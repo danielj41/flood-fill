@@ -1,0 +1,25 @@
+#Backup Files
+*.bak
+
+# Temp Files
+*.swp
+*.swo
+*~
+
+# VS Files and Folders
+Debug/
+*.vcxproj
+*.filters
+
+# Windows Files
+*.dll
+Thumbs.db
+
+# CMake Build folder
+build/
+
+#Executables
+main.exe
+main
+flood-fill.exe
+flood-fill
