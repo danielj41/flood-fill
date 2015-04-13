@@ -102,3 +102,7 @@ void Scene::setMainCamera(std::string label){
            "Camera " << label << " does not exist in this scene!");
     currentCamera = label;
 }
+
+bool Scene::hasMainCamera(){
+    return currentCamera != NO_CAMERA_AVAILABLE;
+}

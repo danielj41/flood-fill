@@ -47,6 +47,8 @@ public:
     //Sets the camera that will look to scene
     void setMainCamera(std::string label);
 
+    bool hasMainCamera();
+
 protected:
     static const std::string NO_CAMERA_AVAILABLE;
 

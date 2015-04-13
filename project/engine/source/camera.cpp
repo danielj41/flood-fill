@@ -9,22 +9,23 @@
 #define degreesToRadians(x) (x*(3.141592f/180.0f))
 
 
-const int Camera::UP_DIRECTION    = -1;
-const int Camera::DOWN_DIRECTION  =  1;
-const int Camera::LEFT_DIRECTION  = -1;
-const int Camera::RIGHT_DIRECTION =  1;
+const int Camera::FORWARD_DIRECTION  = -1;
+const int Camera::BACKWARD_DIRECTION =  1;
+const int Camera::LEFT_DIRECTION     =  1;
+const int Camera::RIGHT_DIRECTION    = -1;
 
 Camera::Camera() : ready(false) {
     DEBUG("Empty Camera!");
 }
 
 Camera::Camera(glm::vec3 _eye, glm::vec3 _target, glm::vec3 _up)
-    : eye(_eye), target(_target), up(_up), theta(0), phi(0), ready(true),
+    : eye(_eye), target(_target), up(_up), theta(-90.0f), phi(0.0f), ready(true),
     projectionMatrixLoaded(false){}
 
 glm::mat4 Camera::getViewMatrix(){
     ASSERT(isReady(), "The camera base vectors missing!");
 
+    updateTarget();
     return lookAt(eye, target, up);
 }
 
@@ -68,6 +69,11 @@ void Camera::setTheta(float degreeAngle){
 
 void Camera::setPhi(float degreeAngle){
     phi = degreeAngle;
+}
+
+void Camera::setAngles(float _theta, float _phi){
+    theta = _theta;
+    phi = _phi;
 }
 
 void Camera::setProjectionMatrix(glm::mat4 matrix){

@@ -7,8 +7,8 @@
 
 class Camera {
 public:
-    static const int UP_DIRECTION;
-    static const int DOWN_DIRECTION;
+    static const int FORWARD_DIRECTION;
+    static const int BACKWARD_DIRECTION;
     static const int LEFT_DIRECTION;
     static const int RIGHT_DIRECTION;
 
@@ -24,6 +24,7 @@ public:
 
     void setTheta(float degreeAngle);
     void setPhi(float degreeAngle);
+    void setAngles(float _theta, float _phi);
     void setProjectionMatrix(glm::mat4 matrix);
 
     float getTheta();

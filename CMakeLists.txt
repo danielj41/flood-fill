@@ -62,6 +62,7 @@ add_executable(
         #Source Files
         project/flood-fill/source/main.cpp
         project/flood-fill/source/main_level.cpp
+        project/flood-fill/source/global_variables.cpp
         project/flood-fill/source/player.cpp
         project/flood-fill/source/ground_plane.cpp
         project/flood-fill/source/obstacle.cpp
@@ -88,6 +89,7 @@ add_executable(
         project/engine/source/load_manager.cpp
         project/engine/source/director.cpp
         project/engine/source/game_object.cpp
+        project/engine/source/time_manager.cpp
 
         #Header Files
         project/engine/headers/GLIncludes.h
@@ -101,6 +103,7 @@ add_executable(
         project/engine/headers/load_manager.hpp
         project/engine/headers/director.hpp
         project/engine/headers/game_object.hpp
+        project/engine/headers/time_manager.hpp
 
 )
 target_link_libraries(main
