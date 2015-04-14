@@ -90,6 +90,7 @@ add_executable(
         project/engine/source/director.cpp
         project/engine/source/game_object.cpp
         project/engine/source/time_manager.cpp
+        project/engine/source/bounding_box.cpp
 
         #Header Files
         project/engine/headers/GLIncludes.h
@@ -104,6 +105,7 @@ add_executable(
         project/engine/headers/director.hpp
         project/engine/headers/game_object.hpp
         project/engine/headers/time_manager.hpp
+        project/engine/headers/bounding_box.hpp
 
 )
 target_link_libraries(main
