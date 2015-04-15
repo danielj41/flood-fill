@@ -3,19 +3,19 @@
 
 #include <list>
 
-#include "game_object.hpp"
+#include "collision_object.hpp"
 
 class CollisionManager{
 
 public:
     static void detectCollisions();
-    static void addGameObject(GameObject * object);
-    static void removeGameObject(GameObject * object);
+    static void addCollisionObject(CollisionObject * object);
+    static void removeCollisionObject(CollisionObject * object);
 
-    static void checkCollision(GameObject * a, GameObject * b);
+    static void checkCollision(CollisionObject * a, CollisionObject * b);
 
 private:
-    static std::list<GameObject *> gameObjects;
+    static std::list<CollisionObject *> collisionObjects;
 };
 
 #endif

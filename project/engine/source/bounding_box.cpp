@@ -6,7 +6,6 @@
 
 #include "glm/gtc/matrix_transform.hpp"
 
-#include "director.hpp"
 
 #define degreesToRadians(x) (x*(3.141592f/180.0f))
 
@@ -14,6 +13,7 @@
 #include "mesh.hpp"
 #include "shader.hpp"
 #include "load_manager.hpp"
+#include "director.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
 const int BoundingBox::NUMBER_VERTICES = 8;
@@ -46,7 +46,7 @@ glm::vec3 BoundingBox::getMin(){
 glm::vec3 BoundingBox::getVertex(int index){
     ASSERT(index < NUMBER_VERTICES && index >= 0,
             "Index " << index << " out of range: Bounding Box getVertex");
-    return glm::vec3(Director::getScene()->getCamera()->getProjectionMatrix()*Director::getScene()->getCamera()->getViewMatrix()*modelMatrix*glm::vec4(vertices[index], 1));
+    return glm::vec3(modelMatrix*glm::vec4(vertices[index], 1));
 }
 
 int BoundingBox::getCollisionID(){

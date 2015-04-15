@@ -127,7 +127,7 @@ bool Camera::hasProjectionMatrix(){
 void Camera::updateTarget(){
     ASSERT(isReady(), "The camera base vectors missing!");
 
-    INFO("Updating the look at point...")
+    //INFO("Updating the look at point...")
 
     target.x = cos(degreesToRadians(phi))*cos(degreesToRadians(theta)) + eye.x;
     target.y = sin(degreesToRadians(phi)) + eye.y;

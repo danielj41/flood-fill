@@ -4,26 +4,27 @@
 #include <cstdlib>
 #include "debug_macros.h"
 
-std::list<GameObject *> CollisionManager::gameObjects;
+std::list<CollisionObject *> CollisionManager::collisionObjects;
 
 void CollisionManager::detectCollisions(){
     INFO("Detecting Collisions...");
 
-    std::list<GameObject *> tempList = gameObjects;
+    std::list<CollisionObject *> tempList = collisionObjects;
 
-    for(std::list<GameObject *>::iterator a = tempList.begin(),
+    for(std::list<CollisionObject *>::iterator a = tempList.begin(),
         c = tempList.begin(); a != tempList.end(); a++){
-        for(std::list<GameObject *>::iterator b = ++c;
+        for(std::list<CollisionObject *>::iterator b = ++c;
                 b != tempList.end(); b++){
             checkCollision(*a, *b);
+            checkCollision(*b, *a);
         }
     }
 }
 
-void CollisionManager::addGameObject(GameObject * object){
+void CollisionManager::addCollisionObject(CollisionObject * object){
     if(object->canCollide()){
         INFO("Adding object to the Collision list");
-        gameObjects.push_front(object);
+        collisionObjects.push_front(object);
     }
     else {
         DEBUG("You can't add this object to the collision list. " <<
@@ -31,12 +32,12 @@ void CollisionManager::addGameObject(GameObject * object){
     }
 }
 
-void CollisionManager::removeGameObject(GameObject * object){
+void CollisionManager::removeCollisionObject(CollisionObject * object){
     INFO("Removing object from the collision list...");
-    for(std::list<GameObject *>::iterator it = gameObjects.begin();
-            it != gameObjects.end(); it++){
+    for(std::list<CollisionObject *>::iterator it = collisionObjects.begin();
+            it != collisionObjects.end(); it++){
         if(*it == object){
-            gameObjects.erase(it);
+            collisionObjects.erase(it);
             INFO("Object Removed from collision list!");
             break;
         }
@@ -57,8 +58,10 @@ float getDFromPlaneEquation(glm::vec3 normal, glm::vec3 point){
 }
 
 //TODO: Refactor the magic numbers
-void CollisionManager::checkCollision(GameObject * aObject, GameObject * bObject){
-    //Checking collision of B in A
+void CollisionManager::checkCollision(CollisionObject * aObject,
+                                      CollisionObject * bObject){
+    /*This funcition checks if any point of B's bounding box is inside the
+      A's boudning box*/
     BoundingBox a = aObject->getBoundingBox();
     BoundingBox b = bObject->getBoundingBox();
 
