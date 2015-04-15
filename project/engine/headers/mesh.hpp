@@ -21,6 +21,13 @@ public:
     void resize();
     void calculateNormals();
 
+    //Calculates the Maximun and Minimun Limits
+    void calculateLimits();
+    //Returns the (max.x, max.y, max.z) Limits of this mesh
+    glm::vec3 getMaxLimits();
+    //Returns the (min.x, min.y, min.z) Limits of this mesh
+    glm::vec3 getMinLimits();
+
     std::vector<float> getNormals();
     std::vector<float> getVertices();
     std::vector<float> getTextureCoordinates();
@@ -41,6 +48,8 @@ public:
     GLuint getTextureCoordinateBuffer();
 
 private:
+    static glm::vec3 INVALID_LIMIT;
+
     std::string objfile;
     bool normalsFlag, loaded;
     std::vector<float> normals;
@@ -50,6 +59,8 @@ private:
     GLuint normalBuffer;
     GLuint indexBuffer;
     GLuint textureCoordinateBuffer;
+
+    glm::vec3 max, min;
 };
 
 #endif

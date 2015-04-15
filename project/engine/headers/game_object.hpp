@@ -13,6 +13,9 @@ public:
 
     bool canCollide();
     void setBoundingBox(BoundingBox _boundingBox);
+    BoundingBox getBoundingBox();
+
+    void collided(GameObject * collidedWith);
 
 protected:
     bool _canCollide;

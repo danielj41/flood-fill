@@ -9,8 +9,10 @@ class CollisionManager{
 
 public:
     static void detectCollisions();
-    static void removeGameObject(GameObject * object);
     static void addGameObject(GameObject * object);
+    static void removeGameObject(GameObject * object);
+
+    static void checkCollision(GameObject * a, GameObject * b);
 
 private:
     static std::list<GameObject *> gameObjects;

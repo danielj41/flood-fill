@@ -10,6 +10,7 @@ BoundingBox::BoundingBox(){}
 
 BoundingBox::BoundingBox(glm::vec3 _max, glm::vec3 _min)
     : max(_max), min(_min), collisionID(1), collideWithID(1) {
+    INFO("Creating a bounding box...");
 
     vertices[0] = glm::vec3(max.x, min.y, max.z);
     vertices[1] = glm::vec3(max.x, max.y, max.z);
@@ -22,6 +23,11 @@ BoundingBox::BoundingBox(glm::vec3 _max, glm::vec3 _min)
     vertices[7] = glm::vec3(min.x, min.y, min.z);
 }
 
+void BoundingBox::update(glm::mat4 _modelMatrix){
+    INFO("Updating Bounding Box...");
+    modelMatrix = _modelMatrix;
+}
+
 glm::vec3 BoundingBox::getMax(){
     return max;
 }
@@ -31,9 +37,9 @@ glm::vec3 BoundingBox::getMin(){
 }
 
 glm::vec3 BoundingBox::getVertex(int index){
-    ASSERT(index >= NUMBER_VERTICES || index < 0,
+    ASSERT(index < NUMBER_VERTICES && index >= 0,
             "Index " << index << " out of range: Bounding Box getVertex");
-    return vertices[index];
+    return glm::vec3(modelMatrix*glm::vec4(vertices[index], 1));
 }
 
 int BoundingBox::getCollisionID(){

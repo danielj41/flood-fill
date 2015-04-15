@@ -6,12 +6,15 @@
 
 #include "glm/gtc/matrix_transform.hpp"
 
+glm::vec3 Mesh::INVALID_LIMIT = glm::vec3(0);
+
 Mesh::Mesh() {
     DEBUG("Empty Mesh!");
 }
 
 Mesh::Mesh(std::string _objfile)
-    : objfile(_objfile), loaded(false), normalsFlag(false) {}
+    : objfile(_objfile), loaded(false), normalsFlag(false),
+         max(INVALID_LIMIT), min(INVALID_LIMIT) {}
 
 void Mesh::resize(){
     ASSERT(isLoaded(), "OBJ " << objfile << "not loaded");
@@ -132,6 +135,48 @@ void Mesh::calculateNormals(){
     }
 
     normalsFlag = true;
+}
+
+void Mesh::calculateLimits(){
+    INFO("Calculating mesh " << objfile << " limits...");
+
+    float minX, minY, minZ;
+    float maxX, maxY, maxZ;
+
+    minX = minY = minZ = 1.1754E+38F;
+    maxX = maxY = maxZ = -1.1754E+38F;
+
+    for (size_t v = 0; v < shape[0].mesh.positions.size() / 3; v++) {
+        if (shape[0].mesh.positions[3 * v + 0] < minX) minX = shape[0].mesh.positions[3 * v + 0];
+        if (shape[0].mesh.positions[3 * v + 0] > maxX) maxX = shape[0].mesh.positions[3 * v + 0];
+
+        if (shape[0].mesh.positions[3 * v + 1] < minY) minY = shape[0].mesh.positions[3 * v + 1];
+        if (shape[0].mesh.positions[3 * v + 1] > maxY) maxY = shape[0].mesh.positions[3 * v + 1];
+
+        if (shape[0].mesh.positions[3 * v + 2] < minZ) minZ = shape[0].mesh.positions[3 * v + 2];
+        if (shape[0].mesh.positions[3 * v + 2] > maxZ) maxZ = shape[0].mesh.positions[3 * v + 2];
+    }
+
+    min = glm::vec3(minX, minY, minZ);
+    max = glm::vec3(maxX, maxY, maxZ);
+
+    INFO("Mesh " << objfile << " Limits:");
+    INFO("   Max: (" << maxX << ", " << maxY << ", " << maxZ<< ")");
+    INFO("   Min: (" << minX << ", " << minY << ", " << minZ<< ")");
+}
+
+glm::vec3 Mesh::getMaxLimits(){
+    ASSERT(max != glm::vec3(0) || min != glm::vec3(0),
+        "You dind't calculate the limits of mesh " << objfile << ". "
+        "Call calclulateLimits() to be able to get Max and Min");
+    return max;
+}
+
+glm::vec3 Mesh::getMinLimits(){
+    ASSERT(max != glm::vec3(0) || min != glm::vec3(0),
+        "You dind't calculate the limits of mesh " << objfile << ". "
+        "Call calclulateLimits() to be able to get Max and Min");
+    return min;
 }
 
 std::string Mesh::getFileName(){

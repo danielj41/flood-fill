@@ -4,6 +4,8 @@
 #include <cstdlib>
 #include "debug_macros.h"
 
+#include "collision_manager.hpp"
+
 const std::string Scene::NO_CAMERA_AVAILABLE = "NO_CAMERA_AVAILABLE";
 
 Scene::Scene(){
@@ -27,6 +29,8 @@ void Scene::update(){
         INFO("Updating " << it->first << "...");
         it->second->update();
     }
+
+    CollisionManager::detectCollisions();
 }
 
 void Scene::render(){
