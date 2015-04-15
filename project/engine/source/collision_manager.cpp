@@ -44,7 +44,7 @@ void CollisionManager::removeGameObject(GameObject * object){
     DEBUG("Could not find the object in the collision list");
 }
 
-int getPlaneSide(glm::vec3 normal, float d, glm::vec3 point){
+float getPlaneSide(glm::vec3 normal, float d, glm::vec3 point){
     float value = glm::dot(normal, point) + d;
     if(value < 0)
         return -1;
@@ -105,9 +105,6 @@ void CollisionManager::checkCollision(GameObject * aObject, GameObject * bObject
     for(int i = 0; i < 8; i++){
         int pointsInside = 0;
         for(int j = 0; j < 6; j+=2){
-            INFO("Plane: " << j << " " << j+1);
-            INFO(getPlaneSide(normal[j + 0], d[j + 0], b.getVertex(i)));
-            INFO(getPlaneSide(normal[j + 1], d[j + 1], b.getVertex(i)));
             if(getPlaneSide(normal[j + 0], d[j + 0], b.getVertex(i)) ==
                getPlaneSide(normal[j + 1], d[j + 1], b.getVertex(i)))
                pointsInside++;

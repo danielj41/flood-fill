@@ -21,7 +21,7 @@ std::string Scene::getName(){
     return name;
 }
 
-void Scene::update(){
+void Scene::updateObjects(){
     INFO("Updating scene " << name << "...");
 
     for(std::map<std::string, GameObject *>::iterator it = gameObjects.begin();
@@ -33,7 +33,7 @@ void Scene::update(){
     CollisionManager::detectCollisions();
 }
 
-void Scene::render(){
+void Scene::renderObjects(){
     INFO("Rendering scene " << name << "...");
 
     for(std::map<std::string, GameObject *>::iterator it = gameObjects.begin();

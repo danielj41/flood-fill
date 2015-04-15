@@ -17,7 +17,7 @@ Object::Object() {
 
 Object::Object(Mesh * _mesh, Shader * _shader): mesh(_mesh), shader(_shader){
     loadIdentity();
-    ASSERT(getMatrix() == glm::mat4(1.0f),
+    ASSERT(getModelMatrix() == glm::mat4(1.0f),
         "Idetenty matrix did't load for this object");
 }
 
@@ -25,6 +25,8 @@ void Object::draw(){
     INFO("Drawing mesh " << mesh->getFileName()
         << " with the vertex shader " << shader->getVertexShaderFileName()
         << " and fragment shader " << shader->getFragmentShaderFileName());
+
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     glUseProgram(shader->getID());
     glEnableVertexAttribArray(shader->getHandle("aPosition"));
@@ -40,7 +42,7 @@ void Object::draw(){
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->getIndexBuffer());
 
     glUniformMatrix4fv(shader->getHandle("uModel"), 1, GL_FALSE,
-                        glm::value_ptr(getMatrix()));
+                        glm::value_ptr(getModelMatrix()));
     glUniformMatrix4fv(shader->getHandle("uView"), 1, GL_FALSE,
       glm::value_ptr(Director::getScene()->getCamera()->getViewMatrix()));
     glUniformMatrix4fv(shader->getHandle("uProjection"), 1, GL_FALSE,
@@ -65,7 +67,7 @@ Shader * Object::getShader(){
     return shader;
 }
 
-glm::mat4 Object::getMatrix(){
+glm::mat4 Object::getModelMatrix(){
     return modelMatrix;
 }
 

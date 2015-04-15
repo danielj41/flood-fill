@@ -41,6 +41,24 @@ glm::vec3 Camera::getStrafeVector(){
     return cross(getViewVector(), up);
 }
 
+glm::vec3 Camera::getEye(){
+    ASSERT(isReady(), "The camera base vectors missing!");
+
+    return eye;
+}
+
+glm::vec3 Camera::getTarget(){
+    ASSERT(isReady(), "The camera base vectors missing!");
+
+    return target;
+}
+
+glm::vec3 Camera::getUp(){
+    ASSERT(isReady(), "The camera base vectors missing!");
+
+    return up;
+}
+
 void Camera::strafe(int direction, float velocity){
     ASSERT(isReady(), "The camera base vectors missing!");
 

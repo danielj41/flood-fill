@@ -19,6 +19,10 @@ public:
     glm::vec3 getViewVector();
     glm::vec3 getStrafeVector();
 
+    glm::vec3 getEye();
+    glm::vec3 getTarget();
+    glm::vec3 getUp();
+
     void strafe(int direction, float velocity);
     void zoom(int direction, float velocity);
 

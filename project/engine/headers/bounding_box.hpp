@@ -7,7 +7,7 @@
 
 /**
 
-Bounding Box Mapping:
+Bounding Box Vertex Mapping:
    6--------5
   /|       /|
  / |      / |
@@ -25,8 +25,6 @@ public:
     BoundingBox();
     BoundingBox(glm::vec3 _max, glm::vec3 _min);
 
-    void update(glm::mat4 _modelMatrix);
-
     glm::vec3 getMax();
     glm::vec3 getMin();
     glm::vec3 getVertex(int index);
@@ -36,6 +34,19 @@ public:
 
     void setCollisionID(int ID);
     void setCollideWithID(int ID);
+
+    //TODO: [Maybe] Extract the behavior of having a model matrix to a different
+    //    class? It happens here and in the Object Class
+    glm::mat4 getModelMatrix();
+    void scale(glm::vec3 scalingVector);
+    void rotate(float angle, glm::vec3 direction);
+    void translate(glm::vec3 translationVector);
+    void loadIdentity();
+    void setModelMatrix(glm::mat4 matrix);
+
+    //TODO: Remove the GL code inside this function in the creation of the
+    //      Render Engine
+    void draw();
 
 private:
     static const int NUMBER_VERTICES;

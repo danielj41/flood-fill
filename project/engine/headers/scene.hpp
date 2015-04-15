@@ -23,11 +23,12 @@ public:
     Scene(std::string _name);
 
     virtual void setup() = 0;
+    virtual void update() = 0;
 
     //Updates all objects in the scene
-    void update();
+    void updateObjects();
     //Render all objects in the scene
-    void render();
+    void renderObjects();
 
     std::string getName();
 

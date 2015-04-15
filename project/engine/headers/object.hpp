@@ -18,7 +18,7 @@ public:
 
     Mesh *    getMesh();
     Shader *  getShader();
-    glm::mat4 getMatrix();
+    glm::mat4 getModelMatrix();
 
     void scale(glm::vec3 scalingVector);
     void rotate(float angle, glm::vec3 direction);

@@ -27,6 +27,9 @@ public:
 
     static void setScene(std::string label);
 
+    static void updateScene();
+    static void renderScene();
+
 private:
     static const std::string NO_VALID_SCENE;
 

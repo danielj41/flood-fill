@@ -15,7 +15,7 @@ public:
     void setBoundingBox(BoundingBox _boundingBox);
     BoundingBox getBoundingBox();
 
-    void collided(GameObject * collidedWith);
+    virtual void collided(GameObject * collidedWith);
 
 protected:
     bool _canCollide;

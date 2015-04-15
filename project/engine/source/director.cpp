@@ -50,3 +50,12 @@ void Director::setScene(std::string label){
     currentScene = label;
     getScene()->setup();
 }
+
+void Director::updateScene(){
+    getScene()->update();
+    getScene()->updateObjects();
+}
+
+void Director::renderScene(){
+    getScene()->renderObjects();
+}

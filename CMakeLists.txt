@@ -66,6 +66,7 @@ add_executable(
         project/flood-fill/source/player.cpp
         project/flood-fill/source/ground_plane.cpp
         project/flood-fill/source/obstacle.cpp
+        project/flood-fill/source/debug_player.cpp
 
         #Header Files
         project/flood-fill/headers/main_level.hpp
@@ -73,10 +74,14 @@ add_executable(
         project/flood-fill/headers/player.hpp
         project/flood-fill/headers/ground_plane.hpp
         project/flood-fill/headers/obstacle.hpp
+        project/flood-fill/headers/debug_player.hpp
 
         #Shader Files
         project/flood-fill/shaders/vertex.glsl
         project/flood-fill/shaders/fragment.glsl
+
+        project/flood-fill/shaders/bounding_box_vertex.glsl
+        project/flood-fill/shaders/bounding_box_fragment.glsl
 
         ### Engine Files ###
         #Source Files
