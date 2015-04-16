@@ -6,8 +6,6 @@
 
 #include "glm/gtc/matrix_transform.hpp"
 
-#define degreesToRadians(x) (x*(3.141592f/180.0f))
-
 
 const int Camera::FORWARD_DIRECTION  = -1;
 const int Camera::BACKWARD_DIRECTION =  1;
@@ -162,9 +160,7 @@ void Camera::unfix(){
 void Camera::updateTarget(){
     ASSERT(isReady(), "The camera base vectors missing!");
 
-    //INFO("Updating the look at point...")
-
-    target.x = cos(degreesToRadians(phi))*cos(degreesToRadians(theta)) + eye.x;
-    target.y = sin(degreesToRadians(phi)) + eye.y;
-    target.z = cos(degreesToRadians(phi))*cos(degreesToRadians(90 - theta)) + eye.z;
+    target.x = cos(glm::radians(phi))*cos(glm::radians(theta)) + eye.x;
+    target.y = sin(glm::radians(phi)) + eye.y;
+    target.z = cos(glm::radians(phi))*cos(glm::radians(90 - theta)) + eye.z;
 }

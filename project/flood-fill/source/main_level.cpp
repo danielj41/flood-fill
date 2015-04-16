@@ -29,7 +29,7 @@ void MainLevel::setup(){
     Camera * cam1 = new Camera(glm::vec3(0, 1, 0), glm::vec3(0, 0, -5),
                              glm::vec3(0, 1, 0));
     cam1->setProjectionMatrix(
-        glm::perspective(90.0f,
+        glm::perspective(glm::radians(90.0f),
                         (float) Global::ScreenWidth/Global::ScreenHeight,
                         0.1f, 100.f));
 
@@ -39,7 +39,7 @@ void MainLevel::setup(){
     Camera * cam2 = new Camera(glm::vec3(0, 1, 0), glm::vec3(0, 0, -5),
                              glm::vec3(0, 1, 0));
     cam2->setProjectionMatrix(
-        glm::perspective(90.0f,
+        glm::perspective(glm::radians(90.0f),
                         (float) Global::ScreenWidth/Global::ScreenHeight,
                         0.1f, 100.f));
 

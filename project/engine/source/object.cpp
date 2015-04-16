@@ -1,6 +1,5 @@
 #include "object.hpp"
 
-#define degreesToRadians(x) (x*(3.141592f/180.0f))
 #include <iostream>
 #include <cstdlib>
 #include "debug_macros.h"
@@ -76,7 +75,7 @@ void Object::scale(glm::vec3 scalingVector){
 }
 
 void Object::rotate(float angle, glm::vec3 direction){
-    modelMatrix = glm::rotate(glm::mat4(1.0f), degreesToRadians(angle),
+    modelMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(angle),
                                 direction)*modelMatrix;
 }
 

@@ -7,8 +7,6 @@
 #include "glm/gtc/matrix_transform.hpp"
 
 
-#define degreesToRadians(x) (x*(3.141592f/180.0f))
-
 //Draw method dependencies
 #include "mesh.hpp"
 #include "shader.hpp"
@@ -58,7 +56,7 @@ void BoundingBox::scale(glm::vec3 scalingVector){
 }
 
 void BoundingBox::rotate(float angle, glm::vec3 direction){
-    modelMatrix = glm::rotate(glm::mat4(1.0f), degreesToRadians(angle),
+    modelMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(angle),
                                 direction)*modelMatrix;
 }
 
