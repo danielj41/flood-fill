@@ -30,7 +30,7 @@ void Obstacle::setup() {
     boundingBox.setModelMatrix(box->getModelMatrix());
 
     setCollisionID(4);
-    setCollideWithID(1 | 2);
+    setCollideWithID(1 | 2 | 4);
 }
 
 void Obstacle::update() {
@@ -60,11 +60,11 @@ void Obstacle::draw() {
 }
 
 void Obstacle::collided(CollisionObject * collidedWith){
-    if(collidedWith->getCollisionID() == 1){
+    if(collidedWith->getCollisionID() == 1 ||
+       collidedWith->getCollisionID() == 4){
         movementDirection = -movementDirection;
     }
-
-    if(collidedWith->getCollisionID() == 2){
+    else if(collidedWith->getCollisionID() == 2){
         CollisionManager::removeCollisionObject(this);
         shrink = true;
     }

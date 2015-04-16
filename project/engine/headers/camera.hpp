@@ -23,6 +23,10 @@ public:
     glm::vec3 getTarget();
     glm::vec3 getUp();
 
+    void setEye(glm::vec3 _eye);
+    void setTarget(glm::vec3 _target);
+    void setUp(glm::vec3 _up);
+
     void strafe(int direction, float velocity);
     void zoom(int direction, float velocity);
 

@@ -1,5 +1,7 @@
 #include "main_level.hpp"
 
+#include <sstream>
+
 #include <cstdlib>
 #include <iostream>
 #include "debug_macros.h"
@@ -12,12 +14,14 @@
 #include "global_variables.hpp"
 #include "ground_plane.hpp"
 #include "obstacle.hpp"
-#include "player.hpp"
 #include "debug_player.hpp"
 #include "invisible_wall.hpp"
 #include "collision_manager.hpp"
+#include "time_manager.hpp"
 
-MainLevel::MainLevel() : Scene("MainLevel"){}
+MainLevel::MainLevel()
+    : Scene("MainLevel"), maxNumObstacles(15), numObstaclesLeft(0),
+      lastSpawnTime(0.0), timeToSpawn(2.0){}
 
 void MainLevel::setup(){
     INFO("Setting up the Main Level...");
@@ -45,15 +49,11 @@ void MainLevel::setup(){
     ground->setup();
     addGameObject("Ground" , ground);
 
-    Obstacle * obs = new Obstacle(glm::vec3(0, 1, -3), glm::vec3(-1, 0, 0), 3.0f);
-    obs->setup();
-    addGameObject("obstacle" , obs);
-    CollisionManager::addCollisionObject(obs);
 
-    Player * p1 = new Player(cam1);
-    p1->setup();
-    addGameObject("player" , p1);
-    CollisionManager::addCollisionObject(p1);
+    player = new Player(cam1);
+    player->setup();
+    addGameObject("player" , player);
+    CollisionManager::addCollisionObject(player);
 
     debugPlayer = new DebugPlayer(cam2);
     debugPlayer->setup();
@@ -85,6 +85,9 @@ void MainLevel::setup(){
 }
 
 void MainLevel::update(){
+    DEBUG("Obstacles in the screen: " <<
+            (numObstaclesLeft - player->getPoints()));
+
     if(debugPlayer->isActive()){
         ASSERT(getCamera("Camera1") != getCamera("DebugCamera"), "Equal camera");
         setMainCamera("DebugCamera");
@@ -93,5 +96,34 @@ void MainLevel::update(){
     else{
         setMainCamera("Camera1");
         getCamera("Camera1")->fix(false, true, false);
+    }
+
+    if(TimeManager::getTimeStamp() - lastSpawnTime >= timeToSpawn){
+        lastSpawnTime = TimeManager::getTimeStamp();
+        placeNewObstacle();
+    }
+}
+
+void MainLevel::placeNewObstacle(){
+    if((numObstaclesLeft - player->getPoints()) < maxNumObstacles){
+        srand(TimeManager::getTimeStamp());
+
+        float x = rand() % 51 - 25;
+        float z = rand() % 51 - 25;
+
+        float dx = rand() % 3 - 1;
+        float dz = rand() % 3 - 1;
+        if(dx == 0.0f && dz == 0.0f) dz = -1;
+
+        Obstacle * obs = new Obstacle(glm::vec3(x, 1, z),
+                                      glm::vec3(dx, 0, dz), 3.0f);
+        obs->setup();
+
+        std::stringstream ss;
+        ss << "obstacle" << rand();
+
+        addGameObject(ss.str() , obs);
+        CollisionManager::addCollisionObject(obs);
+        numObstaclesLeft++;
     }
 }

@@ -16,7 +16,7 @@
 
 Player::Player(Camera * _camera)
     : GameObject(), CollisionObject(BoundingBox(glm::vec3(1), glm::vec3(-1))),
-        camera(_camera) {}
+        camera(_camera), points(0) {}
 
 void Player::setup() {
     INFO("Player Setup...");
@@ -28,6 +28,10 @@ void Player::setup() {
 }
 
 void Player::update() {
+    DEBUG("Player Points: " << points);
+
+    lastPosition = camera->getEye();
+
     float cameraSpeed = 5.0f*TimeManager::getDeltaTime();
     if(glfwGetKey(Global::window, GLFW_KEY_W) == GLFW_PRESS){
         camera->zoom(Camera::FORWARD_DIRECTION, cameraSpeed);
@@ -51,5 +55,16 @@ void Player::draw() {
 }
 
 void Player::collided(CollisionObject * collidedWith){
-    INFO("HIT PLAYER!!!");
+    if(collidedWith->getCollisionID() == 4){
+        points++;
+    }
+    else if(collidedWith->getCollisionID() == 1){
+        boundingBox.loadIdentity();
+        boundingBox.translate(lastPosition);
+        camera->setEye(lastPosition);
+    }
+}
+
+int Player::getPoints(){
+    return points;
 }

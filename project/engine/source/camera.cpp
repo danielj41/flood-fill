@@ -61,6 +61,18 @@ glm::vec3 Camera::getUp(){
     return up;
 }
 
+void Camera::setEye(glm::vec3 _eye){
+    eye = _eye;
+}
+
+void Camera::setTarget(glm::vec3 _target){
+    target = _target;
+}
+
+void Camera::setUp(glm::vec3 _up){
+    up = _up;
+}
+
 void Camera::strafe(int direction, float velocity){
     ASSERT(isReady(), "The camera base vectors missing!");
 
