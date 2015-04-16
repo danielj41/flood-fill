@@ -11,6 +11,7 @@
 
 #include "GLIncludes.h"
 #include "global_variables.hpp"
+#include "time_manager.hpp"
 
 DebugPlayer::DebugPlayer(Camera * _camera) : camera(_camera), active(false) {}
 
@@ -29,7 +30,7 @@ void DebugPlayer::update() {
     }
 
     if(active){
-        float cameraSpeed = 0.01f;
+        float cameraSpeed = 5.0f*TimeManager::getDeltaTime();
         if(glfwGetKey(Global::window, GLFW_KEY_W) == GLFW_PRESS){
             camera->zoom(Camera::FORWARD_DIRECTION, cameraSpeed);
         }

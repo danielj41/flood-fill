@@ -13,6 +13,8 @@ const int Camera::FORWARD_DIRECTION  = -1;
 const int Camera::BACKWARD_DIRECTION =  1;
 const int Camera::LEFT_DIRECTION     =  1;
 const int Camera::RIGHT_DIRECTION    = -1;
+unsigned int Camera::FIXED_AXIS = 0;
+unsigned int Camera::UNFIXED_AXIS = 1;
 
 Camera::Camera() : ready(false) {
     DEBUG("Empty Camera!");
@@ -20,7 +22,7 @@ Camera::Camera() : ready(false) {
 
 Camera::Camera(glm::vec3 _eye, glm::vec3 _target, glm::vec3 _up)
     : eye(_eye), target(_target), up(_up), theta(-90.0f), phi(0.0f), ready(true),
-    projectionMatrixLoaded(false){}
+    projectionMatrixLoaded(false), fixedAxis(glm::vec3(UNFIXED_AXIS)){}
 
 glm::mat4 Camera::getViewMatrix(){
     ASSERT(isReady(), "The camera base vectors missing!");
@@ -66,8 +68,9 @@ void Camera::strafe(int direction, float velocity){
 
     INFO("Strafing the camera...");
     float dir = (float)direction;
-    eye    += getStrafeVector()*velocity*dir;
-    target += getStrafeVector()*velocity*dir;
+
+    eye    += fixedAxis*getStrafeVector()*velocity*dir;
+    target += fixedAxis*getStrafeVector()*velocity*dir;
 }
 
 void Camera::zoom(int direction, float velocity){
@@ -77,8 +80,9 @@ void Camera::zoom(int direction, float velocity){
 
     INFO("Zooming the camera...");
     float dir = (float)direction;
-    eye    += getViewVector()*velocity*dir;
-    target += getViewVector()*velocity*dir;
+
+    eye    += fixedAxis*getViewVector()*velocity*dir;
+    target += fixedAxis*getViewVector()*velocity*dir;
 }
 
 void Camera::setTheta(float degreeAngle){
@@ -120,6 +124,25 @@ bool Camera::isReady(){
 
 bool Camera::hasProjectionMatrix(){
     return projectionMatrixLoaded;
+}
+
+void Camera::fix(bool x, bool y, bool z){
+    INFO("Camera fixed!");
+    fixedAxis = glm::vec3(UNFIXED_AXIS);
+
+    if(x) fixedAxis.x = FIXED_AXIS;
+    if(y) fixedAxis.y = FIXED_AXIS;
+    if(z) fixedAxis.z = FIXED_AXIS;
+}
+
+void Camera::fix(){
+    INFO("Camera fixed!");
+    fixedAxis = glm::vec3(FIXED_AXIS);
+}
+
+void Camera::unfix(){
+    INFO("Camera unfixed!");
+    fixedAxis = glm::vec3(UNFIXED_AXIS);
 }
 
 /** Private Methods **/

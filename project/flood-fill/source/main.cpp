@@ -13,6 +13,7 @@
 #include "director.hpp"
 #include "global_variables.hpp"
 #include "main_level.hpp"
+#include "time_manager.hpp"
 
 using namespace std;
 
@@ -40,9 +41,15 @@ int main(int argc, char **argv)
     glBindVertexArray(vao);
     */
 
+    TimeManager::setTimeStamp();
+    TimeManager::setDeltaTime();
+
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glEnable(GL_DEPTH_TEST);
     glCullFace(GL_BACK);
+
+    int FPS = 0;
+    double timeStamp = TimeManager::getTimeStamp();
     do{
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -52,6 +59,16 @@ int main(int argc, char **argv)
         // Swap buffers
         glfwSwapBuffers(Global::window);
         glfwPollEvents();
+
+        if(TimeManager::getTimeStamp() - timeStamp >= 1){
+            DEBUG("========FPS: " << FPS << "==========");
+            timeStamp = TimeManager::getTimeStamp();
+        }
+
+        TimeManager::setDeltaTime();
+        TimeManager::setTimeStamp();
+
+        FPS++;
     }
     while (glfwGetKey(Global::window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
     glfwWindowShouldClose(Global::window) == 0);

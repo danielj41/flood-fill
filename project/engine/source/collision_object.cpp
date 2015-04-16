@@ -7,7 +7,7 @@
 CollisionObject::CollisionObject() : _canCollide(false){}
 
 CollisionObject::CollisionObject(BoundingBox box)
-    : boundingBox(box), _canCollide(true), collisionID(1), collideWithID(1){}
+    : boundingBox(box), _canCollide(true), collisionID(0), collideWithID(0){}
 
 bool CollisionObject::canCollide(){
     return _canCollide;

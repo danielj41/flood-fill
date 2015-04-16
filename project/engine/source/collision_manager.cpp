@@ -15,8 +15,8 @@ void CollisionManager::detectCollisions(){
         c = tempList.begin(); a != tempList.end(); a++){
         for(std::list<CollisionObject *>::iterator b = ++c;
                 b != tempList.end(); b++){
-            checkCollision(*a, *b);
-            checkCollision(*b, *a);
+            if(!checkCollision(*a, *b))
+                checkCollision(*b, *a);
         }
     }
 }
@@ -39,7 +39,7 @@ void CollisionManager::removeCollisionObject(CollisionObject * object){
         if(*it == object){
             collisionObjects.erase(it);
             INFO("Object Removed from collision list!");
-            break;
+            return;
         }
     }
     DEBUG("Could not find the object in the collision list");
@@ -58,12 +58,17 @@ float getDFromPlaneEquation(glm::vec3 normal, glm::vec3 point){
 }
 
 //TODO: Improve the performace of this method
-//TODO: Use a bit mask to define which objects collide or not
 //TODO: Refactor the magic numbers
-void CollisionManager::checkCollision(CollisionObject * aObject,
+bool CollisionManager::checkCollision(CollisionObject * aObject,
                                       CollisionObject * bObject){
     /*This funcition checks if any point of B's bounding box is inside the
       A's boudning box*/
+
+    //Check the collision bit mask
+    if((aObject->getCollideWithID() & bObject->getCollisionID()) == 0){
+        return false;
+    }
+
     BoundingBox a = aObject->getBoundingBox();
     BoundingBox b = bObject->getBoundingBox();
 
@@ -121,7 +126,9 @@ void CollisionManager::checkCollision(CollisionObject * aObject,
             // i.e. A removes B and B removes A
             aObject->collided(bObject);
             bObject->collided(aObject);
-            break;
+            return true;
         }
     }
+
+    return false;
 }

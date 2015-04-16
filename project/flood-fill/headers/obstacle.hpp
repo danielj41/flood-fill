@@ -12,7 +12,7 @@
 class Obstacle : public GameObject, public CollisionObject{
 
 public:
-    Obstacle(glm::vec3 _movementDirection, float _speed);
+    Obstacle(glm::vec3 _position, glm::vec3 _movementDirection, float _speed);
 
     void setup();
     void update();
@@ -22,8 +22,11 @@ public:
 
 private:
     Object * box;
-    glm::vec3 movementDirection;
+    glm::vec3 movementDirection, position, size;
     float speed;
+
+    bool shrink;
+    float shrinkRate;
 };
 
 #endif

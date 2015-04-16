@@ -192,7 +192,7 @@ void printShaderInfoLog(GLuint shader)
         ASSERT(infoLog != NULL, "ERROR: Could not allocate InfoLog buffer");
 
         glGetShaderInfoLog(shader, infologLength, &charsWritten, infoLog);
-        DEBUG("Shader InfoLog: " << infoLog);
+        INFO("Shader InfoLog: " << infoLog);
         free(infoLog);
     }
     printGLError();
@@ -213,7 +213,7 @@ void printProgramInfoLog(GLuint program)
         ASSERT(infoLog != NULL, "ERROR: Could not allocate InfoLog buffer");
 
         glGetProgramInfoLog(program, infologLength, &charsWritten, infoLog);
-        DEBUG("Program InfoLog: " << infoLog);
+        INFO("Program InfoLog: " << infoLog);
 
         free(infoLog);
     }

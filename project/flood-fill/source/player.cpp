@@ -12,6 +12,7 @@
 #include "GLIncludes.h"
 #include "global_variables.hpp"
 #include "bounding_box.hpp"
+#include "time_manager.hpp"
 
 Player::Player(Camera * _camera)
     : GameObject(), CollisionObject(BoundingBox(glm::vec3(1), glm::vec3(-1))),
@@ -19,10 +20,15 @@ Player::Player(Camera * _camera)
 
 void Player::setup() {
     INFO("Player Setup...");
+
+    setCollisionID(2);
+    setCollideWithID(1 | 4);
+
+    camera->fix(false, true, false);
 }
 
 void Player::update() {
-    float cameraSpeed = 0.01f;
+    float cameraSpeed = 5.0f*TimeManager::getDeltaTime();
     if(glfwGetKey(Global::window, GLFW_KEY_W) == GLFW_PRESS){
         camera->zoom(Camera::FORWARD_DIRECTION, cameraSpeed);
     }

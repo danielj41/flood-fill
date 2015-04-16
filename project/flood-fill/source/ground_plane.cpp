@@ -19,7 +19,7 @@ void GroundPlane::setup(){
                     LoadManager::getMesh("plane.obj"),
                     LoadManager::getShader("vertex.glsl", "fragment.glsl"));
     plane->rotate(90.0f, glm::vec3(1, 0, 0));
-    plane->scale(glm::vec3(3, 1, 3));
+    plane->scale(glm::vec3(30, 1, 30));
 }
 
 void GroundPlane::update(){

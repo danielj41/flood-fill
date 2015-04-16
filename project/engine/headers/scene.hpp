@@ -36,7 +36,9 @@ public:
     void addGameObject(std::string label, GameObject * gameObject);
 
     void removeCamera(std::string label);
+    void removeCamera(Camera * camera);
     void removeGameObject(std::string label);
+    void removeGameObject(GameObject * gameObject);
 
     //Get a specific camera
     Camera * getCamera(std::string label);

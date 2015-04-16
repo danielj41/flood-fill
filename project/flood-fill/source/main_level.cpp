@@ -14,6 +14,7 @@
 #include "obstacle.hpp"
 #include "player.hpp"
 #include "debug_player.hpp"
+#include "invisible_wall.hpp"
 #include "collision_manager.hpp"
 
 MainLevel::MainLevel() : Scene("MainLevel"){}
@@ -44,7 +45,7 @@ void MainLevel::setup(){
     ground->setup();
     addGameObject("Ground" , ground);
 
-    Obstacle * obs = new Obstacle(glm::vec3(0, 0, 0), 0.05);
+    Obstacle * obs = new Obstacle(glm::vec3(0, 1, -3), glm::vec3(-1, 0, 0), 3.0f);
     obs->setup();
     addGameObject("obstacle" , obs);
     CollisionManager::addCollisionObject(obs);
@@ -57,13 +58,40 @@ void MainLevel::setup(){
     debugPlayer = new DebugPlayer(cam2);
     debugPlayer->setup();
     addGameObject("debugPlayer" , debugPlayer);
+
+    InvisibleWall * wall1 = new InvisibleWall(glm::vec3(-30, 0, 0),
+                                              glm::vec3(0.5, 10, 30));
+    wall1->setup();
+    addGameObject("wall1", wall1);
+    CollisionManager::addCollisionObject(wall1);
+
+    InvisibleWall * wall2 = new InvisibleWall(glm::vec3(30, 0, 0),
+                                              glm::vec3(0.5, 10, 30));
+    wall2->setup();
+    addGameObject("wall2", wall2);
+    CollisionManager::addCollisionObject(wall2);
+
+    InvisibleWall * wall3 = new InvisibleWall(glm::vec3(0, 0, 30),
+                                              glm::vec3(30, 10, 0.5));
+    wall3->setup();
+    addGameObject("wall3", wall3);
+    CollisionManager::addCollisionObject(wall3);
+
+    InvisibleWall * wall4 = new InvisibleWall(glm::vec3(0, 0, -30),
+                                              glm::vec3(30, 10, 0.5));
+    wall4->setup();
+    addGameObject("wall4", wall4);
+    CollisionManager::addCollisionObject(wall4);
 }
 
 void MainLevel::update(){
     if(debugPlayer->isActive()){
+        ASSERT(getCamera("Camera1") != getCamera("DebugCamera"), "Equal camera");
         setMainCamera("DebugCamera");
+        getCamera("Camera1")->fix();
     }
     else{
         setMainCamera("Camera1");
+        getCamera("Camera1")->fix(false, true, false);
     }
 }

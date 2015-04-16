@@ -38,10 +38,22 @@ public:
     bool isReady();
     bool hasProjectionMatrix();
 
+    /* The camera will be fixed in the Axis that you specify
+        i.e. if you pass (true, false, true), the camera won't move in X and Z*/
+    void fix(bool x, bool y, bool z);
+    //Fix the camera position in all Axis
+    void fix();
+    void unfix();
+
 private:
+    static unsigned int FIXED_AXIS;
+    static unsigned int UNFIXED_AXIS;
+
     float theta, phi; // Both angles are expressed in degrees
     glm::vec3 eye, target, up;
     glm::mat4 projectionMatrix;
+
+    glm::vec3 fixedAxis;
 
     bool ready; // Flag that says if it is an empty camera or not
     bool projectionMatrixLoaded;

@@ -70,6 +70,22 @@ void Scene::removeCamera(std::string label){
     }
 }
 
+void Scene::removeCamera(Camera * camera){
+    INFO("Removing camera from scene...");
+
+    for(std::map<std::string, Camera *>::iterator it = cameras.begin();
+        it != cameras.end(); it++){
+
+        if(it->second == camera){
+            cameras.erase(it);
+
+            INFO("Camera removed!");
+            return;
+        }
+    }
+    DEBUG("Camera does not exist in this scene!");
+}
+
 void Scene::removeGameObject(std::string label){
     INFO("Removing object " << label << "...");
 
@@ -81,6 +97,22 @@ void Scene::removeGameObject(std::string label){
         gameObjects.erase(it);
         INFO("Object " << label << " removed!");
     }
+}
+
+void Scene::removeGameObject(GameObject * gameObject){
+    INFO("Removing game object from scene...");
+
+    for(std::map<std::string, GameObject *>::iterator it = gameObjects.begin();
+        it != gameObjects.end(); it++){
+
+        if(it->second == gameObject){
+            gameObjects.erase(it);
+
+            INFO("Game Object removed!");
+            return;
+        }
+    }
+    DEBUG("Object does not exist in this scene!");
 }
 
 Camera * Scene::getCamera(std::string label){

@@ -67,6 +67,7 @@ add_executable(
         project/flood-fill/source/ground_plane.cpp
         project/flood-fill/source/obstacle.cpp
         project/flood-fill/source/debug_player.cpp
+        project/flood-fill/source/invisible_wall.cpp
 
         #Header Files
         project/flood-fill/headers/main_level.hpp
@@ -75,6 +76,7 @@ add_executable(
         project/flood-fill/headers/ground_plane.hpp
         project/flood-fill/headers/obstacle.hpp
         project/flood-fill/headers/debug_player.hpp
+        project/flood-fill/headers/invisible_wall.hpp
 
         #Shader Files
         project/flood-fill/shaders/vertex.glsl
