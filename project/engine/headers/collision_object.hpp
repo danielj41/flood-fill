@@ -13,6 +13,12 @@ public:
     BoundingBox getBoundingBox();
     void setBoundingBox(BoundingBox box);
 
+    int getCollisionID();
+    int getCollideWithID();
+
+    void setCollisionID(int ID);
+    void setCollideWithID(int ID);
+
     virtual void collided(CollisionObject * collidedWith) = 0;
 
 protected:
@@ -20,6 +26,8 @@ protected:
 
 private:
     bool _canCollide;
+    int collisionID, collideWithID;
+
 };
 
 #endif

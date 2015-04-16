@@ -3,9 +3,10 @@
 #include "GLIncludes.h"
 
 double TimeManager::timeStamp;
+double TimeManager::deltaTime;
 
-double TimeManager::getDeltaTime(){
-    return getTimeStamp() - timeStamp;
+void TimeManager::setDeltaTime(){
+    deltaTime = getTimeStamp() - timeStamp;
 }
 
 double TimeManager::getTimeStamp(){
@@ -16,3 +17,6 @@ void TimeManager::setTimeStamp(){
     timeStamp = getTimeStamp();
 }
 
+double TimeManager::getDeltaTime(){
+    return deltaTime;
+}

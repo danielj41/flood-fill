@@ -7,7 +7,7 @@
 CollisionObject::CollisionObject() : _canCollide(false){}
 
 CollisionObject::CollisionObject(BoundingBox box)
-    : boundingBox(box), _canCollide(true){}
+    : boundingBox(box), _canCollide(true), collisionID(1), collideWithID(1){}
 
 bool CollisionObject::canCollide(){
     return _canCollide;
@@ -24,3 +24,18 @@ BoundingBox CollisionObject::getBoundingBox(){
     return boundingBox;
 }
 
+int CollisionObject::getCollisionID(){
+    return collisionID;
+}
+
+int CollisionObject::getCollideWithID(){
+    return collideWithID;
+}
+
+void CollisionObject::setCollisionID(int ID){
+    collisionID = ID;
+}
+
+void CollisionObject::setCollideWithID(int ID){
+    collideWithID = ID;
+}

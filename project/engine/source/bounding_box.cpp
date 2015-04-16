@@ -21,7 +21,7 @@ const int BoundingBox::NUMBER_VERTICES = 8;
 BoundingBox::BoundingBox(){}
 
 BoundingBox::BoundingBox(glm::vec3 _max, glm::vec3 _min)
-    : max(_max), min(_min), collisionID(1), collideWithID(1) {
+    : max(_max), min(_min) {
     INFO("Creating a bounding box...");
 
     vertices[0] = glm::vec3(max.x, min.y, max.z);
@@ -47,22 +47,6 @@ glm::vec3 BoundingBox::getVertex(int index){
     ASSERT(index < NUMBER_VERTICES && index >= 0,
             "Index " << index << " out of range: Bounding Box getVertex");
     return glm::vec3(modelMatrix*glm::vec4(vertices[index], 1));
-}
-
-int BoundingBox::getCollisionID(){
-    return collisionID;
-}
-
-int BoundingBox::getCollideWithID(){
-    return collideWithID;
-}
-
-void BoundingBox::setCollisionID(int ID){
-    collisionID = ID;
-}
-
-void BoundingBox::setCollideWithID(int ID){
-    collideWithID = ID;
 }
 
 glm::mat4 BoundingBox::getModelMatrix(){

@@ -4,13 +4,14 @@
 class TimeManager{
 
 public:
-    static double getDeltaTime();
     static double getTimeStamp();
-
+    static double getDeltaTime();
+    static void setDeltaTime();
     static void setTimeStamp();
 
 private:
     static double timeStamp;
+    static double deltaTime;
 };
 
 #endif

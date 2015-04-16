@@ -57,6 +57,8 @@ float getDFromPlaneEquation(glm::vec3 normal, glm::vec3 point){
     return -1*(glm::dot(normal, point));
 }
 
+//TODO: Improve the performace of this method
+//TODO: Use a bit mask to define which objects collide or not
 //TODO: Refactor the magic numbers
 void CollisionManager::checkCollision(CollisionObject * aObject,
                                       CollisionObject * bObject){
