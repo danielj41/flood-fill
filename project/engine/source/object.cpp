@@ -28,7 +28,7 @@ void Object::draw(Shader * shader){
         glm::value_ptr(
         glm::transpose(
         glm::inverse(
-        Director::getScene()->getCamera()->getViewMatrix()*getModelMatrix()))));
+        getModelMatrix()))));
 
     glUniformMatrix4fv(shader->getHandle("uModel"), 1, GL_FALSE,
                         glm::value_ptr(getModelMatrix()));

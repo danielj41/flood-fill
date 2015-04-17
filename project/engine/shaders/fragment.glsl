@@ -37,7 +37,7 @@ void main(){
 
     //float attenuation = dot(uLightFallOff, vec3(1, d, d*d));
 
-    vec3 I = Id + Is + Ia + Ie;
+    vec3 I = Ic*(Id + Is) + Ia + Ie;
 
     gl_FragColor = vec4(I, 1);
 }

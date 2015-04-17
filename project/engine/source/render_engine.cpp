@@ -48,6 +48,7 @@ void RenderEngine::render(){
                 camera->getEye().z);
 
     std::map<std::string, Light *> lights = Director::getScene()->getLights();
+
     //Load the Lights
     for(std::map<std::string, Light *>::iterator it = lights.begin();
             it != lights.end(); it++ ){

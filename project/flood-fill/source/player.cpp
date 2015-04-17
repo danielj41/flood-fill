@@ -28,8 +28,6 @@ void Player::setup() {
 }
 
 void Player::update() {
-    DEBUG("Player Points: " << points);
-
     lastPosition = camera->getEye();
 
     float cameraSpeed = 5.0f*TimeManager::getDeltaTime();

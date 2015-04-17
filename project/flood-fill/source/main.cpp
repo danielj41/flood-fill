@@ -56,12 +56,9 @@ int main(int argc, char **argv)
         Director::updateScene();
         Director::renderScene();
 
-        // Swap buffers
-        glfwSwapBuffers(Global::window);
-        glfwPollEvents();
-
         if(TimeManager::getTimeStamp() - timeStamp >= 1.0f){
-            DEBUG("========FPS: " << FPS << "==========");
+            DEBUG("FPS: " << FPS);
+            DEBUG("Frame Time: " << 1.0f/FPS);
             timeStamp = TimeManager::getTimeStamp();
             FPS = 0;
         }
@@ -70,6 +67,10 @@ int main(int argc, char **argv)
         TimeManager::setTimeStamp();
 
         FPS++;
+
+        // Swap buffers
+        glfwSwapBuffers(Global::window);
+        glfwPollEvents();
     }
     while (glfwGetKey(Global::window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
     glfwWindowShouldClose(Global::window) == 0);

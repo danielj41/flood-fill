@@ -91,6 +91,7 @@ void MainLevel::setup(){
 void MainLevel::update(){
     DEBUG("Obstacles in the screen: " <<
             (numObstaclesLeft - player->getPoints()));
+    DEBUG("Player Points: " << player->getPoints());
 
     if(debugPlayer->isActive()){
         ASSERT(getCamera("Camera1") != getCamera("DebugCamera"), "Equal camera");
