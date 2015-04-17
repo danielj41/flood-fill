@@ -25,8 +25,9 @@ std::string Scene::getName(){
 void Scene::updateObjects(){
     INFO("Updating scene " << name << "...");
 
-    for(std::map<std::string, GameObject *>::iterator it = gameObjects.begin();
-            it != gameObjects.end(); ++it){
+    std::map<std::string, GameObject *> tempMap = gameObjects;
+    for(std::map<std::string, GameObject *>::iterator it = tempMap.begin();
+            it != tempMap.end(); ++it){
         INFO("Updating " << it->first << "...");
         it->second->update();
     }
