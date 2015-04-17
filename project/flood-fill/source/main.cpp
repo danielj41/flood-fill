@@ -14,6 +14,10 @@
 #include "global_variables.hpp"
 #include "main_level.hpp"
 #include "time_manager.hpp"
+#include "render_engine.hpp"
+#include "material_manager.hpp"
+#include "material.hpp"
+#include "mesh.hpp"
 
 using namespace std;
 
@@ -29,8 +33,9 @@ int main(int argc, char **argv)
     setupGLFW();
     setupGLEW();
 
-    loadContent();
+    RenderEngine::setup();
 
+    loadContent();
     createScenes();
 
     /* OpenGL 3.3 Vertex Array Object
@@ -41,21 +46,13 @@ int main(int argc, char **argv)
     glBindVertexArray(vao);
     */
 
+
     TimeManager::setTimeStamp();
     TimeManager::setDeltaTime();
-
-    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glCullFace(GL_BACK);
 
     int FPS = 0;
     double timeStamp = TimeManager::getTimeStamp();
     do{
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
         Director::updateScene();
         Director::renderScene();
 
@@ -111,6 +108,7 @@ void loadMeshes(){
     mesh->generateIndexBuffer();
     mesh->generateNormalBuffer();
     mesh->calculateLimits();
+    RenderEngine::addMesh(mesh);
 
     LoadManager::loadMesh("plane.obj");
     mesh = LoadManager::getMesh("plane.obj");
@@ -120,39 +118,31 @@ void loadMeshes(){
     mesh->generateIndexBuffer();
     mesh->generateNormalBuffer();
     mesh->calculateLimits();
-}
-
-void loadShaders(){
-    INFO("Loading all shaders...");
-
-    Shader * shader;
-
-    LoadManager::loadShader("vertex.glsl", "fragment.glsl");
-    shader = LoadManager::getShader("vertex.glsl", "fragment.glsl");
-    shader->loadHandle("aNormal", 'a');
-    shader->loadHandle("aPosition", 'a');
-    shader->loadHandle("uModel", 'u');
-    shader->loadHandle("uView", 'u');
-    shader->loadHandle("uProjection", 'u');
-
-    LoadManager::loadShader("bounding_box_vertex.glsl",
-                            "bounding_box_fragment.glsl");
-    shader = LoadManager::getShader("bounding_box_vertex.glsl",
-                                    "bounding_box_fragment.glsl");
-    shader->loadHandle("aPosition", 'a');
-    shader->loadHandle("uModel", 'u');
-    shader->loadHandle("uView", 'u');
-    shader->loadHandle("uProjection", 'u');
+    RenderEngine::addMesh(mesh);
 }
 
 void loadTextures(){
     INFO("Loading all textures...");
 }
 
+void createMaterials(){
+    INFO("Creating materials...");
+
+    /*More Materials: http://devernay.free.fr/cours/opengl/materials.html */
+
+    Material * material;
+    material = new Material(glm::vec3(0.13, 0.13, 0.14),
+                            glm::vec3(0.3, 0.3, 0.4),
+                            glm::vec3(0.3, 0.3, 0.4),
+                            4.0f);
+    MaterialManager::addMaterial("FlatGrey", material);
+
+}
+
 void loadContent(){
     loadMeshes();
-    loadShaders();
     loadTextures();
+    createMaterials();
 }
 
 /**

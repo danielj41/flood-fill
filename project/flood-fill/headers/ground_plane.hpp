@@ -11,7 +11,6 @@ public:
 
     void setup();
     void update();
-    void draw();
 
 private:
     Object * plane;

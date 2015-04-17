@@ -5,6 +5,7 @@
 #include "debug_macros.h"
 
 #include "collision_manager.hpp"
+#include "render_engine.hpp"
 
 const std::string Scene::NO_CAMERA_AVAILABLE = "NO_CAMERA_AVAILABLE";
 
@@ -36,11 +37,13 @@ void Scene::updateObjects(){
 void Scene::renderObjects(){
     INFO("Rendering scene " << name << "...");
 
-    for(std::map<std::string, GameObject *>::iterator it = gameObjects.begin();
+    /*for(std::map<std::string, GameObject *>::iterator it = gameObjects.begin();
         it != gameObjects.end(); ++it){
         INFO("Rendering " << it->first << "...");
         it->second->draw();
-    }
+    }*/
+
+    RenderEngine::render();
 }
 
 void Scene::addCamera(std::string label, Camera * camera){
@@ -57,17 +60,20 @@ void Scene::addGameObject(std::string label, GameObject * gameObject){
     INFO("Object " << label << " added to scene " << name);
 }
 
+void Scene::addLight(std::string label, Light * light){
+    lights[label] = light;
+
+    INFO("Light " << label << " added to scene " << name);
+}
+
 void Scene::removeCamera(std::string label){
     INFO("Removing camera " << label << "...");
 
-    std::map<std::string, Camera * >::iterator it = cameras.find(label);
-    if(it == cameras.end()){
-        DEBUG("Camera " << label << " does not exist in this scene!");
-    }
-    else{
-        cameras.erase(it);
-        INFO("Camera " << label << " removed!");
-    }
+    ASSERT(cameras.find(label) != cameras.end(),
+            "Camera " << label << " does not exist in this scene!");
+
+    cameras.erase(cameras.find(label));
+    INFO("Object " << label << " removed!");
 }
 
 void Scene::removeCamera(Camera * camera){
@@ -89,14 +95,11 @@ void Scene::removeCamera(Camera * camera){
 void Scene::removeGameObject(std::string label){
     INFO("Removing object " << label << "...");
 
-    std::map<std::string, GameObject *>::iterator it = gameObjects.find(label);
-    if(it == gameObjects.end()){
-        DEBUG("Object " << label << " does not exist in this scene!");
-    }
-    else{
-        gameObjects.erase(it);
-        INFO("Object " << label << " removed!");
-    }
+    ASSERT(gameObjects.find(label) != gameObjects.end(),
+            "Object " << label << " does not exist in this scene!");
+
+    gameObjects.erase(gameObjects.find(label));
+    INFO("Object " << label << " removed!");
 }
 
 void Scene::removeGameObject(GameObject * gameObject){
@@ -106,13 +109,39 @@ void Scene::removeGameObject(GameObject * gameObject){
         it != gameObjects.end(); it++){
 
         if(it->second == gameObject){
+            INFO("Game Object " << it->first << " removed!");
             gameObjects.erase(it);
 
-            INFO("Game Object removed!");
             return;
         }
     }
     DEBUG("Object does not exist in this scene!");
+}
+
+void Scene::removeLight(std::string label){
+    INFO("Removing light " << label << "...");
+
+    ASSERT(lights.find(label) != lights.end(),
+            "Light " << label << " does not exist in this scene!");
+
+    lights.erase(lights.find(label));
+    INFO("Light " << label << " removed!");
+}
+
+void Scene::removeLight(Light * light){
+    INFO("Removing light from scene...");
+
+    for(std::map<std::string, Light *>::iterator it = lights.begin();
+        it != lights.end(); it++){
+
+        if(it->second == light){
+            INFO("Light " << it->first << " removed!");
+
+            lights.erase(it);
+            return;
+        }
+    }
+    DEBUG("Light does not exist in this scene!");
 }
 
 Camera * Scene::getCamera(std::string label){
@@ -131,6 +160,16 @@ GameObject * Scene::getGameObject(std::string label){
     ASSERT(gameObjects.find(label) != gameObjects.end(),
            "Object " << label << " does not exist in this scene!");
     return gameObjects[label];
+}
+
+Light * Scene::getLight(std::string label){
+    ASSERT(lights.find(label) != lights.end(),
+           "Light " << label << " does not exist in this scene!");
+    return lights[label];
+}
+
+std::map<std::string, Light *> Scene::getLights(){
+    return lights;
 }
 
 void Scene::setMainCamera(std::string label){

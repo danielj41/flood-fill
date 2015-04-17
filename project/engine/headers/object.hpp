@@ -6,18 +6,19 @@
 #include "glm/glm.hpp"
 
 #include "mesh.hpp"
+#include "material.hpp"
 #include "shader.hpp"
 
 class Object {
 
 public:
     Object();
-    Object(Mesh * _mesh, Shader * _shader);
+    Object(Mesh * _mesh, Material * _material);
 
-    void draw();
+    virtual void draw(Shader * shader);
 
-    Mesh *    getMesh();
-    Shader *  getShader();
+    Mesh * getMesh();
+    Material * getMaterial();
     glm::mat4 getModelMatrix();
 
     void scale(glm::vec3 scalingVector);
@@ -26,11 +27,13 @@ public:
     void loadIdentity();
     void setMatrix(glm::mat4 matrix);
 
-private:
+protected:
     Mesh *   mesh;
-    Shader * shader;
+    Material * material;
 
     glm::mat4 modelMatrix;
+
+    void drawElements();
 };
 
 #endif

@@ -78,12 +78,6 @@ add_executable(
         project/flood-fill/headers/debug_player.hpp
         project/flood-fill/headers/invisible_wall.hpp
 
-        #Shader Files
-        project/flood-fill/shaders/vertex.glsl
-        project/flood-fill/shaders/fragment.glsl
-
-        project/flood-fill/shaders/bounding_box_vertex.glsl
-        project/flood-fill/shaders/bounding_box_fragment.glsl
 
         ### Engine Files ###
         #Source Files
@@ -100,6 +94,10 @@ add_executable(
         project/engine/source/bounding_box.cpp
         project/engine/source/collision_manager.cpp
         project/engine/source/collision_object.cpp
+        project/engine/source/light.cpp
+        project/engine/source/material.cpp
+        project/engine/source/render_engine.cpp
+        project/engine/source/material_manager.cpp
 
         #Header Files
         project/engine/headers/GLIncludes.h
@@ -117,7 +115,17 @@ add_executable(
         project/engine/headers/bounding_box.hpp
         project/engine/headers/collision_manager.hpp
         project/engine/headers/collision_object.hpp
+        project/engine/headers/light.hpp
+        project/engine/headers/material.hpp
+        project/engine/headers/render_engine.hpp
+        project/engine/headers/material_manager.hpp
 
+        #Shader Files
+        project/engine/shaders/vertex.glsl
+        project/engine/shaders/fragment.glsl
+
+        project/engine/shaders/bounding_box_vertex.glsl
+        project/engine/shaders/bounding_box_fragment.glsl
 )
 target_link_libraries(main
 	${ALL_LIBS}
@@ -129,14 +137,14 @@ create_default_target_launcher(main WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DI
 
 
 
-SOURCE_GROUP(Shaders "project/flood-fill/shaders/.*glsl$" )
+SOURCE_GROUP(Shaders "project/engine/shaders/.*glsl$" )
 
 
 if (NOT ${CMAKE_GENERATOR} MATCHES "Xcode" )
 #Copying new resources to the build folder
 add_custom_command(
    TARGET main POST_BUILD
-   COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/project/flood-fill/shaders" "${CMAKE_CURRENT_BINARY_DIR}/flood-fill/shaders"
+   COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/project/engine/shaders" "${CMAKE_CURRENT_BINARY_DIR}/engine/shaders"
 )
 add_custom_command(
    TARGET main POST_BUILD

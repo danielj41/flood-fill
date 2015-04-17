@@ -46,9 +46,6 @@ void DebugPlayer::update() {
     }
 }
 
-void DebugPlayer::draw() {
-}
-
 bool DebugPlayer::isActive(){
     return active;
 }

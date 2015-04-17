@@ -14,56 +14,57 @@ Object::Object() {
     DEBUG("Empty Object!");
 }
 
-Object::Object(Mesh * _mesh, Shader * _shader): mesh(_mesh), shader(_shader){
+Object::Object(Mesh * _mesh, Material * _material)
+    : mesh(_mesh), material(_material){
+
     loadIdentity();
     ASSERT(getModelMatrix() == glm::mat4(1.0f),
         "Idetenty matrix did't load for this object");
 }
 
-void Object::draw(){
-    INFO("Drawing mesh " << mesh->getFileName()
-        << " with the vertex shader " << shader->getVertexShaderFileName()
-        << " and fragment shader " << shader->getFragmentShaderFileName());
+void Object::draw(Shader * shader){
 
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-    glUseProgram(shader->getID());
-    glEnableVertexAttribArray(shader->getHandle("aPosition"));
-    glBindBuffer(GL_ARRAY_BUFFER, mesh->getVertexBuffer());
-    glVertexAttribPointer(shader->getHandle("aPosition"), 3, GL_FLOAT,
-                          GL_FALSE, 0, 0);
-
-    glEnableVertexAttribArray(shader->getHandle("aNormal"));
-    glBindBuffer(GL_ARRAY_BUFFER, mesh->getNormalBuffer());
-    glVertexAttribPointer(shader->getHandle("aNormal"), 3,
-                          GL_FLOAT, GL_FALSE, 0, 0);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->getIndexBuffer());
+    glUniformMatrix4fv(shader->getHandle("uNormalMatrix"), 1, GL_FALSE,
+        glm::value_ptr(
+        glm::transpose(
+        glm::inverse(
+        Director::getScene()->getCamera()->getViewMatrix()*getModelMatrix()))));
 
     glUniformMatrix4fv(shader->getHandle("uModel"), 1, GL_FALSE,
                         glm::value_ptr(getModelMatrix()));
-    glUniformMatrix4fv(shader->getHandle("uView"), 1, GL_FALSE,
-      glm::value_ptr(Director::getScene()->getCamera()->getViewMatrix()));
-    glUniformMatrix4fv(shader->getHandle("uProjection"), 1, GL_FALSE,
-      glm::value_ptr(Director::getScene()->getCamera()->getProjectionMatrix()));
 
+    glUniform3f(shader->getHandle("uDiffuseColor"),
+                material->getDiffuseColor().x,
+                material->getDiffuseColor().y,
+                material->getDiffuseColor().z);
+    glUniform3f(shader->getHandle("uSpecularColor"),
+                material->getSpecularColor().x,
+                material->getSpecularColor().y,
+                material->getSpecularColor().z);
+    glUniform3f(shader->getHandle("uAmbientColor"),
+                material->getAmbientColor().x,
+                material->getAmbientColor().y,
+                material->getAmbientColor().z);
+    glUniform3f(shader->getHandle("uEmissionColor"),
+                material->getEmissionColor().x,
+                material->getEmissionColor().y,
+                material->getEmissionColor().z);
+    glUniform1f(shader->getHandle("uShininess"), material->getShininess());
+
+    drawElements();
+}
+
+void Object::drawElements(){
     glDrawElements(GL_TRIANGLES, (int) mesh->getIndices().size(),
                    GL_UNSIGNED_INT, 0);
-
-    glDisableVertexAttribArray(shader->getHandle("aPosition"));
-    glDisableVertexAttribArray(shader->getHandle("aNormal"));
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-    glUseProgram(0);
 }
 
 Mesh * Object::getMesh(){
     return mesh;
 }
 
-Shader * Object::getShader(){
-    return shader;
+Material * Object::getMaterial(){
+    return material;
 }
 
 glm::mat4 Object::getModelMatrix(){

@@ -7,7 +7,7 @@
 std::map<std::string, Shader *> LoadManager::shaders;
 std::map<std::string, Mesh *>   LoadManager::meshes;
 
-const std::string LoadManager::shaderFolder = "flood-fill/shaders";
+const std::string LoadManager::shaderFolder = "engine/shaders";
 const std::string LoadManager::meshFolder = "flood-fill/objects";
 
 

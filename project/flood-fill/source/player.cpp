@@ -50,10 +50,6 @@ void Player::update() {
     boundingBox.translate(camera->getEye());
 }
 
-void Player::draw() {
-    boundingBox.draw();
-}
-
 void Player::collided(CollisionObject * collidedWith){
     if(collidedWith->getCollisionID() == 4){
         points++;

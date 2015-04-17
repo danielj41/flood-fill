@@ -9,6 +9,8 @@
 #include "time_manager.hpp"
 #include "collision_manager.hpp"
 #include "director.hpp"
+#include "material_manager.hpp"
+#include "render_engine.hpp"
 
 Obstacle::Obstacle(glm::vec3 _position, glm::vec3 _movementDirection,
                     float _speed)
@@ -21,9 +23,11 @@ void Obstacle::setup() {
 
     box = new Object(
                     LoadManager::getMesh("cube.obj"),
-                    LoadManager::getShader("vertex.glsl", "fragment.glsl"));
+                    MaterialManager::getMaterial("FlatGrey"));
     //box->rotate(45.0f, glm::vec3(0, 1, 0));
     box->translate(position);
+
+    RenderEngine::addObject(box);
 
     setBoundingBox(BoundingBox(box->getMesh()->getMaxLimits(),
                                box->getMesh()->getMinLimits()));
@@ -44,6 +48,7 @@ void Obstacle::update() {
         size -= shrinkRate*speed*dTime;
         if(size.x <= 0.0f){
             Director::getScene()->removeGameObject(this);
+            RenderEngine::removeObject(box);
             return;
         }
 
@@ -52,11 +57,6 @@ void Obstacle::update() {
 
     box->translate(position);
     boundingBox.setModelMatrix(box->getModelMatrix());
-}
-
-void Obstacle::draw() {
-    box->draw();
-    boundingBox.draw();
 }
 
 void Obstacle::collided(CollisionObject * collidedWith){

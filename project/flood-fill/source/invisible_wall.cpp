@@ -26,10 +26,6 @@ void InvisibleWall::setup(){
 void InvisibleWall::update(){
 }
 
-void InvisibleWall::draw(){
-    boundingBox.draw();
-}
-
 void InvisibleWall::collided(CollisionObject * collidedWith){
     INFO("HIT WALL");
 }

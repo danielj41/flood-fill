@@ -18,6 +18,7 @@
 #include "invisible_wall.hpp"
 #include "collision_manager.hpp"
 #include "time_manager.hpp"
+#include "light.hpp"
 
 MainLevel::MainLevel()
     : Scene("MainLevel"), maxNumObstacles(15), numObstaclesLeft(0),
@@ -82,6 +83,9 @@ void MainLevel::setup(){
     wall4->setup();
     addGameObject("wall4", wall4);
     CollisionManager::addCollisionObject(wall4);
+
+    Light * l1 = new Light(glm::vec3(1), 5.0f, glm::vec3(0, -1, 0));
+    addLight("Sun", l1);
 }
 
 void MainLevel::update(){
