@@ -26,6 +26,6 @@ void InvisibleWall::setup(){
 void InvisibleWall::update(){
 }
 
-void InvisibleWall::collided(CollisionObject * collidedWith){
+void InvisibleWall::collided(CollisionObject *){
     INFO("HIT WALL");
 }

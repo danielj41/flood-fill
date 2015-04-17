@@ -65,8 +65,7 @@ protected:
     std::map<std::string, Light *> lights;
     std::map<std::string, GameObject *> gameObjects;
 
-    std::string currentCamera;
-    std::string name;
+    std::string name, currentCamera;
 };
 
 #endif

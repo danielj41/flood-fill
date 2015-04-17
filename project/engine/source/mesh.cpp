@@ -25,7 +25,6 @@ void Mesh::resize(){
     float maxX, maxY, maxZ;
     float scaleX, scaleY, scaleZ;
     float shiftX, shiftY, shiftZ;
-    float epsilon = 0.001;
 
     minX = minY = minZ = 1.1754E+38F;
     maxX = maxY = maxZ = -1.1754E+38F;
@@ -98,7 +97,7 @@ void Mesh::calculateNormals(){
     int idx1, idx2, idx3;
     glm::vec3 v1, v2, v3;
 
-    for (int i = 0; i < shape[0].mesh.indices.size() / 3; i++) {
+    for (unsigned int i = 0; i < shape[0].mesh.indices.size() / 3; i++) {
         idx1 = shape[0].mesh.indices[3 * i + 0];
         idx2 = shape[0].mesh.indices[3 * i + 1];
         idx3 = shape[0].mesh.indices[3 * i + 2];
@@ -125,7 +124,7 @@ void Mesh::calculateNormals(){
         normals[3 * idx3 + 2] += norm.z;
     }
 
-    for (int i = 0; i < normals.size() / 3; i++) {
+    for (unsigned int i = 0; i < normals.size() / 3; i++) {
         glm::vec3 norm = glm::normalize(glm::vec3(normals[3 * i + 0],
                                                   normals[3 * i + 1],
                                                   normals[3 * i + 2]));

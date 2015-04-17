@@ -15,8 +15,8 @@
 Obstacle::Obstacle(glm::vec3 _position, glm::vec3 _movementDirection,
                     float _speed)
     : GameObject(), CollisionObject(),
-      position(_position), movementDirection(_movementDirection), speed(_speed),
-      shrink(false), shrinkRate(0.5), size(glm::vec3(1)){}
+      position(_position), movementDirection(_movementDirection),
+      size(glm::vec3(1)), speed(_speed), shrink(false), shrinkRate(0.5){}
 
 void Obstacle::setup() {
     INFO("Creating an obstacle plane...");

@@ -21,7 +21,7 @@ public:
 
 private:
     Object * box;
-    glm::vec3 movementDirection, position, size;
+    glm::vec3 position, movementDirection, size;
     float speed;
 
     bool shrink;

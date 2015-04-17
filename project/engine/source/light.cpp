@@ -13,21 +13,21 @@ Light::Light(): type(NOT_VALID_LIGHT), ON(false){}
 
 //Directional Light Constructor
 Light::Light(glm::vec3 _color, float _intensity, glm::vec3 _direction)
-    : type(DIRECTIONAL), color(_color), intensity(_intensity),
-        direction(_direction), ON(true){}
+    : type(DIRECTIONAL), color(_color), direction(_direction),
+        intensity(_intensity), ON(true){}
 
 //Point Light Constructor
 Light::Light(glm::vec3 _color, float _intensity, glm::vec3 _position,
         glm::vec3 _fallOff)
-    : type(POINT_LIGHT), color(_color), intensity(_intensity),
-        position(_position), fallOff(_fallOff), ON(true){}
+    : type(POINT_LIGHT), color(_color), position(_position), fallOff(_fallOff),
+        intensity(_intensity), ON(true){}
 
 //Spot Light Constructor
 Light::Light(glm::vec3 _color, float _intensity, glm::vec3 _position,
         glm::vec3 _direction, glm::vec3 _fallOff, float _cutOffAngle)
-    : type(SPOT_LIGHT), color(_color), intensity(_intensity),
+    : type(SPOT_LIGHT), color(_color),
         position(_position), direction(_direction), fallOff(_fallOff),
-        cutOffAngle(_cutOffAngle), ON(true){}
+        intensity(_intensity), cutOffAngle(_cutOffAngle), ON(true){}
 
 glm::vec3 Light::getPosition(){
     ASSERT(isValid(), "This light is not a valid light");

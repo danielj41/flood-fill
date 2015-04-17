@@ -16,7 +16,7 @@ public:
     void setup();
     void update();
 
-    void collided(CollisionObject * collidedWith);
+    void collided(CollisionObject *);
 
 private:
     glm::vec3 position, scaleVector;

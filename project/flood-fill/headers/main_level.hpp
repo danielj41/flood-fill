@@ -17,7 +17,7 @@ private:
     DebugPlayer * debugPlayer;
     Player * player;
 
-    int numObstaclesLeft, maxNumObstacles;
+    int  maxNumObstacles, numObstaclesLeft;
     double lastSpawnTime, timeToSpawn;
 
     void placeNewObstacle();

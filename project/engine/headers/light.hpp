@@ -51,9 +51,9 @@ public:
 private:
     static const int NOT_VALID_LIGHT;
 
-    glm::vec3 position, color, direction, fallOff;
-    float intensity, cutOffAngle;
     int type;
+    glm::vec3 color, position, direction, fallOff;
+    float intensity, cutOffAngle;
     bool ON;
 
     bool isValid(); // Test if the light type is not NOT_VALID_LIGHT

@@ -28,7 +28,7 @@ void setupGLEW();
 void loadContent();
 void createScenes();
 
-int main(int argc, char **argv)
+int main()
 {
     setupGLFW();
     setupGLEW();
@@ -152,7 +152,7 @@ void loadContent(){
 
 double lastX = Global::ScreenWidth/2.0f, lastY = Global::ScreenHeight/2.0f;
 double mouse_sensitivity = 1.0f;
-void mouse_movement_callback(GLFWwindow * window, double xpos, double ypos){
+void mouse_movement_callback(GLFWwindow *, double xpos, double ypos){
     if(Director::getScene()->hasMainCamera()){
         Camera * cam = Director::getScene()->getCamera();
 
@@ -173,7 +173,7 @@ void mouse_movement_callback(GLFWwindow * window, double xpos, double ypos){
     }
 }
 
-void error_callback(int error, const char* description)
+void error_callback(int, const char* description)
 {
     ASSERT(false, description);
 }

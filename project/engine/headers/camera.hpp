@@ -53,14 +53,13 @@ private:
     static unsigned int FIXED_AXIS;
     static unsigned int UNFIXED_AXIS;
 
-    float theta, phi; // Both angles are expressed in degrees
     glm::vec3 eye, target, up;
-    glm::mat4 projectionMatrix;
-
-    glm::vec3 fixedAxis;
-
+    float theta, phi; // Both angles are expressed in degrees
     bool ready; // Flag that says if it is an empty camera or not
     bool projectionMatrixLoaded;
+    glm::vec3 fixedAxis;
+
+    glm::mat4 projectionMatrix;
 
     void updateTarget();
 };

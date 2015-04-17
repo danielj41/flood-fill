@@ -51,7 +51,7 @@ private:
     static glm::vec3 INVALID_LIMIT;
 
     std::string objfile;
-    bool normalsFlag, loaded;
+    bool  loaded, normalsFlag;
     std::vector<float> normals;
     std::vector<tinyobj::shape_t> shape;
 

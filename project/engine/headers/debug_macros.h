@@ -18,10 +18,10 @@
 /* INFO macro prints a message in the screen using the std iostream */
 
 #ifndef NDEBUG
-#   define INFO(args...) \
-        std::cout << args << std::endl;
+#   define INFO(...) \
+        std::cout << __VA_ARGS__ << std::endl;
 #else
-#   define INFO(args...)
+#   define INFO(...)
 #endif
 
 /**
@@ -32,10 +32,10 @@
 
 #ifndef DEBUG
     #ifndef NDEBUG
-    #   define DEBUG(args...) \
-            std::cerr << args << std::endl;
+    #   define DEBUG(...) \
+            std::cerr << __VA_ARGS__ << std::endl;
     #else
-    #   define DEBUG(args...)
+    #   define DEBUG(...)
     #endif
 #endif
 
@@ -43,16 +43,16 @@
     http://stackoverflow.com/questions/3767869/adding-message-to-assert*/
 
 #ifndef NDEBUG
-#   define ASSERT(condition, message...) \
+#   define ASSERT(condition, ...) \
     do { \
         if (! (condition)) { \
             std::cerr << "Assertion `" #condition "` failed in " << __FILE__ \
-                      << " line " << __LINE__ << ": " << message << std::endl; \
+                      << " line " << __LINE__ << ": " << __VA_ARGS__ << std::endl; \
             std::exit(EXIT_FAILURE); \
         } \
     } while (false)
 #else
-#   define ASSERT(condition, message)
+#   define ASSERT(condition, ...)
 #endif
 
 #endif
