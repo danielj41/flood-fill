@@ -134,6 +134,7 @@ add_executable(
         project/engine/headers/material.hpp
         project/engine/headers/render_engine.hpp
         project/engine/headers/material_manager.hpp
+        project/engine/headers/uniform_3d_grid.hpp
 
         #Shader Files
         project/engine/shaders/vertex.glsl

@@ -42,6 +42,7 @@ void RenderEngine::render(){
     glUniformMatrix4fv(geometryShader->getHandle("uProjection"), 1, GL_FALSE,
       glm::value_ptr(camera->getProjectionMatrix()));
 
+
     glUniform3f(geometryShader->getHandle("uEyePosition"),
                 camera->getEye().x,
                 camera->getEye().y,
@@ -66,8 +67,9 @@ void RenderEngine::render(){
     }
 
     //Rendering all objects of each Mesh
+    std::map< Mesh *, std::list<Object *> > tempMap = objectsToRender;
     for(std::map< Mesh *, std::list<Object *> >::iterator it =
-            objectsToRender.begin(); it != objectsToRender.end(); it++){
+            tempMap.begin(); it != tempMap.end(); it++){
 
         //Common information to all Objects of this Mesh
         Mesh * mesh = it->first;
