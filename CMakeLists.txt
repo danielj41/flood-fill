@@ -84,7 +84,9 @@ add_executable(
 		project/flood-fill/source/demo_level.cpp
 		project/flood-fill/source/box.cpp
 		project/flood-fill/source/level_design.cpp
-
+		project/flood-fill/source/border.cpp
+		
+		
         #Header Files
         #project/flood-fill/headers/main_level.hpp
         project/flood-fill/headers/global_variables.hpp
@@ -94,6 +96,7 @@ add_executable(
 		project/flood-fill/headers/demo_level.hpp
 		project/flood-fill/headers/box.hpp
 		project/flood-fill/headers/level_design.hpp
+		project/flood-fill/headers/border.hpp
 
         ### Engine Files ###
         #Source Files

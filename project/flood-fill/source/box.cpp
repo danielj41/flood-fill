@@ -12,7 +12,7 @@
 #include "render_engine.hpp"
 
 Box::Box(glm::vec3 _position, glm::vec3 _movementDirection, float _speed)
-  : GameObject(), CollisionObject(),
+  : GameObject(), CollisionObject(_position),
 	position(_position), movementDirection(_movementDirection), speed(_speed),
 	size(glm::vec3(1)){}
 
@@ -27,8 +27,8 @@ void Box::setup() {
   
   RenderEngine::addObject(box);
   
-  //setCollisionID(4);
-  //setCollideWithID(1 | 2 | 4);
+  setCollisionID(1);
+  setCanCollide(true);
 }
 
 void Box::update(){

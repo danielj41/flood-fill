@@ -23,8 +23,10 @@ void Player::setup() {
 	lastPosition = camera->getEye();
 	
     setCollisionID(2);
-    setCollideWithID(1 | 4);
-
+    setCollideWithID(1);
+	setCanCollide(true);
+	
+	INFO("Can Collide: " << canCollide());
     camera->fix(false, true, false);
 }
 
@@ -44,8 +46,20 @@ void Player::update() {
     else if(glfwGetKey(Global::window, GLFW_KEY_D) == GLFW_PRESS){
         camera->strafe(Camera::RIGHT_DIRECTION, cameraSpeed);
     }
+
+	setPosition(camera->getEye());
 }
 
 void Player::collided(CollisionObject * collidedWith){
+
+  switch (collidedWith->getCollisionID()) {
+  case 1:
+	INFO("DETECTING COLLISION WITH BLOCK!");
+	camera->setEye(lastPosition);
+	break;
+  default:
+	break;
+  }
+
 }
 

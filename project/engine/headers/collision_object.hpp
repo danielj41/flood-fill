@@ -20,6 +20,7 @@ public:
 
     glm::vec3 getPosition();
     void setPosition(glm::vec3 _position);
+    void setCanCollide(bool canCollide);
 
     virtual void collided(CollisionObject * collidedWith) = 0;
 

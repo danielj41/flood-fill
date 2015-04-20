@@ -107,6 +107,12 @@ Uniform3DGrid<T>::Uniform3DGrid(unsigned int numberOfCubesInX,
     else edgeSizeZ = 0;
 
     grid = new T[sizeX * sizeY * sizeZ];
+	
+
+	// Set the CollisionObject * to 0 at first
+	for ( int i = 0; i < sizeX*sizeY*sizeZ; i++) {
+	  grid[i] = NULL;
+	}
 }
 
 template<typename T>

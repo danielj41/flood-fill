@@ -37,3 +37,7 @@ glm::vec3 CollisionObject::getPosition(){
 void CollisionObject::setPosition(glm::vec3 _position){
   position = _position;
 }
+
+void CollisionObject::setCanCollide(bool canCollide){
+  _canCollide = canCollide;
+}

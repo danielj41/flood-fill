@@ -16,10 +16,11 @@ class CollisionManager{
 
 public:
     static void detectCollisions();
-    static void addCollisionObject(CollisionObject * object);
+    static void addCollisionObjectToList(CollisionObject * object);
+    static void addCollisionObjectToGrid(CollisionObject * object);
     static void removeCollisionObject(CollisionObject * object);
 
-    static bool checkCollision(CollisionObject * a);
+    static void checkCollision(CollisionObject * a);
     static void initGrid(int x, int y, int z, glm::vec3 min, glm::vec3 max);
 
 private:
