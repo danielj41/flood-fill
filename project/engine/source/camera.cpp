@@ -155,6 +155,93 @@ void Camera::unfix(){
     fixedAxis = glm::vec3(UNFIXED_AXIS);
 }
 
+const int POSITVE_SIDE = 1;
+const int NEGATVE_SIDE = -1;
+
+int getPlaneSide(glm::vec4 plane, glm::vec4 point){
+    float distanceFromPlane = glm::dot(plane, point);
+
+    if(distanceFromPlane < 0){
+        return NEGATVE_SIDE;
+    }
+    else{
+        return POSITVE_SIDE;
+    }
+}
+
+bool Camera::insideViewFrustum(Object * object){
+    glm::mat4 MVP = projectionMatrix*getViewMatrix()*object->getModelMatrix();
+
+    glm::vec4 planes[6] = {
+        //Left Plane
+        glm::vec4(MVP[0][3] + MVP[0][0],
+                  MVP[1][3] + MVP[1][0],
+                  MVP[2][3] + MVP[2][0],
+                  MVP[3][3] + MVP[3][0]),
+
+        //Right Plane
+        glm::vec4(MVP[0][3] - MVP[0][0],
+                  MVP[1][3] - MVP[1][0],
+                  MVP[2][3] - MVP[2][0],
+                  MVP[3][3] - MVP[3][0]),
+
+        //Bottom Plane
+        glm::vec4(MVP[0][3] + MVP[0][1],
+                  MVP[1][3] + MVP[1][1],
+                  MVP[2][3] + MVP[2][1],
+                  MVP[3][3] + MVP[3][1]),
+
+        //Top Plane
+        glm::vec4(MVP[0][3] - MVP[0][1],
+                  MVP[1][3] - MVP[1][1],
+                  MVP[2][3] - MVP[2][1],
+                  MVP[3][3] - MVP[3][1]),
+
+        //Near Plane
+        glm::vec4(MVP[0][3] + MVP[0][2],
+                  MVP[1][3] + MVP[1][2],
+                  MVP[2][3] + MVP[2][2],
+                  MVP[3][3] + MVP[3][2]),
+
+        //Top Plane
+        glm::vec4(MVP[0][3] - MVP[0][2],
+                  MVP[1][3] - MVP[1][2],
+                  MVP[2][3] - MVP[2][2],
+                  MVP[3][3] - MVP[3][2])
+    };
+
+    glm::vec3 min = object->getMesh()->getMinLimits();
+    glm::vec3 max = object->getMesh()->getMaxLimits();
+
+    glm::vec4 vertices[8];
+    vertices[0] = glm::vec4(max.x, min.y, max.z, 1);
+    vertices[1] = glm::vec4(max.x, max.y, max.z, 1);
+    vertices[2] = glm::vec4(min.x, max.y, max.z, 1);
+    vertices[3] = glm::vec4(min.x, min.y, max.z, 1);
+
+    vertices[4] = glm::vec4(max.x, min.y, min.z, 1);
+    vertices[5] = glm::vec4(max.x, max.y, min.z, 1);
+    vertices[6] = glm::vec4(min.x, max.y, min.z, 1);
+    vertices[7] = glm::vec4(min.x, min.y, min.z, 1);
+
+    for(int i = 0; i < 8; i++){
+        int pointsInside = 0;
+        for(int j = 0; j < 6; j+=2){
+            if(getPlaneSide(planes[j + 0], vertices[i]) ==
+               getPlaneSide(planes[j + 1], vertices[i])){
+               pointsInside++;
+            }
+            else
+                break;
+        }
+        if(pointsInside == 3){
+            return true;
+        }
+    }
+
+    return false;
+}
+
 /** Private Methods **/
 
 void Camera::updateTarget(){

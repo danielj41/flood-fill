@@ -5,6 +5,8 @@
 #define GLM_FORCE_PURE
 #include "glm/glm.hpp"
 
+#include "object.hpp"
+
 class Camera {
 public:
     static const int FORWARD_DIRECTION;
@@ -48,6 +50,8 @@ public:
     //Fix the camera position in all Axis
     void fix();
     void unfix();
+
+    bool insideViewFrustum(Object * object);
 
 private:
     static unsigned int FIXED_AXIS;
