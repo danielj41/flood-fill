@@ -3,25 +3,15 @@
 #include <iostream>
 #include <cstdlib>
 #include "debug_macros.h"
+#include "glm/glm.hpp"
 
 CollisionObject::CollisionObject() : _canCollide(false){}
 
-CollisionObject::CollisionObject(BoundingBox box)
-    : boundingBox(box), _canCollide(true), collisionID(0), collideWithID(0){}
+CollisionObject::CollisionObject(glm::vec3 _position)
+    : position(_position), _canCollide(true), collisionID(0), collideWithID(0){}
 
 bool CollisionObject::canCollide(){
     return _canCollide;
-}
-
-void CollisionObject::setBoundingBox(BoundingBox box){
-    boundingBox = box;
-    _canCollide = true;
-}
-
-BoundingBox CollisionObject::getBoundingBox(){
-    ASSERT(_canCollide == true, "There is no Bounding Box for this object!");
-
-    return boundingBox;
 }
 
 int CollisionObject::getCollisionID(){
@@ -38,4 +28,12 @@ void CollisionObject::setCollisionID(int ID){
 
 void CollisionObject::setCollideWithID(int ID){
     collideWithID = ID;
+}
+
+glm::vec3 CollisionObject::getPosition(){
+    return position;
+}
+
+void CollisionObject::setPosition(glm::vec3 _position){
+  position = _position;
 }

@@ -20,8 +20,13 @@ void GroundPlane::setup(){
     plane = new Object(
                     LoadManager::getMesh("plane.obj"),
                     MaterialManager::getMaterial("FlatGrey"));
-    plane->rotate(90.0f, glm::vec3(-1, 0, 0));
-    plane->scale(glm::vec3(30, 1, 30));
+    
+
+	plane->translate(glm::vec3(0, 0, 0));
+	plane->rotate(90.0f, glm::vec3(-1, 0, 0));
+    plane->scale(glm::vec3(1, 1, 3));
+
+
     RenderEngine::addObject(plane);
 }
 

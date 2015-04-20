@@ -42,7 +42,7 @@ void Scene::renderObjects(){
         it != gameObjects.end(); ++it){
         INFO("Rendering " << it->first << "...");
         it->second->draw();
-    }*/
+		}*/
 
     RenderEngine::render();
 }

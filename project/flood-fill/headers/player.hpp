@@ -15,12 +15,8 @@ public:
 
     void collided(CollisionObject * collidedWith);
 
-    int getPoints();
-
 private:
     Camera * camera;
-
-    int points;
 
     glm::vec3 lastPosition;
 };

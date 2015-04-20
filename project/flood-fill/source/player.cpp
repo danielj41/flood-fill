@@ -15,12 +15,13 @@
 #include "time_manager.hpp"
 
 Player::Player(Camera * _camera)
-    : GameObject(), CollisionObject(BoundingBox(glm::vec3(1), glm::vec3(-1))),
-        camera(_camera), points(0) {}
+  : GameObject(), CollisionObject(), camera(_camera){}
 
 void Player::setup() {
     INFO("Player Setup...");
 
+	lastPosition = camera->getEye();
+	
     setCollisionID(2);
     setCollideWithID(1 | 4);
 
@@ -43,22 +44,8 @@ void Player::update() {
     else if(glfwGetKey(Global::window, GLFW_KEY_D) == GLFW_PRESS){
         camera->strafe(Camera::RIGHT_DIRECTION, cameraSpeed);
     }
-
-    boundingBox.loadIdentity();
-    boundingBox.translate(camera->getEye());
 }
 
 void Player::collided(CollisionObject * collidedWith){
-    if(collidedWith->getCollisionID() == 4){
-        points++;
-    }
-    else if(collidedWith->getCollisionID() == 1){
-        boundingBox.loadIdentity();
-        boundingBox.translate(lastPosition);
-        camera->setEye(lastPosition);
-    }
 }
 
-int Player::getPoints(){
-    return points;
-}

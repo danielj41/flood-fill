@@ -89,9 +89,9 @@ void MainLevel::setup(){
 }
 
 void MainLevel::update(){
-    DEBUG("Obstacles in the screen: " <<
+  /*DEBUG("Obstacles in the screen: " <<
             (numObstaclesLeft - player->getPoints()));
-    DEBUG("Player Points: " << player->getPoints());
+			DEBUG("Player Points: " << player->getPoints());*/
 
     if(debugPlayer->isActive()){
         ASSERT(getCamera("Camera1") != getCamera("DebugCamera"), "Equal camera");
@@ -103,13 +103,13 @@ void MainLevel::update(){
         getCamera("Camera1")->fix(false, true, false);
     }
 
-    if(TimeManager::getTimeStamp() - lastSpawnTime >= timeToSpawn){
+    /*if(TimeManager::getTimeStamp() - lastSpawnTime >= timeToSpawn){
         lastSpawnTime = TimeManager::getTimeStamp();
         placeNewObstacle();
-    }
+		}*/
 }
 
-void MainLevel::placeNewObstacle(){
+/*void MainLevel::placeNewObstacle(){
     if((numObstaclesLeft - player->getPoints()) < maxNumObstacles){
         srand(TimeManager::getTimeStamp());
 
@@ -131,4 +131,4 @@ void MainLevel::placeNewObstacle(){
         CollisionManager::addCollisionObject(obs);
         numObstaclesLeft++;
     }
-}
+	}*/

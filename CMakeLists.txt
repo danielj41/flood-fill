@@ -76,23 +76,24 @@ add_executable(
         ### Flood Fill Files ###
         #Source Files
         project/flood-fill/source/main.cpp
-        project/flood-fill/source/main_level.cpp
+        #project/flood-fill/source/main_level.cpp
         project/flood-fill/source/global_variables.cpp
         project/flood-fill/source/player.cpp
         project/flood-fill/source/ground_plane.cpp
-        project/flood-fill/source/obstacle.cpp
         project/flood-fill/source/debug_player.cpp
-        project/flood-fill/source/invisible_wall.cpp
+		project/flood-fill/source/demo_level.cpp
+		project/flood-fill/source/box.cpp
+		project/flood-fill/source/level_design.cpp
 
         #Header Files
-        project/flood-fill/headers/main_level.hpp
+        #project/flood-fill/headers/main_level.hpp
         project/flood-fill/headers/global_variables.hpp
         project/flood-fill/headers/player.hpp
         project/flood-fill/headers/ground_plane.hpp
-        project/flood-fill/headers/obstacle.hpp
         project/flood-fill/headers/debug_player.hpp
-        project/flood-fill/headers/invisible_wall.hpp
-
+		project/flood-fill/headers/demo_level.hpp
+		project/flood-fill/headers/box.hpp
+		project/flood-fill/headers/level_design.hpp
 
         ### Engine Files ###
         #Source Files

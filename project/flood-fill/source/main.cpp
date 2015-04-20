@@ -12,7 +12,8 @@
 #include "load_manager.hpp"
 #include "director.hpp"
 #include "global_variables.hpp"
-#include "main_level.hpp"
+//#include "main_level.hpp"
+#include "demo_level.hpp"
 #include "time_manager.hpp"
 #include "render_engine.hpp"
 #include "material_manager.hpp"
@@ -87,9 +88,9 @@ int main()
 void createScenes(){
     INFO("Creating Scenes...");
 
-    MainLevel * mainLevel = new MainLevel();
-    Director::addScene(mainLevel);
-    Director::setScene("MainLevel");
+    DemoLevel * demoLevel = new DemoLevel();
+    Director::addScene(demoLevel);
+    Director::setScene("DemoLevel");
 }
 
 /**
