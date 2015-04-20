@@ -66,6 +66,9 @@ void RenderEngine::render(){
                     light->getDirection().z);
     }
 
+    int numberObjectsRendered = 0; // Keep track of how many objects were culled
+    int numberObjects = 0; // Keep track of how many objects are in the scene
+
     //Rendering all objects of each Mesh
     std::map< Mesh *, std::list<Object *> > tempMap = objectsToRender;
     for(std::map< Mesh *, std::list<Object *> >::iterator it =
@@ -90,7 +93,14 @@ void RenderEngine::render(){
         //Rendering each object with the specific information
         for(std::list<Object *>::iterator obj = it->second.begin();
                 obj != it->second.end(); obj++){
-            (*obj)->draw(geometryShader);
+
+            numberObjects++;
+
+            //View Frustum Culling
+            if(camera->insideViewFrustum((*obj))){
+                (*obj)->draw(geometryShader);
+                numberObjectsRendered++;
+            }
         }
 
         glDisableVertexAttribArray(geometryShader->getHandle("aPosition"));
@@ -100,6 +110,9 @@ void RenderEngine::render(){
     }
 
     glUseProgram(0);
+
+    INFO("Total number of Objects in this scene: " << numberObjects);
+    INFO("Number of Objects Rendered: " << numberObjectsRendered);
 }
 
 void RenderEngine::addMesh(Mesh * mesh){

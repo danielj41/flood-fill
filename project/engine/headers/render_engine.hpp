@@ -7,6 +7,7 @@
 #include "mesh.hpp"
 #include "shader.hpp"
 #include "object.hpp"
+#include "camera.hpp"
 
 class RenderEngine{
 

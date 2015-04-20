@@ -155,6 +155,42 @@ void Camera::unfix(){
     fixedAxis = glm::vec3(UNFIXED_AXIS);
 }
 
+bool Camera::insideViewFrustum(Object * object){
+    glm::mat4 MVP = projectionMatrix*getViewMatrix()*object->getModelMatrix();
+
+    glm::vec4 leftPlane = glm::vec4(MVP[3][0] + MVP[0][0],
+                                    MVP[3][1] + MVP[0][1],
+                                    MVP[3][2] + MVP[0][2],
+                                    MVP[3][3] + MVP[0][3]);
+
+    glm::vec4 rightPlane = glm::vec4(MVP[3][0] - MVP[0][0],
+                                     MVP[3][1] - MVP[0][1],
+                                     MVP[3][2] - MVP[0][2],
+                                     MVP[3][3] - MVP[0][3]);
+
+    glm::vec4 bottomPlane = glm::vec4(MVP[3][0] + MVP[1][0],
+                                      MVP[3][1] + MVP[1][1],
+                                      MVP[3][2] + MVP[1][2],
+                                      MVP[3][3] + MVP[1][3]);
+
+    glm::vec4 topPlane = glm::vec4(MVP[3][0] - MVP[1][0],
+                                   MVP[3][1] - MVP[1][1],
+                                   MVP[3][2] - MVP[1][2],
+                                   MVP[3][3] - MVP[1][3]);
+
+    glm::vec4 nearPlane = glm::vec4(MVP[3][0] + MVP[2][0],
+                                    MVP[3][1] + MVP[2][1],
+                                    MVP[3][2] + MVP[2][2],
+                                    MVP[3][3] + MVP[2][3]);
+
+    glm::vec4 farPlane = glm::vec4(MVP[3][0] - MVP[2][0],
+                                   MVP[3][1] - MVP[2][1],
+                                   MVP[3][2] - MVP[2][2],
+                                   MVP[3][3] - MVP[2][3]);
+
+    return true;
+}
+
 /** Private Methods **/
 
 void Camera::updateTarget(){
