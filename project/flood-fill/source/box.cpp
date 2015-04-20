@@ -13,8 +13,8 @@
 
 Box::Box(glm::vec3 _position, glm::vec3 _movementDirection, float _speed)
   : GameObject(), CollisionObject(_position),
-	position(_position), movementDirection(_movementDirection), speed(_speed),
-	size(glm::vec3(1)){}
+	position(_position), movementDirection(_movementDirection),
+	size(glm::vec3(1)), speed(_speed){}
 
 void Box::setup() {  
   INFO("Creating a box ...");
@@ -42,9 +42,9 @@ void Box::update(){
 }
 
 void Box::collided(CollisionObject * collidedWith){
-  /*if(collidedWith->getCollisionID() == 1 ||
-	 collidedWith->getCollisionID() == 4){
-	movementDirection = -movementDirection;
-	}*/
   
+  switch (collidedWith->getCollisionID()){
+  default:
+	break;
+  } 
 }

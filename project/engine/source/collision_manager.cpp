@@ -16,7 +16,6 @@ void CollisionManager::detectCollisions(){
     std::list<CollisionObject *> tempList = collisionObjects;
 
     for(std::list<CollisionObject *>::iterator a = tempList.begin(); a != tempList.end(); a++){
-	  INFO("Checking for collisions");
 	  checkCollision(*a);
     }
 }
@@ -26,7 +25,7 @@ void CollisionManager::addCollisionObjectToList(CollisionObject * object){
 	INFO("Adding collision object to collision list");
 	collisionObjects.push_back(object);
   } else {
-	DEBUG("You cannot add this object to the collision list because its can Collide is false");
+	DEBUG("You cannot add this object to the collision list because its canCollide == false");
   }
 }
 
@@ -39,8 +38,8 @@ void CollisionManager::addCollisionObjectToGrid(CollisionObject * object){
 
    }
   else {
-	DEBUG("You cannott add this object to the collision grid. " <<
-		  "This object cannot collide");
+	DEBUG("You cannot add this object to the collision grid. " <<
+		  "This object canCollide == false");
   }
 }
 
@@ -50,7 +49,7 @@ void CollisionManager::removeCollisionObject(CollisionObject * object){
             it != collisionObjects.end(); it++){
         if(*it == object){
             collisionObjects.erase(it);
-            INFO("Object Removed from collision list!");
+            INFO("Object Removed from collision list");
             return;
         }
     }
@@ -63,13 +62,7 @@ void CollisionManager::checkCollision(CollisionObject * aObject){
   glm::vec3 pos = aObject->getPosition();
   CollisionObject *bObject = grid.getValue(pos.x, pos.y, pos.z);
 
-  INFO("PLAYER_POS (" << pos.x << ", " << pos.y << ", " << pos.z << ")");
-  
-  INFO("bOBJECT: " << bObject );
-
-  if ( bObject == NULL ) {
-	INFO("bObject is NULL");
-  } else if (aObject->getCollideWithID() & bObject->getCollisionID()) {
+  if ( bObject != NULL && aObject->getCollideWithID() & bObject->getCollisionID()) {
 	aObject->collided(bObject);
 	bObject->collided(aObject);	
   }
@@ -77,10 +70,7 @@ void CollisionManager::checkCollision(CollisionObject * aObject){
 
 
 void CollisionManager::initGrid(int x, int y, int z, glm::vec3 min, glm::vec3 max){
-INFO("Initializing the Grid");
-grid = Uniform3DGrid<CollisionObject *>(x, y, z, min.x, max.x, min.y, max.y, min.z, max.z);
- 
- 
- 
+  INFO("Initializing the Grid");
+  grid = Uniform3DGrid<CollisionObject *>(x, y, z, min.x, max.x, min.y, max.y, min.z, max.z); 
 }
 
