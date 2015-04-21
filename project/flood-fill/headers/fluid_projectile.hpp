@@ -24,6 +24,7 @@ private:
 
   Object * fluidProjectile;
   glm::vec3 position;
+  glm::vec3 oldPosition;
   glm::vec3 movementDirection; 
   glm::vec3 size;
   
