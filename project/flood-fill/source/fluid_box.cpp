@@ -40,7 +40,7 @@ void FluidBox::update(){
   float dTime = ((float) TimeManager::getDeltaTime());
   
   position += movementDirection*speed*dTime;
-  height += dTime / (height * height * height + 0.5) * 5.0;
+  height += dTime * 5.0;
   if(height > 2.0) {
     height = 2.0;
   }
