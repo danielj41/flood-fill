@@ -33,7 +33,6 @@ void Player::setup() {
     camera->fix(false, true, false);
 
     shootPressed = false;
-    shootCount = 0;
 }
 
 void Player::update() {
@@ -55,16 +54,15 @@ void Player::update() {
 
 	setPosition(camera->getEye());
 
-    if(glfwGetKey(Global::window, GLFW_KEY_X) == GLFW_PRESS && !shootPressed){
+    if(glfwGetMouseButton(Global::window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS && !shootPressed){
         FluidProjectile *fluidProjectile = new FluidProjectile(
             camera->getEye(), -glm::normalize(camera->getViewVector()));
         fluidProjectile->setup();
-        Director::getScene()->addGameObject("fluidProjectile", fluidProjectile);
+        Director::getScene()->addGameObject(fluidProjectile);
         CollisionManager::addCollisionObjectToList(fluidProjectile);
         shootPressed = true;
-        shootCount++;
     }
-    if(glfwGetKey(Global::window, GLFW_KEY_X) == GLFW_RELEASE) {
+    if(glfwGetMouseButton(Global::window, GLFW_MOUSE_BUTTON_1) == GLFW_RELEASE) {
         shootPressed = false;
     }
 }

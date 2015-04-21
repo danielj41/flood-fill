@@ -48,6 +48,8 @@ public:
     float getRoundX(float x);
     float getRoundY(float y);
     float getRoundZ(float z);
+    bool inGrid(float x, float y, float z);
+
 private:
     unsigned int sizeX, sizeY, sizeZ;
 
@@ -270,6 +272,13 @@ float Uniform3DGrid<T>::getRoundZ(float z) {
     unsigned int zIndex = ((unsigned int) ((z - minZ)/edgeSizeZ));
     if(zIndex == sizeZ) zIndex--;
     return zIndex * edgeSizeZ + minZ + edgeSizeZ/2.0;
+}
+
+template<typename T>
+bool Uniform3DGrid<T>::inGrid(float x, float y, float z) {
+    return !(x < minX || x > maxX ||
+             y < minY || y > maxY ||
+             z < minZ || z > maxZ);
 }
 
 #endif

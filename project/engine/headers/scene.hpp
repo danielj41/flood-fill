@@ -36,6 +36,7 @@ public:
     void addCamera(std::string label, Camera * camera);
     void addLight(std::string label, Light * light);
     void addGameObject(std::string label, GameObject * gameObject);
+    void addGameObject(GameObject * gameObject);
 
     void removeCamera(std::string label);
     void removeCamera(Camera * camera);
@@ -66,6 +67,8 @@ protected:
     std::map<std::string, GameObject *> gameObjects;
 
     std::string name, currentCamera;
+
+    int labelCount;
 };
 
 #endif

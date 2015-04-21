@@ -86,6 +86,7 @@ add_executable(
 		project/flood-fill/source/level_design.cpp
 		project/flood-fill/source/border.cpp
         project/flood-fill/source/fluid_projectile.cpp
+        project/flood-fill/source/fluid_box.cpp
 		
 		
         #Header Files
@@ -99,6 +100,7 @@ add_executable(
 		project/flood-fill/headers/level_design.hpp
 		project/flood-fill/headers/border.hpp
         project/flood-fill/headers/fluid_projectile.hpp
+        project/flood-fill/headers/fluid_box.hpp
 
         ### Engine Files ###
         #Source Files

@@ -21,7 +21,6 @@ private:
     glm::vec3 lastPosition;
     
     bool shootPressed;
-    int shootCount;
 };
 
 #endif

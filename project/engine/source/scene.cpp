@@ -9,12 +9,12 @@
 
 const std::string Scene::NO_CAMERA_AVAILABLE = "NO_CAMERA_AVAILABLE";
 
-Scene::Scene(){
+Scene::Scene() : labelCount(0) {
     DEBUG("Scene without a name!");
 }
 
 Scene::Scene(std::string _name)
-    : name(_name), currentCamera(NO_CAMERA_AVAILABLE){
+    : labelCount(0), name(_name), currentCamera(NO_CAMERA_AVAILABLE){
     INFO("Creating scene " << name << "...");
 }
 
@@ -59,6 +59,10 @@ void Scene::addGameObject(std::string label, GameObject * gameObject){
     gameObjects[label] = gameObject;
 
     INFO("Object " << label << " added to scene " << name);
+}
+
+void Scene::addGameObject(GameObject * gameObject){
+    addGameObject(std::to_string(labelCount++), gameObject);
 }
 
 void Scene::addLight(std::string label, Light * light){

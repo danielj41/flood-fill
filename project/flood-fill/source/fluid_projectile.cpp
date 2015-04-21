@@ -12,6 +12,7 @@
 #include "render_engine.hpp"
 #include "uniform_3d_grid.hpp"
 #include "box.hpp"
+#include "fluid_box.hpp"
 
 FluidProjectile::FluidProjectile(glm::vec3 _position, glm::vec3 _movementDirection)
   : GameObject(), CollisionObject(_position),
@@ -53,13 +54,15 @@ void FluidProjectile::collided(CollisionObject * collidedWith){
   if(collidedWith->getCollisionID() == 1) {
     Uniform3DGrid<CollisionObject *> *grid = CollisionManager::getGrid();
     glm::vec3 newPos(grid->getRoundX(oldPosition.x), grid->getRoundY(oldPosition.y), grid->getRoundZ(oldPosition.z));
-    Box *box = new Box(newPos, glm::vec3(0,0,0), 0.0f);
-    box->setup();
-    Director::getScene()->addGameObject("box", box);
-    CollisionManager::addCollisionObjectToGrid(box);
+    if(grid->inGrid(newPos.x, newPos.y, newPos.z)) {
+      FluidBox *box = new FluidBox(newPos, glm::vec3(0,0,0), 0.0f);
+      box->setup();
+      Director::getScene()->addGameObject("box", box);
+      CollisionManager::addCollisionObjectToGrid(box);
 
-    Director::getScene()->removeGameObject(this);
-    CollisionManager::removeCollisionObject(this);
-    RenderEngine::removeObject(fluidProjectile);
+      Director::getScene()->removeGameObject(this);
+      CollisionManager::removeCollisionObject(this);
+      RenderEngine::removeObject(fluidProjectile);
+    }
   } 
 }
