@@ -60,11 +60,13 @@ void CollisionManager::checkCollision(CollisionObject * aObject){
 // This function checks if a has any conflicts with other collision objects in the grid    
 
   glm::vec3 pos = aObject->getPosition();
-  CollisionObject *bObject = grid.getValue(pos.x, pos.y, pos.z);
+  if(grid.inGrid(pos.x, pos.y, pos.z)) {
+    CollisionObject *bObject = grid.getValue(pos.x, pos.y, pos.z);
 
-  if ( bObject != NULL && aObject->getCollideWithID() & bObject->getCollisionID()) {
-	aObject->collided(bObject);
-	bObject->collided(aObject);	
+    if ( bObject != NULL && aObject->getCollideWithID() & bObject->getCollisionID()) {
+    aObject->collided(bObject);
+    bObject->collided(aObject); 
+    }
   }
 }
 
