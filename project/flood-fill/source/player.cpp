@@ -13,6 +13,9 @@
 #include "global_variables.hpp"
 #include "bounding_box.hpp"
 #include "time_manager.hpp"
+#include "fluid_projectile.hpp"
+#include "director.hpp"
+#include "collision_manager.hpp"
 
 Player::Player(Camera * _camera)
   : GameObject(), CollisionObject(), camera(_camera){}
@@ -28,6 +31,9 @@ void Player::setup() {
 	
 	INFO("Can Collide: " << canCollide());
     camera->fix(false, true, false);
+
+    shootPressed = false;
+    shootCount = 0;
 }
 
 void Player::update() {
@@ -48,6 +54,19 @@ void Player::update() {
     }
 
 	setPosition(camera->getEye());
+
+    if(glfwGetKey(Global::window, GLFW_KEY_X) == GLFW_PRESS && !shootPressed){
+        FluidProjectile *fluidProjectile = new FluidProjectile(
+            camera->getEye(), -glm::normalize(camera->getViewVector()));
+        fluidProjectile->setup();
+        Director::getScene()->addGameObject("fluidProjectile" + shootCount, fluidProjectile);
+        CollisionManager::addCollisionObjectToList(fluidProjectile);
+        shootPressed = true;
+        shootCount++;
+    }
+    if(glfwGetKey(Global::window, GLFW_KEY_X) == GLFW_RELEASE) {
+        shootPressed = false;
+    }
 }
 
 void Player::collided(CollisionObject * collidedWith){
