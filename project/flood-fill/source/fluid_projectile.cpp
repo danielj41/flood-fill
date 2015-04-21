@@ -26,16 +26,17 @@ void FluidProjectile::setup() {
 				   LoadManager::getMesh("cube.obj"),
 				   MaterialManager::getMaterial("FlatGrey"));
 
-  fluidProjectile->translate(position);
-  
   RenderEngine::addObject(fluidProjectile);
   
   setCollisionID(0);
   setCollideWithID(1);
   setCanCollide(true);
 
+  origPosition = position;
+
   position += movementDirection;
   setPosition(position);
+  fluidProjectile->translate(position);
 }
 
 void FluidProjectile::update(){
@@ -54,15 +55,14 @@ void FluidProjectile::collided(CollisionObject * collidedWith){
   if(collidedWith->getCollisionID() == 1) {
     Uniform3DGrid<CollisionObject *> *grid = CollisionManager::getGrid();
     glm::vec3 newPos(grid->getRoundX(oldPosition.x), grid->getRoundY(oldPosition.y), grid->getRoundZ(oldPosition.z));
-    if(grid->inGrid(newPos.x, newPos.y, newPos.z)) {
+    if(grid->inGrid(newPos.x, newPos.y, newPos.z) && newPos.y < origPosition.y - 1.0f) {
       FluidBox *box = new FluidBox(newPos, glm::vec3(0,0,0), 0.0f);
       box->setup();
       Director::getScene()->addGameObject(box);
       CollisionManager::addCollisionObjectToGrid(box);
-
-      Director::getScene()->removeGameObject(this);
-      CollisionManager::removeCollisionObject(this);
-      RenderEngine::removeObject(fluidProjectile);
     }
+    Director::getScene()->removeGameObject(this);
+    CollisionManager::removeCollisionObject(this);
+    RenderEngine::removeObject(fluidProjectile);
   } 
 }
