@@ -59,7 +59,7 @@ void Player::update() {
         FluidProjectile *fluidProjectile = new FluidProjectile(
             camera->getEye(), -glm::normalize(camera->getViewVector()));
         fluidProjectile->setup();
-        Director::getScene()->addGameObject("fluidProjectile" + shootCount, fluidProjectile);
+        Director::getScene()->addGameObject("fluidProjectile", fluidProjectile);
         CollisionManager::addCollisionObjectToList(fluidProjectile);
         shootPressed = true;
         shootCount++;

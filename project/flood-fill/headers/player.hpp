@@ -19,6 +19,7 @@ private:
     Camera * camera;
 
     glm::vec3 lastPosition;
+    
     bool shootPressed;
     int shootCount;
 };
