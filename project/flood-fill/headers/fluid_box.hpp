@@ -15,6 +15,8 @@ public:
 
   FluidBox(glm::vec3 _position, glm::vec3 _movementDirection, float _speed);
 
+  void createNew(glm::vec3 newPos);
+
   void setup();
   void update();
 
@@ -28,6 +30,9 @@ private:
   glm::vec3 size;
   
   float speed;
+
+  float height;
+  bool generatedAdjacent;
 
 };
 
