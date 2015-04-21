@@ -57,7 +57,7 @@ void FluidProjectile::collided(CollisionObject * collidedWith){
     if(grid->inGrid(newPos.x, newPos.y, newPos.z)) {
       FluidBox *box = new FluidBox(newPos, glm::vec3(0,0,0), 0.0f);
       box->setup();
-      Director::getScene()->addGameObject("box", box);
+      Director::getScene()->addGameObject(box);
       CollisionManager::addCollisionObjectToGrid(box);
 
       Director::getScene()->removeGameObject(this);
