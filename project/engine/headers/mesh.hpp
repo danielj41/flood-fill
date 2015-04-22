@@ -35,6 +35,7 @@ public:
     std::string getFileName();
 
     bool hasNormals();
+    bool hasTextureCoordinates();
     bool isLoaded();
 
     void generateVertexBuffer();

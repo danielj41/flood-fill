@@ -81,22 +81,22 @@ add_executable(
         project/flood-fill/source/player.cpp
         project/flood-fill/source/ground_plane.cpp
         project/flood-fill/source/debug_player.cpp
-		project/flood-fill/source/demo_level.cpp
-		project/flood-fill/source/box.cpp
-		project/flood-fill/source/level_design.cpp
-		project/flood-fill/source/border.cpp
-		
-		
+        project/flood-fill/source/demo_level.cpp
+        project/flood-fill/source/box.cpp
+        project/flood-fill/source/level_design.cpp
+        project/flood-fill/source/border.cpp
+
+
         #Header Files
         #project/flood-fill/headers/main_level.hpp
         project/flood-fill/headers/global_variables.hpp
         project/flood-fill/headers/player.hpp
         project/flood-fill/headers/ground_plane.hpp
         project/flood-fill/headers/debug_player.hpp
-		project/flood-fill/headers/demo_level.hpp
-		project/flood-fill/headers/box.hpp
-		project/flood-fill/headers/level_design.hpp
-		project/flood-fill/headers/border.hpp
+        project/flood-fill/headers/demo_level.hpp
+        project/flood-fill/headers/box.hpp
+        project/flood-fill/headers/level_design.hpp
+        project/flood-fill/headers/border.hpp
 
         ### Engine Files ###
         #Source Files
@@ -117,6 +117,8 @@ add_executable(
         project/engine/source/material.cpp
         project/engine/source/render_engine.cpp
         project/engine/source/material_manager.cpp
+        project/engine/source/image.cpp
+        project/engine/source/texture.cpp
 
         #Header Files
         project/engine/headers/GLIncludes.h
@@ -139,6 +141,8 @@ add_executable(
         project/engine/headers/render_engine.hpp
         project/engine/headers/material_manager.hpp
         project/engine/headers/uniform_3d_grid.hpp
+        project/engine/headers/image.hpp
+        project/engine/headers/texture.hpp
 
         #Shader Files
         project/engine/shaders/vertex.glsl

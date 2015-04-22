@@ -184,29 +184,31 @@ std::string Mesh::getFileName(){
 
 std::vector<float> Mesh::getNormals(){
     ASSERT(isLoaded(), "OBJ " << objfile << "not loaded");
+    ASSERT(hasNormals(), objfile << " normals were not calculated yet!");
 
-    if(!hasNormals()){
-        INFO(objfile << " normals were not calculated yet!");
-    }
     return normals;
 }
 
 std::vector<float> Mesh::getVertices(){
     ASSERT(isLoaded(), "OBJ " << objfile << "not loaded");
+    ASSERT(shape[0].mesh.positions.size(), "This mesh does not have" <<
+                                           " vertices");
 
     return shape[0].mesh.positions;
 }
 
 std::vector<unsigned int> Mesh::getIndices(){
     ASSERT(isLoaded(), "OBJ " << objfile << "not loaded");
+    ASSERT(shape[0].mesh.indices.size(), "This mesh does not have" <<
+                                           " indeces");
 
     return shape[0].mesh.indices;
 }
 
 std::vector<float> Mesh::getTextureCoordinates(){
     ASSERT(isLoaded(), "OBJ " << objfile << "not loaded");
-
-    // TODO: Check if there is tex coord available
+    ASSERT(shape[0].mesh.texcoords.size(), "This mesh does not have" <<
+                                           " texture coordinates");
 
     return shape[0].mesh.texcoords;
 }
@@ -215,12 +217,14 @@ bool Mesh::hasNormals(){
     return normalsFlag;
 }
 
+bool Mesh::hasTextureCoordinates(){
+    return shape[0].mesh.texcoords.size() > 0;
+}
 bool Mesh::isLoaded(){
     return loaded;
 }
 
 void Mesh::generateVertexBuffer(){
-    // TODO: Check if the mesh has vertices, normals, etc before the binding
     // TODO: Check GLError after binding
     INFO("Generating vertex buffer of mesh " << objfile << "...");
 

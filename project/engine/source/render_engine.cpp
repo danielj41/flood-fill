@@ -13,8 +13,17 @@
 
 
 bool RenderEngine::loaded = false;
+
 Shader * RenderEngine::geometryShader;
-std::map< Mesh *, std::list<Object *> > RenderEngine::objectsToRender;
+Shader * RenderEngine::geometryTextureShader;
+Shader * RenderEngine::debugShader;
+
+std::map< Mesh *, std::list<Object *> > RenderEngine::objects;
+std::map< Mesh *, std::list<Object *> > RenderEngine::texturedObjects;
+
+int RenderEngine::objectsCount = 0;
+int RenderEngine::texturedObjectsCount = 0;
+int RenderEngine::totalObjects = 0;
 
 void RenderEngine::setup(){
     INFO("Setup RenderEngine...");
@@ -31,6 +40,114 @@ void RenderEngine::render(){
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+    int numberObjectsRendered = 0;
+
+    numberObjectsRendered += renderObjects();
+    numberObjectsRendered += renderTexturedObjects();
+
+    totalObjects = objectsCount + texturedObjectsCount;
+    INFO("Total number of Objects in this scene: " << totalObjects);
+    INFO("Number of Objects Rendered: " << numberObjectsRendered);
+}
+
+void RenderEngine::addMesh(Mesh * mesh){
+    INFO("Adding mesh " << mesh->getFileName() << " to the Rendering Engine...");
+
+    ASSERT(loaded, "You have to setup the Rendering Engine!");
+
+    std::list<Object *> l;
+    objects[mesh] = l;
+
+    if(mesh->hasTextureCoordinates())
+        texturedObjects[mesh] = l;
+}
+
+void RenderEngine::addObject(Object * object){
+    INFO("Adding object to the Rendering Engine...");
+
+    ASSERT(loaded, "You have to setup the Rendering Engine!");
+    ASSERT(objects.find(object->getMesh()) != objects.end(),
+            "You need to add the mesh " << object->getMesh()->getFileName()
+            << " to the Rendering Engine!");
+
+    if(object->hasTexture() && object->isTextureEnabled()){
+        texturedObjects[object->getMesh()].push_front(object);
+        texturedObjectsCount++;
+    }
+    else {
+        objects[object->getMesh()].push_front(object);
+        objectsCount++;
+    }
+}
+
+void RenderEngine::removeMesh(Mesh * mesh){
+    INFO("Removing mesh " << mesh->getFileName()
+            << " from the Rendering Engine...");
+
+    ASSERT(loaded, "You have to setup the Rendering Engine!");
+    ASSERT(objects.find(mesh) != objects.end(),
+            "You are trying to remove the mesh " << mesh->getFileName()
+            << ", and it is not in the Rendering Engine");
+
+    objects.erase(mesh);
+    if(mesh->hasTextureCoordinates()){
+        texturedObjects.erase(mesh);
+    }
+}
+
+void RenderEngine::removeObject(Object * object){
+    INFO("Removing object to the Rendering Engine...");
+
+    ASSERT(loaded, "You have to setup the Rendering Engine!");
+
+    if(object->hasTexture() && object->isTextureEnabled()){
+        ASSERT(texturedObjects.find(object->getMesh()) != texturedObjects.end(),
+                "Mesh " << object->getMesh()->getFileName()
+                << " is not in the Rendering Engine! Can't Remove this object");
+
+        for(std::list<Object *>::iterator it =
+                texturedObjects[object->getMesh()].begin();
+                it != texturedObjects[object->getMesh()].end(); it++){
+
+            if(*it == object){
+                texturedObjects[object->getMesh()].erase(it);
+                objectsCount--;
+                INFO("Rendering Engine: Object removed!");
+                return;
+            }
+        }
+    }
+    else {
+        ASSERT(objects.find(object->getMesh()) != objects.end(),
+                "Mesh " << object->getMesh()->getFileName()
+                << " is not in the Rendering Engine! Can't Remove this object");
+
+        for(std::list<Object *>::iterator it =
+                objects[object->getMesh()].begin();
+                it != objects[object->getMesh()].end(); it++){
+
+            if(*it == object){
+                objects[object->getMesh()].erase(it);
+                objectsCount--;
+                INFO("Rendering Engine: Object removed!");
+                return;
+            }
+        }
+    }
+
+    DEBUG("Rendering Engine: Object not found!");
+}
+
+
+/* Private Methods */
+
+int RenderEngine::renderObjects(){
+    int numberObjectsRendered = 0;
+
+    if(objectsCount == 0){
+        return 0;
+    }
 
     glUseProgram(geometryShader->getID());
 
@@ -66,11 +183,8 @@ void RenderEngine::render(){
                     light->getDirection().z);
     }
 
-    int numberObjectsRendered = 0; // Keep track of how many objects were culled
-    int numberObjects = 0; // Keep track of how many objects are in the scene
-
     //Rendering all objects of each Mesh
-    std::map< Mesh *, std::list<Object *> > tempMap = objectsToRender;
+    std::map< Mesh *, std::list<Object *> > tempMap = objects;
     for(std::map< Mesh *, std::list<Object *> >::iterator it =
             tempMap.begin(); it != tempMap.end(); it++){
 
@@ -94,8 +208,6 @@ void RenderEngine::render(){
         for(std::list<Object *>::iterator obj = it->second.begin();
                 obj != it->second.end(); obj++){
 
-            numberObjects++;
-
             //View Frustum Culling
             if(camera->insideViewFrustum((*obj))){
                 (*obj)->draw(geometryShader);
@@ -111,99 +223,151 @@ void RenderEngine::render(){
 
     glUseProgram(0);
 
-    INFO("Total number of Objects in this scene: " << numberObjects);
-    INFO("Number of Objects Rendered: " << numberObjectsRendered);
+    return numberObjectsRendered;
 }
 
-void RenderEngine::addMesh(Mesh * mesh){
-    INFO("Adding mesh " << mesh->getFileName() << " to the Rendering Engine...");
+int RenderEngine::renderTexturedObjects(){
+    int numberObjectsRendered = 0;
 
-    ASSERT(loaded, "You have to setup the Rendering Engine!");
-
-    std::list<Object *> l;
-    objectsToRender[mesh] = l;
-}
-
-void RenderEngine::addObject(Object * object){
-    INFO("Adding object to the Rendering Engine...");
-
-    ASSERT(loaded, "You have to setup the Rendering Engine!");
-    ASSERT(objectsToRender.find(object->getMesh()) != objectsToRender.end(),
-            "You need to add the mesh " << object->getMesh()->getFileName()
-            << " to the Rendering Engine!");
-
-    objectsToRender[object->getMesh()].push_front(object);
-}
-
-void RenderEngine::removeMesh(Mesh * mesh){
-    INFO("Removing mesh " << mesh->getFileName()
-            << " from the Rendering Engine...");
-
-    ASSERT(loaded, "You have to setup the Rendering Engine!");
-    ASSERT(objectsToRender.find(mesh) != objectsToRender.end(),
-            "You are trying to remove the mesh " << mesh->getFileName()
-            << ", and it is not in the Rendering Engine");
-
-    objectsToRender.erase(mesh);
-}
-
-void RenderEngine::removeObject(Object * object){
-    INFO("Removing object to the Rendering Engine...");
-
-    ASSERT(loaded, "You have to setup the Rendering Engine!");
-    ASSERT(objectsToRender.find(object->getMesh()) != objectsToRender.end(),
-            "Mesh " << object->getMesh()->getFileName()
-            << " is not in the Rendering Engine! Can't Remove this object");
-
-    for(std::list<Object *>::iterator it =
-            objectsToRender[object->getMesh()].begin();
-            it != objectsToRender[object->getMesh()].end(); it++){
-
-        if(*it == object){
-            objectsToRender[object->getMesh()].erase(it);
-            INFO("Rendering Engine: Object removed!");
-            return;
-        }
+    if(texturedObjectsCount == 0){
+        return 0;
     }
 
-    INFO("Rendering Engine: Object not found!");
+    glUseProgram(geometryTextureShader->getID());
+
+    Camera * camera = Director::getScene()->getCamera();
+
+    //Common information to all Objects
+    glUniformMatrix4fv(geometryTextureShader->getHandle("uView"), 1, GL_FALSE,
+      glm::value_ptr(camera->getViewMatrix()));
+    glUniformMatrix4fv(geometryTextureShader->getHandle("uProjection"), 1, GL_FALSE,
+      glm::value_ptr(camera->getProjectionMatrix()));
+
+
+    glUniform3f(geometryTextureShader->getHandle("uEyePosition"),
+                camera->getEye().x,
+                camera->getEye().y,
+                camera->getEye().z);
+
+    std::map<std::string, Light *> lights = Director::getScene()->getLights();
+
+    //Load the Lights
+    for(std::map<std::string, Light *>::iterator it = lights.begin();
+            it != lights.end(); it++ ){
+        Light * light = it->second;
+
+        glUniform3f(geometryTextureShader->getHandle("uLightColor"),
+                    light->getColor().x,
+                    light->getColor().y,
+                    light->getColor().z);
+
+        glUniform3f(geometryTextureShader->getHandle("uLightDirection"),
+                    light->getDirection().x,
+                    light->getDirection().y,
+                    light->getDirection().z);
+    }
+
+    //Rendering all objects of each Mesh
+    std::map< Mesh *, std::list<Object *> > tempMap = texturedObjects;
+    for(std::map< Mesh *, std::list<Object *> >::iterator it =
+            tempMap.begin(); it != tempMap.end(); it++){
+
+        //Common information to all Objects of this Mesh
+        Mesh * mesh = it->first;
+
+        glEnableVertexAttribArray(geometryTextureShader->getHandle("aPosition"));
+        glBindBuffer(GL_ARRAY_BUFFER, mesh->getVertexBuffer());
+        glVertexAttribPointer(geometryTextureShader->getHandle("aPosition"), 3,
+                              GL_FLOAT, GL_FALSE, 0, 0);
+
+        glEnableVertexAttribArray(geometryTextureShader->getHandle("aNormal"));
+        glBindBuffer(GL_ARRAY_BUFFER, mesh->getNormalBuffer());
+        glVertexAttribPointer(geometryTextureShader->getHandle("aNormal"), 3,
+                              GL_FLOAT, GL_FALSE, 0, 0);
+
+        glEnableVertexAttribArray(geometryTextureShader->getHandle("aTexCoord"));
+        glBindBuffer(GL_ARRAY_BUFFER, mesh->getTextureCoordinateBuffer());
+        glVertexAttribPointer(geometryTextureShader->getHandle("aTexCoord"), 2,
+                              GL_FLOAT, GL_FALSE, 0, 0);
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->getIndexBuffer());
+
+
+        //Rendering each object with the specific information
+        for(std::list<Object *>::iterator obj = it->second.begin();
+                obj != it->second.end(); obj++){
+
+            //View Frustum Culling
+            if(camera->insideViewFrustum((*obj))){
+                (*obj)->draw(geometryTextureShader);
+                numberObjectsRendered++;
+            }
+        }
+
+        glDisableVertexAttribArray(geometryTextureShader->getHandle("aPosition"));
+        glDisableVertexAttribArray(geometryTextureShader->getHandle("aNormal"));
+        glDisableVertexAttribArray(geometryTextureShader->getHandle("aTexCoord"));
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    }
+
+    glUseProgram(0);
+
+    return numberObjectsRendered;
 }
-
-
-/* Private Methods */
 
 void RenderEngine::loadShaders(){
     INFO("Loading all shaders...");
 
-    Shader * shader;
 
     LoadManager::loadShader("vertex.glsl", "fragment.glsl");
-    shader = LoadManager::getShader("vertex.glsl", "fragment.glsl");
-    shader->loadHandle("aNormal", 'a');
-    shader->loadHandle("aPosition", 'a');
-    shader->loadHandle("uModel", 'u');
-    shader->loadHandle("uView", 'u');
-    shader->loadHandle("uProjection", 'u');
-    shader->loadHandle("uNormalMatrix", 'u');
-    shader->loadHandle("uDiffuseColor", 'u');
-    shader->loadHandle("uSpecularColor", 'u');
-    shader->loadHandle("uAmbientColor", 'u');
-    shader->loadHandle("uEmissionColor", 'u');
-    shader->loadHandle("uShininess", 'u');
-    shader->loadHandle("uEyePosition", 'u');
+    geometryShader = LoadManager::getShader("vertex.glsl", "fragment.glsl");
+    geometryShader->loadHandle("aNormal", 'a');
+    geometryShader->loadHandle("aPosition", 'a');
+    geometryShader->loadHandle("uModel", 'u');
+    geometryShader->loadHandle("uView", 'u');
+    geometryShader->loadHandle("uProjection", 'u');
+    geometryShader->loadHandle("uNormalMatrix", 'u');
+    geometryShader->loadHandle("uDiffuseColor", 'u');
+    geometryShader->loadHandle("uSpecularColor", 'u');
+    geometryShader->loadHandle("uAmbientColor", 'u');
+    geometryShader->loadHandle("uEmissionColor", 'u');
+    geometryShader->loadHandle("uShininess", 'u');
+    geometryShader->loadHandle("uEyePosition", 'u');
     //shader->loadHandle("uLightPosition", 'u');
-    shader->loadHandle("uLightDirection", 'u');
-    shader->loadHandle("uLightColor", 'u');
-    geometryShader = shader;
+    geometryShader->loadHandle("uLightDirection", 'u');
+    geometryShader->loadHandle("uLightColor", 'u');
+
+    LoadManager::loadShader("vertex-texture.glsl", "fragment-texture.glsl");
+    geometryTextureShader = LoadManager::getShader("vertex-texture.glsl",
+                                                   "fragment-texture.glsl");
+    geometryTextureShader->loadHandle("aNormal", 'a');
+    geometryTextureShader->loadHandle("aPosition", 'a');
+    geometryTextureShader->loadHandle("aTexCoord", 'a');
+    geometryTextureShader->loadHandle("uModel", 'u');
+    geometryTextureShader->loadHandle("uView", 'u');
+    geometryTextureShader->loadHandle("uProjection", 'u');
+    geometryTextureShader->loadHandle("uNormalMatrix", 'u');
+    geometryTextureShader->loadHandle("uDiffuseColor", 'u');
+    geometryTextureShader->loadHandle("uSpecularColor", 'u');
+    geometryTextureShader->loadHandle("uAmbientColor", 'u');
+    geometryTextureShader->loadHandle("uEmissionColor", 'u');
+    geometryTextureShader->loadHandle("uShininess", 'u');
+    geometryTextureShader->loadHandle("uEyePosition", 'u');
+    geometryTextureShader->loadHandle("uTextureID", 'u');
+    //shader->loadHandle("uLightPosition", 'u');
+    geometryTextureShader->loadHandle("uLightDirection", 'u');
+    geometryTextureShader->loadHandle("uLightColor", 'u');
 
     LoadManager::loadShader("bounding_box_vertex.glsl",
                             "bounding_box_fragment.glsl");
-    shader = LoadManager::getShader("bounding_box_vertex.glsl",
-                                    "bounding_box_fragment.glsl");
-    shader->loadHandle("aPosition", 'a');
-    shader->loadHandle("uModel", 'u');
-    shader->loadHandle("uView", 'u');
-    shader->loadHandle("uProjection", 'u');
+    debugShader = LoadManager::getShader("bounding_box_vertex.glsl",
+                                         "bounding_box_fragment.glsl");
+    debugShader->loadHandle("aPosition", 'a');
+    debugShader->loadHandle("uModel", 'u');
+    debugShader->loadHandle("uView", 'u');
+    debugShader->loadHandle("uProjection", 'u');
 }
 
 void RenderEngine::setupOpenGL(){
@@ -215,4 +379,5 @@ void RenderEngine::setupOpenGL(){
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glCullFace(GL_BACK);
+    glEnable(GL_TEXTURE_2D);
 }

@@ -8,6 +8,7 @@
 #include "mesh.hpp"
 #include "material.hpp"
 #include "shader.hpp"
+#include "texture.hpp"
 
 class Object {
 
@@ -21,6 +22,12 @@ public:
     Material * getMaterial();
     glm::mat4 getModelMatrix();
 
+    void applyTexture(Texture * _texture);
+    void enableTexture();
+    void disableTexture();
+    bool isTextureEnabled();
+    bool hasTexture();
+
     void scale(glm::vec3 scalingVector);
     void rotate(float angle, glm::vec3 direction);
     void translate(glm::vec3 translationVector);
@@ -30,8 +37,10 @@ public:
 protected:
     Mesh *   mesh;
     Material * material;
+    Texture * texture;
 
     glm::mat4 modelMatrix;
+    bool _hasTexture, textureEnabled;
 
     void drawElements();
 };

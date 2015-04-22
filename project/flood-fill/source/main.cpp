@@ -19,6 +19,8 @@
 #include "material_manager.hpp"
 #include "material.hpp"
 #include "mesh.hpp"
+#include "image.hpp"
+#include "texture.hpp"
 
 using namespace std;
 
@@ -109,6 +111,7 @@ void loadMeshes(){
     mesh->generateVertexBuffer();
     mesh->generateIndexBuffer();
     mesh->generateNormalBuffer();
+    mesh->generateTextureCoordinateBuffer();
     mesh->calculateLimits();
     RenderEngine::addMesh(mesh);
 
@@ -119,7 +122,10 @@ void loadMeshes(){
     mesh->generateVertexBuffer();
     mesh->generateIndexBuffer();
     mesh->generateNormalBuffer();
+    mesh->generateTextureCoordinateBuffer();
     mesh->calculateLimits();
+
+
     RenderEngine::addMesh(mesh);
 
     LoadManager::loadMesh("sphere.obj");
@@ -129,12 +135,16 @@ void loadMeshes(){
     mesh->generateVertexBuffer();
     mesh->generateIndexBuffer();
     mesh->generateNormalBuffer();
+    mesh->generateTextureCoordinateBuffer();
     mesh->calculateLimits();
     RenderEngine::addMesh(mesh);
 }
 
 void loadTextures(){
     INFO("Loading all textures...");
+
+    LoadManager::loadImage("default_voxel.bmp");
+    LoadManager::loadTexture("VoxelTexture", LoadManager::getImage("default_voxel.bmp"));
 }
 
 void createMaterials(){

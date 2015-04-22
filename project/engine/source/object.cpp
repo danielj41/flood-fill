@@ -10,12 +10,10 @@
 
 #include "director.hpp"
 
-Object::Object() {
-    DEBUG("Empty Object!");
-}
+Object::Object() : _hasTexture(false), textureEnabled(false) {}
 
 Object::Object(Mesh * _mesh, Material * _material)
-    : mesh(_mesh), material(_material){
+    : mesh(_mesh), material(_material), _hasTexture(false), textureEnabled(false){
 
     loadIdentity();
     ASSERT(getModelMatrix() == glm::mat4(1.0f),
@@ -51,6 +49,12 @@ void Object::draw(Shader * shader){
                 material->getEmissionColor().z);
     glUniform1f(shader->getHandle("uShininess"), material->getShininess());
 
+    if(hasTexture() && isTextureEnabled()){
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, texture->getTexture());
+        glUniform1i(shader->getHandle("uTextureID"), 0);
+    }
+
     drawElements();
 }
 
@@ -69,6 +73,30 @@ Material * Object::getMaterial(){
 
 glm::mat4 Object::getModelMatrix(){
     return modelMatrix;
+}
+
+void Object::applyTexture(Texture * _texture){
+    texture = _texture;
+    _hasTexture = true;
+}
+
+void Object::enableTexture(){
+    ASSERT(_hasTexture, "This Object does not have texture!");
+    textureEnabled = true;
+}
+
+void Object::disableTexture(){
+    ASSERT(_hasTexture, "This Object does not have texture!");
+    textureEnabled = false;
+}
+
+bool Object::isTextureEnabled(){
+    ASSERT(_hasTexture, "This Object does not have texture!");
+    return textureEnabled;
+}
+
+bool Object::hasTexture(){
+    return _hasTexture;
 }
 
 void Object::scale(glm::vec3 scalingVector){

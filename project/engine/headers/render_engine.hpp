@@ -25,10 +25,20 @@ private:
     static bool loaded;
 
     static Shader * geometryShader;
-    static std::map< Mesh *, std::list<Object *> > objectsToRender;
+    static Shader * geometryTextureShader;
+    static Shader * debugShader;
+    static std::map< Mesh *, std::list<Object *> > objects;
+    static std::map< Mesh *, std::list<Object *> > texturedObjects;
+
+    static int objectsCount;
+    static int texturedObjectsCount;
+    static int totalObjects;
 
     static void loadShaders();
     static void setupOpenGL();
+
+    static int renderObjects();
+    static int renderTexturedObjects();
 };
 
 #endif
