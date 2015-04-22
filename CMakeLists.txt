@@ -43,7 +43,7 @@ elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
   # Update if necessary
   #-Wno-comment Will disable a commom warning when you are using GLM lib
   #-Wno-variadic-macros Is to permit the use of ... on the debug macros
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -W -Wall -Wno-long-long -Wno-comment -pedantic -Wno-variadic-macros")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -g -W -Wall -Wno-long-long -Wno-comment -pedantic -Wno-variadic-macros")
 endif()
 
 
