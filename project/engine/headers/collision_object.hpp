@@ -2,7 +2,7 @@
 #define COLLISION_OBJECT_HPP
 
 #include "glm/glm.hpp"
-
+#include "bounding_box.hpp"
 
 class CollisionObject{
 
@@ -24,11 +24,17 @@ public:
 
     virtual void collided(CollisionObject * collidedWith) = 0;
 
+    bool checkCollision(CollisionObject *other);
+    glm::vec3 getCollisionNormal(CollisionObject *other);
+    void setBoundingBox(BoundingBox _boundingBox);
+    BoundingBox* getBoundingBox();
+
 private:
     
     glm::vec3 position;
     bool _canCollide;
     int collisionID, collideWithID;
+    BoundingBox boundingBox;
 
 };
 

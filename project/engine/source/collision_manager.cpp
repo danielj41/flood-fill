@@ -59,13 +59,26 @@ void CollisionManager::removeCollisionObject(CollisionObject * object){
 void CollisionManager::checkCollision(CollisionObject * aObject){
 // This function checks if a has any conflicts with other collision objects in the grid    
 
-  glm::vec3 pos = aObject->getPosition();
-  if(grid.inGrid(pos.x, pos.y, pos.z)) {
-    CollisionObject *bObject = grid.getValue(pos.x, pos.y, pos.z);
+  checkCollisionWithOffset(aObject, 0,-1,0);
+  checkCollisionWithOffset(aObject, 0,0,0);
+  checkCollisionWithOffset(aObject, 0,1,0);
+  checkCollisionWithOffset(aObject, -1,0,0);
+  checkCollisionWithOffset(aObject, 1,0,0);
+  checkCollisionWithOffset(aObject, 0,0,1);
+  checkCollisionWithOffset(aObject, 0,0,-1);
 
-    if ( bObject != NULL && aObject->getCollideWithID() & bObject->getCollisionID()) {
-    aObject->collided(bObject);
-    bObject->collided(aObject); 
+  
+}
+
+void CollisionManager::checkCollisionWithOffset(CollisionObject * aObject, int x, int y, int z) {
+  glm::vec3 pos = aObject->getBoundingBox()->getPosition();
+
+  if(grid.inGrid(pos.x + x * grid.getEdgeSizeX(), pos.y + y * grid.getEdgeSizeY(), pos.z + z * grid.getEdgeSizeZ())) {
+    CollisionObject *bObject = grid.getValue(pos.x + x * grid.getEdgeSizeX(), pos.y + y * grid.getEdgeSizeY(), pos.z + z * grid.getEdgeSizeZ());
+
+    if ( bObject != NULL && aObject->getCollideWithID() & bObject->getCollisionID() && aObject->checkCollision(bObject)) {
+      aObject->collided(bObject);
+      bObject->collided(aObject); 
     }
   }
 }

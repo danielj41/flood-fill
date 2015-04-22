@@ -33,6 +33,9 @@ void FluidBox::setup() {
 
   height = 0.0;
   generatedAdjacent = false;
+
+  setBoundingBox(BoundingBox(glm::vec3(1.0f,1.0f,1.0f), glm::vec3(-1.0f,-1.0f,-1.0f)));
+  getBoundingBox()->setPosition(position);
 }
 
 void FluidBox::update(){

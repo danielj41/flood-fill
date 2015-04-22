@@ -29,6 +29,9 @@ void Box::setup() {
   
   setCollisionID(1);
   setCanCollide(true);
+
+  setBoundingBox(BoundingBox(glm::vec3(1.0f,1.0f,1.0f), glm::vec3(-1.0f,-1.0f,-1.0f)));
+  getBoundingBox()->setPosition(position);
 }
 
 void Box::update(){

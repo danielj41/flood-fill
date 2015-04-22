@@ -21,6 +21,7 @@ public:
     static void removeCollisionObject(CollisionObject * object);
 
     static void checkCollision(CollisionObject * a);
+    static void checkCollisionWithOffset(CollisionObject * aObject, int x, int y, int z);
     static void initGrid(int x, int y, int z, glm::vec3 min, glm::vec3 max);
     static Uniform3DGrid<CollisionObject *>* getGrid();
 
