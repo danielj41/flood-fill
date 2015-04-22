@@ -1,4 +1,4 @@
-#version 120
+#version 130
 
 uniform vec3 uDiffuseColor;
 uniform vec3 uSpecularColor;
@@ -12,8 +12,8 @@ uniform vec3 uEyePosition;
 uniform vec3 uLightDirection;
 uniform vec3 uLightColor;
 
-varying vec3 vVertex;
-varying vec3 vNormal;
+in vec3 vVertex;
+flat in vec3 vNormal;
 
 void main(){
     vec3 kd = uDiffuseColor;

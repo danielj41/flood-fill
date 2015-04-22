@@ -121,6 +121,16 @@ void loadMeshes(){
     mesh->generateNormalBuffer();
     mesh->calculateLimits();
     RenderEngine::addMesh(mesh);
+
+    LoadManager::loadMesh("sphere.obj");
+    mesh = LoadManager::getMesh("sphere.obj");
+    mesh->resize();
+    mesh->calculateNormals();
+    mesh->generateVertexBuffer();
+    mesh->generateIndexBuffer();
+    mesh->generateNormalBuffer();
+    mesh->calculateLimits();
+    RenderEngine::addMesh(mesh);
 }
 
 void loadTextures(){
@@ -133,7 +143,7 @@ void createMaterials(){
     /*More Materials: http://devernay.free.fr/cours/opengl/materials.html */
 
     Material * material;
-    material = new Material(glm::vec3(0.13, 0.13, 0.14),
+    material = new Material(glm::vec3(0.4, 0.4, 0.4),
                             glm::vec3(0.3, 0.3, 0.4),
                             glm::vec3(0.3, 0.3, 0.4),
                             4.0f);
