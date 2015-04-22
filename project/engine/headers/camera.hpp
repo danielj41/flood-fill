@@ -31,6 +31,7 @@ public:
 
     void strafe(int direction, float velocity);
     void zoom(int direction, float velocity);
+    void jump(float velocity);
 
     void setTheta(float degreeAngle);
     void setPhi(float degreeAngle);

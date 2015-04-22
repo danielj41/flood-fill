@@ -20,6 +20,10 @@ private:
 
     glm::vec3 lastPosition;
     
+    bool jumping;
+    float velocity;
+    float gravity;
+    
     bool shootPressed;
 };
 

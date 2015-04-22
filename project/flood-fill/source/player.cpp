@@ -18,7 +18,8 @@
 #include "collision_manager.hpp"
 
 Player::Player(Camera * _camera)
-  : GameObject(), CollisionObject(), camera(_camera){}
+  : GameObject(), CollisionObject(), camera(_camera),
+    jumping(false), velocity(0), gravity(-2){}
 
 void Player::setup() {
     INFO("Player Setup...");
@@ -43,6 +44,12 @@ void Player::update() {
 
     camera->setEye(camera->getEye() - glm::vec3(0,0.1,0));
 
+    if(glfwGetKey(Global::window, GLFW_KEY_SPACE) == GLFW_PRESS && !jumping){
+        jumping = true;
+        velocity = .5;
+        camera->jump(velocity);
+    }
+
     float cameraSpeed = 5.0f*TimeManager::getDeltaTime();
     if(glfwGetKey(Global::window, GLFW_KEY_W) == GLFW_PRESS){
         camera->zoom(Camera::FORWARD_DIRECTION, cameraSpeed);
@@ -55,6 +62,15 @@ void Player::update() {
     }
     else if(glfwGetKey(Global::window, GLFW_KEY_D) == GLFW_PRESS){
         camera->strafe(Camera::RIGHT_DIRECTION, cameraSpeed);
+    }
+    
+    if(jumping) {
+        velocity += gravity * TimeManager::getDeltaTime();
+        camera->jump(velocity);
+        // if(camera->getEye().y <= 1) {
+        //     jumping = false;    
+        //     velocity = 0;        
+        // }
     }
 
     getBoundingBox()->setPosition(camera->getEye() - glm::vec3(0,1.0f,0));
@@ -85,7 +101,12 @@ void Player::collided(CollisionObject * collidedWith){
         getBoundingBox()->setPosition(camera->getEye() - glm::vec3(0,1.0f,0));
         INFO("normal " << getCollisionNormal(collidedWith).x << " " << getCollisionNormal(collidedWith).y << " " << getCollisionNormal(collidedWith).z);
         INFO("position " << collidedWith->getPosition().x << " " << collidedWith->getPosition().y << " " << collidedWith->getPosition().z);
-
+        
+        //If on flat ground, jumping is done. 
+        if(getCollisionNormal(collidedWith).y) {
+            jumping = false;
+            velocity = 0;
+        }
     }
 	
     break;

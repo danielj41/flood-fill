@@ -95,6 +95,15 @@ void Camera::zoom(int direction, float velocity){
     target += fixedAxis*getViewVector()*velocity*dir;
 }
 
+void Camera::jump(float velocity) {
+    ASSERT(isReady(), "The camera base vectors missing!");
+    updateTarget();
+
+    INFO("Jumping..." );    
+    eye    += up*velocity;
+    target += up*velocity;
+}
+
 void Camera::setTheta(float degreeAngle){
     theta = degreeAngle;
 }
