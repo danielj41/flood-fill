@@ -33,10 +33,15 @@ void Player::setup() {
     camera->fix(false, true, false);
 
     shootPressed = false;
+
+    setBoundingBox(BoundingBox(glm::vec3(1.0f,1.0f,1.0f), glm::vec3(-1.0f,-1.0f,-1.0f)));
+    getBoundingBox()->setPosition(camera->getEye() - glm::vec3(0,1.0f,0));
 }
 
 void Player::update() {
     lastPosition = camera->getEye();
+
+    camera->setEye(camera->getEye() - glm::vec3(0,0.1,0));
 
     float cameraSpeed = 5.0f*TimeManager::getDeltaTime();
     if(glfwGetKey(Global::window, GLFW_KEY_W) == GLFW_PRESS){
@@ -52,6 +57,7 @@ void Player::update() {
         camera->strafe(Camera::RIGHT_DIRECTION, cameraSpeed);
     }
 
+    getBoundingBox()->setPosition(camera->getEye() - glm::vec3(0,1.0f,0));
 	setPosition(camera->getEye());
 
     if(glfwGetMouseButton(Global::window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS && !shootPressed){
@@ -68,12 +74,21 @@ void Player::update() {
 }
 
 void Player::collided(CollisionObject * collidedWith){
-
+  float normalComponent;
   switch (collidedWith->getCollisionID()) {
   case 1:
 	INFO("DETECTING COLLISION WITH BLOCK!");
-	camera->setEye(lastPosition);
-	break;
+    normalComponent = glm::dot(getPosition() - lastPosition, getCollisionNormal(collidedWith));
+    if(normalComponent < 0.0f) {
+        camera->setEye(getPosition() - getCollisionNormal(collidedWith) * normalComponent);
+        setPosition(camera->getEye());
+        getBoundingBox()->setPosition(camera->getEye() - glm::vec3(0,1.0f,0));
+        INFO("normal " << getCollisionNormal(collidedWith).x << " " << getCollisionNormal(collidedWith).y << " " << getCollisionNormal(collidedWith).z);
+        INFO("position " << collidedWith->getPosition().x << " " << collidedWith->getPosition().y << " " << collidedWith->getPosition().z);
+
+    }
+	
+    break;
   default:
 	break;
   }

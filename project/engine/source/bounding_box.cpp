@@ -19,7 +19,7 @@ const int BoundingBox::NUMBER_VERTICES = 8;
 BoundingBox::BoundingBox(){}
 
 BoundingBox::BoundingBox(glm::vec3 _max, glm::vec3 _min)
-    : max(_max), min(_min) {
+    : max(_max), min(_min), oldPosition(glm::vec3(0, 0, 0)) {
     INFO("Creating a bounding box...");
 
     vertices[0] = glm::vec3(max.x, min.y, max.z);
@@ -66,6 +66,19 @@ void BoundingBox::translate(glm::vec3 translationVector){
 
 void BoundingBox::loadIdentity(){
     modelMatrix = glm::mat4(1.0f);
+}
+
+void BoundingBox::setPosition(glm::vec3 position) {
+    loadIdentity();
+    translate(position);
+    glm::vec3 difference = position - oldPosition;
+    min += difference;
+    max += difference;
+    oldPosition = position;
+}
+
+glm::vec3 BoundingBox::getPosition() {
+    return oldPosition;
 }
 
 void BoundingBox::setModelMatrix(glm::mat4 matrix){

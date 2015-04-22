@@ -37,6 +37,9 @@ void FluidProjectile::setup() {
   position += movementDirection;
   setPosition(position);
   fluidProjectile->translate(position);
+
+  setBoundingBox(BoundingBox(glm::vec3(0.5f,0.5f,0.5f), glm::vec3(-0.5f,-0.5f,-0.5f)));
+  getBoundingBox()->setPosition(position);
 }
 
 void FluidProjectile::update(){
@@ -48,7 +51,8 @@ void FluidProjectile::update(){
   movementDirection.y -= dTime;
   
   fluidProjectile->loadIdentity();
-  fluidProjectile->translate(position);  
+  fluidProjectile->translate(position); 
+  getBoundingBox()->setPosition(position); 
 }
 
 void FluidProjectile::collided(CollisionObject * collidedWith){
