@@ -23,6 +23,9 @@ void Box::setup() {
 				   LoadManager::getMesh("cube.obj"),
 				   MaterialManager::getMaterial("FlatGrey"));
 
+  box->applyTexture(LoadManager::getTexture("VoxelTexture"));
+  box->enableTexture();
+
   box->translate(position);
   
   RenderEngine::addObject(box);
