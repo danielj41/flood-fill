@@ -109,7 +109,7 @@ void LevelTemplate::interpLines(std::vector<std::string> lines){
             for(int i = 0; i < numVoxelsInX; i++){
                 ss >> voxelId;
                 typeGrid(i, j, k) = voxelId;
-                grid(i, j, k)     = createVoxel(voxelId, i, j, k);
+                grid(i, j, k)     = createVoxel(voxelId, i, (numVoxelsInY - j - 1), k);
             }
 
             j++;

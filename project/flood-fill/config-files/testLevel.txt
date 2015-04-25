@@ -1,16 +1,21 @@
-# Comment
+# Use # to comment Comment
 
+# The first thing is to define the Map Measures
+# map numVoxelsInX numVoxelsInY numVoxelsInZ minX minY minX maxX maxY maxZ
+# Example:
 map 3 3 3 0 0 -6 6 6 0
 
-
+#Back Slice
 0 0 1
 0 0 1
 1 1 1
 
+#Middle Slice
 0 0 0
 0 0 1
 1 1 1
 
+#Front Slice
 0 0 0
 0 0 0
 1 1 1

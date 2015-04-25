@@ -21,7 +21,7 @@ public:
     virtual void setup() = 0;
     virtual void update() = 0;
 
-private:
+protected:
     std::string fileName;
 
     // The grid holds every game object in the map
@@ -32,9 +32,9 @@ private:
     DebugPlayer * debugPlayer;
     Player * player;
 
+private:
     void interpLines(std::vector<std::string> lines);
     GameObject * createVoxel(int id, int i, int j, int k);
-
 
     //Special Game Object to initialize the grid
     static VoidVoxel * voidVoxel;
