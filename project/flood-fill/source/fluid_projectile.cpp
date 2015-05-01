@@ -13,6 +13,7 @@
 #include "uniform_3d_grid.hpp"
 #include "box.hpp"
 #include "fluid_box.hpp"
+#include "water_surface.hpp"
 
 FluidProjectile::FluidProjectile(glm::vec3 _position, glm::vec3 _movementDirection)
   : GameObject(), CollisionObject(_position),
@@ -60,10 +61,14 @@ void FluidProjectile::collided(CollisionObject * collidedWith){
     Uniform3DGrid<CollisionObject *> *grid = CollisionManager::getGrid();
     glm::vec3 newPos(grid->getRoundX(oldPosition.x), grid->getRoundY(oldPosition.y), grid->getRoundZ(oldPosition.z));
     if(grid->inGrid(newPos.x, newPos.y, newPos.z) && newPos.y < origPosition.y - 1.0f) {
-      FluidBox *box = new FluidBox(newPos, glm::vec3(0,0,0), 0.0f);
+      /*FluidBox *box = new FluidBox(newPos, glm::vec3(0,0,0), 0.0f);
       box->setup();
       Director::getScene()->addGameObject(box);
-      CollisionManager::addCollisionObjectToGrid(box);
+      CollisionManager::addCollisionObjectToGrid(box);*/
+      WaterSurface *surface = new WaterSurface(newPos);
+      surface->setup();
+      Director::getScene()->addGameObject(surface);
+      CollisionManager::addCollisionObjectToGrid(surface);
     }
     Director::getScene()->removeGameObject(this);
     CollisionManager::removeCollisionObject(this);

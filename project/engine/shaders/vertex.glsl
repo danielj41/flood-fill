@@ -1,15 +1,15 @@
-#version 130
 
-in vec3 aPosition;
-in vec3 aNormal;
+
+attribute vec3 aPosition;
+attribute vec3 aNormal;
 
 uniform mat4 uModel;
 uniform mat4 uView;
 uniform mat4 uProjection;
 uniform mat4 uNormalMatrix;
 
-out vec3 vVertex;
-flat out vec3 vNormal;
+varying vec3 vVertex;
+varying vec3 vNormal;
 
 void main(){
 

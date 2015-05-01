@@ -125,6 +125,15 @@ void loadMeshes(){
     mesh->generateTextureCoordinateBuffer();
     mesh->calculateLimits();
 
+    LoadManager::loadMesh("grid.obj");
+    mesh = LoadManager::getMesh("grid.obj");
+    mesh->resize();
+    mesh->calculateNormals();
+    mesh->generateVertexBuffer();
+    mesh->generateIndexBuffer();
+    mesh->generateNormalBuffer();
+    mesh->calculateLimits();
+
 
     RenderEngine::addMesh(mesh);
 

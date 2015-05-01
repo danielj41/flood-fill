@@ -10,10 +10,10 @@
 
 #include "director.hpp"
 
-Object::Object() : _hasTexture(false), textureEnabled(false) {}
+Object::Object() : _hasTexture(false), textureEnabled(false), water(false) {}
 
 Object::Object(Mesh * _mesh, Material * _material)
-    : mesh(_mesh), material(_material), _hasTexture(false), textureEnabled(false){
+    : mesh(_mesh), material(_material), _hasTexture(false), textureEnabled(false), water(false){
 
     loadIdentity();
     ASSERT(getModelMatrix() == glm::mat4(1.0f),
@@ -97,6 +97,14 @@ bool Object::isTextureEnabled(){
 
 bool Object::hasTexture(){
     return _hasTexture;
+}
+
+bool Object::isWater() {
+    return water;
+}
+
+void Object::enableWater() {
+    water = true;
 }
 
 void Object::scale(glm::vec3 scalingVector){

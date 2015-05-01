@@ -1,4 +1,4 @@
-#version 130
+
 
 uniform vec3 uDiffuseColor;
 uniform vec3 uSpecularColor;
@@ -14,9 +14,9 @@ uniform vec3 uLightColor;
 
 uniform sampler2D uTextureID;
 
-in vec3 vVertex;
-flat in vec3 vNormal;
-in vec2 vTexCoord;
+varying vec3 vVertex;
+varying vec3 vNormal;
+varying vec2 vTexCoord;
 
 void main(){
     vec3 kd = uDiffuseColor;
@@ -35,8 +35,8 @@ void main(){
 
     vec3 H = normalize(L + V);
 
-    vec3 Is = pow(max(dot(N, H), 0), n)*ks;
-    vec3 Id = max(dot(N, L), 0)*kd;
+    vec3 Is = pow(max(dot(N, H), 0.0), n)*ks;
+    vec3 Id = max(dot(N, L), 0.0)*kd;
 
     //float attenuation = dot(uLightFallOff, vec3(1, d, d*d));
 

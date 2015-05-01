@@ -26,6 +26,8 @@ public:
     void enableTexture();
     void disableTexture();
     bool isTextureEnabled();
+    bool isWater();
+    void enableWater();
     bool hasTexture();
 
     void scale(glm::vec3 scalingVector);
@@ -41,6 +43,7 @@ protected:
 
     glm::mat4 modelMatrix;
     bool _hasTexture, textureEnabled;
+    bool water;
 
     void drawElements();
 };
