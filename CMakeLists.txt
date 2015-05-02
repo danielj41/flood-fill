@@ -88,8 +88,11 @@ add_executable(
         project/flood-fill/source/fluid_projectile.cpp
         project/flood-fill/source/fluid_box.cpp
         project/flood-fill/source/water_surface.cpp
-
-		
+        project/flood-fill/source/level_template.cpp
+        project/flood-fill/source/test_level.cpp
+        project/flood-fill/source/void_voxel.cpp
+        project/flood-fill/source/solid_cube.cpp
+				
         #Header Files
         #project/flood-fill/headers/main_level.hpp
         project/flood-fill/headers/global_variables.hpp
@@ -103,6 +106,10 @@ add_executable(
         project/flood-fill/headers/fluid_projectile.hpp
         project/flood-fill/headers/fluid_box.hpp
         project/flood-fill/headers/water_surface.hpp
+        project/flood-fill/headers/level_template.hpp
+        project/flood-fill/headers/test_level.hpp
+        project/flood-fill/headers/void_voxel.hpp
+        project/flood-fill/headers/solid_cube.hpp
 
         ### Engine Files ###
         #Source Files
@@ -191,6 +198,10 @@ add_custom_command(
 add_custom_command(
    TARGET main POST_BUILD
    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/project/flood-fill/textures" "${CMAKE_CURRENT_BINARY_DIR}/flood-fill/textures"
+)
+add_custom_command(
+   TARGET main POST_BUILD
+   COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/project/flood-fill/config-files" "${CMAKE_CURRENT_BINARY_DIR}/flood-fill/config-files"
 )
 
 #Copying the compiled project to the project folder, out of the build directory

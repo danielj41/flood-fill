@@ -13,6 +13,7 @@
 #include "director.hpp"
 #include "global_variables.hpp"
 //#include "main_level.hpp"
+#include "test_level.hpp"
 #include "demo_level.hpp"
 #include "time_manager.hpp"
 #include "render_engine.hpp"
@@ -96,9 +97,9 @@ int main()
 void createScenes(){
     INFO("Creating Scenes...");
 
-    DemoLevel * demoLevel = new DemoLevel();
-    Director::addScene(demoLevel);
-    Director::setScene("DemoLevel");
+    TestLevel * level = new TestLevel();
+    Director::addScene(level);
+    Director::setScene("testLevel.txt");
 }
 
 /**

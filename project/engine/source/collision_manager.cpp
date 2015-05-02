@@ -86,6 +86,8 @@ void CollisionManager::checkCollisionWithOffset(CollisionObject * aObject, int x
 void CollisionManager::initGrid(int x, int y, int z, glm::vec3 min, glm::vec3 max){
   INFO("Initializing the Grid");
   grid = Uniform3DGrid<CollisionObject *>(x, y, z, min.x, max.x, min.y, max.y, min.z, max.z); 
+  CollisionObject * obj = NULL;
+  grid.initialize(obj);
 }
 
 Uniform3DGrid<CollisionObject *>* CollisionManager::getGrid() {
