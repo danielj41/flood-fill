@@ -54,6 +54,14 @@ void Object::draw(Shader * shader){
         glBindTexture(GL_TEXTURE_2D, texture->getTexture());
         glUniform1i(shader->getHandle("uTextureID"), 0);
     }
+    if(isWater()) {
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, waterData->getTexture());
+        glUniform1i(shader->getHandle("uWaterData"), 0);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, waterColor->getTexture());
+        glUniform1i(shader->getHandle("uWaterColor"), 0);
+    }
 
     drawElements();
 }
@@ -78,6 +86,14 @@ glm::mat4 Object::getModelMatrix(){
 void Object::applyTexture(Texture * _texture){
     texture = _texture;
     _hasTexture = true;
+}
+
+void Object::applyWaterData(Texture * _texture){
+    waterData = _texture;
+}
+
+void Object::applyWaterColor(Texture * _texture){
+    waterColor = _texture;
 }
 
 void Object::enableTexture(){

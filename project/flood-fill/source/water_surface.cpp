@@ -20,8 +20,12 @@ void WaterSurface::setup() {
                    LoadManager::getMesh("grid.obj"),
                    MaterialManager::getMaterial("FlatGrey"));
 
-  waterSurface->translate(position);
+  
+  waterSurface->applyWaterData(LoadManager::getTexture("WaterTest"));
+  waterSurface->applyWaterColor(LoadManager::getTexture("WaterTest"));
+  waterSurface->scale(glm::vec3(4.0f, 1.0f, 4.0f));
   waterSurface->enableWater();
+  waterSurface->translate(position);
   
   RenderEngine::addObject(waterSurface);
 }

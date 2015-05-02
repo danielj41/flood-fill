@@ -154,6 +154,8 @@ void loadTextures(){
 
     LoadManager::loadImage("default_voxel.bmp");
     LoadManager::loadTexture("VoxelTexture", LoadManager::getImage("default_voxel.bmp"));
+    LoadManager::loadImage("water_test.bmp");
+    LoadManager::loadTexture("WaterTest", LoadManager::getImage("water_test.bmp"));
 }
 
 void createMaterials(){

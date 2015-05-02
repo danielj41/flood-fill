@@ -14,9 +14,11 @@ uniform vec3 uLightColor;
 
 varying vec3 vVertex;
 varying vec3 vNormal;
+varying vec4 vWaterColor;
 
 void main(){
-    vec3 kd = uDiffuseColor;
+    uDiffuseColor;
+    vec3 kd = vWaterColor.rgb;
     vec3 ks = uSpecularColor;
     vec3 Ia = uAmbientColor;
     vec3 Ie = uEmissionColor;

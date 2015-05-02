@@ -26,9 +26,11 @@ public:
     void enableTexture();
     void disableTexture();
     bool isTextureEnabled();
+    bool hasTexture();
     bool isWater();
     void enableWater();
-    bool hasTexture();
+    void applyWaterData(Texture * _texture);
+    void applyWaterColor(Texture * _texture);
 
     void scale(glm::vec3 scalingVector);
     void rotate(float angle, glm::vec3 direction);
@@ -40,6 +42,9 @@ protected:
     Mesh *   mesh;
     Material * material;
     Texture * texture;
+
+    Texture * waterData;
+    Texture * waterColor;
 
     glm::mat4 modelMatrix;
     bool _hasTexture, textureEnabled;
