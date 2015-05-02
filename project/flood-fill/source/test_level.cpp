@@ -20,7 +20,7 @@ void TestLevel::setup(){
     createLevel();
 
     INFO("Setting up the cameras for the Test Level...");
-    Camera * cam1 = new Camera(glm::vec3(1, 8, -3), glm::vec3(0, 0, -5),
+    Camera * cam1 = new Camera(glm::vec3(1, 12, -3), glm::vec3(0, 0, -5),
                              glm::vec3(0, 1, 0));
     cam1->setProjectionMatrix(
         glm::perspective(glm::radians(90.0f),
@@ -36,6 +36,9 @@ void TestLevel::setup(){
         glm::perspective(glm::radians(90.0f),
                         (float) Global::ScreenWidth/Global::ScreenHeight,
                         0.1f, 100.f));
+
+    Light * l1 = new Light(glm::vec3(1), 5.0f, glm::vec3(0, -1, 0));
+    addLight("Sun", l1);
 
     INFO("Setting up the player for the Test Level...");
     player = new Player(cam1);
