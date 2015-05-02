@@ -21,6 +21,7 @@
 #include "mesh.hpp"
 #include "image.hpp"
 #include "texture.hpp"
+#include "render_texture.hpp"
 
 using namespace std;
 
@@ -161,6 +162,10 @@ void loadTextures(){
     LoadManager::loadTexture("VoxelTexture", LoadManager::getImage("default_voxel.bmp"));
     LoadManager::loadImage("water_test.bmp");
     LoadManager::loadTexture("WaterTest", LoadManager::getImage("water_test.bmp"));
+
+    RenderTexture::loadShaders();
+    LoadManager::loadRenderTexture("waterData");
+    LoadManager::loadRenderTexture("waterColor");
 }
 
 void createMaterials(){

@@ -8,6 +8,7 @@ std::map<std::string, Shader *> LoadManager::shaders;
 std::map<std::string, Mesh *>   LoadManager::meshes;
 std::map<std::string, Image *> LoadManager::images;
 std::map<std::string, Texture *> LoadManager::textures;
+std::map<std::string, RenderTexture *> LoadManager::renderTextures;
 
 const std::string LoadManager::shaderFolder = "engine/shaders";
 const std::string LoadManager::meshFolder = "flood-fill/objects";
@@ -65,6 +66,16 @@ void LoadManager::loadTexture(std::string name, Image * image){
     INFO("LoadManager: Texture " << name << " loaded!");
 }
 
+void LoadManager::loadRenderTexture(std::string name){
+
+    if(renderTextures.find(name) == renderTextures.end()){
+        renderTextures[name] = new RenderTexture();
+        renderTextures[name]->load();
+    }
+
+    INFO("LoadManager: RenderTexture " << name << " loaded!");
+}
+
 Shader * LoadManager::getShader(std::string vertex, std::string fragment){
     ASSERT(shaders.find(vertex + fragment) != shaders.end(),
         "The shader " << vertex << " " << fragment << " is not loaded!");
@@ -87,6 +98,12 @@ Texture * LoadManager::getTexture(std::string name){
     ASSERT(textures.find(name) != textures.end(),
         "The texture " << name << " is not loaded!");
     return textures[name];
+}
+
+RenderTexture * LoadManager::getRenderTexture(std::string name){
+    ASSERT(renderTextures.find(name) != renderTextures.end(),
+        "The texture " << name << " is not loaded!");
+    return renderTextures[name];
 }
 
 /** Private Methods **/

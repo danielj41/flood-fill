@@ -5,13 +5,17 @@
 #include <map>
 
 #include "image.hpp"
+#include "shader.hpp"
 
 class RenderTexture {
 public:
     RenderTexture();
 
+    static void loadShaders();
     void load();
-    void render();
+    void render(Shader *shader);
+    void swapTextures();
+    void clear();
 
     GLuint getTexture();
 
@@ -22,7 +26,6 @@ private:
 
     int currentTexture;
     bool loaded;
-    bool first;
 };
 
 #endif

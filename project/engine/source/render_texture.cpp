@@ -9,7 +9,7 @@
 
 RenderTexture::RenderTexture() : loaded(false){}
 
-void RenderTexture::load(){
+void RenderTexture::loadShaders() {
     LoadManager::loadShader("render-texture-vertex.glsl", "render-texture-fragment.glsl");
     Shader *shader = LoadManager::getShader("render-texture-vertex.glsl", "render-texture-fragment.glsl");
     shader->loadHandle("aNormal", 'a');
@@ -17,6 +17,9 @@ void RenderTexture::load(){
     shader->loadHandle("aTexCoord", 'a');
     shader->loadHandle("uPrevTexture", 'u');
     shader->loadHandle("test", 'u');
+}
+
+void RenderTexture::load(){
 
     currentTexture = 0;
     int i = 0;
@@ -43,33 +46,37 @@ void RenderTexture::load(){
         glBindTexture(GL_TEXTURE_2D, 0);
 
         glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, framebuffer[currentTexture]);
-        glClearColor(0.0, 0.5, 0.0, 0.0);
-        //glClearDepth(1.0f);
+        glClearColor(0.0, 0.0, 0.0, 1.0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
     }
     
-    first = true;
     loaded = true;
 }
 
-void RenderTexture::render() {
+void RenderTexture::clear() {
+    int i;
+    for(i = 0; i < 2; i++) {
+        glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, framebuffer[currentTexture]);
+        glClearColor(0.0, 0.0, 0.0, 1.0);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+    }
+}
+
+void RenderTexture::render(Shader *shader) {
     ASSERT(loaded, "You didn't load the Texture");
 
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, framebuffer[currentTexture]);
-    glClearColor(0.5, 0.5, 0.0, 0.0);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_DEPTH_BUFFER_BIT);
 
     glViewport(0, 0, 256, 256);
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
 
-
-
-    Shader *shader = LoadManager::getShader("render-texture-vertex.glsl", "render-texture-fragment.glsl");
     glUseProgram(shader->getID());
 
-    Mesh *mesh = LoadManager::getMesh("sphere.obj");
+    Mesh *mesh = LoadManager::getMesh("plane.obj");
 
     glEnableVertexAttribArray(shader->getHandle("aPosition"));
     glBindBuffer(GL_ARRAY_BUFFER, mesh->getVertexBuffer());
@@ -87,15 +94,6 @@ void RenderTexture::render() {
     glBindTexture(GL_TEXTURE_2D, texture[(currentTexture + 1) % 2]);
     glUniform1i(shader->getHandle("uPrevTexture"), 0);
 
-    glUniform1i(shader->getHandle("test"), 0);
-    if(first) {
-        // HACKY TEST CODE, REMOVE THIS
-        glUniform1i(shader->getHandle("test"), 10);
-        first = false;
-    }
-    
-
-
     glDrawElements(GL_TRIANGLES, (int) mesh->getIndices().size(),
                    GL_UNSIGNED_INT, 0);
 
@@ -111,7 +109,9 @@ void RenderTexture::render() {
 
     glEnable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);
+}
 
+void RenderTexture::swapTextures() {
     currentTexture = (currentTexture + 1) % 2;
 }
 

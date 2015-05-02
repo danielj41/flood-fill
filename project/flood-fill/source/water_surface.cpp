@@ -20,10 +20,12 @@ void WaterSurface::setup() {
                    LoadManager::getMesh("grid.obj"),
                    MaterialManager::getMaterial("FlatGrey"));
 
-  texture = new RenderTexture();
-  texture->load();
-  waterSurface->applyWaterData(texture->getTexture());
-  waterSurface->applyWaterColor(texture->getTexture());
+  waterDataTexture = LoadManager::getRenderTexture("waterData");
+  waterColorTexture = LoadManager::getRenderTexture("waterColor");
+  waterDataTexture->clear();
+  waterColorTexture->clear();
+  waterSurface->applyWaterData(waterDataTexture->getTexture());
+  waterSurface->applyWaterColor(waterColorTexture->getTexture());
   waterSurface->scale(glm::vec3(4.0f, 1.0f, 4.0f));
   waterSurface->enableWater();
   waterSurface->translate(position);
@@ -32,9 +34,12 @@ void WaterSurface::setup() {
 }
 
 void WaterSurface::update(){
-  waterSurface->applyWaterData(texture->getTexture());
-  waterSurface->applyWaterColor(texture->getTexture());
-  texture->render();
+  waterSurface->applyWaterData(waterDataTexture->getTexture());
+  waterSurface->applyWaterColor(waterColorTexture->getTexture());
+  waterDataTexture->render(LoadManager::getShader("render-texture-vertex.glsl", "render-texture-fragment.glsl"));
+  waterColorTexture->render(LoadManager::getShader("render-texture-vertex.glsl", "render-texture-fragment.glsl"));
+  waterDataTexture->swapTextures();
+  waterColorTexture->swapTextures();
 }
 
 void WaterSurface::collided(CollisionObject * collidedWith){
