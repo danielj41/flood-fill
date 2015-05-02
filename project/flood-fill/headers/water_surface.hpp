@@ -8,6 +8,8 @@
 #include "game_object.hpp"
 #include "collision_object.hpp"
 #include "object.hpp"
+#include "render_texture.hpp"
+
 
 class WaterSurface : public GameObject, public CollisionObject{
 
@@ -26,6 +28,7 @@ private:
   glm::vec3 position;
   glm::vec3 movementDirection; 
   glm::vec3 size;
+  RenderTexture * texture;
   
   float speed;
 

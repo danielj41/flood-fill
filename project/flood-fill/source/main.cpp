@@ -49,6 +49,10 @@ int main()
     glBindVertexArray(vao);
     */
 
+    // store the initally calculated window viewport,
+    // may not be window size on retina displays
+    GLint windowViewport[4];
+    glGetIntegerv(GL_VIEWPORT, windowViewport);
 
     TimeManager::setTimeStamp();
     TimeManager::setDeltaTime();
@@ -57,6 +61,7 @@ int main()
     double timeStamp = TimeManager::getTimeStamp();
     do{
         Director::updateScene();
+        glViewport(windowViewport[0], windowViewport[1], windowViewport[2], windowViewport[3]);
         Director::renderScene();
 
         if(TimeManager::getTimeStamp() - timeStamp >= 1.0f){

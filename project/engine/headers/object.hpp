@@ -29,8 +29,8 @@ public:
     bool hasTexture();
     bool isWater();
     void enableWater();
-    void applyWaterData(Texture * _texture);
-    void applyWaterColor(Texture * _texture);
+    void applyWaterData(GLuint id);
+    void applyWaterColor(GLuint id);
 
     void scale(glm::vec3 scalingVector);
     void rotate(float angle, glm::vec3 direction);
@@ -43,8 +43,8 @@ protected:
     Material * material;
     Texture * texture;
 
-    Texture * waterData;
-    Texture * waterColor;
+    GLuint waterData;
+    GLuint waterColor;
 
     glm::mat4 modelMatrix;
     bool _hasTexture, textureEnabled;

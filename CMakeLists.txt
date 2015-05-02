@@ -88,7 +88,7 @@ add_executable(
         project/flood-fill/source/fluid_projectile.cpp
         project/flood-fill/source/fluid_box.cpp
         project/flood-fill/source/water_surface.cpp
-		
+
 		
         #Header Files
         #project/flood-fill/headers/main_level.hpp
@@ -125,6 +125,7 @@ add_executable(
         project/engine/source/material_manager.cpp
         project/engine/source/image.cpp
         project/engine/source/texture.cpp
+        project/engine/source/render_texture.cpp
 
         #Header Files
         project/engine/headers/GLIncludes.h
@@ -149,10 +150,17 @@ add_executable(
         project/engine/headers/uniform_3d_grid.hpp
         project/engine/headers/image.hpp
         project/engine/headers/texture.hpp
+        project/engine/headers/render_texture.hpp
 
         #Shader Files
         project/engine/shaders/vertex.glsl
         project/engine/shaders/fragment.glsl
+
+        project/engine/shaders/vertex-texture.glsl
+        project/engine/shaders/fragment-texture.glsl
+
+        project/engine/shaders/vertex-water.glsl
+        project/engine/shaders/fragment-water.glsl
 
         project/engine/shaders/bounding_box_vertex.glsl
         project/engine/shaders/bounding_box_fragment.glsl

@@ -20,9 +20,10 @@ void WaterSurface::setup() {
                    LoadManager::getMesh("grid.obj"),
                    MaterialManager::getMaterial("FlatGrey"));
 
-  
-  waterSurface->applyWaterData(LoadManager::getTexture("WaterTest"));
-  waterSurface->applyWaterColor(LoadManager::getTexture("WaterTest"));
+  texture = new RenderTexture();
+  texture->load();
+  waterSurface->applyWaterData(texture->getTexture());
+  waterSurface->applyWaterColor(texture->getTexture());
   waterSurface->scale(glm::vec3(4.0f, 1.0f, 4.0f));
   waterSurface->enableWater();
   waterSurface->translate(position);
@@ -31,7 +32,9 @@ void WaterSurface::setup() {
 }
 
 void WaterSurface::update(){
-
+  waterSurface->applyWaterData(texture->getTexture());
+  waterSurface->applyWaterColor(texture->getTexture());
+  texture->render();
 }
 
 void WaterSurface::collided(CollisionObject * collidedWith){

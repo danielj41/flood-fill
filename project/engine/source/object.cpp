@@ -56,11 +56,11 @@ void Object::draw(Shader * shader){
     }
     if(isWater()) {
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, waterData->getTexture());
+        glBindTexture(GL_TEXTURE_2D, waterData);
         glUniform1i(shader->getHandle("uWaterData"), 0);
         glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, waterColor->getTexture());
-        glUniform1i(shader->getHandle("uWaterColor"), 0);
+        glBindTexture(GL_TEXTURE_2D, waterColor);
+        glUniform1i(shader->getHandle("uWaterColor"), 1);
     }
 
     drawElements();
@@ -88,12 +88,12 @@ void Object::applyTexture(Texture * _texture){
     _hasTexture = true;
 }
 
-void Object::applyWaterData(Texture * _texture){
-    waterData = _texture;
+void Object::applyWaterData(GLuint id){
+    waterData = id;
 }
 
-void Object::applyWaterColor(Texture * _texture){
-    waterColor = _texture;
+void Object::applyWaterColor(GLuint id){
+    waterColor = id;
 }
 
 void Object::enableTexture(){
