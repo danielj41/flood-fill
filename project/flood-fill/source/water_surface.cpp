@@ -43,8 +43,14 @@ void WaterSurface::setup() {
   waterColorTexture->clear();
   waterBlockTexture->clear();
   waterBlockTexture->renderBlock(&grid, minX, maxX, minY, maxY, minZ, maxZ); 
+  waterColorTexture->render(LoadManager::getShader("render-texture-vertex-color-initial.glsl", "render-texture-fragment-color-initial.glsl"),
+                            waterBlockTexture->getTexture());
+  waterSurface->applyWaterColor(waterColorTexture->getTexture());
+  waterColorTexture->swapTextures();
+  waterDataTexture->render(LoadManager::getShader("render-texture-vertex-data-initial.glsl", "render-texture-fragment-data-initial.glsl"),
+                            waterBlockTexture->getTexture());
   waterSurface->applyWaterData(waterDataTexture->getTexture());
-  waterSurface->applyWaterColor(waterBlockTexture->getTexture());
+  waterDataTexture->swapTextures();
   waterSurface->scale(glm::vec3((maxX - minX + 2.0f) / 2.0f, (maxY - minY + 2.0f) / 2.0f, (maxZ - minZ + 2.0f) / 2.0f));
   waterSurface->enableWater();
   position = glm::vec3((maxX + minX) / 2.0f, (maxY + minY) / 2.0f, (maxZ + minZ) / 2.0f);
@@ -55,11 +61,9 @@ void WaterSurface::setup() {
 
 void WaterSurface::update(){
   waterSurface->applyWaterData(waterDataTexture->getTexture());
-  //waterSurface->applyWaterColor(waterColorTexture->getTexture());
-  waterDataTexture->render(LoadManager::getShader("render-texture-vertex.glsl", "render-texture-fragment.glsl"));
-  waterColorTexture->render(LoadManager::getShader("render-texture-vertex.glsl", "render-texture-fragment.glsl"));
+  waterDataTexture->render(LoadManager::getShader("render-texture-vertex-data-update.glsl", "render-texture-fragment-data-update.glsl"),
+                           waterBlockTexture->getTexture());
   waterDataTexture->swapTextures();
-  waterColorTexture->swapTextures();
 }
 
 void WaterSurface::checkAdjacent(glm::vec3 newPos) {

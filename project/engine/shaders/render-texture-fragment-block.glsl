@@ -1,4 +1,3 @@
-uniform sampler2D uPrevTexture;
 varying float vHeight;
 
 void main(){

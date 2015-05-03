@@ -14,7 +14,7 @@ public:
 
     static void loadShaders();
     void load();
-    void render(Shader *shader);
+    void render(Shader *shader, GLuint texture);
     void swapTextures();
     void clear();
     void renderBlock(Uniform3DGrid<int> *grid,

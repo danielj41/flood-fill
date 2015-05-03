@@ -14,19 +14,35 @@
 RenderTexture::RenderTexture() : loaded(false){}
 
 void RenderTexture::loadShaders() {
-    LoadManager::loadShader("render-texture-vertex.glsl", "render-texture-fragment.glsl");
-    Shader *shader = LoadManager::getShader("render-texture-vertex.glsl", "render-texture-fragment.glsl");
+    LoadManager::loadShader("render-texture-vertex-data-initial.glsl", "render-texture-fragment-data-initial.glsl");
+    Shader *shader = LoadManager::getShader("render-texture-vertex-data-initial.glsl", "render-texture-fragment-data-initial.glsl");
     shader->loadHandle("aNormal", 'a');
     shader->loadHandle("aPosition", 'a');
     shader->loadHandle("aTexCoord", 'a');
     shader->loadHandle("uPrevTexture", 'u');
+    shader->loadHandle("uDataTexture", 'u');
+
+    LoadManager::loadShader("render-texture-vertex-color-initial.glsl", "render-texture-fragment-color-initial.glsl");
+    shader = LoadManager::getShader("render-texture-vertex-color-initial.glsl", "render-texture-fragment-color-initial.glsl");
+    shader->loadHandle("aNormal", 'a');
+    shader->loadHandle("aPosition", 'a');
+    shader->loadHandle("aTexCoord", 'a');
+    shader->loadHandle("uPrevTexture", 'u');
+    shader->loadHandle("uDataTexture", 'u');
+
+    LoadManager::loadShader("render-texture-vertex-data-update.glsl", "render-texture-fragment-data-update.glsl");
+    shader = LoadManager::getShader("render-texture-vertex-data-update.glsl", "render-texture-fragment-data-update.glsl");
+    shader->loadHandle("aNormal", 'a');
+    shader->loadHandle("aPosition", 'a');
+    shader->loadHandle("aTexCoord", 'a');
+    shader->loadHandle("uPrevTexture", 'u');
+    shader->loadHandle("uDataTexture", 'u');
 
     LoadManager::loadShader("render-texture-vertex-block.glsl", "render-texture-fragment-block.glsl");
     shader = LoadManager::getShader("render-texture-vertex-block.glsl", "render-texture-fragment-block.glsl");
     shader->loadHandle("aNormal", 'a');
     shader->loadHandle("aPosition", 'a');
     shader->loadHandle("aTexCoord", 'a');
-    shader->loadHandle("uPrevTexture", 'u');
     shader->loadHandle("uModelMatrix", 'u');
 }
 
@@ -75,7 +91,7 @@ void RenderTexture::clear() {
     }
 }
 
-void RenderTexture::render(Shader *shader) {
+void RenderTexture::render(Shader *shader, GLuint dataTexture) {
     ASSERT(loaded, "You didn't load the Texture");
 
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, framebuffer[currentTexture]);
@@ -104,6 +120,10 @@ void RenderTexture::render(Shader *shader) {
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture[(currentTexture + 1) % 2]);
     glUniform1i(shader->getHandle("uPrevTexture"), 0);
+
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, dataTexture);
+    glUniform1i(shader->getHandle("uDataTexture"), 1);
 
     glDrawElements(GL_TRIANGLES, (int) mesh->getIndices().size(),
                    GL_UNSIGNED_INT, 0);
@@ -157,10 +177,6 @@ void RenderTexture::renderBlock(Uniform3DGrid<int> *grid,
                           GL_FLOAT, GL_FALSE, 0, 0);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->getIndexBuffer());
-
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture[(currentTexture + 1) % 2]);
-    glUniform1i(shader->getHandle("uPrevTexture"), 0);
 
     // y and z are intentionally flipped, to map the XZ grid into an XY projection to draw on the texture
     glm::mat4 scale = glm::scale(glm::mat4(1.0f),

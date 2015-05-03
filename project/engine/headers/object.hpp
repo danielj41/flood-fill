@@ -31,6 +31,7 @@ public:
     void enableWater();
     void applyWaterData(GLuint id);
     void applyWaterColor(GLuint id);
+    void applyWaterBlock(GLuint id);
 
     void scale(glm::vec3 scalingVector);
     void rotate(float angle, glm::vec3 direction);

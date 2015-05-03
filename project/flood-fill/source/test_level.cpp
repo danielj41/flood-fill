@@ -37,7 +37,7 @@ void TestLevel::setup(){
                         (float) Global::ScreenWidth/Global::ScreenHeight,
                         0.1f, 100.f));
 
-    Light * l1 = new Light(glm::vec3(1), 5.0f, glm::vec3(0, -1, 0));
+    Light * l1 = new Light(glm::vec3(1), 30.0f, glm::vec3(1.0, -1.0, 0.5));
     addLight("Sun", l1);
 
     INFO("Setting up the player for the Test Level...");
