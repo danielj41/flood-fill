@@ -133,6 +133,7 @@ add_executable(
         project/engine/source/image.cpp
         project/engine/source/texture.cpp
         project/engine/source/render_texture.cpp
+        project/engine/source/lodepng.cpp
 
         #Header Files
         project/engine/headers/GLIncludes.h
@@ -158,6 +159,7 @@ add_executable(
         project/engine/headers/image.hpp
         project/engine/headers/texture.hpp
         project/engine/headers/render_texture.hpp
+        project/engine/headers/lodepng.h
 
         #Shader Files
         project/engine/shaders/vertex.glsl
