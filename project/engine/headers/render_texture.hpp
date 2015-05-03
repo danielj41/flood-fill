@@ -6,6 +6,7 @@
 
 #include "image.hpp"
 #include "shader.hpp"
+#include "uniform_3d_grid.hpp"
 
 class RenderTexture {
 public:
@@ -16,6 +17,10 @@ public:
     void render(Shader *shader);
     void swapTextures();
     void clear();
+    void renderBlock(Uniform3DGrid<int> *grid,
+                     float minX, float maxX,
+                     float minY, float maxY,
+                     float minZ, float maxZ);
 
     GLuint getTexture();
 

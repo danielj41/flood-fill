@@ -167,6 +167,7 @@ void loadTextures(){
     RenderTexture::loadShaders();
     LoadManager::loadRenderTexture("waterData");
     LoadManager::loadRenderTexture("waterColor");
+    LoadManager::loadRenderTexture("waterBlock");
 }
 
 void createMaterials(){

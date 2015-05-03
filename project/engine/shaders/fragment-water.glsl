@@ -17,8 +17,7 @@ varying vec3 vNormal;
 varying vec4 vWaterColor;
 
 void main(){
-    uDiffuseColor;
-    vec3 kd = vWaterColor.rgb;
+    vec3 kd = uDiffuseColor;
     vec3 ks = uSpecularColor;
     vec3 Ia = uAmbientColor;
     vec3 Ie = uEmissionColor;
@@ -41,5 +40,5 @@ void main(){
 
     vec3 I = Ic*(Id + Is) + Ia + Ie;
 
-    gl_FragColor = vec4(I, 1);
+    gl_FragColor = vWaterColor;
 }

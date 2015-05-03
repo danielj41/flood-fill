@@ -68,7 +68,7 @@ void FluidProjectile::collided(CollisionObject * collidedWith){
       WaterSurface *surface = new WaterSurface(newPos);
       surface->setup();
       Director::getScene()->addGameObject(surface);
-      CollisionManager::addCollisionObjectToGrid(surface);
+      //CollisionManager::addCollisionObjectToGrid(surface);
     }
     Director::getScene()->removeGameObject(this);
     CollisionManager::removeCollisionObject(this);

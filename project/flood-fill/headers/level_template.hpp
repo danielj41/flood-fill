@@ -18,8 +18,18 @@ public:
 
     void createLevel();
 
+
     virtual void setup() = 0;
     virtual void update() = 0;
+
+    Uniform3DGrid<int>* getTypeGrid();
+
+    // Level blocks identifiers
+    static const char COMMENT;
+    static const int VOID_SPACE;
+    static const int AIR;
+    static const int SOLID_CUBE;
+    static const int AVAILABLE_FILL_SPACE;
 
 protected:
     std::string fileName;
@@ -34,18 +44,12 @@ protected:
 
 private:
     void interpLines(std::vector<std::string> lines);
+    int minx, miny, minz, maxx, maxy, maxz;
     GameObject * createVoxel(int id, int i, int j, int k);
 
     //Special Game Object to initialize the grid
     static VoidVoxel * voidVoxel;
     static const std::string templatesFolder;
-
-    // Level blocks identifiers
-    static const char COMMENT;
-    static const int VOID_SPACE;
-    static const int AIR;
-    static const int SOLID_CUBE;
-    static const int AVAIABLE_FILL_SPACE;
 };
 
 #endif

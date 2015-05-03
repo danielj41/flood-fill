@@ -20,6 +20,6 @@ void main(){
     vNormal = vec3(normalize(uNormalMatrix*vec4(aNormal, 0)));
     vVertex = vec3(uProjection*uView*uModel*vec4(aPosition, 1));
 
-    gl_Position = uProjection*uView*uModel*vec4(aPosition - vec3(0, texture2D(uWaterData, aPosition.xz*0.5 + 0.5).g, 0), 1);
+    gl_Position = uProjection*uView*uModel*vec4(aPosition + vec3(0, 1.0 - texture2D(uWaterData, aPosition.xz*0.5 + vec2(0.5,0.5)).g * 2.0, 0), 1);
     vWaterColor = texture2D(uWaterColor, aPosition.xz*0.5 + 0.5);
 }

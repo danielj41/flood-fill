@@ -59,6 +59,8 @@ void CollisionManager::removeCollisionObject(CollisionObject * object){
 void CollisionManager::checkCollision(CollisionObject * aObject){
 // This function checks if a has any conflicts with other collision objects in the grid    
 
+  // fix this later to include all nearby cubes, or calculate it with the bounding box
+  // this causes you to be able to jump diagonally through things.
   checkCollisionWithOffset(aObject, 0,-1,0);
   checkCollisionWithOffset(aObject, 0,0,0);
   checkCollisionWithOffset(aObject, 0,1,0);

@@ -274,21 +274,18 @@ float Uniform3DGrid<T>::getMaxZ(){ return maxZ; }
 template<typename T>
 float Uniform3DGrid<T>::getRoundX(float x) {
     unsigned int xIndex = ((unsigned int) ((x - minX)/edgeSizeX));
-    if(xIndex == sizeX) xIndex--;
     return xIndex * edgeSizeX + minX + edgeSizeX/2.0;
 }
 
 template<typename T>
 float Uniform3DGrid<T>::getRoundY(float y) {
     unsigned int yIndex = ((unsigned int) ((y - maxY)/-edgeSizeY));
-    if(yIndex == sizeY) yIndex--;
     return yIndex * -edgeSizeY + maxY - edgeSizeY/2.0;
 }
 
 template<typename T>
 float Uniform3DGrid<T>::getRoundZ(float z) {
     unsigned int zIndex = ((unsigned int) ((z - minZ)/edgeSizeZ));
-    if(zIndex == sizeZ) zIndex--;
     return zIndex * edgeSizeZ + minZ + edgeSizeZ/2.0;
 }
 

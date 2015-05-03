@@ -26,7 +26,7 @@ const char LevelTemplate::COMMENT = '#';
 const int LevelTemplate::VOID_SPACE          = -1;
 const int LevelTemplate::AIR                 =  0;
 const int LevelTemplate::SOLID_CUBE          =  1;
-const int LevelTemplate::AVAIABLE_FILL_SPACE =  2;
+const int LevelTemplate::AVAILABLE_FILL_SPACE =  2;
 
 
 LevelTemplate::LevelTemplate(std::string levelFileName)
@@ -63,7 +63,7 @@ void LevelTemplate::interpLines(std::vector<std::string> lines){
 
     std::string line;
 
-    int numVoxelsInX, numVoxelsInY, numVoxelsInZ, minx, miny, minz, maxx, maxy, maxz;
+    int numVoxelsInX, numVoxelsInY, numVoxelsInZ;
 
     //Counts the line of the grid that is being read. Correspond to the Y component
     int j = 0;
@@ -90,11 +90,11 @@ void LevelTemplate::interpLines(std::vector<std::string> lines){
                      << "Got: " << line);
 
             grid = Uniform3DGrid<GameObject *>(numVoxelsInX, numVoxelsInY, numVoxelsInZ,
-                                               minx, miny, minz, maxx, maxy, maxz);
+                                               minx, maxx, miny, maxy, minz, maxz);
             grid.initialize(voidVoxel);
 
             typeGrid = Uniform3DGrid<int>(numVoxelsInX, numVoxelsInY, numVoxelsInZ,
-                                          minx, miny, minz, maxx, maxy, maxz);
+                                          minx, maxx, miny, maxy, minz, maxz);
             typeGrid.initialize(VOID_SPACE);
 
             CollisionManager::initGrid(numVoxelsInX, numVoxelsInY, numVoxelsInZ,
@@ -135,13 +135,13 @@ GameObject * LevelTemplate::createVoxel(int id, int i, int j, int k){
         break;
     case SOLID_CUBE:
     {
-        SolidCube * c = new SolidCube(glm::vec3(i * 2 + 1, j * 2 + 1, -(k * 2 + 1)));
+        SolidCube * c = new SolidCube(glm::vec3(minx + i * 2 + 1, miny + j * 2 + 1, minz + (k * 2 + 1)));
         c->setup();
         CollisionManager::addCollisionObjectToGrid(c);
         return c;
         break;
     }
-    case AVAIABLE_FILL_SPACE:
+    case AVAILABLE_FILL_SPACE:
         return voidVoxel;
         break;
     default:
@@ -149,4 +149,8 @@ GameObject * LevelTemplate::createVoxel(int id, int i, int j, int k){
     }
 
     return voidVoxel;
+}
+
+Uniform3DGrid<int>* LevelTemplate::getTypeGrid() {
+    return &typeGrid;
 }

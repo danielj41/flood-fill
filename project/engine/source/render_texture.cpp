@@ -6,6 +6,10 @@
 #include <cstdlib>
 #include <iostream>
 #include "debug_macros.h"
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/type_ptr.hpp"
+
 
 RenderTexture::RenderTexture() : loaded(false){}
 
@@ -16,7 +20,14 @@ void RenderTexture::loadShaders() {
     shader->loadHandle("aPosition", 'a');
     shader->loadHandle("aTexCoord", 'a');
     shader->loadHandle("uPrevTexture", 'u');
-    shader->loadHandle("test", 'u');
+
+    LoadManager::loadShader("render-texture-vertex-block.glsl", "render-texture-fragment-block.glsl");
+    shader = LoadManager::getShader("render-texture-vertex-block.glsl", "render-texture-fragment-block.glsl");
+    shader->loadHandle("aNormal", 'a');
+    shader->loadHandle("aPosition", 'a');
+    shader->loadHandle("aTexCoord", 'a');
+    shader->loadHandle("uPrevTexture", 'u');
+    shader->loadHandle("uModelMatrix", 'u');
 }
 
 void RenderTexture::load(){
@@ -57,7 +68,7 @@ void RenderTexture::load(){
 void RenderTexture::clear() {
     int i;
     for(i = 0; i < 2; i++) {
-        glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, framebuffer[currentTexture]);
+        glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, framebuffer[i]);
         glClearColor(0.0, 0.0, 0.0, 1.0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
@@ -115,9 +126,83 @@ void RenderTexture::swapTextures() {
     currentTexture = (currentTexture + 1) % 2;
 }
 
+void RenderTexture::renderBlock(Uniform3DGrid<int> *grid,
+                                float minX, float maxX,
+                                float minY, float maxY,
+                                float minZ, float maxZ) {
+
+    ASSERT(loaded, "You didn't load the Texture");
+
+    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, framebuffer[currentTexture]);
+    glClear(GL_DEPTH_BUFFER_BIT);
+
+    glViewport(0, 0, 256, 256);
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_CULL_FACE);
+
+    Shader *shader = LoadManager::getShader("render-texture-vertex-block.glsl", "render-texture-fragment-block.glsl");
+
+    glUseProgram(shader->getID());
+
+    Mesh *mesh = LoadManager::getMesh("plane.obj");
+
+    glEnableVertexAttribArray(shader->getHandle("aPosition"));
+    glBindBuffer(GL_ARRAY_BUFFER, mesh->getVertexBuffer());
+    glVertexAttribPointer(shader->getHandle("aPosition"), 3,
+                          GL_FLOAT, GL_FALSE, 0, 0);
+
+    glEnableVertexAttribArray(shader->getHandle("aNormal"));
+    glBindBuffer(GL_ARRAY_BUFFER, mesh->getNormalBuffer());
+    glVertexAttribPointer(shader->getHandle("aNormal"), 3,
+                          GL_FLOAT, GL_FALSE, 0, 0);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->getIndexBuffer());
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture[(currentTexture + 1) % 2]);
+    glUniform1i(shader->getHandle("uPrevTexture"), 0);
+
+    // y and z are intentionally flipped, to map the XZ grid into an XY projection to draw on the texture
+    glm::mat4 scale = glm::scale(glm::mat4(1.0f),
+        glm::vec3(grid->getEdgeSizeX() / (maxX - minX + grid->getEdgeSizeX()),
+                  grid->getEdgeSizeZ() / (maxZ - minZ + grid->getEdgeSizeZ()),
+                  1.0f));
+
+    float x, y, z;
+    for(x = minX; x < maxX + grid->getEdgeSizeX()/2.0f; x += grid->getEdgeSizeX()) {
+        for(z = minZ; z < maxZ + grid->getEdgeSizeZ()/2.0f; z += grid->getEdgeSizeZ()) {
+            for(y = maxY + grid->getEdgeSizeY(); y > minY + grid->getEdgeSizeY()/2.0f && // stop early, so we can query one block down
+                          grid->getValue(x, y - grid->getEdgeSizeY(), z) == 1;
+                y -= grid->getEdgeSizeY());
+
+            glm::mat4 model = glm::translate(glm::mat4(1.0f),
+                glm::vec3((x - (maxX + minX) / 2.0f) / (maxX - minX + grid->getEdgeSizeX()) * 2.0f,
+                          (z - (maxZ + minZ) / 2.0f) / (maxZ - minZ + grid->getEdgeSizeZ()) * 2.0f,
+                          (y - grid->getEdgeSizeY() / 2.0f - (maxY + minY) / 2.0f) / (maxY - minY + grid->getEdgeSizeY()) * 2.0f
+                          )) * scale;
+
+            glUniformMatrix4fv(shader->getHandle("uModelMatrix"), 1, GL_FALSE,
+                        glm::value_ptr(model));
+
+            glDrawElements(GL_TRIANGLES, (int) mesh->getIndices().size(), GL_UNSIGNED_INT, 0);
+        }
+    }
+
+    glDisableVertexAttribArray(shader->getHandle("aPosition"));
+    glDisableVertexAttribArray(shader->getHandle("aNormal"));
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
+}
+
 GLuint RenderTexture::getTexture(){
     ASSERT(loaded, "You didn't load the Texture");
 
-    return texture[(currentTexture + 1) % 2];
+    return texture[currentTexture];
 }
 

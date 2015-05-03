@@ -9,6 +9,8 @@
 #include "collision_object.hpp"
 #include "object.hpp"
 #include "render_texture.hpp"
+#include "level_template.hpp"
+#include "director.hpp"
 
 
 class WaterSurface : public GameObject, public CollisionObject{
@@ -24,15 +26,20 @@ public:
 
 private:
 
+  Uniform3DGrid<int> *typeGrid;
+  Uniform3DGrid<int> grid;
   Object * waterSurface;
   glm::vec3 position;
   glm::vec3 movementDirection; 
   glm::vec3 size;
   RenderTexture * waterDataTexture;
   RenderTexture * waterColorTexture;
-  
-  float speed;
+  RenderTexture * waterBlockTexture;
+  LevelTemplate * level;
 
+  float minX, maxX, minY, maxY, minZ, maxZ;
+
+  void checkAdjacent(glm::vec3 newPos);
 };
 
 #endif
