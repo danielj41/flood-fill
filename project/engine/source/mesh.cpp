@@ -117,7 +117,7 @@ void Mesh::calculateNormals(){
 
     INFO("Calculating " << objfile << " normals...");
 
-    normals = std::vector<float>(vertices.size(), 0);
+    normals = std::vector<float>(vertices.size(), 0.0f);
 
     int idx1, idx2, idx3;
     glm::vec3 v1, v2, v3;
@@ -141,9 +141,11 @@ void Mesh::calculateNormals(){
         normals[3 * idx1 + 0] += norm.x;
         normals[3 * idx1 + 1] += norm.y;
         normals[3 * idx1 + 2] += norm.z;
+
         normals[3 * idx2 + 0] += norm.x;
         normals[3 * idx2 + 1] += norm.y;
         normals[3 * idx2 + 2] += norm.z;
+
         normals[3 * idx3 + 0] += norm.x;
         normals[3 * idx3 + 1] += norm.y;
         normals[3 * idx3 + 2] += norm.z;
@@ -153,9 +155,9 @@ void Mesh::calculateNormals(){
         glm::vec3 norm = glm::normalize(glm::vec3(normals[3 * i + 0],
                                                   normals[3 * i + 1],
                                                   normals[3 * i + 2]));
-        normals[3 * i + 0] += norm.x;
-        normals[3 * i + 1] += norm.y;
-        normals[3 * i + 2] += norm.z;
+        normals[3 * i + 0] = norm.x;
+        normals[3 * i + 1] = norm.y;
+        normals[3 * i + 2] = norm.z;
     }
 
     normalsFlag = true;
