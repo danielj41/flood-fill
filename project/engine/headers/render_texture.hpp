@@ -23,12 +23,15 @@ public:
                      float minZ, float maxZ);
 
     GLuint getTexture();
+    void release();
+    bool isInUse();
 
 private:
     GLuint texture[2];
     GLuint framebuffer[2];
     GLuint renderbuffer[2];
 
+    bool inUse;
     int currentTexture;
     bool loaded;
 };

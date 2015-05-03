@@ -79,6 +79,7 @@ void RenderTexture::load(){
     }
     
     loaded = true;
+    inUse = false;
 }
 
 void RenderTexture::clear() {
@@ -89,6 +90,8 @@ void RenderTexture::clear() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
     }
+
+    inUse = true;
 }
 
 void RenderTexture::render(Shader *shader, GLuint dataTexture) {
@@ -219,6 +222,14 @@ void RenderTexture::renderBlock(Uniform3DGrid<int> *grid,
 
     glEnable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);
+}
+
+void RenderTexture::release() {
+    inUse = false;
+}
+
+bool RenderTexture::isInUse() {
+    return inUse;
 }
 
 GLuint RenderTexture::getTexture(){

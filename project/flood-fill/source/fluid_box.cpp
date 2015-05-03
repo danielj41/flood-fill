@@ -11,11 +11,12 @@
 #include "material_manager.hpp"
 #include "render_engine.hpp"
 #include "uniform_3d_grid.hpp"
+#include "level_template.hpp"
 
-FluidBox::FluidBox(glm::vec3 _position, glm::vec3 _movementDirection, float _speed)
+FluidBox::FluidBox(glm::vec3 _position)
   : GameObject(), CollisionObject(_position),
-	position(_position), movementDirection(_movementDirection),
-	size(glm::vec3(1)), speed(_speed){}
+	position(_position),
+	size(glm::vec3(1)) {}
 
 void FluidBox::setup() {  
   INFO("Creating a box ...");
@@ -24,49 +25,43 @@ void FluidBox::setup() {
 				   LoadManager::getMesh("cube.obj"),
 				   MaterialManager::getMaterial("FlatBlue"));
 
-  fluidBox->translate(position - glm::vec3(0.0f, 2.0f, 0.0f));
-  
-  RenderEngine::addObject(fluidBox);
+  fluidBox->translate(position);
+  timer = 0.0f;
+  visible = false;
   
   setCollisionID(1);
   setCanCollide(true);
 
-  height = 0.0;
-  generatedAdjacent = false;
-
   setBoundingBox(BoundingBox(glm::vec3(1.0f,1.0f,1.0f), glm::vec3(-1.0f,-1.0f,-1.0f)));
   getBoundingBox()->setPosition(position);
+
+  CollisionManager::addCollisionObjectToGrid(this);
+  ((LevelTemplate *)Director::getScene())->getTypeGrid()->setValue(position.x, position.y, position.z, LevelTemplate::SOLID_CUBE);
+
+  Uniform3DGrid<CollisionObject *> *grid = CollisionManager::getGrid();
+  createNew(position + glm::vec3(grid->getEdgeSizeX(), 0.0f, 0.0f));
+  createNew(position + glm::vec3(-grid->getEdgeSizeX(), 0.0f, 0.0f));
+  createNew(position + glm::vec3(0.0f, 0.0f, grid->getEdgeSizeZ()));
+  createNew(position + glm::vec3(0.0f, 0.0f, -grid->getEdgeSizeZ()));
 }
 
 void FluidBox::update(){
-
   float dTime = ((float) TimeManager::getDeltaTime());
-  
-  position += movementDirection*speed*dTime;
-  height += dTime * 5.0;
-  if(height > 2.0) {
-    height = 2.0;
-  }
-  if(height > 1.0 && !generatedAdjacent) {
-    generatedAdjacent = true;
-    Uniform3DGrid<CollisionObject *> *grid = CollisionManager::getGrid();
-    createNew(position + glm::vec3(grid->getEdgeSizeX(), 0.0f, 0.0f));
-    createNew(position + glm::vec3(-grid->getEdgeSizeX(), 0.0f, 0.0f));
-    createNew(position + glm::vec3(0.0f, 0.0f, grid->getEdgeSizeZ()));
-    createNew(position + glm::vec3(0.0f, 0.0f, -grid->getEdgeSizeZ()));
-  }
-
-  fluidBox->loadIdentity();
-  fluidBox->translate(position - glm::vec3(0.0f, 2.0f - height, 0.0f));  
+  if(!visible) {
+    timer += dTime;
+    if(timer > 2.0f) {
+      visible = true;
+      RenderEngine::addObject(fluidBox);
+    }
+  } 
 }
 
 void FluidBox::createNew(glm::vec3 newPos) {
   Uniform3DGrid<CollisionObject *> *grid = CollisionManager::getGrid();
   if(grid->inGrid(newPos.x, newPos.y, newPos.z) && grid->getValue(newPos.x, newPos.y, newPos.z) == NULL) {
-    FluidBox *box = new FluidBox(newPos, glm::vec3(0,0,0), 0.0f);
+    FluidBox *box = new FluidBox(newPos);
     box->setup();
     Director::getScene()->addGameObject(box);
-    CollisionManager::addCollisionObjectToGrid(box);
   }
 }
 

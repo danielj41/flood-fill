@@ -26,7 +26,7 @@ void main(){
 
     vel *= 0.995;
 
-    info.r += vel;
+    info.r += vel / 10.0;
 
     info.g = (vel + 1.0) / 2.0;
 

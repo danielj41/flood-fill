@@ -16,6 +16,7 @@
 #include "fluid_projectile.hpp"
 #include "director.hpp"
 #include "collision_manager.hpp"
+#include "load_manager.hpp"
 
 Player::Player(Camera * _camera)
   : GameObject(), CollisionObject(), camera(_camera),

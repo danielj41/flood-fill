@@ -38,8 +38,10 @@ private:
   LevelTemplate * level;
 
   float minX, maxX, minY, maxY, minZ, maxZ;
+  glm::vec3 lowestPosition;
+  float timer;
 
-  void checkAdjacent(glm::vec3 newPos);
+  bool checkAdjacent(glm::vec3 newPos);
 };
 
 #endif

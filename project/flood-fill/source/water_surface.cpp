@@ -10,6 +10,7 @@
 #include "director.hpp"
 #include "material_manager.hpp"
 #include "render_engine.hpp"
+#include "fluid_box.hpp"
 
 WaterSurface::WaterSurface(glm::vec3 _position)
   : GameObject(), CollisionObject(_position), position(_position) {}
@@ -30,7 +31,10 @@ void WaterSurface::setup() {
   grid = Uniform3DGrid<int>(*typeGrid);
   grid.initialize(0);
 
-  checkAdjacent(position);
+  timer = 0.0f;
+  if(!checkAdjacent(position)) {
+    timer = 2.0f; // remove next frame
+  };
 
   waterSurface = new Object(
                    LoadManager::getMesh("grid.obj"),
@@ -48,7 +52,6 @@ void WaterSurface::setup() {
   waterSurface->applyWaterColor(waterColorTexture->getTexture());
   waterColorTexture->swapTextures();
 
-  //render it to both framebuffers, for some reason it's not working otherwise
   waterDataTexture->render(LoadManager::getShader("render-texture-vertex-data-initial.glsl", "render-texture-fragment-data-initial.glsl"),
                             waterBlockTexture->getTexture());
   waterSurface->applyWaterData(waterDataTexture->getTexture());
@@ -60,16 +63,31 @@ void WaterSurface::setup() {
   waterSurface->translate(position);
   
   RenderEngine::addObject(waterSurface);
+
+  FluidBox *fluidBox = new FluidBox(lowestPosition);
+  fluidBox->setup();
+  Director::getScene()->addGameObject(fluidBox);
 }
 
 void WaterSurface::update(){
+  float dTime = ((float) TimeManager::getDeltaTime());
+
   waterSurface->applyWaterData(waterDataTexture->getTexture());
   waterDataTexture->render(LoadManager::getShader("render-texture-vertex-data-update.glsl", "render-texture-fragment-data-update.glsl"),
                            waterBlockTexture->getTexture());
   waterDataTexture->swapTextures();
+
+  timer += dTime;
+  if(timer > 2.0f) {
+    Director::getScene()->removeGameObject(this);
+    RenderEngine::removeObject(waterSurface);
+    waterDataTexture->release();
+    waterColorTexture->release();
+    waterBlockTexture->release();
+  }
 }
 
-void WaterSurface::checkAdjacent(glm::vec3 newPos) {
+bool WaterSurface::checkAdjacent(glm::vec3 newPos) {
   if(grid.inGrid(newPos.x, newPos.y, newPos.z) &&
      grid.getValue(newPos.x, newPos.y, newPos.z) == 0 &&
      typeGrid->getValue(newPos.x, newPos.y, newPos.z) == LevelTemplate::AVAILABLE_FILL_SPACE) {
@@ -86,6 +104,7 @@ void WaterSurface::checkAdjacent(glm::vec3 newPos) {
     }
     if(newPos.y < minY) {
       minY = newPos.y;
+      lowestPosition = newPos;
     }
     if(newPos.z > maxZ) {
       maxZ = newPos.z;
@@ -99,7 +118,10 @@ void WaterSurface::checkAdjacent(glm::vec3 newPos) {
     checkAdjacent(newPos - glm::vec3(0, grid.getEdgeSizeY(), 0));
     checkAdjacent(newPos + glm::vec3(0, 0, grid.getEdgeSizeZ()));
     checkAdjacent(newPos - glm::vec3(0, 0, grid.getEdgeSizeZ()));
+
+    return true;
   }
+  return false;
 }
 
 void WaterSurface::collided(CollisionObject * collidedWith){

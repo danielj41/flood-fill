@@ -61,14 +61,11 @@ void FluidProjectile::collided(CollisionObject * collidedWith){
     Uniform3DGrid<CollisionObject *> *grid = CollisionManager::getGrid();
     glm::vec3 newPos(grid->getRoundX(oldPosition.x), grid->getRoundY(oldPosition.y), grid->getRoundZ(oldPosition.z));
     if(grid->inGrid(newPos.x, newPos.y, newPos.z) && newPos.y < origPosition.y - 1.0f) {
-      /*FluidBox *box = new FluidBox(newPos, glm::vec3(0,0,0), 0.0f);
-      box->setup();
-      Director::getScene()->addGameObject(box);
-      CollisionManager::addCollisionObjectToGrid(box);*/
-      WaterSurface *surface = new WaterSurface(newPos);
-      surface->setup();
-      Director::getScene()->addGameObject(surface);
-      //CollisionManager::addCollisionObjectToGrid(surface);
+      if(!LoadManager::getRenderTexture("waterData")->isInUse()) {
+        WaterSurface *surface = new WaterSurface(newPos);
+        surface->setup();
+        Director::getScene()->addGameObject(surface);
+      }
     }
     Director::getScene()->removeGameObject(this);
     CollisionManager::removeCollisionObject(this);

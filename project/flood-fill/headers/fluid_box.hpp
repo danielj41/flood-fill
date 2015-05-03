@@ -13,7 +13,7 @@ class FluidBox : public GameObject, public CollisionObject{
 
 public:
 
-  FluidBox(glm::vec3 _position, glm::vec3 _movementDirection, float _speed);
+  FluidBox(glm::vec3 _position);
 
   void createNew(glm::vec3 newPos);
 
@@ -26,14 +26,9 @@ private:
 
   Object * fluidBox;
   glm::vec3 position;
-  glm::vec3 movementDirection; 
   glm::vec3 size;
-  
-  float speed;
-
-  float height;
-  bool generatedAdjacent;
-
+  float timer;
+  bool visible;
 };
 
 #endif
