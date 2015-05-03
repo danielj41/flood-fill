@@ -1,10 +1,13 @@
 uniform sampler2D uPrevTexture;
 uniform sampler2D uDataTexture;
+uniform vec3 uSize;
+uniform float uDTime;
+uniform vec3 uStartPosition;
 
 void main(){
     // http://madebyevan.com/webgl-water/water.js
-    vec2 coord = gl_FragCoord.xy / 256.0;
-    vec2 delta = vec2(0.05, 0.05);
+    vec2 coord = gl_FragCoord.xy / 512.0;
+    vec2 delta = vec2(0.02, 0.02);
 
     vec4 info = texture2D(uPrevTexture, coord);
     vec3 dx = vec3(delta.x, texture2D(uPrevTexture, vec2(coord.x + delta.x, coord.y)).r - info.r, 0.0);

@@ -6,9 +6,7 @@
 #include <cstdlib>
 #include <iostream>
 #include "debug_macros.h"
-#include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
-#include "glm/gtc/type_ptr.hpp"
+
 
 
 RenderTexture::RenderTexture() : loaded(false){}
@@ -21,6 +19,9 @@ void RenderTexture::loadShaders() {
     shader->loadHandle("aTexCoord", 'a');
     shader->loadHandle("uPrevTexture", 'u');
     shader->loadHandle("uDataTexture", 'u');
+    shader->loadHandle("uSize", 'u');
+    shader->loadHandle("uDTime", 'u');
+    shader->loadHandle("uStartPosition", 'u');
 
     LoadManager::loadShader("render-texture-vertex-color-initial.glsl", "render-texture-fragment-color-initial.glsl");
     shader = LoadManager::getShader("render-texture-vertex-color-initial.glsl", "render-texture-fragment-color-initial.glsl");
@@ -29,6 +30,9 @@ void RenderTexture::loadShaders() {
     shader->loadHandle("aTexCoord", 'a');
     shader->loadHandle("uPrevTexture", 'u');
     shader->loadHandle("uDataTexture", 'u');
+    shader->loadHandle("uSize", 'u');
+    shader->loadHandle("uDTime", 'u');
+    shader->loadHandle("uStartPosition", 'u');
 
     LoadManager::loadShader("render-texture-vertex-data-update.glsl", "render-texture-fragment-data-update.glsl");
     shader = LoadManager::getShader("render-texture-vertex-data-update.glsl", "render-texture-fragment-data-update.glsl");
@@ -37,6 +41,9 @@ void RenderTexture::loadShaders() {
     shader->loadHandle("aTexCoord", 'a');
     shader->loadHandle("uPrevTexture", 'u');
     shader->loadHandle("uDataTexture", 'u');
+    shader->loadHandle("uSize", 'u');
+    shader->loadHandle("uDTime", 'u');
+    shader->loadHandle("uStartPosition", 'u');
 
     LoadManager::loadShader("render-texture-vertex-block.glsl", "render-texture-fragment-block.glsl");
     shader = LoadManager::getShader("render-texture-vertex-block.glsl", "render-texture-fragment-block.glsl");
@@ -58,7 +65,7 @@ void RenderTexture::load(){
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 256, 256, 0, GL_BGRA, GL_UNSIGNED_BYTE, NULL);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 512, 512, 0, GL_BGRA, GL_UNSIGNED_BYTE, NULL);
 
         glGenFramebuffersEXT(1, &framebuffer[i]);
         glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, framebuffer[i]);
@@ -66,7 +73,7 @@ void RenderTexture::load(){
 
         glGenRenderbuffersEXT(1, &renderbuffer[i]);
         glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, renderbuffer[i]);
-        glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT24, 256, 256);
+        glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT24, 512, 512);
 
         glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, renderbuffer[i]);
 
@@ -94,11 +101,12 @@ void RenderTexture::clear() {
     inUse = true;
 }
 
-void RenderTexture::render(Shader *shader, GLuint dataTexture) {
+void RenderTexture::render(Shader *shader, GLuint dataTexture,
+ float dTime, glm::vec3 startPosition, glm::vec3 size) {
     ASSERT(loaded, "You didn't load the Texture");
 
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, framebuffer[currentTexture]);
-    glViewport(0, 0, 256, 256);
+    glViewport(0, 0, 512, 512);
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
     glDisable (GL_BLEND);
@@ -133,6 +141,10 @@ void RenderTexture::render(Shader *shader, GLuint dataTexture) {
     glBindTexture(GL_TEXTURE_2D, dataTexture);
     glUniform1i(shader->getHandle("uDataTexture"), 1);
 
+    glUniform1f(shader->getHandle("uDTime"), dTime);
+    glUniform3f(shader->getHandle("uStartPosition"), startPosition.x, startPosition.y, startPosition.z);
+    glUniform3f(shader->getHandle("uSize"), size.x, size.y, size.z);
+
     glDrawElements(GL_TRIANGLES, (int) mesh->getIndices().size(),
                    GL_UNSIGNED_INT, 0);
 
@@ -164,7 +176,7 @@ void RenderTexture::renderBlock(Uniform3DGrid<int> *grid,
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, framebuffer[currentTexture]);
     glClear(GL_DEPTH_BUFFER_BIT);
 
-    glViewport(0, 0, 256, 256);
+    glViewport(0, 0, 512, 512);
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
 

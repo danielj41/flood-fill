@@ -8,13 +8,18 @@
 #include "shader.hpp"
 #include "uniform_3d_grid.hpp"
 
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/type_ptr.hpp"
+
 class RenderTexture {
 public:
     RenderTexture();
 
     static void loadShaders();
     void load();
-    void render(Shader *shader, GLuint texture);
+    void render(Shader *shader, GLuint dataTexture,
+     float dTime, glm::vec3 startPosition, glm::vec3 size);
     void swapTextures();
     void clear();
     void renderBlock(Uniform3DGrid<int> *grid,
