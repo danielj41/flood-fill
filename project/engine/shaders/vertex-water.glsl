@@ -16,10 +16,11 @@ varying vec3 vNormal;
 varying vec4 vWaterColor;
 
 void main(){
+    aNormal;
+    vec4 info = texture2D(uWaterData, aPosition.xz*0.5 + vec2(0.5,0.5));
+    vNormal = vec3(normalize(uNormalMatrix*vec4(info.b * 2.0 - 1.0, 1.0, info.a * 2.0 - 1.0, 0.0)));
 
-    vNormal = vec3(normalize(uNormalMatrix*vec4(aNormal, 0)));
-    vVertex = vec3(uProjection*uView*uModel*vec4(aPosition, 1));
-
-    gl_Position = uProjection*uView*uModel*vec4(aPosition + vec3(0, -1.0 + texture2D(uWaterData, aPosition.xz*0.5 + vec2(0.5,0.5)).r * 2.0, 0), 1);
-    vWaterColor = texture2D(uWaterColor, aPosition.xz*0.5 + 0.5);
+    gl_Position = uProjection*uView*uModel*vec4(aPosition + vec3(0, -1.0 + info.r * 2.0, 0), 1);
+    vWaterColor = texture2D(uWaterColor, aPosition.xz*0.5 + vec2(0.5,0.5));
+    vVertex = vec3(gl_Position);
 }

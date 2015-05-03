@@ -47,10 +47,13 @@ void WaterSurface::setup() {
                             waterBlockTexture->getTexture());
   waterSurface->applyWaterColor(waterColorTexture->getTexture());
   waterColorTexture->swapTextures();
+
+  //render it to both framebuffers, for some reason it's not working otherwise
   waterDataTexture->render(LoadManager::getShader("render-texture-vertex-data-initial.glsl", "render-texture-fragment-data-initial.glsl"),
                             waterBlockTexture->getTexture());
   waterSurface->applyWaterData(waterDataTexture->getTexture());
   waterDataTexture->swapTextures();
+
   waterSurface->scale(glm::vec3((maxX - minX + 2.0f) / 2.0f, (maxY - minY + 2.0f) / 2.0f, (maxZ - minZ + 2.0f) / 2.0f));
   waterSurface->enableWater();
   position = glm::vec3((maxX + minX) / 2.0f, (maxY + minY) / 2.0f, (maxZ + minZ) / 2.0f);

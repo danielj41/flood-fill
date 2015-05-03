@@ -72,8 +72,8 @@ void RenderTexture::load(){
 
         glBindTexture(GL_TEXTURE_2D, 0);
 
-        glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, framebuffer[currentTexture]);
-        glClearColor(0.0, 0.0, 0.0, 1.0);
+        glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, framebuffer[i]);
+        glClearColor(0.0, 0.0, 0.0, 0.0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
     }
@@ -85,7 +85,7 @@ void RenderTexture::clear() {
     int i;
     for(i = 0; i < 2; i++) {
         glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, framebuffer[i]);
-        glClearColor(0.0, 0.0, 0.0, 1.0);
+        glClearColor(0.0, 0.0, 0.0, 0.0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
     }
@@ -95,11 +95,14 @@ void RenderTexture::render(Shader *shader, GLuint dataTexture) {
     ASSERT(loaded, "You didn't load the Texture");
 
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, framebuffer[currentTexture]);
-    glClear(GL_DEPTH_BUFFER_BIT);
-
     glViewport(0, 0, 256, 256);
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
+    glDisable (GL_BLEND);
+    glClearColor(0.0, 0.0, 0.0, 0.0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
 
     glUseProgram(shader->getID());
 
@@ -116,6 +119,8 @@ void RenderTexture::render(Shader *shader, GLuint dataTexture) {
                           GL_FLOAT, GL_FALSE, 0, 0);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->getIndexBuffer());
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP); 
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture[(currentTexture + 1) % 2]);
