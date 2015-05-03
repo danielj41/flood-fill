@@ -9,13 +9,14 @@
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_PURE
 #include "glm/glm.hpp"
-#include "tiny_obj_loader.h"
 
 class Mesh {
 
 public:
     Mesh();
     Mesh(std::string _objfile);
+    Mesh(std::vector<unsigned int> _indices, std::vector<float> _vertices);
+    Mesh(std::vector<unsigned int> _indices, std::vector<float> _vertices, std::vector<float> _texcoords);
 
     void load();
     void resize();
@@ -35,6 +36,7 @@ public:
     std::string getFileName();
 
     bool hasNormals();
+    bool hasIndices();
     bool hasTextureCoordinates();
     bool isLoaded();
 
@@ -50,11 +52,14 @@ public:
 
 private:
     static glm::vec3 INVALID_LIMIT;
+    static std::string MANUAL_GENERATED_MESH_NAME;
 
     std::string objfile;
     bool  loaded, normalsFlag;
     std::vector<float> normals;
-    std::vector<tinyobj::shape_t> shape;
+    std::vector<float> vertices;
+    std::vector<float> textureCoordinates;
+    std::vector<unsigned int> indices;
 
     GLuint vertexBuffer;
     GLuint normalBuffer;
