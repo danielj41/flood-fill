@@ -102,7 +102,7 @@ void RenderTexture::clear() {
 }
 
 void RenderTexture::render(Shader *shader, GLuint dataTexture,
- float dTime, glm::vec3 startPosition, glm::vec3 size) {
+ glm::vec2 dTime, glm::vec3 startPosition, glm::vec3 size) {
     ASSERT(loaded, "You didn't load the Texture");
 
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, framebuffer[currentTexture]);
@@ -141,7 +141,7 @@ void RenderTexture::render(Shader *shader, GLuint dataTexture,
     glBindTexture(GL_TEXTURE_2D, dataTexture);
     glUniform1i(shader->getHandle("uDataTexture"), 1);
 
-    glUniform1f(shader->getHandle("uDTime"), dTime);
+    glUniform2f(shader->getHandle("uDTime"), dTime.x, dTime.y);
     glUniform3f(shader->getHandle("uStartPosition"), startPosition.x, startPosition.y, startPosition.z);
     glUniform3f(shader->getHandle("uSize"), size.x, size.y, size.z);
 

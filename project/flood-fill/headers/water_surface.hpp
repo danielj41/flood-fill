@@ -32,6 +32,7 @@ private:
   glm::vec3 position;
   glm::vec3 movementDirection; 
   glm::vec3 size;
+  glm::vec3 startPosition;
   RenderTexture * waterDataTexture;
   RenderTexture * waterColorTexture;
   RenderTexture * waterBlockTexture;

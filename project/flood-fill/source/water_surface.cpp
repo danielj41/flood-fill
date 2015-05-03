@@ -36,9 +36,10 @@ void WaterSurface::setup() {
     timer = 2.0f; // remove next frame
   };
 
+  startPosition = position;
   waterSurface = new Object(
                    LoadManager::getMesh("grid.obj"),
-                   MaterialManager::getMaterial("FlatGrey"));
+                   MaterialManager::getMaterial("FlatBlue"));
 
   waterDataTexture = LoadManager::getRenderTexture("waterData");
   waterColorTexture = LoadManager::getRenderTexture("waterColor");
@@ -48,12 +49,12 @@ void WaterSurface::setup() {
   waterBlockTexture->clear();
   waterBlockTexture->renderBlock(&grid, minX, maxX, minY, maxY, minZ, maxZ); 
   waterColorTexture->render(LoadManager::getShader("render-texture-vertex-color-initial.glsl", "render-texture-fragment-color-initial.glsl"),
-                            waterBlockTexture->getTexture(), 0, glm::vec3(0), glm::vec3(0));
+                            waterBlockTexture->getTexture(), glm::vec2(0), glm::vec3(0), glm::vec3(0));
   waterSurface->applyWaterColor(waterColorTexture->getTexture());
   waterColorTexture->swapTextures();
 
   waterDataTexture->render(LoadManager::getShader("render-texture-vertex-data-initial.glsl", "render-texture-fragment-data-initial.glsl"),
-                            waterBlockTexture->getTexture(), 0, glm::vec3(0), glm::vec3(0));
+                            waterBlockTexture->getTexture(), glm::vec2(0), glm::vec3(0), glm::vec3(0));
   waterSurface->applyWaterData(waterDataTexture->getTexture());
   waterDataTexture->swapTextures();
 
@@ -75,7 +76,7 @@ void WaterSurface::update(){
 
   waterSurface->applyWaterData(waterDataTexture->getTexture());
   waterDataTexture->render(LoadManager::getShader("render-texture-vertex-data-update.glsl", "render-texture-fragment-data-update.glsl"),
-                           waterBlockTexture->getTexture(), dTime, position, size);
+                           waterBlockTexture->getTexture(), glm::vec2(dTime, timer), startPosition - position, size);
   waterDataTexture->swapTextures();
 
   timer += dTime;

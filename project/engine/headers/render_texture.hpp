@@ -19,7 +19,7 @@ public:
     static void loadShaders();
     void load();
     void render(Shader *shader, GLuint dataTexture,
-     float dTime, glm::vec3 startPosition, glm::vec3 size);
+     glm::vec2 dTime, glm::vec3 startPosition, glm::vec3 size);
     void swapTextures();
     void clear();
     void renderBlock(Uniform3DGrid<int> *grid,

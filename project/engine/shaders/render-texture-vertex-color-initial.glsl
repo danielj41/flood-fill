@@ -3,7 +3,7 @@ attribute vec3 aNormal;
 uniform sampler2D uPrevTexture;
 uniform sampler2D uDataTexture;
 uniform vec3 uSize;
-uniform float uDTime;
+uniform vec2 uDTime;
 uniform vec3 uStartPosition;
 
 void main(){
