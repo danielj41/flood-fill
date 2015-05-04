@@ -36,20 +36,18 @@ void Player::setup() {
 
     shootPressed = false;
 
-    setBoundingBox(BoundingBox(glm::vec3(1.0f,1.0f,1.0f), glm::vec3(-1.0f,-1.0f,-1.0f)));
+    setBoundingBox(BoundingBox(glm::vec3(0.8f,0.8f,0.8f), glm::vec3(-0.8f,-0.8f,-0.8f)));
     getBoundingBox()->setPosition(camera->getEye() - glm::vec3(0,1.0f,0));
 }
 
 void Player::update() {
     lastPosition = camera->getEye();
 
-    camera->setEye(camera->getEye() - glm::vec3(0,0.1,0));
-
     if(glfwGetKey(Global::window, GLFW_KEY_SPACE) == GLFW_PRESS && !jumping){
-        jumping = true;
-        velocity = .5;
+        velocity = .4;
         camera->jump(velocity);
     }
+    jumping = true;
 
     float cameraSpeed = 5.0f*TimeManager::getDeltaTime();
     if(glfwGetKey(Global::window, GLFW_KEY_W) == GLFW_PRESS){
@@ -91,23 +89,21 @@ void Player::update() {
 }
 
 void Player::collided(CollisionObject * collidedWith){
-  float normalComponent;
+  glm::vec3 normal;
+  float dist;
   switch (collidedWith->getCollisionID()) {
   case 1:
 	INFO("DETECTING COLLISION WITH BLOCK!");
-    normalComponent = glm::dot(getPosition() - lastPosition, getCollisionNormal(collidedWith));
-    if(normalComponent < 0.0f) {
-        camera->setEye(getPosition() - getCollisionNormal(collidedWith) * normalComponent);
-        setPosition(camera->getEye());
-        getBoundingBox()->setPosition(camera->getEye() - glm::vec3(0,1.0f,0));
-        INFO("normal " << getCollisionNormal(collidedWith).x << " " << getCollisionNormal(collidedWith).y << " " << getCollisionNormal(collidedWith).z);
-        INFO("position " << collidedWith->getPosition().x << " " << collidedWith->getPosition().y << " " << collidedWith->getPosition().z);
-        
-        //If on flat ground, jumping is done. 
-        if(getCollisionNormal(collidedWith).y) {
-            jumping = false;
-            velocity = 0;
-        }
+    normal = getCollisionNormal(collidedWith);
+    dist = getCollisionDistance(collidedWith);
+    camera->setEye(getPosition() + normal * dist);
+    setPosition(camera->getEye());
+    getBoundingBox()->setPosition(camera->getEye() - glm::vec3(0,1.0f,0));
+
+    //If on flat ground, jumping is done. 
+    if(fabs(normal.y) > 0.1) {
+        velocity = 0;
+        jumping = false;
     }
 	
     break;

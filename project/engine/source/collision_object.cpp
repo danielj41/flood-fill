@@ -70,7 +70,7 @@ glm::vec3 CollisionObject::getCollisionNormal(CollisionObject *other) {
     glm::vec3 oMax = other->boundingBox.getMax();
 
     glm::vec3 best = glm::vec3(0,0,0);
-    float bestDist = 1000.0f; //max float? do something with this.
+    float bestDist = 10.0f; //max float? do something with this.
 
     if(max.x - oMin.x < bestDist) {
         bestDist = max.x - oMin.x;
@@ -98,6 +98,36 @@ glm::vec3 CollisionObject::getCollisionNormal(CollisionObject *other) {
     }
 
     return best;
+}
+
+float CollisionObject::getCollisionDistance(CollisionObject *other) {
+    glm::vec3 min = boundingBox.getMin();
+    glm::vec3 oMin = other->boundingBox.getMin();
+    glm::vec3 max = boundingBox.getMax();
+    glm::vec3 oMax = other->boundingBox.getMax();
+
+    float bestDist = 10.0f; //max float? do something with this.
+
+    if(max.x - oMin.x < bestDist) {
+        bestDist = max.x - oMin.x;
+    }
+    if(oMax.x - min.x < bestDist) {
+        bestDist = oMax.x - min.x;
+    }
+    if(max.y - oMin.y < bestDist) {
+        bestDist = max.y - oMin.y;
+    }
+    if(oMax.y - min.y < bestDist) {
+        bestDist = oMax.y - min.y;
+    }
+    if(max.z - oMin.z < bestDist) {
+        bestDist = max.z - oMin.z;
+    }
+    if(oMax.z - min.z < bestDist) {
+        bestDist = oMax.z - min.z;
+    }
+
+    return bestDist;
 }
 
 

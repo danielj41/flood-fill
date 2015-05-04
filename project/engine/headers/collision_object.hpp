@@ -26,6 +26,7 @@ public:
 
     bool checkCollision(CollisionObject *other);
     glm::vec3 getCollisionNormal(CollisionObject *other);
+    float getCollisionDistance(CollisionObject *other);
     void setBoundingBox(BoundingBox _boundingBox);
     BoundingBox* getBoundingBox();
 

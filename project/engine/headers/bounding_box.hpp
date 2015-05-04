@@ -37,7 +37,7 @@ public:
     void translate(glm::vec3 translationVector);
     void loadIdentity();
     void setModelMatrix(glm::mat4 matrix);
-    void setPosition(glm::vec3 position);
+    void setPosition(glm::vec3 _position);
     glm::vec3 getPosition();
 
     //TODO: Remove the GL code inside this function in the creation of the
@@ -50,7 +50,7 @@ private:
     glm::vec3 max, min;
     glm::vec3 vertices[8];
     glm::mat4 modelMatrix;
-    glm::vec3 oldPosition;
+    glm::vec3 position;
 };
 
 #endif

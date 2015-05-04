@@ -34,7 +34,7 @@ void FluidBox::setup() {
   setCanCollide(true);
 
   setBoundingBox(BoundingBox(glm::vec3(1.0f,1.0f,1.0f), glm::vec3(-1.0f,-1.0f,-1.0f)));
-  getBoundingBox()->setPosition(position);
+  getBoundingBox()->setPosition(position - glm::vec3(0, 2.0f, 0));
 
   CollisionManager::addCollisionObjectToGrid(this);
 
@@ -46,9 +46,11 @@ void FluidBox::update(){
   float dTime = ((float) TimeManager::getDeltaTime());
   if(!visible) {
     timer += dTime;
+    getBoundingBox()->setPosition(position - (1.0f - timer/1.55f) * glm::vec3(0, 2.0f, 0));
     if(timer > 1.55f) {
       visible = true;
       RenderEngine::addObject(fluidBox);
+      getBoundingBox()->setPosition(position);
     }
   } 
 }

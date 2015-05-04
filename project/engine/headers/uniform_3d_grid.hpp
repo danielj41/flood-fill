@@ -279,8 +279,8 @@ float Uniform3DGrid<T>::getRoundX(float x) {
 
 template<typename T>
 float Uniform3DGrid<T>::getRoundY(float y) {
-    unsigned int yIndex = ((unsigned int) ((y - maxY)/-edgeSizeY));
-    return yIndex * -edgeSizeY + maxY - edgeSizeY/2.0;
+    unsigned int yIndex = ((unsigned int) ((y - minY)/edgeSizeY));
+    return yIndex * edgeSizeY + minY + edgeSizeY/2.0;
 }
 
 template<typename T>

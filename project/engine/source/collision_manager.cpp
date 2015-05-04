@@ -61,15 +61,25 @@ void CollisionManager::checkCollision(CollisionObject * aObject){
 
   // fix this later to include all nearby cubes, or calculate it with the bounding box
   // this causes you to be able to jump diagonally through things.
-  checkCollisionWithOffset(aObject, 0,-1,0);
-  checkCollisionWithOffset(aObject, 0,0,0);
-  checkCollisionWithOffset(aObject, 0,1,0);
-  checkCollisionWithOffset(aObject, -1,0,0);
-  checkCollisionWithOffset(aObject, 1,0,0);
-  checkCollisionWithOffset(aObject, 0,0,1);
-  checkCollisionWithOffset(aObject, 0,0,-1);
 
-  
+  int xDir, yDir, zDir;
+  glm::vec3 pos = aObject->getBoundingBox()->getPosition();
+  glm::vec3 roundPos(grid.getRoundX(pos.x), grid.getRoundY(pos.y), grid.getRoundZ(pos.z));
+  xDir = pos.x > roundPos.x ? 1 : -1;
+  yDir = pos.y > roundPos.y ? 1 : -1;
+  zDir = pos.z > roundPos.z ? 1 : -1;
+  INFO(roundPos.y);
+  INFO("Heyy");
+  INFO(pos.y);
+
+  checkCollisionWithOffset(aObject, 0, 0, 0);
+  checkCollisionWithOffset(aObject, 0, yDir, 0);
+  checkCollisionWithOffset(aObject, xDir, 0, 0);
+  checkCollisionWithOffset(aObject, 0, 0, zDir);
+  checkCollisionWithOffset(aObject, xDir, yDir, 0);
+  checkCollisionWithOffset(aObject, 0, yDir, zDir);
+  checkCollisionWithOffset(aObject, xDir, 0, zDir);
+  checkCollisionWithOffset(aObject, xDir, yDir, zDir);
 }
 
 void CollisionManager::checkCollisionWithOffset(CollisionObject * aObject, int x, int y, int z) {
