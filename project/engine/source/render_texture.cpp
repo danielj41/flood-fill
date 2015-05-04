@@ -45,6 +45,17 @@ void RenderTexture::loadShaders() {
     shader->loadHandle("uDTime", 'u');
     shader->loadHandle("uStartPosition", 'u');
 
+    LoadManager::loadShader("render-texture-vertex-color-update.glsl", "render-texture-fragment-color-update.glsl");
+    shader = LoadManager::getShader("render-texture-vertex-color-update.glsl", "render-texture-fragment-color-update.glsl");
+    shader->loadHandle("aNormal", 'a');
+    shader->loadHandle("aPosition", 'a');
+    shader->loadHandle("aTexCoord", 'a');
+    shader->loadHandle("uPrevTexture", 'u');
+    shader->loadHandle("uDataTexture", 'u');
+    shader->loadHandle("uSize", 'u');
+    shader->loadHandle("uDTime", 'u');
+    shader->loadHandle("uStartPosition", 'u');
+
     LoadManager::loadShader("render-texture-vertex-block.glsl", "render-texture-fragment-block.glsl");
     shader = LoadManager::getShader("render-texture-vertex-block.glsl", "render-texture-fragment-block.glsl");
     shader->loadHandle("aNormal", 'a');
@@ -177,7 +188,7 @@ void RenderTexture::renderBlock(Uniform3DGrid<int> *grid,
     glClear(GL_DEPTH_BUFFER_BIT);
 
     glViewport(0, 0, 512, 512);
-    glDisable(GL_DEPTH_TEST);
+    glEnable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
 
     Shader *shader = LoadManager::getShader("render-texture-vertex-block.glsl", "render-texture-fragment-block.glsl");
@@ -214,7 +225,7 @@ void RenderTexture::renderBlock(Uniform3DGrid<int> *grid,
             glm::mat4 model = glm::translate(glm::mat4(1.0f),
                 glm::vec3((x - (maxX + minX) / 2.0f) / (maxX - minX + grid->getEdgeSizeX()) * 2.0f,
                           (z - (maxZ + minZ) / 2.0f) / (maxZ - minZ + grid->getEdgeSizeZ()) * 2.0f,
-                          (y - grid->getEdgeSizeY() / 2.0f - (maxY + minY) / 2.0f) / (maxY - minY + grid->getEdgeSizeY()) * 2.0f
+                          -(y - grid->getEdgeSizeY() / 2.0f - (maxY + minY) / 2.0f) / (maxY - minY + grid->getEdgeSizeY()) * 2.0f
                           )) * scale;
 
             glUniformMatrix4fv(shader->getHandle("uModelMatrix"), 1, GL_FALSE,

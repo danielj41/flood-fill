@@ -6,5 +6,5 @@ varying float vHeight;
 void main(){
     aNormal;
     gl_Position = uModelMatrix * vec4(aPosition, 1.0);
-    vHeight = gl_Position.z;
+    vHeight = -gl_Position.z;
 }

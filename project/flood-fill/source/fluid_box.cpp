@@ -49,7 +49,7 @@ void FluidBox::update(){
   float dTime = ((float) TimeManager::getDeltaTime());
   if(!visible) {
     timer += dTime;
-    if(timer > 2.0f) {
+    if(timer > 1.5f) {
       visible = true;
       RenderEngine::addObject(fluidBox);
     }

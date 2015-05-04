@@ -17,34 +17,29 @@ varying vec3 vNormal;
 varying vec4 vWaterColor;
 
 void main(){
+    uDiffuseColor;
+    vec3 kd = vWaterColor.rgb;
+    vec3 ks = uSpecularColor;
+    vec3 Ia = uAmbientColor;
+    vec3 Ie = uEmissionColor;
+    vec3 Ic = uLightColor;
 
-    if(vWaterColor.a < 0.1) {
-        discard;
-    } else {
-        uDiffuseColor;
-        vec3 kd = vWaterColor.rgb;
-        vec3 ks = uSpecularColor;
-        vec3 Ia = uAmbientColor;
-        vec3 Ie = uEmissionColor;
-        vec3 Ic = uLightColor;
+    float n = uShininess;
 
-        float n = uShininess;
+    //float d = distance(uLightPosition, vVertex);
 
-        //float d = distance(uLightPosition, vVertex);
+    vec3 N = normalize(vec3(vNormal));
+    vec3 L = normalize(-uLightDirection);
+    vec3 V = normalize(uEyePosition - vVertex);
 
-        vec3 N = normalize(vec3(vNormal));
-        vec3 L = normalize(-uLightDirection);
-        vec3 V = normalize(uEyePosition - vVertex);
+    vec3 H = normalize(L + V);
 
-        vec3 H = normalize(L + V);
+    vec3 Is = pow(max(dot(N, H), 0.0), n)*ks;
+    vec3 Id = max(dot(N, L), 0.0)*kd;
 
-        vec3 Is = pow(max(dot(N, H), 0.0), n)*ks;
-        vec3 Id = max(dot(N, L), 0.0)*kd;
+    //float attenuation = dot(uLightFallOff, vec3(1, d, d*d));
 
-        //float attenuation = dot(uLightFallOff, vec3(1, d, d*d));
+    vec3 I = Ic*(Id + Is) + Ia + Ie;
 
-        vec3 I = Ic*(Id + Is) + Ia + Ie;
-
-        gl_FragColor = vec4(I, 1);
-    }
+    gl_FragColor = vec4(I, 1);
 }
