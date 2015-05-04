@@ -43,6 +43,7 @@ private:
   float timer;
 
   bool checkAdjacent(glm::vec3 newPos);
+  void createFluidBox(glm::vec3 newPos);
 };
 
 #endif

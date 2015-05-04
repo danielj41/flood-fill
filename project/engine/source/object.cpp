@@ -61,6 +61,9 @@ void Object::draw(Shader * shader){
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, waterColor);
         glUniform1i(shader->getHandle("uWaterColor"), 1);
+        glActiveTexture(GL_TEXTURE2);
+        glBindTexture(GL_TEXTURE_2D, waterBlock);
+        glUniform1i(shader->getHandle("uWaterBlock"), 2);
     }
 
     drawElements();
@@ -94,6 +97,10 @@ void Object::applyWaterData(GLuint id){
 
 void Object::applyWaterColor(GLuint id){
     waterColor = id;
+}
+
+void Object::applyWaterBlock(GLuint id){
+    waterBlock = id;
 }
 
 void Object::enableTexture(){

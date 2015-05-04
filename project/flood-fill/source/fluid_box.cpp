@@ -36,13 +36,6 @@ void FluidBox::setup() {
   getBoundingBox()->setPosition(position);
 
   CollisionManager::addCollisionObjectToGrid(this);
-  ((LevelTemplate *)Director::getScene())->getTypeGrid()->setValue(position.x, position.y, position.z, LevelTemplate::SOLID_CUBE);
-
-  Uniform3DGrid<CollisionObject *> *grid = CollisionManager::getGrid();
-  createNew(position + glm::vec3(grid->getEdgeSizeX(), 0.0f, 0.0f));
-  createNew(position + glm::vec3(-grid->getEdgeSizeX(), 0.0f, 0.0f));
-  createNew(position + glm::vec3(0.0f, 0.0f, grid->getEdgeSizeZ()));
-  createNew(position + glm::vec3(0.0f, 0.0f, -grid->getEdgeSizeZ()));
 }
 
 void FluidBox::update(){
@@ -54,15 +47,6 @@ void FluidBox::update(){
       RenderEngine::addObject(fluidBox);
     }
   } 
-}
-
-void FluidBox::createNew(glm::vec3 newPos) {
-  Uniform3DGrid<CollisionObject *> *grid = CollisionManager::getGrid();
-  if(grid->inGrid(newPos.x, newPos.y, newPos.z) && grid->getValue(newPos.x, newPos.y, newPos.z) == NULL) {
-    FluidBox *box = new FluidBox(newPos);
-    box->setup();
-    Director::getScene()->addGameObject(box);
-  }
 }
 
 void FluidBox::collided(CollisionObject * collidedWith){

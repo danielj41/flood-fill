@@ -46,6 +46,7 @@ protected:
 
     GLuint waterData;
     GLuint waterColor;
+    GLuint waterBlock;
 
     glm::mat4 modelMatrix;
     bool _hasTexture, textureEnabled;

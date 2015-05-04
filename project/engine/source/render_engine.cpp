@@ -470,6 +470,7 @@ void RenderEngine::loadShaders(){
     geometryWaterShader->loadHandle("uLightColor", 'u');
     geometryWaterShader->loadHandle("uWaterData", 'u');
     geometryWaterShader->loadHandle("uWaterColor", 'u');
+    geometryWaterShader->loadHandle("uWaterBlock", 'u');
 
     LoadManager::loadShader("vertex-texture.glsl", "fragment-texture.glsl");
     geometryTextureShader = LoadManager::getShader("vertex-texture.glsl",

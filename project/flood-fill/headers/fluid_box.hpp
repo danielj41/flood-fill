@@ -15,8 +15,6 @@ public:
 
   FluidBox(glm::vec3 _position);
 
-  void createNew(glm::vec3 newPos);
-
   void setup();
   void update();
 

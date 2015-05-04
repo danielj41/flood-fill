@@ -12,13 +12,23 @@ uniform vec3 uEyePosition;
 uniform vec3 uLightDirection;
 uniform vec3 uLightColor;
 
+uniform mat4 uModel;
+uniform mat4 uNormalMatrix;
+uniform sampler2D uWaterData;
+uniform sampler2D uWaterColor;
+uniform sampler2D uWaterBlock;
+
 varying vec3 vVertex;
+varying vec3 vPosition;
 varying vec3 vNormal;
-varying vec4 vWaterColor;
 
 void main(){
+    vec4 info = texture2D(uWaterData, vPosition.xz*0.5 + vec2(0.5,0.5));
+    vec4 color = texture2D(uWaterColor, vPosition.xz*0.5 + vec2(0.5,0.5));
+    vec4 block = texture2D(uWaterBlock, vPosition.xz*0.5 + vec2(0.5,0.5));
+
     uDiffuseColor;
-    vec3 kd = vWaterColor.rgb;
+    vec3 kd = color.rgb;
     vec3 ks = uSpecularColor;
     vec3 Ia = uAmbientColor;
     vec3 Ie = uEmissionColor;
@@ -41,5 +51,5 @@ void main(){
 
     vec3 I = Ic*(Id + Is) + Ia + Ie;
 
-    gl_FragColor = vec4(I, vWaterColor.a);
+    gl_FragColor = vec4(I, color.a * min(1.0, uModel[3][1] * ((info.r * color.a) - block.r)));
 }

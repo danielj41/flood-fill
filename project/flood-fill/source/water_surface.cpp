@@ -48,6 +48,7 @@ void WaterSurface::setup() {
   waterColorTexture->clear();
   waterBlockTexture->clear();
   waterBlockTexture->renderBlock(&grid, minX, maxX, minY, maxY, minZ, maxZ); 
+  waterSurface->applyWaterBlock(waterBlockTexture->getTexture());
   waterColorTexture->render(LoadManager::getShader("render-texture-vertex-color-initial.glsl", "render-texture-fragment-color-initial.glsl"),
                             waterBlockTexture->getTexture(), glm::vec2(0), glm::vec3(0), glm::vec3(0));
   waterSurface->applyWaterColor(waterColorTexture->getTexture());
@@ -67,9 +68,8 @@ void WaterSurface::setup() {
   
   RenderEngine::addObject(waterSurface);
 
-  FluidBox *fluidBox = new FluidBox(lowestPosition);
-  fluidBox->setup();
-  Director::getScene()->addGameObject(fluidBox);
+  grid.initialize(0);
+  createFluidBox(startPosition);
 }
 
 void WaterSurface::update(){
@@ -92,6 +92,28 @@ void WaterSurface::update(){
     waterDataTexture->release();
     waterColorTexture->release();
     waterBlockTexture->release();
+  }
+}
+
+void WaterSurface::createFluidBox(glm::vec3 newPos) {
+  if(grid.inGrid(newPos.x, newPos.y, newPos.z) &&
+     grid.getValue(newPos.x, newPos.y, newPos.z) == 0 &&
+     typeGrid->getValue(newPos.x, newPos.y, newPos.z) == LevelTemplate::AVAILABLE_FILL_SPACE) {
+
+    grid.setValue(newPos.x, newPos.y, newPos.z, 1);
+
+    if(newPos.y < lowestPosition.y + grid.getEdgeSizeY() / 2.0f) {
+      typeGrid->setValue(newPos.x, newPos.y, newPos.z, LevelTemplate::SOLID_CUBE);
+      FluidBox *fluidBox = new FluidBox(newPos);
+      fluidBox->setup();
+      Director::getScene()->addGameObject(fluidBox);
+    }
+    
+    createFluidBox(newPos + glm::vec3(grid.getEdgeSizeX(), 0, 0));
+    createFluidBox(newPos - glm::vec3(grid.getEdgeSizeX(), 0, 0));
+    createFluidBox(newPos - glm::vec3(0, grid.getEdgeSizeY(), 0));
+    createFluidBox(newPos + glm::vec3(0, 0, grid.getEdgeSizeZ()));
+    createFluidBox(newPos - glm::vec3(0, 0, grid.getEdgeSizeZ()));
   }
 }
 
