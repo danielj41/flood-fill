@@ -28,6 +28,8 @@ private:
   glm::vec3 origPosition;
   glm::vec3 movementDirection; 
   glm::vec3 size;
+  bool hasCollided;
+  float timer;
   
 };
 
