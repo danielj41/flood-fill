@@ -5,7 +5,7 @@ uniform vec2 uDTime;
 uniform vec3 uStartPosition;
 
 void main(){
-    vec2 coord = gl_FragCoord.xy / 512.0;
+    vec2 coord = gl_FragCoord.xy / 256.0;
     vec2 delta = 0.5 / uSize.xz;
 
     vec4 info = texture2D(uPrevTexture, coord);

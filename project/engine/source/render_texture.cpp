@@ -76,7 +76,7 @@ void RenderTexture::load(){
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 512, 512, 0, GL_BGRA, GL_UNSIGNED_BYTE, NULL);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 256, 256, 0, GL_BGRA, GL_UNSIGNED_BYTE, NULL);
 
         glGenFramebuffersEXT(1, &framebuffer[i]);
         glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, framebuffer[i]);
@@ -84,7 +84,7 @@ void RenderTexture::load(){
 
         glGenRenderbuffersEXT(1, &renderbuffer[i]);
         glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, renderbuffer[i]);
-        glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT24, 512, 512);
+        glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT24, 256, 256);
 
         glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, renderbuffer[i]);
 
@@ -117,7 +117,7 @@ void RenderTexture::render(Shader *shader, GLuint dataTexture,
     ASSERT(loaded, "You didn't load the Texture");
 
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, framebuffer[currentTexture]);
-    glViewport(0, 0, 512, 512);
+    glViewport(0, 0, 256, 256);
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
     glDisable (GL_BLEND);
@@ -190,7 +190,7 @@ void RenderTexture::renderBlock(Uniform3DGrid<int> *grid,
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, framebuffer[currentTexture]);
     glClear(GL_DEPTH_BUFFER_BIT);
 
-    glViewport(0, 0, 512, 512);
+    glViewport(0, 0, 256, 256);
     glEnable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
 
