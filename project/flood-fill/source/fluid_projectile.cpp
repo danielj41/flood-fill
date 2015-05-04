@@ -14,6 +14,7 @@
 #include "box.hpp"
 #include "fluid_box.hpp"
 #include "water_surface.hpp"
+#include "level_template.hpp"
 
 FluidProjectile::FluidProjectile(glm::vec3 _position, glm::vec3 _movementDirection)
   : GameObject(), CollisionObject(_position),
@@ -24,8 +25,8 @@ void FluidProjectile::setup() {
   INFO("Shooting a fluid projectile ...");
   
   fluidProjectile = new Object(
-				   LoadManager::getMesh("cube.obj"),
-				   MaterialManager::getMaterial("FlatGrey"));
+				   LoadManager::getMesh("sphere.obj"),
+				   MaterialManager::getMaterial("FlatBlue"));
 
   RenderEngine::addObject(fluidProjectile);
   
@@ -34,6 +35,7 @@ void FluidProjectile::setup() {
   setCanCollide(true);
 
   origPosition = position;
+
 
   position += movementDirection;
   setPosition(position);
@@ -52,15 +54,16 @@ void FluidProjectile::update(){
   movementDirection.y -= dTime;
   
   fluidProjectile->loadIdentity();
+  fluidProjectile->scale(glm::vec3(0.5, 0.5, 0.5));
   fluidProjectile->translate(position); 
   getBoundingBox()->setPosition(position); 
 }
 
 void FluidProjectile::collided(CollisionObject * collidedWith){
   if(collidedWith->getCollisionID() == 1) {
-    Uniform3DGrid<CollisionObject *> *grid = CollisionManager::getGrid();
+    Uniform3DGrid<int> *grid = ((LevelTemplate *)Director::getScene())->getTypeGrid();
     glm::vec3 newPos(grid->getRoundX(oldPosition.x), grid->getRoundY(oldPosition.y), grid->getRoundZ(oldPosition.z));
-    if(grid->inGrid(newPos.x, newPos.y, newPos.z) && newPos.y < origPosition.y - 1.0f) {
+    if(grid->inGrid(newPos.x, newPos.y, newPos.z) && grid->getValue(newPos.x, newPos.y, newPos.z) == LevelTemplate::AVAILABLE_FILL_SPACE) {
       if(!LoadManager::getRenderTexture("waterData")->isInUse()) {
         WaterSurface *surface = new WaterSurface(newPos);
         surface->setup();
