@@ -22,10 +22,11 @@ void FluidBox::setup() {
   INFO("Creating a box ...");
   
   fluidBox = new Object(
-				   LoadManager::getMesh("cube.obj"),
+				   LoadManager::getMesh("plane2.obj"),
 				   MaterialManager::getMaterial("FlatBlue"));
 
-  fluidBox->translate(position);
+  fluidBox->scale(glm::vec3(1,1.0f,1));
+  fluidBox->translate(position + glm::vec3(0, 1.0f, 0));
   timer = 0.0f;
   visible = false;
   
@@ -36,13 +37,16 @@ void FluidBox::setup() {
   getBoundingBox()->setPosition(position);
 
   CollisionManager::addCollisionObjectToGrid(this);
+
+  
 }
 
 void FluidBox::update(){
+  
   float dTime = ((float) TimeManager::getDeltaTime());
   if(!visible) {
     timer += dTime;
-    if(timer > 1.5f) {
+    if(timer > 1.55f) {
       visible = true;
       RenderEngine::addObject(fluidBox);
     }

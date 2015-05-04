@@ -182,7 +182,8 @@ void RenderTexture::swapTextures() {
 void RenderTexture::renderBlock(Uniform3DGrid<int> *grid,
                                 float minX, float maxX,
                                 float minY, float maxY,
-                                float minZ, float maxZ) {
+                                float minZ, float maxZ,
+                                float extended) {
 
     ASSERT(loaded, "You didn't load the Texture");
 
@@ -213,8 +214,8 @@ void RenderTexture::renderBlock(Uniform3DGrid<int> *grid,
 
     // y and z are intentionally flipped, to map the XZ grid into an XY projection to draw on the texture
     glm::mat4 scale = glm::scale(glm::mat4(1.0f),
-        glm::vec3(grid->getEdgeSizeX() / (maxX - minX + grid->getEdgeSizeX()),
-                  grid->getEdgeSizeZ() / (maxZ - minZ + grid->getEdgeSizeZ()),
+        glm::vec3(grid->getEdgeSizeX() * extended / (maxX - minX + grid->getEdgeSizeX()),
+                  grid->getEdgeSizeZ() * extended / (maxZ - minZ + grid->getEdgeSizeZ()),
                   1.0f));
 
     float x, y, z;

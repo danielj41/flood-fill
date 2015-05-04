@@ -10,10 +10,10 @@
 
 #include "director.hpp"
 
-Object::Object() : _hasTexture(false), textureEnabled(false), water(false) {}
+Object::Object() : _hasTexture(false), textureEnabled(false), water(false), alpha(1.0f) {}
 
 Object::Object(Mesh * _mesh, Material * _material)
-    : mesh(_mesh), material(_material), _hasTexture(false), textureEnabled(false), water(false){
+    : mesh(_mesh), material(_material), _hasTexture(false), textureEnabled(false), water(false), alpha(1.0f){
 
     loadIdentity();
     ASSERT(getModelMatrix() == glm::mat4(1.0f),
@@ -49,12 +49,16 @@ void Object::draw(Shader * shader){
                 material->getEmissionColor().z);
     glUniform1f(shader->getHandle("uShininess"), material->getShininess());
 
+    if(alpha < 0.99f) {
+        glDepthMask(GL_FALSE);
+    }
+
     if(hasTexture() && isTextureEnabled()){
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture->getTexture());
         glUniform1i(shader->getHandle("uTextureID"), 0);
     }
-    if(isWater()) {
+    else if(isWater()) {
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, waterData);
         glUniform1i(shader->getHandle("uWaterData"), 0);
@@ -64,9 +68,15 @@ void Object::draw(Shader * shader){
         glActiveTexture(GL_TEXTURE2);
         glBindTexture(GL_TEXTURE_2D, waterBlock);
         glUniform1i(shader->getHandle("uWaterBlock"), 2);
+    } else {
+        glUniform1f(shader->getHandle("alpha"), alpha);
     }
 
     drawElements();
+
+    if(alpha < 0.99f) {
+        glDepthMask(GL_TRUE);
+    }
 }
 
 void Object::drawElements(){
@@ -84,6 +94,10 @@ Material * Object::getMaterial(){
 
 glm::mat4 Object::getModelMatrix(){
     return modelMatrix;
+}
+
+void Object::setAlpha(float _alpha) {
+    alpha = _alpha;
 }
 
 void Object::applyTexture(Texture * _texture){

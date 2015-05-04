@@ -51,5 +51,5 @@ void main(){
 
     vec3 I = Ic*(Id + Is) + Ia + Ie;
 
-    gl_FragColor = vec4(I, color.a * min(1.0, uModel[3][1] * ((info.r * color.a) - block.r)));
+    gl_FragColor = vec4(I, color.a * min(1.0, 0.8 * uModel[3][1] * ((info.r * color.a) - block.r)));
 }

@@ -47,9 +47,10 @@ void RenderEngine::render(){
 
     int numberObjectsRendered = 0;
 
-    numberObjectsRendered += renderObjects();
     numberObjectsRendered += renderTexturedObjects();
+    numberObjectsRendered += renderObjects();
     numberObjectsRendered += renderWaterObjects();
+
 
     totalObjects = objectsCount + texturedObjectsCount + waterObjectsCount;
     INFO("Total number of Objects in this scene: " << totalObjects);
@@ -450,6 +451,7 @@ void RenderEngine::loadShaders(){
     //shader->loadHandle("uLightPosition", 'u');
     geometryShader->loadHandle("uLightDirection", 'u');
     geometryShader->loadHandle("uLightColor", 'u');
+    geometryShader->loadHandle("alpha", 'u');
 
     LoadManager::loadShader("vertex-water.glsl", "fragment-water.glsl");
     geometryWaterShader = LoadManager::getShader("vertex-water.glsl", "fragment-water.glsl");

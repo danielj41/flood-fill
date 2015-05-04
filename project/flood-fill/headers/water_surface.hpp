@@ -36,6 +36,7 @@ private:
   RenderTexture * waterDataTexture;
   RenderTexture * waterColorTexture;
   RenderTexture * waterBlockTexture;
+  RenderTexture * waterBlockExtendedTexture;
   LevelTemplate * level;
 
   float minX, maxX, minY, maxY, minZ, maxZ;

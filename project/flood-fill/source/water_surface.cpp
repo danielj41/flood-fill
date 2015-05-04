@@ -44,11 +44,14 @@ void WaterSurface::setup() {
   waterDataTexture = LoadManager::getRenderTexture("waterData");
   waterColorTexture = LoadManager::getRenderTexture("waterColor");
   waterBlockTexture = LoadManager::getRenderTexture("waterBlock");
+
   waterDataTexture->clear();
   waterColorTexture->clear();
   waterBlockTexture->clear();
-  waterBlockTexture->renderBlock(&grid, minX, maxX, minY, maxY, minZ, maxZ); 
+
+  waterBlockTexture->renderBlock(&grid, minX, maxX, minY, maxY, minZ, maxZ, 1.0); 
   waterSurface->applyWaterBlock(waterBlockTexture->getTexture());
+
   waterColorTexture->render(LoadManager::getShader("render-texture-vertex-color-initial.glsl", "render-texture-fragment-color-initial.glsl"),
                             waterBlockTexture->getTexture(), glm::vec2(0), glm::vec3(0), glm::vec3(0));
   waterSurface->applyWaterColor(waterColorTexture->getTexture());
@@ -86,7 +89,7 @@ void WaterSurface::update(){
   waterColorTexture->swapTextures();
 
   timer += dTime;
-  if(timer > 1.5f) {
+  if(timer > 1.55f) {
     Director::getScene()->removeGameObject(this);
     RenderEngine::removeObject(waterSurface);
     waterDataTexture->release();

@@ -17,11 +17,12 @@ void main(){
 
     vec2 dx2 = vec2(delta.x, 0.0);
     vec2 dy2 = vec2(0.0, delta.y);
+
     float average = (
-        texture2D(uPrevTexture, coord - dx2).r - min(texture2D(uDataTexture, coord - dx2).r, 1.0 - 1.0/uSize.y) +
-        texture2D(uPrevTexture, coord - dy2).r - min(texture2D(uDataTexture, coord - dy2).r, 1.0 - 1.0/uSize.y) +
-        texture2D(uPrevTexture, coord + dx2).r - min(texture2D(uDataTexture, coord + dx2).r, 1.0 - 1.0/uSize.y) +
-        texture2D(uPrevTexture, coord + dy2).r - min(texture2D(uDataTexture, coord + dy2).r, 1.0 - 1.0/uSize.y)
+        texture2D(uPrevTexture, coord - dx2).r - 0.5*min(texture2D(uDataTexture, coord - dx2).r, 1.0 - 1.0/uSize.y) +
+        texture2D(uPrevTexture, coord - dy2).r - 0.5*min(texture2D(uDataTexture, coord - dy2).r, 1.0 - 1.0/uSize.y) +
+        texture2D(uPrevTexture, coord + dx2).r - 0.5*min(texture2D(uDataTexture, coord + dx2).r, 1.0 - 1.0/uSize.y) +
+        texture2D(uPrevTexture, coord + dy2).r - 0.5*min(texture2D(uDataTexture, coord + dy2).r, 1.0 - 1.0/uSize.y)
     ) / 4.0;
 
     float vel = info.g * 2.0 - 1.0;
@@ -32,7 +33,7 @@ void main(){
 
     block.r = min(block.r,  1.0 - 1.0/uSize.y);
 
-    vel += (average - info.r + block.r) * 20.0 * uDTime.x;
+    vel += (average - info.r + 0.5 * block.r) * 20.0 * uDTime.x;
 
     vel += uDTime.x * -sign(vel);
 
@@ -47,7 +48,7 @@ void main(){
 
     info.r = max(info.r, (1.0 - amount) * (block.r + 0.01/uSize.y));
 
-    info.r = (1.0 - amount) * info.r + amount * (1.0 / uSize.y - 0.01);
+    info.r = (1.0 - amount) * info.r + amount * (1.0 / uSize.y);
 
     info.b = (1.0 - amount) * info.b + 0.5 * amount;
     info.a = (1.0 - amount) * info.a + 0.5 * amount;

@@ -25,7 +25,8 @@ public:
     void renderBlock(Uniform3DGrid<int> *grid,
                      float minX, float maxX,
                      float minY, float maxY,
-                     float minZ, float maxZ);
+                     float minZ, float maxZ,
+                     float extended);
 
     GLuint getTexture();
     void release();

@@ -131,6 +131,18 @@ void loadMeshes(){
     mesh->generateNormalBuffer();
     mesh->generateTextureCoordinateBuffer();
     mesh->calculateLimits();
+    RenderEngine::addMesh(mesh);
+
+    LoadManager::loadMesh("plane2.obj");
+    mesh = LoadManager::getMesh("plane2.obj");
+    mesh->resize();
+    mesh->calculateNormals();
+    mesh->generateVertexBuffer();
+    mesh->generateIndexBuffer();
+    mesh->generateNormalBuffer();
+    mesh->calculateLimits();
+    RenderEngine::addMesh(mesh);
+
 
     LoadManager::loadMesh("grid.obj");
     mesh = LoadManager::getMesh("grid.obj");
@@ -140,8 +152,6 @@ void loadMeshes(){
     mesh->generateIndexBuffer();
     mesh->generateNormalBuffer();
     mesh->calculateLimits();
-
-
     RenderEngine::addMesh(mesh);
 
     LoadManager::loadMesh("sphere.obj");
@@ -168,6 +178,7 @@ void loadTextures(){
     LoadManager::loadRenderTexture("waterData");
     LoadManager::loadRenderTexture("waterColor");
     LoadManager::loadRenderTexture("waterBlock");
+    LoadManager::loadRenderTexture("waterBlockExtended");
 }
 
 void createMaterials(){
@@ -183,9 +194,9 @@ void createMaterials(){
     MaterialManager::addMaterial("FlatGrey", material);
 
     Material * material2;
-    material2 = new Material(glm::vec3(0.0, 0.3, 0.9),
-                            glm::vec3(0.3, 0.3, 0.8),
-                            glm::vec3(0.3, 0.3, 0.8),
+    material2 = new Material(glm::vec3(0.3, 0.3, 0.8),
+                            glm::vec3(0.0, 0.3, 0.9),
+                             glm::vec3(0.3, 0.3, 0.8),
                             4.0f);
     MaterialManager::addMaterial("FlatBlue", material2);
 

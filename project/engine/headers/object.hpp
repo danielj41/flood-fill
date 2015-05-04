@@ -33,6 +33,7 @@ public:
     void applyWaterColor(GLuint id);
     void applyWaterBlock(GLuint id);
 
+    void setAlpha(float _alpha);
     void scale(glm::vec3 scalingVector);
     void rotate(float angle, glm::vec3 direction);
     void translate(glm::vec3 translationVector);
@@ -51,6 +52,7 @@ protected:
     glm::mat4 modelMatrix;
     bool _hasTexture, textureEnabled;
     bool water;
+    float alpha;
 
     void drawElements();
 };
