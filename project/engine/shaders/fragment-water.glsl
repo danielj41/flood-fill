@@ -41,5 +41,5 @@ void main(){
 
     vec3 I = Ic*(Id + Is) + Ia + Ie;
 
-    gl_FragColor = vec4(I, 1);
+    gl_FragColor = vec4(I, vWaterColor.a);
 }

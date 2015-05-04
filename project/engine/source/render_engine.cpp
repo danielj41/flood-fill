@@ -48,8 +48,8 @@ void RenderEngine::render(){
     int numberObjectsRendered = 0;
 
     numberObjectsRendered += renderObjects();
-    numberObjectsRendered += renderWaterObjects();
     numberObjectsRendered += renderTexturedObjects();
+    numberObjectsRendered += renderWaterObjects();
 
     totalObjects = objectsCount + texturedObjectsCount + waterObjectsCount;
     INFO("Total number of Objects in this scene: " << totalObjects);
