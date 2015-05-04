@@ -44,6 +44,7 @@ void FluidProjectile::setup() {
   setBoundingBox(BoundingBox(glm::vec3(0.5f,0.5f,0.5f), glm::vec3(-0.5,-0.5f,-0.5f)));
   getBoundingBox()->setPosition(position);
 
+  hasCollided = false;
   timer = 0;
 }
 
