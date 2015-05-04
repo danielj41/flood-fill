@@ -41,7 +41,7 @@ void FluidProjectile::setup() {
   setPosition(position);
   fluidProjectile->translate(position);
 
-  setBoundingBox(BoundingBox(glm::vec3(0.8f,0.8f,0.8f), glm::vec3(-0.8,-0.8f,-0.8f)));
+  setBoundingBox(BoundingBox(glm::vec3(0.5f,0.5f,0.5f), glm::vec3(-0.5,-0.5f,-0.5f)));
   getBoundingBox()->setPosition(position);
 
   timer = 0;

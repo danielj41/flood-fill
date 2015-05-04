@@ -77,7 +77,7 @@ void Player::update() {
 
     if(glfwGetMouseButton(Global::window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS && !shootPressed){
         FluidProjectile *fluidProjectile = new FluidProjectile(
-            camera->getEye(), -glm::normalize(camera->getViewVector()));
+            camera->getEye() + glm::vec3(0,0.5f,0), -glm::normalize(camera->getViewVector()));
         fluidProjectile->setup();
         Director::getScene()->addGameObject(fluidProjectile);
         CollisionManager::addCollisionObjectToList(fluidProjectile);
