@@ -25,6 +25,7 @@ Mesh::Mesh(std::vector<unsigned int> _indices, std::vector<float> _vertices){
     indices = _indices;
     vertices = _vertices;
     textureCoordinates.clear();
+    tangents.clear();
     loaded = true;
 }
 
@@ -34,6 +35,7 @@ Mesh::Mesh(std::vector<unsigned int> _indices, std::vector<float> _vertices,
     indices = _indices;
     vertices = _vertices;
     textureCoordinates = _texcoords;
+    tangents.clear();
     loaded = true;
 }
 
@@ -158,9 +160,74 @@ void Mesh::calculateNormals(){
         normals[3 * i + 0] = norm.x;
         normals[3 * i + 1] = norm.y;
         normals[3 * i + 2] = norm.z;
+
     }
 
     normalsFlag = true;
+}
+
+void Mesh::calculateTangents(){
+    ASSERT(isLoaded(), "OBJ " << objfile << "not loaded");
+    ASSERT(hasNormals(), objfile << " normals were not calculated yet!");
+    ASSERT(hasTextureCoordinates(), "this mesh does not have" <<
+                                           " texture coordinates");
+
+    tangents = std::vector<float>(vertices.size(), 0.0f);
+
+    int idx1, idx2, idx3;
+    glm::vec3 v1, v2, v3;
+    glm::vec2 uv1, uv2, uv3;
+
+    for (unsigned int i = 0; i < indices.size() / 3; i++) {
+        idx1 = indices[3 * i + 0];
+        idx2 = indices[3 * i + 1];
+        idx3 = indices[3 * i + 2];
+        v1 = glm::vec3(vertices[3 * idx1 + 0],
+                       vertices[3 * idx1 + 1],
+                       vertices[3 * idx1 + 2]);
+        v2 = glm::vec3(vertices[3 * idx2 + 0],
+                       vertices[3 * idx2 + 1],
+                       vertices[3 * idx2 + 2]);
+        v3 = glm::vec3(vertices[3 * idx3 + 0],
+                       vertices[3 * idx3 + 1],
+                       vertices[3 * idx3 + 2]);
+
+        uv1 = glm::vec2(textureCoordinates[2 * idx1 + 0],
+                        textureCoordinates[2 * idx1 + 1]);
+        uv2 = glm::vec2(textureCoordinates[2 * idx2 + 0],
+                        textureCoordinates[2 * idx2 + 1]);
+        uv3 = glm::vec2(textureCoordinates[2 * idx3 + 0],
+                        textureCoordinates[2 * idx3 + 1]);
+
+        glm::vec2 deltaUV1 = uv2 - uv1;
+        glm::vec2 deltaUV2 = uv3 - uv1;
+
+        float f = 1.0f/(deltaUV1.x * deltaUV2.y - deltaUV2.x*deltaUV1.y);
+
+        glm::vec3 tangent = f * (deltaUV2.y * (v2 - v1) - deltaUV1.y * (v3 - v1));
+
+        tangents[3 * idx1 + 0] += tangent.x;
+        tangents[3 * idx1 + 1] += tangent.y;
+        tangents[3 * idx1 + 2] += tangent.z;
+
+        tangents[3 * idx2 + 0] += tangent.x;
+        tangents[3 * idx2 + 1] += tangent.y;
+        tangents[3 * idx2 + 2] += tangent.z;
+
+        tangents[3 * idx3 + 0] += tangent.x;
+        tangents[3 * idx3 + 1] += tangent.y;
+        tangents[3 * idx3 + 2] += tangent.z;
+    }
+
+    for (unsigned int i = 0; i < normals.size() / 3; i++) {
+        glm::vec3 tangent = glm::normalize(glm::vec3(tangents[3 * i + 0],
+                                                     tangents[3 * i + 1],
+                                                     tangents[3 * i + 2]));
+        tangents[3 * i + 0] = tangent.x;
+        tangents[3 * i + 1] = tangent.y;
+        tangents[3 * i + 2] = tangent.z;
+
+    }
 }
 
 void Mesh::calculateLimits(){
@@ -238,6 +305,13 @@ std::vector<float> Mesh::getTextureCoordinates(){
     return textureCoordinates;
 }
 
+std::vector<float> Mesh::getTangents(){
+    ASSERT(isLoaded(), "OBJ " << objfile << "not loaded");
+    ASSERT(hasTangents(), "this mesh does not have" <<
+                         " tangents calculated");
+    return tangents;
+}
+
 bool Mesh::hasNormals(){
     return normalsFlag;
 }
@@ -248,6 +322,10 @@ bool Mesh::hasTextureCoordinates(){
 
 bool Mesh::hasIndices(){
     return indices.size() > 0;
+}
+
+bool Mesh::hasTangents(){
+    return tangents.size() > 0;
 }
 
 bool Mesh::isLoaded(){
@@ -300,6 +378,19 @@ void Mesh::generateTextureCoordinateBuffer(){
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
+void Mesh::generateTangentBuffer(){
+    ASSERT(hasTangents(), "this mesh does not have" <<
+                          " tangents calculated");
+
+    INFO("Generating tangent buffer of mesh " << objfile << "...");
+
+    glGenBuffers(1, &tangentBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, tangentBuffer);
+    glBufferData(GL_ARRAY_BUFFER, getTangents().size()*sizeof(float),
+                 &getTangents()[0], GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
 GLuint Mesh::getVertexBuffer(){
     return vertexBuffer;
 }
@@ -314,4 +405,8 @@ GLuint Mesh::getIndexBuffer(){
 
 GLuint Mesh::getTextureCoordinateBuffer(){
     return textureCoordinateBuffer;
+}
+
+GLuint Mesh::getTangentBuffer(){
+    return tangentBuffer;
 }
