@@ -12,6 +12,10 @@
 #include "camera.hpp"
 #include "global_variables.hpp"
 #include "collision_manager.hpp"
+#include "object.hpp"
+#include "render_engine.hpp"
+#include "load_manager.hpp"
+#include "material_manager.hpp"
 
 TestLevel::TestLevel() : LevelTemplate("testLevel.txt"){}
 
@@ -51,6 +55,16 @@ void TestLevel::setup(){
     addGameObject("debugPlayer" , debugPlayer);
 
     addCamera("DebugCamera", cam2);
+
+    Object *sky = new Object(
+        LoadManager::getMesh("sphere.obj"),
+        MaterialManager::getMaterial("None"));
+
+    sky->applyTexture(LoadManager::getTexture("Sky"));
+    sky->enableTexture();
+    sky->scale(glm::vec3(50.0f,50.0f,50.0f));
+    sky->translate(glm::vec3(8.0f,8.0f,-8.0f));
+    RenderEngine::addObject(sky);
 }
 
 void TestLevel::update(){

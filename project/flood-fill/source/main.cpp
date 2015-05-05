@@ -171,8 +171,8 @@ void loadTextures(){
 
     LoadManager::loadImage("default_voxel.bmp");
     LoadManager::loadTexture("VoxelTexture", LoadManager::getImage("default_voxel.bmp"));
-    LoadManager::loadImage("water_test.bmp");
-    LoadManager::loadTexture("WaterTest", LoadManager::getImage("water_test.bmp"));
+    LoadManager::loadImage("sky.bmp");
+    LoadManager::loadTexture("Sky", LoadManager::getImage("sky.bmp"));
 
     RenderTexture::loadShaders();
     LoadManager::loadRenderTexture("waterData");
@@ -198,6 +198,13 @@ void createMaterials(){
                              glm::vec3(0.3, 0.3, 0.8),
                             4.0f);
     MaterialManager::addMaterial("FlatBlue", material2);
+
+    Material * material3;
+    material3 = new Material(glm::vec3(1.0, 1.0, 1.0),
+                            glm::vec3(0.0, 0.0, 0.0),
+                             glm::vec3(0.0, 0.0, 0.0),
+                            4.0f);
+    MaterialManager::addMaterial("None", material3);
 
 }
 
