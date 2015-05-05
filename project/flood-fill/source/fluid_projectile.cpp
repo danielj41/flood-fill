@@ -52,7 +52,7 @@ void FluidProjectile::update(){
   float dTime = ((float) TimeManager::getDeltaTime());
   
   position += movementDirection * dTime * 10.0f;
-  oldPosition = position - movementDirection;
+  oldPosition = position - 0.5f * movementDirection;
   setPosition(position);
   movementDirection.y -= dTime;
   
