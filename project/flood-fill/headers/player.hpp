@@ -4,6 +4,7 @@
 #include "game_object.hpp"
 #include "collision_object.hpp"
 #include "camera.hpp"
+#include "object.hpp"
 
 class Player: public GameObject, public CollisionObject{
 
@@ -23,6 +24,8 @@ private:
     bool jumping;
     float velocity;
     float gravity;
+
+    Object *sky;
     
     bool shootPressed;
 };

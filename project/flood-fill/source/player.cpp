@@ -17,6 +17,9 @@
 #include "director.hpp"
 #include "collision_manager.hpp"
 #include "load_manager.hpp"
+#include "material_manager.hpp"
+#include "object.hpp"
+#include "render_engine.hpp"
 
 Player::Player(Camera * _camera)
   : GameObject(), CollisionObject(), camera(_camera),
@@ -38,6 +41,16 @@ void Player::setup() {
 
     setBoundingBox(BoundingBox(glm::vec3(0.8f,0.8f,0.8f), glm::vec3(-0.8f,-0.8f,-0.8f)));
     getBoundingBox()->setPosition(camera->getEye() - glm::vec3(0,1.0f,0));
+
+    sky = new Object(
+        LoadManager::getMesh("sphere.obj"),
+        MaterialManager::getMaterial("None"));
+
+    sky->applyTexture(LoadManager::getTexture("Sky"));
+    sky->enableTexture();
+    sky->scale(glm::vec3(-50.0f,-50.0f,-50.0f));
+    sky->translate(getPosition());
+    RenderEngine::addObject(sky);
 }
 
 void Player::update() {
@@ -74,6 +87,9 @@ void Player::update() {
 
     getBoundingBox()->setPosition(camera->getEye() - glm::vec3(0,1.0f,0));
 	setPosition(camera->getEye());
+    sky->loadIdentity();
+    sky->scale(glm::vec3(-50.0f,-50.0f,-50.0f));
+    sky->translate(getPosition());
 
     if(glfwGetMouseButton(Global::window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS && !shootPressed){
         FluidProjectile *fluidProjectile = new FluidProjectile(
