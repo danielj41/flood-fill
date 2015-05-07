@@ -21,6 +21,8 @@ public:
 
     virtual ~Uniform3DGrid();
 
+    void initialize(const T& value);
+
     T& operator() (unsigned int x, unsigned int y, unsigned int z);
     T& operator() (unsigned int x, unsigned int y, unsigned int z) const;
 
@@ -104,6 +106,20 @@ Uniform3DGrid<T>::Uniform3DGrid(unsigned int numberOfCubesInX,
 
 //TODO: throw exceptions if the max and min are equal or if the number of cubes is 0
 
+    if(_minX > _maxX){
+        minX = _maxX;
+        maxX = _minX;
+    }
+    if(_minY > _maxY){
+        minY = _maxY;
+        maxY = _minY;
+    }
+    if(_minZ > _maxZ){
+        minZ = _maxZ;
+        maxZ = _minZ;
+    }
+
+
     if(numberOfCubesInX > 0) edgeSizeX = (maxX - minX)/numberOfCubesInX;
     else edgeSizeX = 0;
     if(numberOfCubesInY > 0) edgeSizeY = (maxY - minY)/numberOfCubesInY;
@@ -112,13 +128,8 @@ Uniform3DGrid<T>::Uniform3DGrid(unsigned int numberOfCubesInX,
     else edgeSizeZ = 0;
 
     grid = new T[sizeX * sizeY * sizeZ];
-	
-
-	// Set the CollisionObject * to 0 at first
-	for ( int i = 0; i < sizeX*sizeY*sizeZ; i++) {
-	  grid[i] = NULL;
-	}
 }
+
 
 template<typename T>
 Uniform3DGrid<T>::Uniform3DGrid(const Uniform3DGrid<T>& uGrid){
@@ -141,6 +152,13 @@ Uniform3DGrid<T>::Uniform3DGrid(const Uniform3DGrid<T>& uGrid){
 template<typename T>
 Uniform3DGrid<T>::~Uniform3DGrid(){
     delete grid;
+}
+
+template<typename T>
+void Uniform3DGrid<T>::initialize(const T& value){
+    for ( int i = 0; i < sizeX*sizeY*sizeZ; i++) {
+        grid[i] = value;
+    }
 }
 
 template<typename T>
@@ -256,21 +274,18 @@ float Uniform3DGrid<T>::getMaxZ(){ return maxZ; }
 template<typename T>
 float Uniform3DGrid<T>::getRoundX(float x) {
     unsigned int xIndex = ((unsigned int) ((x - minX)/edgeSizeX));
-    if(xIndex == sizeX) xIndex--;
     return xIndex * edgeSizeX + minX + edgeSizeX/2.0;
 }
 
 template<typename T>
 float Uniform3DGrid<T>::getRoundY(float y) {
-    unsigned int yIndex = ((unsigned int) ((y - maxY)/-edgeSizeY));
-    if(yIndex == sizeY) yIndex--;
-    return yIndex * -edgeSizeY + maxY - edgeSizeY/2.0;
+    unsigned int yIndex = ((unsigned int) ((y - minY)/edgeSizeY));
+    return yIndex * edgeSizeY + minY + edgeSizeY/2.0;
 }
 
 template<typename T>
 float Uniform3DGrid<T>::getRoundZ(float z) {
     unsigned int zIndex = ((unsigned int) ((z - minZ)/edgeSizeZ));
-    if(zIndex == sizeZ) zIndex--;
     return zIndex * edgeSizeZ + minZ + edgeSizeZ/2.0;
 }
 

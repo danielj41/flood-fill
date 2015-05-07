@@ -5,8 +5,10 @@
 #include "debug_macros.h"
 
 #include "glm/gtc/matrix_transform.hpp"
+#include "tiny_obj_loader.h"
 
 glm::vec3 Mesh::INVALID_LIMIT = glm::vec3(0);
+std::string Mesh::MANUAL_GENERATED_MESH_NAME = "MANUAL_GENERATED_MESH_NAME";
 
 Mesh::Mesh() {
     DEBUG("Empty Mesh!");
@@ -14,7 +16,28 @@ Mesh::Mesh() {
 
 Mesh::Mesh(std::string _objfile)
     : objfile(_objfile), loaded(false), normalsFlag(false),
-         max(INVALID_LIMIT), min(INVALID_LIMIT) {}
+         max(INVALID_LIMIT), min(INVALID_LIMIT) {
+    ASSERT(_objfile != MANUAL_GENERATED_MESH_NAME, "This filename is reserved!");
+}
+
+Mesh::Mesh(std::vector<unsigned int> _indices, std::vector<float> _vertices){
+    objfile = MANUAL_GENERATED_MESH_NAME;
+    indices = _indices;
+    vertices = _vertices;
+    textureCoordinates.clear();
+    tangents.clear();
+    loaded = true;
+}
+
+Mesh::Mesh(std::vector<unsigned int> _indices, std::vector<float> _vertices,
+           std::vector<float> _texcoords){
+    objfile = MANUAL_GENERATED_MESH_NAME;
+    indices = _indices;
+    vertices = _vertices;
+    textureCoordinates = _texcoords;
+    tangents.clear();
+    loaded = true;
+}
 
 void Mesh::resize(){
     ASSERT(isLoaded(), "OBJ " << objfile << "not loaded");
@@ -30,18 +53,17 @@ void Mesh::resize(){
     maxX = maxY = maxZ = -1.1754E+38F;
 
     //Go through all vertices to determine min and max of each dimension
-    for (size_t i = 0; i < shape.size(); i++) {
-        for (size_t v = 0; v < shape[i].mesh.positions.size() / 3; v++) {
-            if (shape[i].mesh.positions[3 * v + 0] < minX) minX = shape[i].mesh.positions[3 * v + 0];
-            if (shape[i].mesh.positions[3 * v + 0] > maxX) maxX = shape[i].mesh.positions[3 * v + 0];
+    for (size_t v = 0; v < vertices.size() / 3; v++) {
+        if (vertices[3 * v + 0] < minX) minX = vertices[3 * v + 0];
+        if (vertices[3 * v + 0] > maxX) maxX = vertices[3 * v + 0];
 
-            if (shape[i].mesh.positions[3 * v + 1] < minY) minY = shape[i].mesh.positions[3 * v + 1];
-            if (shape[i].mesh.positions[3 * v + 1] > maxY) maxY = shape[i].mesh.positions[3 * v + 1];
+        if (vertices[3 * v + 1] < minY) minY = vertices[3 * v + 1];
+        if (vertices[3 * v + 1] > maxY) maxY = vertices[3 * v + 1];
 
-            if (shape[i].mesh.positions[3 * v + 2] < minZ) minZ = shape[i].mesh.positions[3 * v + 2];
-            if (shape[i].mesh.positions[3 * v + 2] > maxZ) maxZ = shape[i].mesh.positions[3 * v + 2];
-        }
+        if (vertices[3 * v + 2] < minZ) minZ = vertices[3 * v + 2];
+        if (vertices[3 * v + 2] > maxZ) maxZ = vertices[3 * v + 2];
     }
+
     //From min and max compute necessary scale and shift for each dimension
     float maxExtent, xExtent, yExtent, zExtent;
     xExtent = maxX - minX;
@@ -63,22 +85,27 @@ void Mesh::resize(){
     scaleZ = 2.0 / maxExtent;
     shiftZ = minZ + (zExtent) / 2.0;
 
-    //Go through all verticies shift and scale them
-    for (size_t i = 0; i < shape.size(); i++) {
-        for (size_t v = 0; v < shape[i].mesh.positions.size() / 3; v++) {
-            shape[i].mesh.positions[3 * v + 0] = (shape[i].mesh.positions[3 * v + 0] - shiftX) * scaleX;
-            shape[i].mesh.positions[3 * v + 1] = (shape[i].mesh.positions[3 * v + 1] - shiftY) * scaleY;
-            shape[i].mesh.positions[3 * v + 2] = (shape[i].mesh.positions[3 * v + 2] - shiftZ) * scaleZ;
-        }
+    //Go through all vertices shift and scale them
+    for (size_t v = 0; v < vertices.size() / 3; v++) {
+        vertices[3 * v + 0] = (vertices[3 * v + 0] - shiftX) * scaleX;
+        vertices[3 * v + 1] = (vertices[3 * v + 1] - shiftY) * scaleY;
+        vertices[3 * v + 2] = (vertices[3 * v + 2] - shiftZ) * scaleZ;
     }
 }
 
 void Mesh::load(){
+    ASSERT(objfile != MANUAL_GENERATED_MESH_NAME,
+           "This mesh can't be loaded! It is manual generated!");
     if(!isLoaded()){
         INFO("Loading OBJ " << objfile << "...");
 
         std::vector<tinyobj::material_t> materials;
+        std::vector<tinyobj::shape_t> shape;
         std::string err = tinyobj::LoadObj(shape, materials, objfile.c_str());
+
+        vertices = shape[0].mesh.positions;
+        indices = shape[0].mesh.indices;
+        textureCoordinates = shape[0].mesh.texcoords;
 
         ASSERT(err.empty(), err);
     }
@@ -92,33 +119,35 @@ void Mesh::calculateNormals(){
 
     INFO("Calculating " << objfile << " normals...");
 
-    normals = std::vector<float>(shape[0].mesh.positions.size(), 0);
+    normals = std::vector<float>(vertices.size(), 0.0f);
 
     int idx1, idx2, idx3;
     glm::vec3 v1, v2, v3;
 
-    for (unsigned int i = 0; i < shape[0].mesh.indices.size() / 3; i++) {
-        idx1 = shape[0].mesh.indices[3 * i + 0];
-        idx2 = shape[0].mesh.indices[3 * i + 1];
-        idx3 = shape[0].mesh.indices[3 * i + 2];
-        v1 = glm::vec3(shape[0].mesh.positions[3 * idx1 + 0],
-                       shape[0].mesh.positions[3 * idx1 + 1],
-                       shape[0].mesh.positions[3 * idx1 + 2]);
-        v2 = glm::vec3(shape[0].mesh.positions[3 * idx2 + 0],
-                       shape[0].mesh.positions[3 * idx2 + 1],
-                       shape[0].mesh.positions[3 * idx2 + 2]);
-        v3 = glm::vec3(shape[0].mesh.positions[3 * idx3 + 0],
-                       shape[0].mesh.positions[3 * idx3 + 1],
-                       shape[0].mesh.positions[3 * idx3 + 2]);
+    for (unsigned int i = 0; i < indices.size() / 3; i++) {
+        idx1 = indices[3 * i + 0];
+        idx2 = indices[3 * i + 1];
+        idx3 = indices[3 * i + 2];
+        v1 = glm::vec3(vertices[3 * idx1 + 0],
+                       vertices[3 * idx1 + 1],
+                       vertices[3 * idx1 + 2]);
+        v2 = glm::vec3(vertices[3 * idx2 + 0],
+                       vertices[3 * idx2 + 1],
+                       vertices[3 * idx2 + 2]);
+        v3 = glm::vec3(vertices[3 * idx3 + 0],
+                       vertices[3 * idx3 + 1],
+                       vertices[3 * idx3 + 2]);
 
         glm::vec3 norm = glm::cross((v2 - v1), (v3 - v1));
 
         normals[3 * idx1 + 0] += norm.x;
         normals[3 * idx1 + 1] += norm.y;
         normals[3 * idx1 + 2] += norm.z;
+
         normals[3 * idx2 + 0] += norm.x;
         normals[3 * idx2 + 1] += norm.y;
         normals[3 * idx2 + 2] += norm.z;
+
         normals[3 * idx3 + 0] += norm.x;
         normals[3 * idx3 + 1] += norm.y;
         normals[3 * idx3 + 2] += norm.z;
@@ -128,12 +157,77 @@ void Mesh::calculateNormals(){
         glm::vec3 norm = glm::normalize(glm::vec3(normals[3 * i + 0],
                                                   normals[3 * i + 1],
                                                   normals[3 * i + 2]));
-        normals[3 * i + 0] += norm.x;
-        normals[3 * i + 1] += norm.y;
-        normals[3 * i + 2] += norm.z;
+        normals[3 * i + 0] = norm.x;
+        normals[3 * i + 1] = norm.y;
+        normals[3 * i + 2] = norm.z;
+
     }
 
     normalsFlag = true;
+}
+
+void Mesh::calculateTangents(){
+    ASSERT(isLoaded(), "OBJ " << objfile << "not loaded");
+    ASSERT(hasNormals(), objfile << " normals were not calculated yet!");
+    ASSERT(hasTextureCoordinates(), "this mesh does not have" <<
+                                           " texture coordinates");
+
+    tangents = std::vector<float>(vertices.size(), 0.0f);
+
+    int idx1, idx2, idx3;
+    glm::vec3 v1, v2, v3;
+    glm::vec2 uv1, uv2, uv3;
+
+    for (unsigned int i = 0; i < indices.size() / 3; i++) {
+        idx1 = indices[3 * i + 0];
+        idx2 = indices[3 * i + 1];
+        idx3 = indices[3 * i + 2];
+        v1 = glm::vec3(vertices[3 * idx1 + 0],
+                       vertices[3 * idx1 + 1],
+                       vertices[3 * idx1 + 2]);
+        v2 = glm::vec3(vertices[3 * idx2 + 0],
+                       vertices[3 * idx2 + 1],
+                       vertices[3 * idx2 + 2]);
+        v3 = glm::vec3(vertices[3 * idx3 + 0],
+                       vertices[3 * idx3 + 1],
+                       vertices[3 * idx3 + 2]);
+
+        uv1 = glm::vec2(textureCoordinates[2 * idx1 + 0],
+                        textureCoordinates[2 * idx1 + 1]);
+        uv2 = glm::vec2(textureCoordinates[2 * idx2 + 0],
+                        textureCoordinates[2 * idx2 + 1]);
+        uv3 = glm::vec2(textureCoordinates[2 * idx3 + 0],
+                        textureCoordinates[2 * idx3 + 1]);
+
+        glm::vec2 deltaUV1 = uv2 - uv1;
+        glm::vec2 deltaUV2 = uv3 - uv1;
+
+        float f = 1.0f/(deltaUV1.x * deltaUV2.y - deltaUV2.x*deltaUV1.y);
+
+        glm::vec3 tangent = f * (deltaUV2.y * (v2 - v1) - deltaUV1.y * (v3 - v1));
+
+        tangents[3 * idx1 + 0] += tangent.x;
+        tangents[3 * idx1 + 1] += tangent.y;
+        tangents[3 * idx1 + 2] += tangent.z;
+
+        tangents[3 * idx2 + 0] += tangent.x;
+        tangents[3 * idx2 + 1] += tangent.y;
+        tangents[3 * idx2 + 2] += tangent.z;
+
+        tangents[3 * idx3 + 0] += tangent.x;
+        tangents[3 * idx3 + 1] += tangent.y;
+        tangents[3 * idx3 + 2] += tangent.z;
+    }
+
+    for (unsigned int i = 0; i < normals.size() / 3; i++) {
+        glm::vec3 tangent = glm::normalize(glm::vec3(tangents[3 * i + 0],
+                                                     tangents[3 * i + 1],
+                                                     tangents[3 * i + 2]));
+        tangents[3 * i + 0] = tangent.x;
+        tangents[3 * i + 1] = tangent.y;
+        tangents[3 * i + 2] = tangent.z;
+
+    }
 }
 
 void Mesh::calculateLimits(){
@@ -145,15 +239,15 @@ void Mesh::calculateLimits(){
     minX = minY = minZ = 1.1754E+38F;
     maxX = maxY = maxZ = -1.1754E+38F;
 
-    for (size_t v = 0; v < shape[0].mesh.positions.size() / 3; v++) {
-        if (shape[0].mesh.positions[3 * v + 0] < minX) minX = shape[0].mesh.positions[3 * v + 0];
-        if (shape[0].mesh.positions[3 * v + 0] > maxX) maxX = shape[0].mesh.positions[3 * v + 0];
+    for (size_t v = 0; v < vertices.size() / 3; v++) {
+        if (vertices[3 * v + 0] < minX) minX = vertices[3 * v + 0];
+        if (vertices[3 * v + 0] > maxX) maxX = vertices[3 * v + 0];
 
-        if (shape[0].mesh.positions[3 * v + 1] < minY) minY = shape[0].mesh.positions[3 * v + 1];
-        if (shape[0].mesh.positions[3 * v + 1] > maxY) maxY = shape[0].mesh.positions[3 * v + 1];
+        if (vertices[3 * v + 1] < minY) minY = vertices[3 * v + 1];
+        if (vertices[3 * v + 1] > maxY) maxY = vertices[3 * v + 1];
 
-        if (shape[0].mesh.positions[3 * v + 2] < minZ) minZ = shape[0].mesh.positions[3 * v + 2];
-        if (shape[0].mesh.positions[3 * v + 2] > maxZ) maxZ = shape[0].mesh.positions[3 * v + 2];
+        if (vertices[3 * v + 2] < minZ) minZ = vertices[3 * v + 2];
+        if (vertices[3 * v + 2] > maxZ) maxZ = vertices[3 * v + 2];
     }
 
     min = glm::vec3(minX, minY, minZ);
@@ -191,26 +285,31 @@ std::vector<float> Mesh::getNormals(){
 
 std::vector<float> Mesh::getVertices(){
     ASSERT(isLoaded(), "OBJ " << objfile << "not loaded");
-    ASSERT(shape[0].mesh.positions.size(), "This mesh does not have" <<
-                                           " vertices");
+    ASSERT(vertices.size(), "This mesh does not have vertices");
 
-    return shape[0].mesh.positions;
+    return vertices;
 }
 
 std::vector<unsigned int> Mesh::getIndices(){
     ASSERT(isLoaded(), "OBJ " << objfile << "not loaded");
-    ASSERT(shape[0].mesh.indices.size(), "This mesh does not have" <<
-                                           " indeces");
+    ASSERT(hasIndices(), "This mesh does not have indeces");
 
-    return shape[0].mesh.indices;
+    return indices;
 }
 
 std::vector<float> Mesh::getTextureCoordinates(){
     ASSERT(isLoaded(), "OBJ " << objfile << "not loaded");
-    ASSERT(shape[0].mesh.texcoords.size(), "This mesh does not have" <<
+    ASSERT(hasTextureCoordinates(), "this mesh does not have" <<
                                            " texture coordinates");
 
-    return shape[0].mesh.texcoords;
+    return textureCoordinates;
+}
+
+std::vector<float> Mesh::getTangents(){
+    ASSERT(isLoaded(), "OBJ " << objfile << "not loaded");
+    ASSERT(hasTangents(), "this mesh does not have" <<
+                         " tangents calculated");
+    return tangents;
 }
 
 bool Mesh::hasNormals(){
@@ -218,8 +317,17 @@ bool Mesh::hasNormals(){
 }
 
 bool Mesh::hasTextureCoordinates(){
-    return shape[0].mesh.texcoords.size() > 0;
+    return textureCoordinates.size() > 0;
 }
+
+bool Mesh::hasIndices(){
+    return indices.size() > 0;
+}
+
+bool Mesh::hasTangents(){
+    return tangents.size() > 0;
+}
+
 bool Mesh::isLoaded(){
     return loaded;
 }
@@ -236,6 +344,7 @@ void Mesh::generateVertexBuffer(){
 }
 
 void Mesh::generateNormalBuffer(){
+    ASSERT(hasNormals(), objfile << " normals were not calculated yet!");
     INFO("Generating normal buffer of mesh " << objfile << "...");
 
     glGenBuffers(1, &normalBuffer);
@@ -246,6 +355,7 @@ void Mesh::generateNormalBuffer(){
 }
 
 void Mesh::generateIndexBuffer(){
+    ASSERT(hasIndices(), "This mesh does not have indeces");
     INFO("Generating index buffer of mesh " << objfile << "...");
 
     glGenBuffers(1, &indexBuffer);
@@ -256,12 +366,28 @@ void Mesh::generateIndexBuffer(){
 }
 
 void Mesh::generateTextureCoordinateBuffer(){
+    ASSERT(hasTextureCoordinates(), "this mesh does not have" <<
+                                           " texture coordinates");
+
     INFO("Generating texture coordinates buffer of mesh " << objfile << "...");
 
     glGenBuffers(1, &textureCoordinateBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, textureCoordinateBuffer);
     glBufferData(GL_ARRAY_BUFFER, getTextureCoordinates().size()*sizeof(float),
                  &getTextureCoordinates()[0], GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+void Mesh::generateTangentBuffer(){
+    ASSERT(hasTangents(), "this mesh does not have" <<
+                          " tangents calculated");
+
+    INFO("Generating tangent buffer of mesh " << objfile << "...");
+
+    glGenBuffers(1, &tangentBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, tangentBuffer);
+    glBufferData(GL_ARRAY_BUFFER, getTangents().size()*sizeof(float),
+                 &getTangents()[0], GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
@@ -279,4 +405,8 @@ GLuint Mesh::getIndexBuffer(){
 
 GLuint Mesh::getTextureCoordinateBuffer(){
     return textureCoordinateBuffer;
+}
+
+GLuint Mesh::getTangentBuffer(){
+    return tangentBuffer;
 }

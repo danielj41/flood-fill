@@ -17,6 +17,10 @@
 #include "fluid_projectile.hpp"
 #include "director.hpp"
 #include "collision_manager.hpp"
+#include "load_manager.hpp"
+#include "material_manager.hpp"
+#include "object.hpp"
+#include "render_engine.hpp"
 
 Player::Player(Camera * _camera)
   : GameObject(), CollisionObject(), camera(_camera),
@@ -36,22 +40,31 @@ void Player::setup() {
 
     shootPressed = false;
 
+    setBoundingBox(BoundingBox(glm::vec3(0.8f,0.8f,0.8f), glm::vec3(-0.8f,-0.8f,-0.8f)));
+    getBoundingBox()->setPosition(camera->getEye() - glm::vec3(0,1.0f,0));
+
     LoadManager::loadSound("jump_land.wav");
 
-    setBoundingBox(BoundingBox(glm::vec3(1.0f,1.0f,1.0f), glm::vec3(-1.0f,-1.0f,-1.0f)));
-    getBoundingBox()->setPosition(camera->getEye() - glm::vec3(0,1.0f,0));
+    sky = new Object(
+        LoadManager::getMesh("sphere.obj"),
+        MaterialManager::getMaterial("None"));
+
+    sky->applyTexture(LoadManager::getTexture("Sky"));
+    sky->enableTexture();
+    sky->scale(glm::vec3(-50.0f,-50.0f,-50.0f));
+    sky->translate(getPosition());
+    RenderEngine::addObject(sky);
 }
 
 void Player::update() {
     lastPosition = camera->getEye();
 
-    // camera->setEye(camera->getEye() - glm::vec3(0,0.1,0));
-
     if(glfwGetKey(Global::window, GLFW_KEY_SPACE) == GLFW_PRESS && !jumping){
-        jumping = true;
         velocity = .4;
         camera->jump(velocity);
+        jumping = true;
     }
+    // jumping = true;
 
     float cameraSpeed = 5.0f*TimeManager::getDeltaTime();
     if(glfwGetKey(Global::window, GLFW_KEY_W) == GLFW_PRESS){
@@ -72,10 +85,13 @@ void Player::update() {
 
     getBoundingBox()->setPosition(camera->getEye() - glm::vec3(0,1.0f,0));
 	setPosition(camera->getEye());
+    sky->loadIdentity();
+    sky->scale(glm::vec3(-50.0f,-50.0f,-50.0f));
+    sky->translate(getPosition());
 
     if(glfwGetMouseButton(Global::window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS && !shootPressed){
         FluidProjectile *fluidProjectile = new FluidProjectile(
-            camera->getEye(), -glm::normalize(camera->getViewVector()));
+            camera->getEye() + glm::vec3(0,0.5f,0), -glm::normalize(camera->getViewVector()));
         fluidProjectile->setup();
         Director::getScene()->addGameObject(fluidProjectile);
         CollisionManager::addCollisionObjectToList(fluidProjectile);
@@ -86,29 +102,24 @@ void Player::update() {
     }
 }
 
-void Player::collided(CollisionObject * collidedWith){
-  float normalComponent;
+void Player::collided(CollisionObject * collidedWith) {
+  glm::vec3 normal;
+  float dist;
   switch (collidedWith->getCollisionID()) {
   case 1:
 	INFO("DETECTING COLLISION WITH BLOCK!");
-    normalComponent = glm::dot(getPosition() - lastPosition, getCollisionNormal(collidedWith));
-    if(normalComponent < 0.0f) {
-        camera->setEye(getPosition() - getCollisionNormal(collidedWith) * normalComponent);
-        setPosition(camera->getEye());
-        getBoundingBox()->setPosition(camera->getEye() - glm::vec3(0,1.0f,0));
-        INFO("normal " << getCollisionNormal(collidedWith).x << " " << getCollisionNormal(collidedWith).y << " " << getCollisionNormal(collidedWith).z);
-        INFO("position " << collidedWith->getPosition().x << " " << collidedWith->getPosition().y << " " << collidedWith->getPosition().z);
-        
-        if(!getCollisionNormal(collidedWith).y && !jumping) 
-            jumping = true;
+    normal = getCollisionNormal(collidedWith);
+    dist = getCollisionDistance(collidedWith);
+    camera->setEye(getPosition() + normal * dist);
+    setPosition(camera->getEye());
+    getBoundingBox()->setPosition(camera->getEye() - glm::vec3(0,1.0f,0));
 
-        //If on flat ground, jumping is done. 
-        if(getCollisionNormal(collidedWith).y) {
-            if(jumping)
-                LoadManager::getSound("jump_land.wav")->playSound();
-            jumping = false;
-            velocity = 0;
-        }
+    //If on flat ground, jumping is done. 
+    if(fabs(normal.y) > 0.1) {
+        if(jumping)
+            LoadManager::getSound("jump_land.wav")->playSound();
+        velocity = 0;
+        jumping = false;
     }
 	
     break;

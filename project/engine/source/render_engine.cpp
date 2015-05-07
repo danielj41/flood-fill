@@ -15,14 +15,17 @@
 bool RenderEngine::loaded = false;
 
 Shader * RenderEngine::geometryShader;
+Shader * RenderEngine::geometryWaterShader;
 Shader * RenderEngine::geometryTextureShader;
 Shader * RenderEngine::debugShader;
 
 std::map< Mesh *, std::list<Object *> > RenderEngine::objects;
+std::map< Mesh *, std::list<Object *> > RenderEngine::waterObjects;
 std::map< Mesh *, std::list<Object *> > RenderEngine::texturedObjects;
 
 int RenderEngine::objectsCount = 0;
 int RenderEngine::texturedObjectsCount = 0;
+int RenderEngine::waterObjectsCount = 0;
 int RenderEngine::totalObjects = 0;
 
 void RenderEngine::setup(){
@@ -38,15 +41,19 @@ void RenderEngine::setup(){
 void RenderEngine::render(){
     INFO("Render Enging: rendering objects...");
 
+    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glEnable(GL_CULL_FACE);
 
     int numberObjectsRendered = 0;
 
-    numberObjectsRendered += renderObjects();
     numberObjectsRendered += renderTexturedObjects();
+    numberObjectsRendered += renderObjects();
+    numberObjectsRendered += renderWaterObjects();
 
-    totalObjects = objectsCount + texturedObjectsCount;
+
+    totalObjects = objectsCount + texturedObjectsCount + waterObjectsCount;
     INFO("Total number of Objects in this scene: " << totalObjects);
     INFO("Number of Objects Rendered: " << numberObjectsRendered);
 }
@@ -75,6 +82,10 @@ void RenderEngine::addObject(Object * object){
         texturedObjects[object->getMesh()].push_front(object);
         texturedObjectsCount++;
     }
+    else if(object->isWater()) {
+        waterObjects[object->getMesh()].push_front(object);
+        waterObjectsCount++;
+    }
     else {
         objects[object->getMesh()].push_front(object);
         objectsCount++;
@@ -94,6 +105,7 @@ void RenderEngine::removeMesh(Mesh * mesh){
     if(mesh->hasTextureCoordinates()){
         texturedObjects.erase(mesh);
     }
+    waterObjects.erase(mesh);
 }
 
 void RenderEngine::removeObject(Object * object){
@@ -113,6 +125,23 @@ void RenderEngine::removeObject(Object * object){
             if(*it == object){
                 texturedObjects[object->getMesh()].erase(it);
                 objectsCount--;
+                INFO("Rendering Engine: Object removed!");
+                return;
+            }
+        }
+    }
+    else if(object->isWater()){
+        ASSERT(waterObjects.find(object->getMesh()) != waterObjects.end(),
+                "Mesh " << object->getMesh()->getFileName()
+                << " is not in the Rendering Engine! Can't Remove this object");
+
+        for(std::list<Object *>::iterator it =
+                waterObjects[object->getMesh()].begin();
+                it != waterObjects[object->getMesh()].end(); it++){
+
+            if(*it == object){
+                waterObjects[object->getMesh()].erase(it);
+                waterObjectsCount--;
                 INFO("Rendering Engine: Object removed!");
                 return;
             }
@@ -217,6 +246,91 @@ int RenderEngine::renderObjects(){
 
         glDisableVertexAttribArray(geometryShader->getHandle("aPosition"));
         glDisableVertexAttribArray(geometryShader->getHandle("aNormal"));
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    }
+
+    glUseProgram(0);
+
+    return numberObjectsRendered;
+}
+
+
+int RenderEngine::renderWaterObjects(){
+    int numberObjectsRendered = 0;
+
+    if(waterObjectsCount == 0){
+        return 0;
+    }
+
+    glUseProgram(geometryWaterShader->getID());
+
+    Camera * camera = Director::getScene()->getCamera();
+
+    //Common information to all Objects
+    glUniformMatrix4fv(geometryWaterShader->getHandle("uView"), 1, GL_FALSE,
+      glm::value_ptr(camera->getViewMatrix()));
+    glUniformMatrix4fv(geometryWaterShader->getHandle("uProjection"), 1, GL_FALSE,
+      glm::value_ptr(camera->getProjectionMatrix()));
+
+
+    glUniform3f(geometryWaterShader->getHandle("uEyePosition"),
+                camera->getEye().x,
+                camera->getEye().y,
+                camera->getEye().z);
+
+    std::map<std::string, Light *> lights = Director::getScene()->getLights();
+
+    //Load the Lights
+    for(std::map<std::string, Light *>::iterator it = lights.begin();
+            it != lights.end(); it++ ){
+        Light * light = it->second;
+
+        glUniform3f(geometryWaterShader->getHandle("uLightColor"),
+                    light->getColor().x,
+                    light->getColor().y,
+                    light->getColor().z);
+
+        glUniform3f(geometryWaterShader->getHandle("uLightDirection"),
+                    light->getDirection().x,
+                    light->getDirection().y,
+                    light->getDirection().z);
+    }
+
+    //Rendering all objects of each Mesh
+    std::map< Mesh *, std::list<Object *> > tempMap = waterObjects;
+    for(std::map< Mesh *, std::list<Object *> >::iterator it =
+            tempMap.begin(); it != tempMap.end(); it++){
+
+        //Common information to all Objects of this Mesh
+        Mesh * mesh = it->first;
+
+        glEnableVertexAttribArray(geometryWaterShader->getHandle("aPosition"));
+        glBindBuffer(GL_ARRAY_BUFFER, mesh->getVertexBuffer());
+        glVertexAttribPointer(geometryWaterShader->getHandle("aPosition"), 3,
+                              GL_FLOAT, GL_FALSE, 0, 0);
+
+        glEnableVertexAttribArray(geometryWaterShader->getHandle("aNormal"));
+        glBindBuffer(GL_ARRAY_BUFFER, mesh->getNormalBuffer());
+        glVertexAttribPointer(geometryWaterShader->getHandle("aNormal"), 3,
+                              GL_FLOAT, GL_FALSE, 0, 0);
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->getIndexBuffer());
+
+
+        //Rendering each object with the specific information
+        for(std::list<Object *>::iterator obj = it->second.begin();
+                obj != it->second.end(); obj++){
+
+            //View Frustum Culling
+            if(camera->insideViewFrustum((*obj))){
+                (*obj)->draw(geometryWaterShader);
+                numberObjectsRendered++;
+            }
+        }
+
+        glDisableVertexAttribArray(geometryWaterShader->getHandle("aPosition"));
+        glDisableVertexAttribArray(geometryWaterShader->getHandle("aNormal"));
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     }
@@ -338,6 +452,28 @@ void RenderEngine::loadShaders(){
     //shader->loadHandle("uLightPosition", 'u');
     geometryShader->loadHandle("uLightDirection", 'u');
     geometryShader->loadHandle("uLightColor", 'u');
+    geometryShader->loadHandle("alpha", 'u');
+
+    LoadManager::loadShader("vertex-water.glsl", "fragment-water.glsl");
+    geometryWaterShader = LoadManager::getShader("vertex-water.glsl", "fragment-water.glsl");
+    geometryWaterShader->loadHandle("aNormal", 'a');
+    geometryWaterShader->loadHandle("aPosition", 'a');
+    geometryWaterShader->loadHandle("uModel", 'u');
+    geometryWaterShader->loadHandle("uView", 'u');
+    geometryWaterShader->loadHandle("uProjection", 'u');
+    geometryWaterShader->loadHandle("uNormalMatrix", 'u');
+    geometryWaterShader->loadHandle("uDiffuseColor", 'u');
+    geometryWaterShader->loadHandle("uSpecularColor", 'u');
+    geometryWaterShader->loadHandle("uAmbientColor", 'u');
+    geometryWaterShader->loadHandle("uEmissionColor", 'u');
+    geometryWaterShader->loadHandle("uShininess", 'u');
+    geometryWaterShader->loadHandle("uEyePosition", 'u');
+    //shader->loadHandle("uLightPosition", 'u');
+    geometryWaterShader->loadHandle("uLightDirection", 'u');
+    geometryWaterShader->loadHandle("uLightColor", 'u');
+    geometryWaterShader->loadHandle("uWaterData", 'u');
+    geometryWaterShader->loadHandle("uWaterColor", 'u');
+    geometryWaterShader->loadHandle("uWaterBlock", 'u');
 
     LoadManager::loadShader("vertex-texture.glsl", "fragment-texture.glsl");
     geometryTextureShader = LoadManager::getShader("vertex-texture.glsl",

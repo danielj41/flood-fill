@@ -1,4 +1,4 @@
-#version 130
+
 
 uniform vec3 uDiffuseColor;
 uniform vec3 uSpecularColor;
@@ -12,8 +12,10 @@ uniform vec3 uEyePosition;
 uniform vec3 uLightDirection;
 uniform vec3 uLightColor;
 
-in vec3 vVertex;
-flat in vec3 vNormal;
+varying vec3 vVertex;
+varying vec3 vNormal;
+
+uniform float alpha;
 
 void main(){
     vec3 kd = uDiffuseColor;
@@ -32,12 +34,12 @@ void main(){
 
     vec3 H = normalize(L + V);
 
-    vec3 Is = pow(max(dot(N, H), 0), n)*ks;
-    vec3 Id = max(dot(N, L), 0)*kd;
+    vec3 Is = pow(max(dot(N, H), 0.0), n)*ks;
+    vec3 Id = max(dot(N, L), 0.0)*kd;
 
     //float attenuation = dot(uLightFallOff, vec3(1, d, d*d));
 
     vec3 I = Ic*(Id + Is) + Ia + Ie;
 
-    gl_FragColor = vec4(I, 1);
+    gl_FragColor = vec4(I, alpha);
 }

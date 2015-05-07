@@ -59,15 +59,24 @@ void CollisionManager::removeCollisionObject(CollisionObject * object){
 void CollisionManager::checkCollision(CollisionObject * aObject){
 // This function checks if a has any conflicts with other collision objects in the grid    
 
-  checkCollisionWithOffset(aObject, 0,-1,0);
-  checkCollisionWithOffset(aObject, 0,0,0);
-  checkCollisionWithOffset(aObject, 0,1,0);
-  checkCollisionWithOffset(aObject, -1,0,0);
-  checkCollisionWithOffset(aObject, 1,0,0);
-  checkCollisionWithOffset(aObject, 0,0,1);
-  checkCollisionWithOffset(aObject, 0,0,-1);
+  // fix this later to include all nearby cubes, or calculate it with the bounding box
+  // this causes you to be able to jump diagonally through things.
 
-  
+  int xDir, yDir, zDir;
+  glm::vec3 pos = aObject->getBoundingBox()->getPosition();
+  glm::vec3 roundPos(grid.getRoundX(pos.x), grid.getRoundY(pos.y), grid.getRoundZ(pos.z));
+  xDir = pos.x > roundPos.x ? 1 : -1;
+  yDir = pos.y > roundPos.y ? 1 : -1;
+  zDir = pos.z > roundPos.z ? 1 : -1;
+
+  checkCollisionWithOffset(aObject, 0, 0, 0);
+  checkCollisionWithOffset(aObject, 0, yDir, 0);
+  checkCollisionWithOffset(aObject, xDir, 0, 0);
+  checkCollisionWithOffset(aObject, 0, 0, zDir);
+  checkCollisionWithOffset(aObject, xDir, yDir, 0);
+  checkCollisionWithOffset(aObject, 0, yDir, zDir);
+  checkCollisionWithOffset(aObject, xDir, 0, zDir);
+  checkCollisionWithOffset(aObject, xDir, yDir, zDir);
 }
 
 void CollisionManager::checkCollisionWithOffset(CollisionObject * aObject, int x, int y, int z) {
@@ -86,6 +95,8 @@ void CollisionManager::checkCollisionWithOffset(CollisionObject * aObject, int x
 void CollisionManager::initGrid(int x, int y, int z, glm::vec3 min, glm::vec3 max){
   INFO("Initializing the Grid");
   grid = Uniform3DGrid<CollisionObject *>(x, y, z, min.x, max.x, min.y, max.y, min.z, max.z); 
+  CollisionObject * obj = NULL;
+  grid.initialize(obj);
 }
 
 Uniform3DGrid<CollisionObject *>* CollisionManager::getGrid() {

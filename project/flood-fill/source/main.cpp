@@ -13,6 +13,7 @@
 #include "director.hpp"
 #include "global_variables.hpp"
 //#include "main_level.hpp"
+#include "test_level.hpp"
 #include "demo_level.hpp"
 #include "time_manager.hpp"
 #include "render_engine.hpp"
@@ -21,6 +22,7 @@
 #include "mesh.hpp"
 #include "image.hpp"
 #include "texture.hpp"
+#include "render_texture.hpp"
 
 using namespace std;
 
@@ -49,6 +51,10 @@ int main()
     glBindVertexArray(vao);
     */
 
+    // store the initally calculated window viewport,
+    // may not be window size on retina displays
+    GLint windowViewport[4];
+    glGetIntegerv(GL_VIEWPORT, windowViewport);
 
     TimeManager::setTimeStamp();
     TimeManager::setDeltaTime();
@@ -61,6 +67,7 @@ int main()
 
     do{
         Director::updateScene();
+        glViewport(windowViewport[0], windowViewport[1], windowViewport[2], windowViewport[3]);
         Director::renderScene();
 
         if(TimeManager::getTimeStamp() - timeStamp >= 1.0f){
@@ -93,9 +100,9 @@ int main()
 void createScenes(){
     INFO("Creating Scenes...");
 
-    DemoLevel * demoLevel = new DemoLevel();
-    Director::addScene(demoLevel);
-    Director::setScene("DemoLevel");
+    TestLevel * level = new TestLevel();
+    Director::addScene(level);
+    Director::setScene("testLevel.txt");
 }
 
 /**
@@ -127,8 +134,27 @@ void loadMeshes(){
     mesh->generateNormalBuffer();
     mesh->generateTextureCoordinateBuffer();
     mesh->calculateLimits();
+    RenderEngine::addMesh(mesh);
+
+    LoadManager::loadMesh("plane2.obj");
+    mesh = LoadManager::getMesh("plane2.obj");
+    mesh->resize();
+    mesh->calculateNormals();
+    mesh->generateVertexBuffer();
+    mesh->generateIndexBuffer();
+    mesh->generateNormalBuffer();
+    mesh->calculateLimits();
+    RenderEngine::addMesh(mesh);
 
 
+    LoadManager::loadMesh("grid.obj");
+    mesh = LoadManager::getMesh("grid.obj");
+    mesh->resize();
+    mesh->calculateNormals();
+    mesh->generateVertexBuffer();
+    mesh->generateIndexBuffer();
+    mesh->generateNormalBuffer();
+    mesh->calculateLimits();
     RenderEngine::addMesh(mesh);
 
     LoadManager::loadMesh("sphere.obj");
@@ -148,6 +174,13 @@ void loadTextures(){
 
     LoadManager::loadImage("default_voxel.bmp");
     LoadManager::loadTexture("VoxelTexture", LoadManager::getImage("default_voxel.bmp"));
+    LoadManager::loadImage("sky.bmp");
+    LoadManager::loadTexture("Sky", LoadManager::getImage("sky.bmp"));
+
+    RenderTexture::loadShaders();
+    LoadManager::loadRenderTexture("waterData");
+    LoadManager::loadRenderTexture("waterColor");
+    LoadManager::loadRenderTexture("waterBlock");
 }
 
 void createMaterials(){
@@ -163,11 +196,18 @@ void createMaterials(){
     MaterialManager::addMaterial("FlatGrey", material);
 
     Material * material2;
-    material2 = new Material(glm::vec3(0.13, 0.13, 0.34),
-                            glm::vec3(0.3, 0.3, 0.8),
-                            glm::vec3(0.3, 0.3, 0.8),
+    material2 = new Material(glm::vec3(0.3, 0.3, 0.8),
+                            glm::vec3(0.0, 0.3, 0.9),
+                             glm::vec3(0.3, 0.3, 0.8),
                             4.0f);
     MaterialManager::addMaterial("FlatBlue", material2);
+
+    Material * material3;
+    material3 = new Material(glm::vec3(1.0, 1.0, 1.0),
+                            glm::vec3(0.0, 0.0, 0.0),
+                             glm::vec3(0.0, 0.0, 0.0),
+                            4.0f);
+    MaterialManager::addMaterial("None", material3);
 
 }
 

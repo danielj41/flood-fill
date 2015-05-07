@@ -88,8 +88,12 @@ add_executable(
 		project/flood-fill/source/border.cpp
         project/flood-fill/source/fluid_projectile.cpp
         project/flood-fill/source/fluid_box.cpp
-		
-		
+        project/flood-fill/source/water_surface.cpp
+        project/flood-fill/source/level_template.cpp
+        project/flood-fill/source/test_level.cpp
+        project/flood-fill/source/void_voxel.cpp
+        project/flood-fill/source/solid_cube.cpp
+				
         #Header Files
         #project/flood-fill/headers/main_level.hpp
         project/flood-fill/headers/global_variables.hpp
@@ -102,6 +106,11 @@ add_executable(
 		project/flood-fill/headers/border.hpp
         project/flood-fill/headers/fluid_projectile.hpp
         project/flood-fill/headers/fluid_box.hpp
+        project/flood-fill/headers/water_surface.hpp
+        project/flood-fill/headers/level_template.hpp
+        project/flood-fill/headers/test_level.hpp
+        project/flood-fill/headers/void_voxel.hpp
+        project/flood-fill/headers/solid_cube.hpp
 
         ### Engine Files ###
         #Source Files
@@ -124,6 +133,8 @@ add_executable(
         project/engine/source/material_manager.cpp
         project/engine/source/image.cpp
         project/engine/source/texture.cpp
+        project/engine/source/render_texture.cpp
+        project/engine/source/lodepng.cpp
         project/engine/source/sound.cpp
 
         #Header Files
@@ -149,11 +160,19 @@ add_executable(
         project/engine/headers/uniform_3d_grid.hpp
         project/engine/headers/image.hpp
         project/engine/headers/texture.hpp
+        project/engine/headers/render_texture.hpp
+        project/engine/headers/lodepng.h
         project/engine/headers/sound.hpp
 
         #Shader Files
         project/engine/shaders/vertex.glsl
         project/engine/shaders/fragment.glsl
+
+        project/engine/shaders/vertex-texture.glsl
+        project/engine/shaders/fragment-texture.glsl
+
+        project/engine/shaders/vertex-water.glsl
+        project/engine/shaders/fragment-water.glsl
 
         project/engine/shaders/bounding_box_vertex.glsl
         project/engine/shaders/bounding_box_fragment.glsl
@@ -187,8 +206,13 @@ add_custom_command(
 )
 add_custom_command(
    TARGET main POST_BUILD
+   COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/project/flood-fill/config-files" "${CMAKE_CURRENT_BINARY_DIR}/flood-fill/config-files"
+)
+add_custom_command(
+   TARGET main POST_BUILD
    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/project/flood-fill/sounds" "${CMAKE_CURRENT_BINARY_DIR}/flood-fill/sounds"
 )
+
 
 #Copying the compiled project to the project folder, out of the build directory
 add_custom_command(

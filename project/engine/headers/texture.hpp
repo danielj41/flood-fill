@@ -4,6 +4,7 @@
 #include <string>
 #include <map>
 
+#include "GLIncludes.h"
 #include "image.hpp"
 
 class Texture{
