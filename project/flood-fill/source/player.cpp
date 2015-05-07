@@ -13,6 +13,7 @@
 #include "global_variables.hpp"
 #include "bounding_box.hpp"
 #include "time_manager.hpp"
+#include "load_manager.hpp"
 #include "fluid_projectile.hpp"
 #include "director.hpp"
 #include "collision_manager.hpp"
@@ -35,6 +36,8 @@ void Player::setup() {
 
     shootPressed = false;
 
+    LoadManager::loadSound("jump_land.wav");
+
     setBoundingBox(BoundingBox(glm::vec3(1.0f,1.0f,1.0f), glm::vec3(-1.0f,-1.0f,-1.0f)));
     getBoundingBox()->setPosition(camera->getEye() - glm::vec3(0,1.0f,0));
 }
@@ -42,11 +45,11 @@ void Player::setup() {
 void Player::update() {
     lastPosition = camera->getEye();
 
-    camera->setEye(camera->getEye() - glm::vec3(0,0.1,0));
+    // camera->setEye(camera->getEye() - glm::vec3(0,0.1,0));
 
     if(glfwGetKey(Global::window, GLFW_KEY_SPACE) == GLFW_PRESS && !jumping){
         jumping = true;
-        velocity = .5;
+        velocity = .4;
         camera->jump(velocity);
     }
 
@@ -64,14 +67,8 @@ void Player::update() {
         camera->strafe(Camera::RIGHT_DIRECTION, cameraSpeed);
     }
     
-    if(jumping) {
-        velocity += gravity * TimeManager::getDeltaTime();
-        camera->jump(velocity);
-        // if(camera->getEye().y <= 1) {
-        //     jumping = false;    
-        //     velocity = 0;        
-        // }
-    }
+    velocity += gravity * TimeManager::getDeltaTime();
+    camera->jump(velocity);
 
     getBoundingBox()->setPosition(camera->getEye() - glm::vec3(0,1.0f,0));
 	setPosition(camera->getEye());
@@ -102,8 +99,13 @@ void Player::collided(CollisionObject * collidedWith){
         INFO("normal " << getCollisionNormal(collidedWith).x << " " << getCollisionNormal(collidedWith).y << " " << getCollisionNormal(collidedWith).z);
         INFO("position " << collidedWith->getPosition().x << " " << collidedWith->getPosition().y << " " << collidedWith->getPosition().z);
         
+        if(!getCollisionNormal(collidedWith).y && !jumping) 
+            jumping = true;
+
         //If on flat ground, jumping is done. 
         if(getCollisionNormal(collidedWith).y) {
+            if(jumping)
+                LoadManager::getSound("jump_land.wav")->playSound();
             jumping = false;
             velocity = 0;
         }

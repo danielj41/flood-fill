@@ -60,6 +60,7 @@ set(ALL_LIBS
 	${OPENGL_LIBRARY}
 	GLFW_303
 	GLEW_190
+    sfml-audio
 )
 
 add_definitions(
@@ -123,6 +124,7 @@ add_executable(
         project/engine/source/material_manager.cpp
         project/engine/source/image.cpp
         project/engine/source/texture.cpp
+        project/engine/source/sound.cpp
 
         #Header Files
         project/engine/headers/GLIncludes.h
@@ -147,6 +149,7 @@ add_executable(
         project/engine/headers/uniform_3d_grid.hpp
         project/engine/headers/image.hpp
         project/engine/headers/texture.hpp
+        project/engine/headers/sound.hpp
 
         #Shader Files
         project/engine/shaders/vertex.glsl
@@ -181,6 +184,10 @@ add_custom_command(
 add_custom_command(
    TARGET main POST_BUILD
    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/project/flood-fill/textures" "${CMAKE_CURRENT_BINARY_DIR}/flood-fill/textures"
+)
+add_custom_command(
+   TARGET main POST_BUILD
+   COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/project/flood-fill/sounds" "${CMAKE_CURRENT_BINARY_DIR}/flood-fill/sounds"
 )
 
 #Copying the compiled project to the project folder, out of the build directory

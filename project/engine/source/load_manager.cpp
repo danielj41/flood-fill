@@ -8,11 +8,12 @@ std::map<std::string, Shader *> LoadManager::shaders;
 std::map<std::string, Mesh *>   LoadManager::meshes;
 std::map<std::string, Image *> LoadManager::images;
 std::map<std::string, Texture *> LoadManager::textures;
+std::map<std::string, Sound *> LoadManager::sounds;
 
 const std::string LoadManager::shaderFolder = "engine/shaders";
 const std::string LoadManager::meshFolder = "flood-fill/objects";
 const std::string LoadManager::imageFolder = "flood-fill/textures";
-
+const std::string LoadManager::soundFolder = "flood-fill/sounds";
 
 void LoadManager::loadShader(std::string vertex, std::string fragment){
     INFO("LoadManager: Loading shader " << vertex << " " << fragment << "...");
@@ -65,6 +66,18 @@ void LoadManager::loadTexture(std::string name, Image * image){
     INFO("LoadManager: Texture " << name << " loaded!");
 }
 
+void LoadManager::loadSound(std::string name){
+    INFO("LoadManager: Loading sound " << name << "...");
+
+    std::string path = buildPath(soundFolder, name);
+    if(sounds.find(name) == sounds.end()){
+        sounds[name] = new Sound(path);
+        sounds[name]->load();
+    }
+
+    INFO("LoadManager: Image " << name << " loaded!");
+}
+
 Shader * LoadManager::getShader(std::string vertex, std::string fragment){
     ASSERT(shaders.find(vertex + fragment) != shaders.end(),
         "The shader " << vertex << " " << fragment << " is not loaded!");
@@ -87,6 +100,12 @@ Texture * LoadManager::getTexture(std::string name){
     ASSERT(textures.find(name) != textures.end(),
         "The texture " << name << " is not loaded!");
     return textures[name];
+}
+
+Sound * LoadManager::getSound(std::string name){
+    ASSERT(sounds.find(name) != sounds.end(),
+        "The sound " << name << " is not loaded!");
+    return sounds[name];
 }
 
 /** Private Methods **/

@@ -54,6 +54,7 @@ void Director::setScene(std::string label){
 void Director::updateScene(){
     getScene()->update();
     getScene()->updateObjects();
+
 }
 
 void Director::renderScene(){

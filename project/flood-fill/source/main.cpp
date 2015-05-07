@@ -55,6 +55,10 @@ int main()
 
     int FPS = 0;
     double timeStamp = TimeManager::getTimeStamp();
+
+    LoadManager::loadSound("rain.wav");
+    LoadManager::getSound("rain.wav")->playSound();
+
     do{
         Director::updateScene();
         Director::renderScene();
@@ -68,7 +72,6 @@ int main()
 
         TimeManager::setDeltaTime();
         TimeManager::setTimeStamp();
-
         FPS++;
 
         // Swap buffers
