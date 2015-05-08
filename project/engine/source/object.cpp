@@ -101,6 +101,22 @@ Texture * Object::getTexture(){
     return texture;
 }
 
+float Object::getAlpha(){
+    return alpha;
+}
+
+GLuint Object::getWaterData(){
+    return waterData;
+}
+
+GLuint Object::getWaterColor(){
+    return waterColor;
+}
+
+GLuint Object::getWaterBlock(){
+    return waterBlock;
+}
+
 void Object::setAlpha(float _alpha) {
     alpha = _alpha;
 }

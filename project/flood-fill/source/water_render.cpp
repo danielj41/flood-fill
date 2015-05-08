@@ -1,4 +1,4 @@
-#include "regular_polygons_render.hpp"
+#include "water_render.hpp"
 
 #include <iostream>
 #include <cstdlib>
@@ -9,12 +9,12 @@
 #include "load_manager.hpp"
 #include "director.hpp"
 
-const std::string RegularPolygonsRender::VERTEX_SHADER_FILE = "vertex.glsl";
-const std::string RegularPolygonsRender::FRAGMENT_SHADER_FILE = "fragment.glsl";
+const std::string WaterRender::VERTEX_SHADER_FILE = "vertex-water.glsl";
+const std::string WaterRender::FRAGMENT_SHADER_FILE = "fragment-water.glsl";
 
-RegularPolygonsRender::RegularPolygonsRender() : RenderElement() {}
+WaterRender::WaterRender() : RenderElement() {}
 
-void RegularPolygonsRender::loadShader(){
+void WaterRender::loadShader(){
     LoadManager::loadShader(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);
     shader = LoadManager::getShader(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);
 
@@ -32,15 +32,17 @@ void RegularPolygonsRender::loadShader(){
     shader->loadHandle("uEyePosition", 'u');
     shader->loadHandle("uLightDirection", 'u');
     shader->loadHandle("uLightColor", 'u');
-    shader->loadHandle("alpha", 'u');
+    shader->loadHandle("uWaterData", 'u');
+    shader->loadHandle("uWaterColor", 'u');
+    shader->loadHandle("uWaterBlock", 'u');
 }
 
-void RegularPolygonsRender::setupEnviroment(){
+void WaterRender::setupEnviroment(){
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glEnable(GL_CULL_FACE);
 }
 
-void RegularPolygonsRender::tearDownEnviroment(){
+void WaterRender::tearDownEnviroment(){
     glDisableVertexAttribArray(shader->getHandle("aPosition"));
     glDisableVertexAttribArray(shader->getHandle("aNormal"));
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -50,7 +52,7 @@ void RegularPolygonsRender::tearDownEnviroment(){
     glDisable(GL_CULL_FACE);
 }
 
-void RegularPolygonsRender::setupShader(){
+void WaterRender::setupShader(){
     glUseProgram(shader->getID());
 
     Camera * camera = Director::getScene()->getCamera();
@@ -86,21 +88,21 @@ void RegularPolygonsRender::setupShader(){
     }
 }
 
-void RegularPolygonsRender::setupMesh(Mesh * mesh){
-        glEnableVertexAttribArray(shader->getHandle("aPosition"));
-        glBindBuffer(GL_ARRAY_BUFFER, mesh->getVertexBuffer());
-        glVertexAttribPointer(shader->getHandle("aPosition"), 3,
-                              GL_FLOAT, GL_FALSE, 0, 0);
+void WaterRender::setupMesh(Mesh * mesh){
+    glEnableVertexAttribArray(shader->getHandle("aPosition"));
+    glBindBuffer(GL_ARRAY_BUFFER, mesh->getVertexBuffer());
+    glVertexAttribPointer(shader->getHandle("aPosition"), 3,
+                          GL_FLOAT, GL_FALSE, 0, 0);
 
-        glEnableVertexAttribArray(shader->getHandle("aNormal"));
-        glBindBuffer(GL_ARRAY_BUFFER, mesh->getNormalBuffer());
-        glVertexAttribPointer(shader->getHandle("aNormal"), 3,
-                              GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(shader->getHandle("aNormal"));
+    glBindBuffer(GL_ARRAY_BUFFER, mesh->getNormalBuffer());
+    glVertexAttribPointer(shader->getHandle("aNormal"), 3,
+                          GL_FLOAT, GL_FALSE, 0, 0);
 
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->getIndexBuffer());
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->getIndexBuffer());
 }
 
-void RegularPolygonsRender::renderObject(Object * object){
+void WaterRender::renderObject(Object * object){
     Mesh * mesh = object->getMesh();
 
     glUniformMatrix4fv(shader->getHandle("uNormalMatrix"), 1, GL_FALSE,
@@ -127,15 +129,17 @@ void RegularPolygonsRender::renderObject(Object * object){
                 object->getMaterial()->getEmissionColor().z);
     glUniform1f(shader->getHandle("uShininess"), object->getMaterial()->getShininess());
 
-    if(object->getAlpha() < 0.99f) {
-        glDepthMask(GL_FALSE);
-    }
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, object->getWaterData());
+    glUniform1i(shader->getHandle("uWaterData"), 0);
 
-    glUniform1f(shader->getHandle("alpha"), object->getAlpha());
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, object->getWaterColor());
+    glUniform1i(shader->getHandle("uWaterColor"), 1);
+
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, object->getWaterBlock());
+    glUniform1i(shader->getHandle("uWaterBlock"), 2);
 
     glDrawElements(GL_TRIANGLES, (int) mesh->getIndices().size(), GL_UNSIGNED_INT, 0);
-
-    if(object->getAlpha() < 0.99f) {
-        glDepthMask(GL_TRUE);
-    }
 }

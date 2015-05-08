@@ -22,6 +22,10 @@ public:
     Material * getMaterial();
     glm::mat4 getModelMatrix();
     Texture * getTexture();
+    float getAlpha();
+    GLuint getWaterData();
+    GLuint getWaterColor();
+    GLuint getWaterBlock();
 
     void applyTexture(Texture * _texture);
     void enableTexture();
