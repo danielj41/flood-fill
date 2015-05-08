@@ -96,6 +96,11 @@ glm::mat4 Object::getModelMatrix(){
     return modelMatrix;
 }
 
+Texture * Object::getTexture(){
+    ASSERT(hasTexture(), "This object does not have texture!");
+    return texture;
+}
+
 void Object::setAlpha(float _alpha) {
     alpha = _alpha;
 }

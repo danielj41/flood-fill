@@ -1,4 +1,4 @@
-#include "regular_polygons_render.hpp"
+#include "textured_polygons_render.hpp"
 
 #include <iostream>
 #include <cstdlib>
@@ -9,17 +9,18 @@
 #include "load_manager.hpp"
 #include "director.hpp"
 
-const std::string RegularPolygonsRender::VERTEX_SHADER_FILE = "vertex.glsl";
-const std::string RegularPolygonsRender::FRAGMENT_SHADER_FILE = "fragment.glsl";
+const std::string TexturedPolygonsRender::VERTEX_SHADER_FILE = "vertex-texture.glsl";
+const std::string TexturedPolygonsRender::FRAGMENT_SHADER_FILE = "fragment-texture.glsl";
 
-RegularPolygonsRender::RegularPolygonsRender() : RenderElement() {}
+TexturedPolygonsRender::TexturedPolygonsRender() : RenderElement() {}
 
-void RegularPolygonsRender::loadShader(){
+void TexturedPolygonsRender::loadShader(){
     LoadManager::loadShader(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);
     shader = LoadManager::getShader(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);
 
     shader->loadHandle("aNormal", 'a');
     shader->loadHandle("aPosition", 'a');
+    shader->loadHandle("aTexCoord", 'a');
     shader->loadHandle("uModel", 'u');
     shader->loadHandle("uView", 'u');
     shader->loadHandle("uProjection", 'u');
@@ -30,19 +31,22 @@ void RegularPolygonsRender::loadShader(){
     shader->loadHandle("uEmissionColor", 'u');
     shader->loadHandle("uShininess", 'u');
     shader->loadHandle("uEyePosition", 'u');
+    shader->loadHandle("uTextureID", 'u');
     shader->loadHandle("uLightDirection", 'u');
     shader->loadHandle("uLightColor", 'u');
-    shader->loadHandle("alpha", 'u');
 }
 
-void RegularPolygonsRender::setupEnviroment(){
+void TexturedPolygonsRender::setupEnviroment(){
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glEnable(GL_CULL_FACE);
+    glEnable(GL_TEXTURE_2D);
 }
 
-void RegularPolygonsRender::tearDownEnviroment(){
+void TexturedPolygonsRender::tearDownEnviroment(){
     glDisableVertexAttribArray(shader->getHandle("aPosition"));
     glDisableVertexAttribArray(shader->getHandle("aNormal"));
+    glDisableVertexAttribArray(shader->getHandle("aTexCoord"));
+    glBindTexture(GL_TEXTURE_2D, 0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     glUseProgram(0);
@@ -50,7 +54,7 @@ void RegularPolygonsRender::tearDownEnviroment(){
     glDisable(GL_CULL_FACE);
 }
 
-void RegularPolygonsRender::setupShader(){
+void TexturedPolygonsRender::setupShader(){
     glUseProgram(shader->getID());
 
     Camera * camera = Director::getScene()->getCamera();
@@ -86,21 +90,26 @@ void RegularPolygonsRender::setupShader(){
     }
 }
 
-void RegularPolygonsRender::setupMesh(Mesh * mesh){
-        glEnableVertexAttribArray(shader->getHandle("aPosition"));
-        glBindBuffer(GL_ARRAY_BUFFER, mesh->getVertexBuffer());
-        glVertexAttribPointer(shader->getHandle("aPosition"), 3,
-                              GL_FLOAT, GL_FALSE, 0, 0);
+void TexturedPolygonsRender::setupMesh(Mesh * mesh){
+    glEnableVertexAttribArray(shader->getHandle("aPosition"));
+    glBindBuffer(GL_ARRAY_BUFFER, mesh->getVertexBuffer());
+    glVertexAttribPointer(shader->getHandle("aPosition"), 3,
+                          GL_FLOAT, GL_FALSE, 0, 0);
 
-        glEnableVertexAttribArray(shader->getHandle("aNormal"));
-        glBindBuffer(GL_ARRAY_BUFFER, mesh->getNormalBuffer());
-        glVertexAttribPointer(shader->getHandle("aNormal"), 3,
-                              GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(shader->getHandle("aNormal"));
+    glBindBuffer(GL_ARRAY_BUFFER, mesh->getNormalBuffer());
+    glVertexAttribPointer(shader->getHandle("aNormal"), 3,
+                          GL_FLOAT, GL_FALSE, 0, 0);
 
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->getIndexBuffer());
+    glEnableVertexAttribArray(shader->getHandle("aTexCoord"));
+    glBindBuffer(GL_ARRAY_BUFFER, mesh->getTextureCoordinateBuffer());
+    glVertexAttribPointer(shader->getHandle("aTexCoord"), 2,
+                          GL_FLOAT, GL_FALSE, 0, 0);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->getIndexBuffer());
 }
 
-void RegularPolygonsRender::renderObject(Object * object){
+void TexturedPolygonsRender::renderObject(Object * object){
     Mesh * mesh = object->getMesh();
 
     glUniformMatrix4fv(shader->getHandle("uNormalMatrix"), 1, GL_FALSE,
@@ -126,6 +135,10 @@ void RegularPolygonsRender::renderObject(Object * object){
                 object->getMaterial()->getEmissionColor().y,
                 object->getMaterial()->getEmissionColor().z);
     glUniform1f(shader->getHandle("uShininess"), object->getMaterial()->getShininess());
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, object->getTexture()->getTexture());
+    glUniform1i(shader->getHandle("uTextureID"), 0);
 
     glDrawElements(GL_TRIANGLES, (int) mesh->getIndices().size(), GL_UNSIGNED_INT, 0);
 }

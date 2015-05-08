@@ -21,6 +21,7 @@ public:
     Mesh * getMesh();
     Material * getMaterial();
     glm::mat4 getModelMatrix();
+    Texture * getTexture();
 
     void applyTexture(Texture * _texture);
     void enableTexture();

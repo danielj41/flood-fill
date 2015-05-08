@@ -44,6 +44,7 @@ void RenderEngine::addRenderElement(RenderElement * renderElement){
     INFO("Adding render element to the render engine...");
     ASSERT(loaded, "You dind't load the rendering engine!");
 
+    renderElement->loadShader();
     renderElements.push_back(renderElement);
 }
 
