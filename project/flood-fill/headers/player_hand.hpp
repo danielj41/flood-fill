@@ -1,5 +1,5 @@
-#ifndef FLUID_BOX_HPP
-#define FLUID_BOX_HPP
+#ifndef PLAYER_HAND_HPP
+#define PLAYER_HAND_HPP
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_PURE
@@ -9,25 +9,20 @@
 #include "collision_object.hpp"
 #include "object.hpp"
 
-class FluidBox : public GameObject, public CollisionObject{
+class PlayerHand : public GameObject, public CollisionObject {
 
 public:
 
-  FluidBox(glm::vec3 _position);
+  PlayerHand(glm::vec3 _position);
 
   void setup();
   void update();
+  void setPosition(glm::vec3 _position);
 
   void collided(CollisionObject * collidedWith);
 
 private:
-
-  Object * fluidBox;
   glm::vec3 position;
-  glm::vec3 size;
-  float timer;
-  bool visible;
-  bool deleting;
 };
 
 #endif

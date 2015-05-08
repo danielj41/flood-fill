@@ -31,7 +31,7 @@ void Player::setup() {
 	lastPosition = camera->getEye();
 	
     setCollisionID(2);
-    setCollideWithID(1);
+    setCollideWithID(1 + 64);
 	setCanCollide(true);
 	
 	INFO("Can Collide: " << canCollide());
@@ -51,6 +51,11 @@ void Player::setup() {
     sky->scale(glm::vec3(-50.0f,-50.0f,-50.0f));
     sky->translate(getPosition());
     RenderEngine::getRenderElement("textured")->addObject(sky);
+
+    hand = new PlayerHand(getPosition());
+    hand->setup();
+    Director::getScene()->addGameObject(hand);
+    CollisionManager::addCollisionObjectToList(hand);
 }
 
 void Player::update() {
@@ -105,6 +110,8 @@ void Player::update() {
     if(glfwGetMouseButton(Global::window, GLFW_MOUSE_BUTTON_1) == GLFW_RELEASE) {
         shootPressed = false;
     }
+
+    hand->setPosition(getBoundingBox()->getPosition() - 1.2f * camera->getViewVector());
 }
 
 void Player::collided(CollisionObject * collidedWith){
@@ -112,6 +119,7 @@ void Player::collided(CollisionObject * collidedWith){
   float dist;
   switch (collidedWith->getCollisionID()) {
   case 1:
+  case 64:
 	INFO("DETECTING COLLISION WITH BLOCK!");
     normal = getCollisionNormal(collidedWith);
     dist = getCollisionDistance(collidedWith);
