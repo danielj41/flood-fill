@@ -25,6 +25,8 @@ private:
     float velocity;
     float gravity;
 
+    uint colorMask;
+
     Object *sky;
     
     bool shootPressed;

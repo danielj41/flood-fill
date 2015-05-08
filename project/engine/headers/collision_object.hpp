@@ -1,6 +1,8 @@
 #ifndef COLLISION_OBJECT_HPP
 #define COLLISION_OBJECT_HPP
 
+#include <string>
+
 #include "glm/glm.hpp"
 #include "bounding_box.hpp"
 

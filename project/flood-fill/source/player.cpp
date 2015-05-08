@@ -20,7 +20,12 @@
 #include "load_manager.hpp"
 #include "material_manager.hpp"
 #include "object.hpp"
-#include "render_engine.hpp"
+#include "render_engine.hpp"    
+
+#define BLUE    1
+#define GREEN   2
+#define RED     4
+#define GREY    8
 
 Player::Player(Camera * _camera)
   : GameObject(), CollisionObject(), camera(_camera),
@@ -54,6 +59,8 @@ void Player::setup() {
     sky->scale(glm::vec3(-50.0f,-50.0f,-50.0f));
     sky->translate(getPosition());
     RenderEngine::addObject(sky);
+
+    colorMask = BLUE;
 }
 
 void Player::update() {
@@ -79,6 +86,19 @@ void Player::update() {
     else if(glfwGetKey(Global::window, GLFW_KEY_D) == GLFW_PRESS){
         camera->strafe(Camera::RIGHT_DIRECTION, cameraSpeed);
     }
+
+    if(glfwGetKey(Global::window, GLFW_KEY_U) == GLFW_PRESS){
+        colorMask = BLUE;
+    } 
+    else if(glfwGetKey(Global::window, GLFW_KEY_I) == GLFW_PRESS){
+        colorMask = GREEN;
+    }
+    else if(glfwGetKey(Global::window, GLFW_KEY_O) == GLFW_PRESS){
+        colorMask = RED;
+    }
+    else if(glfwGetKey(Global::window, GLFW_KEY_P) == GLFW_PRESS){
+        colorMask = GREY;
+    }
     
     velocity += gravity * TimeManager::getDeltaTime();
     camera->jump(velocity);
@@ -91,7 +111,7 @@ void Player::update() {
 
     if(glfwGetMouseButton(Global::window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS && !shootPressed){
         FluidProjectile *fluidProjectile = new FluidProjectile(
-            camera->getEye() + glm::vec3(0,0.5f,0), -glm::normalize(camera->getViewVector()));
+            camera->getEye() + glm::vec3(0,0.5f,0), -glm::normalize(camera->getViewVector()), colorMask);
         fluidProjectile->setup();
         Director::getScene()->addGameObject(fluidProjectile);
         CollisionManager::addCollisionObjectToList(fluidProjectile);

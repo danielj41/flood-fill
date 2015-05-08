@@ -12,8 +12,9 @@
 #include "render_engine.hpp"
 #include "fluid_box.hpp"
 
-WaterSurface::WaterSurface(glm::vec3 _position)
-  : GameObject(), CollisionObject(_position), position(_position) {}
+WaterSurface::WaterSurface(glm::vec3 _position, std::string _color)
+  : GameObject(), CollisionObject(_position), position(_position),
+    color(_color){}
 
 void WaterSurface::setup() {  
   
@@ -39,7 +40,7 @@ void WaterSurface::setup() {
   startPosition = position;
   waterSurface = new Object(
                    LoadManager::getMesh("grid.obj"),
-                   MaterialManager::getMaterial("FlatBlue"));
+                   MaterialManager::getMaterial(color));
 
   waterDataTexture = LoadManager::getRenderTexture("waterData");
   waterColorTexture = LoadManager::getRenderTexture("waterColor");
@@ -107,7 +108,7 @@ void WaterSurface::createFluidBox(glm::vec3 newPos) {
 
     if(newPos.y < lowestPosition.y + grid.getEdgeSizeY() / 2.0f) {
       typeGrid->setValue(newPos.x, newPos.y, newPos.z, LevelTemplate::SOLID_CUBE);
-      FluidBox *fluidBox = new FluidBox(newPos);
+      FluidBox *fluidBox = new FluidBox(newPos, color);
       fluidBox->setup();
       Director::getScene()->addGameObject(fluidBox);
     }

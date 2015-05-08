@@ -13,7 +13,8 @@ class FluidProjectile : public GameObject, public CollisionObject{
 
 public:
 
-  FluidProjectile(glm::vec3 _position, glm::vec3 _movementDirection);
+  FluidProjectile(glm::vec3 _position, glm::vec3 _movementDirection,
+    uint _colorMask);
 
   void setup();
   void update();
@@ -28,6 +29,7 @@ private:
   glm::vec3 origPosition;
   glm::vec3 movementDirection; 
   glm::vec3 size;
+  std::string color;
   bool hasCollided;
   float timer;
   

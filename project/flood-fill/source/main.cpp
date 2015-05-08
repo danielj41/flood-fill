@@ -203,11 +203,25 @@ void createMaterials(){
     MaterialManager::addMaterial("FlatBlue", material2);
 
     Material * material3;
-    material3 = new Material(glm::vec3(1.0, 1.0, 1.0),
+    material3 = new Material(glm::vec3(0.3, 0.8, 0.3),
+                            glm::vec3(0.0, 0.9, 0.3),
+                             glm::vec3(0.3, 0.8, 0.3),
+                            4.0f);
+    MaterialManager::addMaterial("FlatRed", material3);
+    
+    Material * material4;
+    material4 = new Material(glm::vec3(0.8, 0.3, 0.3),
+                            glm::vec3(0.0, 0.3, 0.3),
+                             glm::vec3(0.8, 0.3, 0.3),
+                            4.0f);
+    MaterialManager::addMaterial("FlatGreen", material4);
+
+    Material * material5;
+    material5 = new Material(glm::vec3(1.0, 1.0, 1.0),
                             glm::vec3(0.0, 0.0, 0.0),
                              glm::vec3(0.0, 0.0, 0.0),
                             4.0f);
-    MaterialManager::addMaterial("None", material3);
+    MaterialManager::addMaterial("None", material5);
 
 }
 
