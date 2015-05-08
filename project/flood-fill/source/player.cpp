@@ -57,8 +57,8 @@ void Player::update() {
     lastPosition = camera->getEye();
 
     if(glfwGetKey(Global::window, GLFW_KEY_SPACE) == GLFW_PRESS && !jumping){
-        velocity = .4;
-        camera->jump(velocity);
+        velocity = .6;
+        camera->jump(velocity * 25.0 * TimeManager::getDeltaTime());
     }
     jumping = true;
 
@@ -78,7 +78,10 @@ void Player::update() {
     
     if(jumping) {
         velocity += gravity * TimeManager::getDeltaTime();
-        camera->jump(velocity);
+        if(velocity < -0.6) {
+            velocity = -0.6;
+        }
+        camera->jump(velocity * 25.0 * TimeManager::getDeltaTime());
         // if(camera->getEye().y <= 1) {
         //     jumping = false;    
         //     velocity = 0;        
