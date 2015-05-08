@@ -13,25 +13,12 @@
 
 
 bool RenderEngine::loaded = false;
+std::list< RenderElement * > RenderEngine::renderElements;
 
-Shader * RenderEngine::geometryShader;
-Shader * RenderEngine::geometryWaterShader;
-Shader * RenderEngine::geometryTextureShader;
-Shader * RenderEngine::debugShader;
-
-std::map< Mesh *, std::list<Object *> > RenderEngine::objects;
-std::map< Mesh *, std::list<Object *> > RenderEngine::waterObjects;
-std::map< Mesh *, std::list<Object *> > RenderEngine::texturedObjects;
-
-int RenderEngine::objectsCount = 0;
-int RenderEngine::texturedObjectsCount = 0;
-int RenderEngine::waterObjectsCount = 0;
-int RenderEngine::totalObjects = 0;
 
 void RenderEngine::setup(){
     INFO("Setup RenderEngine...");
 
-    loadShaders();
     setupOpenGL();
 
     loaded = true;
@@ -41,136 +28,42 @@ void RenderEngine::setup(){
 void RenderEngine::render(){
     INFO("Render Enging: rendering objects...");
 
+    ASSERT(loaded, "You dind't load the rendering engine!");
+
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    glEnable(GL_CULL_FACE);
 
-    int numberObjectsRendered = 0;
-
-    numberObjectsRendered += renderTexturedObjects();
-    numberObjectsRendered += renderObjects();
-    numberObjectsRendered += renderWaterObjects();
-
-
-    totalObjects = objectsCount + texturedObjectsCount + waterObjectsCount;
-    INFO("Total number of Objects in this scene: " << totalObjects);
-    INFO("Number of Objects Rendered: " << numberObjectsRendered);
-}
-
-void RenderEngine::addMesh(Mesh * mesh){
-    INFO("Adding mesh " << mesh->getFileName() << " to the Rendering Engine...");
-
-    ASSERT(loaded, "You have to setup the Rendering Engine!");
-
-    std::list<Object *> l;
-    objects[mesh] = l;
-
-    if(mesh->hasTextureCoordinates())
-        texturedObjects[mesh] = l;
-}
-
-void RenderEngine::addObject(Object * object){
-    INFO("Adding object to the Rendering Engine...");
-
-    ASSERT(loaded, "You have to setup the Rendering Engine!");
-    ASSERT(objects.find(object->getMesh()) != objects.end(),
-            "You need to add the mesh " << object->getMesh()->getFileName()
-            << " to the Rendering Engine!");
-
-    if(object->hasTexture() && object->isTextureEnabled()){
-        texturedObjects[object->getMesh()].push_front(object);
-        texturedObjectsCount++;
-    }
-    else if(object->isWater()) {
-        waterObjects[object->getMesh()].push_front(object);
-        waterObjectsCount++;
-    }
-    else {
-        objects[object->getMesh()].push_front(object);
-        objectsCount++;
+    for(auto it = renderElements.begin(); it != renderElements.end(); it++){
+        (*it)->setupEnviroment();
+        (*it)->renderPass();
+        (*it)->tearDownEnviroment();
     }
 }
 
-void RenderEngine::removeMesh(Mesh * mesh){
-    INFO("Removing mesh " << mesh->getFileName()
-            << " from the Rendering Engine...");
+void RenderEngine::addRenderElement(RenderElement * renderElement){
+    INFO("Adding render element to the render engine...");
+    ASSERT(loaded, "You dind't load the rendering engine!");
 
-    ASSERT(loaded, "You have to setup the Rendering Engine!");
-    ASSERT(objects.find(mesh) != objects.end(),
-            "You are trying to remove the mesh " << mesh->getFileName()
-            << ", and it is not in the Rendering Engine");
-
-    objects.erase(mesh);
-    if(mesh->hasTextureCoordinates()){
-        texturedObjects.erase(mesh);
-    }
-    waterObjects.erase(mesh);
+    renderElements.push_back(renderElement);
 }
 
-void RenderEngine::removeObject(Object * object){
-    INFO("Removing object to the Rendering Engine...");
+void RenderEngine::removeRenderElement(RenderElement * renderElement){
+    INFO("Removing Render Element from Render Engine...");
+    ASSERT(loaded, "You dind't load the rendering engine!");
 
-    ASSERT(loaded, "You have to setup the Rendering Engine!");
-
-    if(object->hasTexture() && object->isTextureEnabled()){
-        ASSERT(texturedObjects.find(object->getMesh()) != texturedObjects.end(),
-                "Mesh " << object->getMesh()->getFileName()
-                << " is not in the Rendering Engine! Can't Remove this object");
-
-        for(std::list<Object *>::iterator it =
-                texturedObjects[object->getMesh()].begin();
-                it != texturedObjects[object->getMesh()].end(); it++){
-
-            if(*it == object){
-                texturedObjects[object->getMesh()].erase(it);
-                objectsCount--;
-                INFO("Rendering Engine: Object removed!");
-                return;
-            }
-        }
-    }
-    else if(object->isWater()){
-        ASSERT(waterObjects.find(object->getMesh()) != waterObjects.end(),
-                "Mesh " << object->getMesh()->getFileName()
-                << " is not in the Rendering Engine! Can't Remove this object");
-
-        for(std::list<Object *>::iterator it =
-                waterObjects[object->getMesh()].begin();
-                it != waterObjects[object->getMesh()].end(); it++){
-
-            if(*it == object){
-                waterObjects[object->getMesh()].erase(it);
-                waterObjectsCount--;
-                INFO("Rendering Engine: Object removed!");
-                return;
-            }
-        }
-    }
-    else {
-        ASSERT(objects.find(object->getMesh()) != objects.end(),
-                "Mesh " << object->getMesh()->getFileName()
-                << " is not in the Rendering Engine! Can't Remove this object");
-
-        for(std::list<Object *>::iterator it =
-                objects[object->getMesh()].begin();
-                it != objects[object->getMesh()].end(); it++){
-
-            if(*it == object){
-                objects[object->getMesh()].erase(it);
-                objectsCount--;
-                INFO("Rendering Engine: Object removed!");
-                return;
-            }
+    for(auto it = renderElements.begin(); it != renderElements.end(); it++){
+        if(*it == renderElement){
+            renderElements.erase(it);
+            INFO("Render Element Removed!");
+            return;
         }
     }
 
-    DEBUG("Rendering Engine: Object not found!");
+    DEBUG("Could not find Render Element!");
 }
-
 
 /* Private Methods */
-
+/*
 int RenderEngine::renderObjects(){
     int numberObjectsRendered = 0;
 
@@ -505,7 +398,7 @@ void RenderEngine::loadShaders(){
     debugShader->loadHandle("uView", 'u');
     debugShader->loadHandle("uProjection", 'u');
 }
-
+*/
 void RenderEngine::setupOpenGL(){
     INFO("Setup OpenGL...");
 

@@ -1,0 +1,54 @@
+#include "render_element.hpp"
+
+#include <iostream>
+#include <cstdlib>
+#include "debug_macros.h"
+
+#include "director.hpp"
+
+const std::list<Object *> RenderElement::EMPTY_LIST;
+
+RenderElement::RenderElement(bool viewFrustumCullingEnable) : cull(viewFrustumCullingEnable) {}
+
+void RenderElement::addObject(Object * object){
+    INFO("Adding object to the Rendering Element...");
+
+    objects[object->getMesh()].push_front(object);
+}
+
+void RenderElement::removeObject(Object * object){
+    INFO("Removing object from Rendering Element...");
+
+    Mesh * mesh = object->getMesh();
+
+    ASSERT(objects.find(mesh) != objects.end(), "Mesh does not exist!");
+
+    for(auto it = objects[mesh].begin() ; it != objects[mesh].end(); it++){
+        if(*it == object){
+            objects[mesh].remove(*it);
+            INFO("Object Removed!");
+            return;
+        }
+    }
+
+    DEBUG("Could not remove object!");
+}
+
+void RenderElement::setupEnviroment() {}
+void RenderElement::tearDownEnviroment() {}
+
+void RenderElement::renderPass(){
+    Camera * camera = Director::getScene()->getCamera();
+
+    for(auto it = objects.begin(); it != objects.end(); it++){
+        Mesh * mesh = it->first;
+        setupMesh(mesh);
+
+        for(auto objIt = it->second.begin(); objIt != it->second.end(); it++){
+            //View Frustum Culling
+            if(cull == false || (cull && camera->insideViewFrustum((*objIt)))){
+                renderObject(*objIt);
+            }
+        }
+    }
+}

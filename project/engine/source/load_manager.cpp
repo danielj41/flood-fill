@@ -10,7 +10,7 @@ std::map<std::string, Image *> LoadManager::images;
 std::map<std::string, Texture *> LoadManager::textures;
 std::map<std::string, RenderTexture *> LoadManager::renderTextures;
 
-const std::string LoadManager::shaderFolder = "engine/shaders";
+const std::string LoadManager::shaderFolder = "flood-fill/shaders";
 const std::string LoadManager::meshFolder = "flood-fill/objects";
 const std::string LoadManager::imageFolder = "flood-fill/textures";
 
