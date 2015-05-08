@@ -167,12 +167,15 @@ void Mesh::calculateNormals(){
 }
 
 void Mesh::calculateTangents(){
+    //Reference: http://www.terathon.com/code/tangent.html
+
     ASSERT(isLoaded(), "OBJ " << objfile << "not loaded");
     ASSERT(hasNormals(), objfile << " normals were not calculated yet!");
     ASSERT(hasTextureCoordinates(), "this mesh does not have" <<
                                            " texture coordinates");
 
-    tangents = std::vector<float>(vertices.size(), 0.0f);
+    tangents = std::vector<float>(4*vertices.size()/3, 0.0f);
+    std::vector<float> bitangents(vertices.size(), 0.0f);
 
     int idx1, idx2, idx3;
     glm::vec3 v1, v2, v3;
@@ -199,34 +202,68 @@ void Mesh::calculateTangents(){
         uv3 = glm::vec2(textureCoordinates[2 * idx3 + 0],
                         textureCoordinates[2 * idx3 + 1]);
 
-        glm::vec2 deltaUV1 = uv2 - uv1;
-        glm::vec2 deltaUV2 = uv3 - uv1;
+        glm::vec2 ST1 = uv2 - uv1;
+        glm::vec2 ST2 = uv3 - uv1;
 
-        float f = 1.0f/(deltaUV1.x * deltaUV2.y - deltaUV2.x*deltaUV1.y);
+        float f = 1.0f/(ST1.x * ST2.y - ST2.x * ST1.y);
 
-        glm::vec3 tangent = f * (deltaUV2.y * (v2 - v1) - deltaUV1.y * (v3 - v1));
+        glm::vec3 tangent   = f * (ST2.y * (v2 - v1) - ST1.y * (v3 - v1));
+        glm::vec3 bitangent = f * (ST1.x * (v2 - v1) - ST2.x * (v3 - v1));
 
-        tangents[3 * idx1 + 0] += tangent.x;
-        tangents[3 * idx1 + 1] += tangent.y;
-        tangents[3 * idx1 + 2] += tangent.z;
+        tangents[4 * idx1 + 0] += tangent.x;
+        tangents[4 * idx1 + 1] += tangent.y;
+        tangents[4 * idx1 + 2] += tangent.z;
 
-        tangents[3 * idx2 + 0] += tangent.x;
-        tangents[3 * idx2 + 1] += tangent.y;
-        tangents[3 * idx2 + 2] += tangent.z;
+        tangents[4 * idx2 + 0] += tangent.x;
+        tangents[4 * idx2 + 1] += tangent.y;
+        tangents[4 * idx2 + 2] += tangent.z;
 
-        tangents[3 * idx3 + 0] += tangent.x;
-        tangents[3 * idx3 + 1] += tangent.y;
-        tangents[3 * idx3 + 2] += tangent.z;
+        tangents[4 * idx3 + 0] += tangent.x;
+        tangents[4 * idx3 + 1] += tangent.y;
+        tangents[4 * idx3 + 2] += tangent.z;
+
+        bitangents[3 * idx1 + 0] += bitangent.x;
+        bitangents[3 * idx1 + 1] += bitangent.y;
+        bitangents[3 * idx1 + 2] += bitangent.z;
+
+        bitangents[3 * idx2 + 0] += bitangent.x;
+        bitangents[3 * idx2 + 1] += bitangent.y;
+        bitangents[3 * idx2 + 2] += bitangent.z;
+
+        bitangents[3 * idx3 + 0] += bitangent.x;
+        bitangents[3 * idx3 + 1] += bitangent.y;
+        bitangents[3 * idx3 + 2] += bitangent.z;
     }
 
-    for (unsigned int i = 0; i < normals.size() / 3; i++) {
-        glm::vec3 tangent = glm::normalize(glm::vec3(tangents[3 * i + 0],
-                                                     tangents[3 * i + 1],
-                                                     tangents[3 * i + 2]));
-        tangents[3 * i + 0] = tangent.x;
-        tangents[3 * i + 1] = tangent.y;
-        tangents[3 * i + 2] = tangent.z;
+    for (unsigned int i = 0; i < tangents.size() / 4; i++) {
+        glm::vec3 tangent = glm::vec3(tangents[4 * i + 0],
+                                      tangents[4 * i + 1],
+                                      tangents[4 * i + 2]);
+        glm::vec3 bitangent = glm::vec3(bitangents[3 * i + 0],
+                                        bitangents[3 * i + 1],
+                                        bitangents[3 * i + 2]);
+        glm::vec3 normal = glm::vec3(normals[3 * i + 0],
+                                     normals[3 * i + 1],
+                                     normals[3 * i + 2]);
 
+        // Gram-Schmidt orthogonalization
+        glm::vec3 t_ortho = tangent - glm::dot(tangent, normal)*normal;
+        glm::vec3 b_ortho = bitangent - glm::dot(normal, bitangent)*normal
+                            - glm::dot(t_ortho, bitangent)*t_ortho/(tangent*tangent);
+
+        t_ortho = normalize(t_ortho);
+        b_ortho = normalize(b_ortho);
+
+        glm::mat3 TBN_ortho = glm::transpose(glm::mat3(t_ortho, b_ortho, normal));
+
+        float handedness = glm::determinant(TBN_ortho);
+        if(handedness < 0) handedness = -1.0f;
+        else handedness = 1.0f;
+
+        tangents[4 * i + 0] = t_ortho.x;
+        tangents[4 * i + 1] = t_ortho.y;
+        tangents[4 * i + 2] = t_ortho.z;
+        tangents[4 * i + 3] = handedness;
     }
 }
 
