@@ -24,7 +24,7 @@ void SolidCube::setup() {
 
     cube->translate(position);
 
-    RenderEngine::addObject(cube);
+    RenderEngine::getRenderElement("textured")->addObject(cube);
 
     setCollisionID(1);
     setCanCollide(true);

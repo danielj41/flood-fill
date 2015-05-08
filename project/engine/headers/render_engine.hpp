@@ -1,7 +1,8 @@
 #ifndef RENDER_ENGINE_HPP
 #define RENDER_ENGINE_HPP
 
-#include <list>
+#include <map>
+#include <string>
 
 #include "render_element.hpp"
 
@@ -11,13 +12,14 @@ public:
     static void setup();
     static void render();
 
-    static void addRenderElement(RenderElement * renderElement);
-    static void removeRenderElement(RenderElement * renderElement);
+    static void addRenderElement(std::string name, RenderElement * renderElement);
+    static RenderElement * getRenderElement(std::string name);
+    static void removeRenderElement(std::string name);
 
 private:
     static bool loaded;
 
-    static std::list< RenderElement * > renderElements;
+    static std::map< std::string, RenderElement * > renderElements;
 
     static void setupOpenGL();
 };

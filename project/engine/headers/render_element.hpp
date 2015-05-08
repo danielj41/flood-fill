@@ -50,9 +50,6 @@ protected:
 
     Shader * shader;
     std::map< Mesh *, std::list<Object *> > objects;
-
-private:
-    static const std::list<Object *> EMPTY_LIST;
 };
 
 #endif

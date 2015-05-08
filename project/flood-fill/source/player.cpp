@@ -50,7 +50,7 @@ void Player::setup() {
     sky->enableTexture();
     sky->scale(glm::vec3(-50.0f,-50.0f,-50.0f));
     sky->translate(getPosition());
-    RenderEngine::addObject(sky);
+    RenderEngine::getRenderElement("textured")->addObject(sky);
 }
 
 void Player::update() {

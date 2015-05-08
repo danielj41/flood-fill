@@ -16,11 +16,16 @@
 #include "render_engine.hpp"
 #include "load_manager.hpp"
 #include "material_manager.hpp"
+#include "regular_polygons_render.hpp"
+#include "textured_polygons_render.hpp"
+#include "water_render.hpp"
 
 TestLevel::TestLevel() : LevelTemplate("testLevel.txt"){}
 
 void TestLevel::setup(){
     INFO("Generanting Test Level...");
+    createRenders();
+
     createLevel();
 
     INFO("Setting up the cameras for the Test Level...");
@@ -67,4 +72,11 @@ void TestLevel::update(){
         setMainCamera("Camera1");
         getCamera("Camera1")->fix(false, true, false);
     }
+}
+
+void TestLevel::createRenders(){
+    INFO("Creating Renders...");
+    RenderEngine::addRenderElement("regular", new RegularPolygonsRender());
+    RenderEngine::addRenderElement("textured", new TexturedPolygonsRender());
+    RenderEngine::addRenderElement("water", new WaterRender());
 }

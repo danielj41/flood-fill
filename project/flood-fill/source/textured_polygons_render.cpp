@@ -15,6 +15,8 @@ const std::string TexturedPolygonsRender::FRAGMENT_SHADER_FILE = "fragment-textu
 TexturedPolygonsRender::TexturedPolygonsRender() : RenderElement() {}
 
 void TexturedPolygonsRender::loadShader(){
+    INFO("Loading Shader...");
+
     LoadManager::loadShader(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);
     shader = LoadManager::getShader(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);
 
@@ -37,12 +39,16 @@ void TexturedPolygonsRender::loadShader(){
 }
 
 void TexturedPolygonsRender::setupEnviroment(){
+    INFO("Setup Enviroment...");
+
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glEnable(GL_CULL_FACE);
     glEnable(GL_TEXTURE_2D);
 }
 
 void TexturedPolygonsRender::tearDownEnviroment(){
+    INFO("Tear Down Enviroment...");
+
     glDisableVertexAttribArray(shader->getHandle("aPosition"));
     glDisableVertexAttribArray(shader->getHandle("aNormal"));
     glDisableVertexAttribArray(shader->getHandle("aTexCoord"));
@@ -55,6 +61,8 @@ void TexturedPolygonsRender::tearDownEnviroment(){
 }
 
 void TexturedPolygonsRender::setupShader(){
+    INFO("Setup Shader...");
+
     glUseProgram(shader->getID());
 
     Camera * camera = Director::getScene()->getCamera();
@@ -91,6 +99,8 @@ void TexturedPolygonsRender::setupShader(){
 }
 
 void TexturedPolygonsRender::setupMesh(Mesh * mesh){
+    INFO("Setup mesh...");
+
     glEnableVertexAttribArray(shader->getHandle("aPosition"));
     glBindBuffer(GL_ARRAY_BUFFER, mesh->getVertexBuffer());
     glVertexAttribPointer(shader->getHandle("aPosition"), 3,

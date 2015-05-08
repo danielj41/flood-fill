@@ -13,7 +13,7 @@
 
 
 bool RenderEngine::loaded = false;
-std::list< RenderElement * > RenderEngine::renderElements;
+std::map< std::string, RenderElement * > RenderEngine::renderElements;
 
 
 void RenderEngine::setup(){
@@ -26,7 +26,7 @@ void RenderEngine::setup(){
 }
 
 void RenderEngine::render(){
-    INFO("Render Enging: rendering objects...");
+    INFO("Render Engine: rendering objects...");
 
     ASSERT(loaded, "You dind't load the rendering engine!");
 
@@ -34,26 +34,39 @@ void RenderEngine::render(){
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     for(auto it = renderElements.begin(); it != renderElements.end(); it++){
-        (*it)->setupEnviroment();
-        (*it)->renderPass();
-        (*it)->tearDownEnviroment();
+        INFO("Rendering Objects from Render Element " << it->first << "...");
+        it->second->setupEnviroment();
+        it->second->renderPass();
+        it->second->tearDownEnviroment();
     }
 }
 
-void RenderEngine::addRenderElement(RenderElement * renderElement){
-    INFO("Adding render element to the render engine...");
+void RenderEngine::addRenderElement(std::string name, RenderElement * renderElement){
+    INFO("Adding render element " << name << " to the render engine...");
     ASSERT(loaded, "You dind't load the rendering engine!");
 
     renderElement->loadShader();
-    renderElements.push_back(renderElement);
+    renderElements[name] = renderElement;
+    INFO("Render element " << name << " added!");
 }
 
-void RenderEngine::removeRenderElement(RenderElement * renderElement){
-    INFO("Removing Render Element from Render Engine...");
+RenderElement * RenderEngine::getRenderElement(std::string name){
+    ASSERT(loaded, "You dind't load the rendering engine!");
+
+    if(renderElements.find(name) != renderElements.end()){
+        return renderElements[name];
+    }
+
+    ASSERT(false, "Render Element " << name << " not found!");
+    return NULL;
+}
+
+void RenderEngine::removeRenderElement(std::string name){
+    INFO("Removing Render Element " << name << " from Render Engine...");
     ASSERT(loaded, "You dind't load the rendering engine!");
 
     for(auto it = renderElements.begin(); it != renderElements.end(); it++){
-        if(*it == renderElement){
+        if(it->first == name){
             renderElements.erase(it);
             INFO("Render Element Removed!");
             return;

@@ -6,8 +6,6 @@
 
 #include "director.hpp"
 
-const std::list<Object *> RenderElement::EMPTY_LIST;
-
 RenderElement::RenderElement(bool viewFrustumCullingEnable) : cull(viewFrustumCullingEnable) {}
 
 void RenderElement::addObject(Object * object){
@@ -38,13 +36,15 @@ void RenderElement::setupEnviroment() {}
 void RenderElement::tearDownEnviroment() {}
 
 void RenderElement::renderPass(){
+    INFO("Render Pass: render all objects");
+
     Camera * camera = Director::getScene()->getCamera();
 
     for(auto it = objects.begin(); it != objects.end(); it++){
         Mesh * mesh = it->first;
         setupMesh(mesh);
 
-        for(auto objIt = it->second.begin(); objIt != it->second.end(); it++){
+        for(auto objIt = it->second.begin(); objIt != it->second.end(); objIt++){
             //View Frustum Culling
             if(cull == false || (cull && camera->insideViewFrustum((*objIt)))){
                 renderObject(*objIt);
