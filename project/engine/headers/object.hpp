@@ -22,7 +22,10 @@ public:
     Material * getMaterial();
     glm::mat4 getModelMatrix();
     Texture * getTexture();
+    Texture * getNormalMap();
     float getAlpha();
+    float getNormalMapScale();
+    float getNormalMapBias();
     GLuint getWaterData();
     GLuint getWaterColor();
     GLuint getWaterBlock();
@@ -32,6 +35,10 @@ public:
     void disableTexture();
     bool isTextureEnabled();
     bool hasTexture();
+
+    void applyNormalMap(Texture * _texture);
+    bool hasNormalMap();
+
     bool isWater();
     void enableWater();
     void applyWaterData(GLuint id);
@@ -48,16 +55,20 @@ public:
 protected:
     Mesh *   mesh;
     Material * material;
+
     Texture * texture;
+    Texture * normalMap;
 
     GLuint waterData;
     GLuint waterColor;
     GLuint waterBlock;
 
     glm::mat4 modelMatrix;
-    bool _hasTexture, textureEnabled;
+    bool _hasTexture, _hasNormalMap, textureEnabled;
     bool water;
     float alpha;
+    float normalMapScale;
+    float normalMapBias;
 
     void drawElements();
 };

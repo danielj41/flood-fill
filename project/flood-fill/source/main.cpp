@@ -119,6 +119,8 @@ void loadMeshes(){
     mesh->generateNormalBuffer();
     mesh->generateTextureCoordinateBuffer();
     mesh->calculateLimits();
+    mesh->calculateTangents();
+    mesh->generateTangentBuffer();
 
     LoadManager::loadMesh("plane.obj");
     mesh = LoadManager::getMesh("plane.obj");
@@ -129,6 +131,8 @@ void loadMeshes(){
     mesh->generateNormalBuffer();
     mesh->generateTextureCoordinateBuffer();
     mesh->calculateLimits();
+    mesh->calculateTangents();
+    mesh->generateTangentBuffer();
 
     LoadManager::loadMesh("plane2.obj");
     mesh = LoadManager::getMesh("plane2.obj");
@@ -158,6 +162,8 @@ void loadMeshes(){
     mesh->generateNormalBuffer();
     mesh->generateTextureCoordinateBuffer();
     mesh->calculateLimits();
+    mesh->calculateTangents();
+    mesh->generateTangentBuffer();
 }
 
 void loadTextures(){
@@ -165,8 +171,12 @@ void loadTextures(){
 
     LoadManager::loadImage("default_voxel.bmp");
     LoadManager::loadTexture("VoxelTexture", LoadManager::getImage("default_voxel.bmp"));
+
     LoadManager::loadImage("sky.bmp");
     LoadManager::loadTexture("Sky", LoadManager::getImage("sky.bmp"));
+
+    LoadManager::loadImage("chesterfield_normal_map.png");
+    LoadManager::loadTexture("PaddedNormalMap", LoadManager::getImage("chesterfield_normal_map.png"));
 
     RenderTexture::loadShaders();
     LoadManager::loadRenderTexture("waterData");

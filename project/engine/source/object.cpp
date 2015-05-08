@@ -10,7 +10,11 @@
 
 #include "director.hpp"
 
-Object::Object() : _hasTexture(false), textureEnabled(false), water(false), alpha(1.0f) {}
+Object::Object() : _hasTexture(false), textureEnabled(false), water(false), alpha(1.0f) {
+    _hasNormalMap = false;
+    normalMapScale = 0.0f;
+    normalMapBias = 0.0f;
+}
 
 Object::Object(Mesh * _mesh, Material * _material)
     : mesh(_mesh), material(_material), _hasTexture(false), textureEnabled(false), water(false), alpha(1.0f){
@@ -18,6 +22,10 @@ Object::Object(Mesh * _mesh, Material * _material)
     loadIdentity();
     ASSERT(getModelMatrix() == glm::mat4(1.0f),
         "Idetenty matrix did't load for this object");
+
+    _hasNormalMap = false;
+    normalMapScale = 0.0f;
+    normalMapBias = 0.0f;
 }
 
 void Object::draw(Shader * shader){
@@ -117,6 +125,19 @@ GLuint Object::getWaterBlock(){
     return waterBlock;
 }
 
+Texture * Object::getNormalMap(){
+    ASSERT(hasNormalMap(), "This Object does not have normal map!");
+    return normalMap;
+}
+
+float Object::getNormalMapScale(){
+    return normalMapScale;
+}
+
+float Object::getNormalMapBias(){
+    return normalMapBias;
+}
+
 void Object::setAlpha(float _alpha) {
     alpha = _alpha;
 }
@@ -124,6 +145,11 @@ void Object::setAlpha(float _alpha) {
 void Object::applyTexture(Texture * _texture){
     texture = _texture;
     _hasTexture = true;
+}
+
+void Object::applyNormalMap(Texture * _texture){
+    normalMap = _texture;
+    _hasNormalMap = true;
 }
 
 void Object::applyWaterData(GLuint id){
@@ -155,6 +181,10 @@ bool Object::isTextureEnabled(){
 
 bool Object::hasTexture(){
     return _hasTexture;
+}
+
+bool Object::hasNormalMap(){
+    return _hasNormalMap;
 }
 
 bool Object::isWater() {
