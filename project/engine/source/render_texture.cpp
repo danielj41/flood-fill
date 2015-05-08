@@ -198,7 +198,7 @@ void RenderTexture::renderBlock(Uniform3DGrid<int> *grid,
 
     glUseProgram(shader->getID());
 
-    Mesh *mesh = LoadManager::getMesh("plane.obj");
+    Mesh *mesh = LoadManager::getMesh("interpcube.obj");
 
     glEnableVertexAttribArray(shader->getHandle("aPosition"));
     glBindBuffer(GL_ARRAY_BUFFER, mesh->getVertexBuffer());
@@ -216,7 +216,7 @@ void RenderTexture::renderBlock(Uniform3DGrid<int> *grid,
     glm::mat4 scale = glm::scale(glm::mat4(1.0f),
         glm::vec3(grid->getEdgeSizeX() * extended / (maxX - minX + grid->getEdgeSizeX()),
                   grid->getEdgeSizeZ() * extended / (maxZ - minZ + grid->getEdgeSizeZ()),
-                  1.0f));
+                  grid->getEdgeSizeY() / (maxY - minY + grid->getEdgeSizeY())));
 
     float x, y, z;
     for(x = minX; x < maxX + grid->getEdgeSizeX()/2.0f; x += grid->getEdgeSizeX()) {
@@ -228,8 +228,8 @@ void RenderTexture::renderBlock(Uniform3DGrid<int> *grid,
             glm::mat4 model = glm::translate(glm::mat4(1.0f),
                 glm::vec3((x - (maxX + minX) / 2.0f) / (maxX - minX + grid->getEdgeSizeX()) * 2.0f,
                           (z - (maxZ + minZ) / 2.0f) / (maxZ - minZ + grid->getEdgeSizeZ()) * 2.0f,
-                          -(y - grid->getEdgeSizeY() / 2.0f - (maxY + minY) / 2.0f) / (maxY - minY + grid->getEdgeSizeY()) * 2.0f
-                          )) * scale;
+                          -(y - (maxY + minY) / 2.0f - grid->getEdgeSizeY())*0.99f / (maxY - minY + grid->getEdgeSizeY()) * 2.0f
+                          )) * scale; //0.99f prevents objects drawn at exactly 1 or -1 from being culled
 
             glUniformMatrix4fv(shader->getHandle("uModelMatrix"), 1, GL_FALSE,
                         glm::value_ptr(model));

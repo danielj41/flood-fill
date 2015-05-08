@@ -164,6 +164,14 @@ void loadMeshes(){
     mesh->calculateLimits();
     mesh->calculateTangents();
     mesh->generateTangentBuffer();
+
+    LoadManager::loadMesh("interpcube.obj");
+    mesh = LoadManager::getMesh("interpcube.obj");
+    //mesh->resize(); // Don't resize this
+    mesh->calculateNormals();
+    mesh->generateVertexBuffer();
+    mesh->generateIndexBuffer();
+    mesh->generateNormalBuffer();
 }
 
 void loadTextures(){

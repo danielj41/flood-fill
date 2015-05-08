@@ -31,7 +31,7 @@ void FluidProjectile::setup() {
   RenderEngine::getRenderElement("regular")->addObject(fluidProjectile);
   
   setCollisionID(0);
-  setCollideWithID(1);
+  setCollideWithID(1 + 64);
   setCanCollide(true);
 
   origPosition = position;
@@ -72,7 +72,7 @@ void FluidProjectile::update(){
 }
 
 void FluidProjectile::collided(CollisionObject * collidedWith){
-  if(collidedWith->getCollisionID() == 1 && !hasCollided) {
+  if(collidedWith->getCollisionID() == 1 || collidedWith->getCollisionID() == 64 && !hasCollided) {
     hasCollided = true;
     Uniform3DGrid<int> *grid = ((LevelTemplate *)Director::getScene())->getTypeGrid();
     glm::vec3 newPos(grid->getRoundX(oldPosition.x), grid->getRoundY(oldPosition.y), grid->getRoundZ(oldPosition.z));
