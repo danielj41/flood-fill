@@ -40,8 +40,17 @@ void RenderElement::renderPass(){
 
     Camera * camera = Director::getScene()->getCamera();
 
+    if(objects.size() == 0) return;
+
+    INFO("Setup Shader...");
+    setupShader();
+
     for(auto it = objects.begin(); it != objects.end(); it++){
         Mesh * mesh = it->first;
+
+        if(it->second.size() == 0) continue;
+
+        INFO("Setup Mesh...");
         setupMesh(mesh);
 
         for(auto objIt = it->second.begin(); objIt != it->second.end(); objIt++){

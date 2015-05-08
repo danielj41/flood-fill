@@ -35,8 +35,11 @@ void RenderEngine::render(){
 
     for(auto it = renderElements.begin(); it != renderElements.end(); it++){
         INFO("Rendering Objects from Render Element " << it->first << "...");
+        INFO("Setup Enviroment...")
         it->second->setupEnviroment();
+        INFO("Render Pass...")
         it->second->renderPass();
+        INFO("Tear Down Enviroment...")
         it->second->tearDownEnviroment();
     }
 }

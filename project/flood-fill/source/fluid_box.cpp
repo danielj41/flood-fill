@@ -49,7 +49,7 @@ void FluidBox::update(){
     getBoundingBox()->setPosition(position - (1.0f - timer/1.55f) * glm::vec3(0, 2.0f, 0));
     if(timer > 1.55f) {
       visible = true;
-      RenderEngine::getRenderElement("textured")->addObject(fluidBox);
+      RenderEngine::getRenderElement("regular")->addObject(fluidBox);
       getBoundingBox()->setPosition(position);
     }
   } 
