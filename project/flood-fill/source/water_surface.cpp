@@ -14,7 +14,7 @@
 
 WaterSurface::WaterSurface(glm::vec3 _position)
   : GameObject(), CollisionObject(_position), position(_position) {}
-///////////////////////////////////////////
+///////////
 void WaterSurface::setup() {  
   
   level = (LevelTemplate *)Director::getScene();
@@ -34,7 +34,10 @@ void WaterSurface::setup() {
   timer = 0.0f;
   if(!checkAdjacent(position)) {
     timer = 2.0f; // remove next frame
-  };
+  }
+  if(maxX - grid.getEdgeSizeY() * 1.5f < minY) {
+    checkAdjacent(position + glm::vec3(0, grid.getEdgeSizeY(), 0));
+  }
 
   startPosition = position;
   waterSurface = new Object(
@@ -60,7 +63,7 @@ void WaterSurface::setup() {
   size = glm::vec3((maxX - minX + 2.0f) / 2.0f, (maxY - minY + 2.0f) / 2.0f, (maxZ - minZ + 2.0f) / 2.0f);
 
   waterDataTexture->render(LoadManager::getShader("render-texture-vertex-data-initial.glsl", "render-texture-fragment-data-initial.glsl"),
-                            waterBlockTexture->getTexture(), glm::vec2(0), glm::vec3(0), size);
+                            waterBlockTexture->getTexture(), glm::vec2(0), startPosition - position, size);
   waterSurface->applyWaterData(waterDataTexture->getTexture());
   waterDataTexture->swapTextures();
 

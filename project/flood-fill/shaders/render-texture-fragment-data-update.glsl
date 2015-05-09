@@ -48,7 +48,7 @@ void main(){
     vec2 increasePosition = vec2((uStartPosition.x / uSize.x + 1.0) / 2.0, (uStartPosition.z / uSize.z + 1.0)/2.0);
     vel += 1.5 * uDTime.x / (uDTime.y + 1.0) / (uDTime.y + 1.0) / (dot(coord - increasePosition, coord - increasePosition) / 0.15 + 2.00);
 
-    vel += (block.r + 0.3/uSize.y - info.r) * 10.0 * uDTime.x;
+    vel += (block.r + 0.3/uSize.y - info.r) * 7.0 * uDTime.x;
 
     vel *= pow(0.995, uDTime.x * 60.0);
 
