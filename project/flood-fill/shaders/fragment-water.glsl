@@ -58,5 +58,5 @@ void main(){
     amount = amount * amount;
     float blockHeight = (1.0 - amount) * block.r + amount * blockCenter.r;
 
-    gl_FragColor = vec4(I, color.a * clamp(uModel[1][1] * (max(info.r, blockHeight) - blockHeight), 0.0, 1.0));
+    gl_FragColor = vec4(0.0, info.g, 0.0, 1.0);//vec4(I, color.a * clamp(uModel[1][1] * (max(info.r, blockHeight) - blockHeight), 0.0, 1.0));
 }
