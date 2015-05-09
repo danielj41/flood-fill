@@ -45,6 +45,11 @@ void main(){
 
     vel += (average - info.r + 0.5 * block.r) * 50.0 * uDTime.x;
 
+    vec2 increasePosition = vec2((uStartPosition.x / uSize.x + 1.0) / 2.0, (uStartPosition.z / uSize.z + 1.0)/2.0);
+    vel += 2.5 * uDTime.x / (uDTime.y * uDTime.y + 0.5) / uSize.y / (dot(coord - increasePosition, coord - increasePosition) / 0.05 + 1.0);
+
+    vel += (block.r + 1.0/uSize.y - info.r) * 10.0 * uDTime.x;
+
     vel *= pow(0.995, uDTime.x * 60.0);
 
     float height = info.r;
@@ -54,13 +59,10 @@ void main(){
     float amount = uDTime.y / 1.5;
     amount = amount * amount * amount;
     amount = min(amount, 1.0);
+    
+    height = max(height, (1.0 - amount) * (block.r + 0.1/uSize.y));
 
-    vec2 increasePosition = vec2((uStartPosition.x / uSize.x + 1.0) / 2.0, (uStartPosition.z / uSize.z + 1.0)/2.0);
-    //height += 5.0 * uDTime.x / (uDTime.y + 0.1) / uSize.y / (dot(coord - increasePosition, coord - increasePosition) + 0.01);
-
-    //height = max(height, (1.0 - amount) * (block.r + 0.01/uSize.y));
-
-    //height = (1.0 - amount) * info.r + amount * (1.0 / uSize.y);
+    //height = (1.0 - amount) * height + amount * (1.0 / uSize.y);
 
     info.b = (1.0 - amount) * info.b + 0.5 * amount;
     info.a = (1.0 - amount) * info.a + 0.5 * amount;

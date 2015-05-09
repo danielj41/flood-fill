@@ -14,7 +14,7 @@
 
 WaterSurface::WaterSurface(glm::vec3 _position)
   : GameObject(), CollisionObject(_position), position(_position) {}
-////////////////////////////////////////////////////
+////////////
 void WaterSurface::setup() {  
   
   level = (LevelTemplate *)Director::getScene();
