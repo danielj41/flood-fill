@@ -8,6 +8,7 @@
 #include "collision_manager.hpp"
 #include "material_manager.hpp"
 #include "render_engine.hpp"
+#include "debug_render.hpp"
 
 SolidCube::SolidCube(glm::vec3 _position) : GameObject(), CollisionObject(_position),
     position(_position) {}
@@ -33,6 +34,8 @@ void SolidCube::setup() {
 
     setBoundingBox(BoundingBox(glm::vec3(1.0f,1.0f,1.0f), glm::vec3(-1.0f,-1.0f,-1.0f)));
     getBoundingBox()->setPosition(position);
+
+    ((DebugRender *) RenderEngine::getRenderElement("debug"))->addBoundingBox(getBoundingBox());
 }
 
 void SolidCube::update(){
