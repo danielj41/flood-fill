@@ -23,6 +23,7 @@ varying vec3 vVertex;
 varying vec3 vPosition;
 varying vec3 vNormal;
 
+
 void main(){
     vec2 coord = vPosition.xz*0.5 + vec2(0.5,0.5);
     vec4 info = texture2D(uWaterData, coord);
@@ -57,6 +58,7 @@ void main(){
     float amount = uDTime.y / 1.5;
     amount = amount * amount;
     float blockHeight = (1.0 - amount) * block.r + amount * blockCenter.r;
+    float diff = 2.0 * uModel[1][1] * (max(((1.0 - amount) * info.r * color.a + amount * 1.0/uModel[1][1]) + 0.10/uModel[1][1], blockHeight) - blockHeight);
 
-    gl_FragColor = vec4(0.0, info.g, 0.0, 1.0);//vec4(I, color.a * clamp(uModel[1][1] * (max(info.r, blockHeight) - blockHeight), 0.0, 1.0));
+    gl_FragColor = vec4(I, color.a * clamp(pow(diff, 0.5), amount, 1.0));
 }
