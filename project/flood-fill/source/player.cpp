@@ -37,7 +37,7 @@ void Player::setup() {
 	lastPosition = camera->getEye();
 	
     setCollisionID(2);
-    setCollideWithID(1);
+    setCollideWithID(1 + 16);
 	setCanCollide(true);
 	
 	INFO("Can Collide: " << canCollide());
@@ -142,6 +142,9 @@ void Player::collided(CollisionObject * collidedWith) {
         jumping = false;
     }
 	
+    break;
+  case 16:
+    
     break;
   default:
 	break;
