@@ -17,15 +17,18 @@ uniform mat4 uNormalMatrix;
 uniform sampler2D uWaterData;
 uniform sampler2D uWaterColor;
 uniform sampler2D uWaterBlock;
+uniform vec2 uDTime;
 
 varying vec3 vVertex;
 varying vec3 vPosition;
 varying vec3 vNormal;
 
 void main(){
-    vec4 info = texture2D(uWaterData, vPosition.xz*0.5 + vec2(0.5,0.5));
-    vec4 color = texture2D(uWaterColor, vPosition.xz*0.5 + vec2(0.5,0.5));
-    vec4 block = texture2D(uWaterBlock, vPosition.xz*0.5 + vec2(0.5,0.5));
+    vec2 coord = vPosition.xz*0.5 + vec2(0.5,0.5);
+    vec4 info = texture2D(uWaterData, coord);
+    vec4 color = texture2D(uWaterColor, coord);
+    vec4 block = texture2D(uWaterBlock, coord);
+    vec4 blockCenter = texture2D(uWaterBlock, vec2((floor(coord.x*uModel[0][0]) + 0.5)/uModel[0][0], (floor(coord.y*uModel[2][2]) + 0.5)/uModel[2][2]));
 
     uDiffuseColor;
     vec3 kd = vec3(uDiffuseColor.r * color.r, uDiffuseColor.g * color.g, uDiffuseColor.b * color.b);
@@ -51,5 +54,9 @@ void main(){
 
     vec3 I = Ic*(Id + Is) + Ia + Ie;
 
-    gl_FragColor = vec4(I, color.a * min(1.0, 0.8 * uModel[3][1] * ((info.r * color.a) - block.r)));
+    float amount = uDTime.y / 1.5;
+    amount = amount * amount;
+    float blockHeight = (1.0 - amount) * block.r + amount * blockCenter.r;
+
+    gl_FragColor = vec4(I, color.a * clamp(uModel[1][1] * (max(info.r, blockHeight) - blockHeight), 0.0, 1.0));
 }

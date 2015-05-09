@@ -14,7 +14,7 @@
 
 WaterSurface::WaterSurface(glm::vec3 _position)
   : GameObject(), CollisionObject(_position), position(_position) {}
-
+//
 void WaterSurface::setup() {  
   
   level = (LevelTemplate *)Director::getScene();
@@ -49,7 +49,7 @@ void WaterSurface::setup() {
   waterColorTexture->clear();
   waterBlockTexture->clear();
 
-  waterBlockTexture->renderBlock(&grid, minX, maxX, minY, maxY, minZ, maxZ, 1.0); 
+  waterBlockTexture->renderBlock(&grid, minX, maxX, minY, maxY, minZ, maxZ, 1.05f); 
   waterSurface->applyWaterBlock(waterBlockTexture->getTexture());
 
   waterColorTexture->render(LoadManager::getShader("render-texture-vertex-color-initial.glsl", "render-texture-fragment-color-initial.glsl"),
@@ -66,6 +66,7 @@ void WaterSurface::setup() {
 
   waterSurface->scale(size);
   waterSurface->enableWater();
+  waterSurface->setDTime(glm::vec2(0));
   position = glm::vec3((maxX + minX) / 2.0f, (maxY + minY) / 2.0f, (maxZ + minZ) / 2.0f);
   waterSurface->translate(position);
   
@@ -87,6 +88,8 @@ void WaterSurface::update(){
   waterColorTexture->render(LoadManager::getShader("render-texture-vertex-color-update.glsl", "render-texture-fragment-color-update.glsl"),
                            waterBlockTexture->getTexture(), glm::vec2(dTime, timer), startPosition - position, size);
   waterColorTexture->swapTextures();
+
+  waterSurface->setDTime(glm::vec2(dTime, timer));
 
   timer += dTime;
   if(timer > 1.55f) {

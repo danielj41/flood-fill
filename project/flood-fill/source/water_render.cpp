@@ -35,6 +35,7 @@ void WaterRender::loadShader(){
     shader->loadHandle("uWaterData", 'u');
     shader->loadHandle("uWaterColor", 'u');
     shader->loadHandle("uWaterBlock", 'u');
+    shader->loadHandle("uDTime", 'u');
 }
 
 void WaterRender::setupEnviroment(){
@@ -140,6 +141,8 @@ void WaterRender::renderObject(Object * object){
     glActiveTexture(GL_TEXTURE2);
     glBindTexture(GL_TEXTURE_2D, object->getWaterBlock());
     glUniform1i(shader->getHandle("uWaterBlock"), 2);
+
+    glUniform2f(shader->getHandle("uDTime"), object->getDTime().x, object->getDTime().y);
 
     glDrawElements(GL_TRIANGLES, (int) mesh->getIndices().size(), GL_UNSIGNED_INT, 0);
 }

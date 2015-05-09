@@ -164,6 +164,14 @@ void Object::applyWaterBlock(GLuint id){
     waterBlock = id;
 }
 
+void Object::setDTime(glm::vec2 _dTime) {
+    dTime = _dTime;
+}
+
+glm::vec2 Object::getDTime() {
+    return dTime;
+}
+
 void Object::enableTexture(){
     ASSERT(_hasTexture, "This Object does not have texture!");
     textureEnabled = true;

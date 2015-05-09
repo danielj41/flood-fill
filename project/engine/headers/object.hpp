@@ -44,6 +44,8 @@ public:
     void applyWaterData(GLuint id);
     void applyWaterColor(GLuint id);
     void applyWaterBlock(GLuint id);
+    void setDTime(glm::vec2 _dTime);
+    glm::vec2 getDTime();
 
     void setAlpha(float _alpha);
     void scale(glm::vec3 scalingVector);
@@ -69,6 +71,7 @@ protected:
     float alpha;
     float normalMapScale;
     float normalMapBias;
+    glm::vec2 dTime;
 
     void drawElements();
 };
