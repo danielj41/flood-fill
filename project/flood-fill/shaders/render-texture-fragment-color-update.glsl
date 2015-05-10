@@ -11,6 +11,6 @@ void main(){
         gl_FragColor = vec4(1.0, 1.0, 1.0, 0.0);
     } else {
         vec2 increasePosition = vec2((uStartPosition.x / uSize.x + 1.0) / 2.0, (uStartPosition.z / uSize.z + 1.0)/2.0);
-        gl_FragColor = vec4(1.0, 1.0, 1.0, clamp(uDTime.y * uDTime.y / dot(coord - increasePosition, coord - increasePosition), uDTime.y/1.5, 1.0));
+        gl_FragColor = vec4(1.0, 1.0, 1.0, clamp(uDTime.y * uDTime.y / dot(coord - increasePosition, coord - increasePosition) / 1.65, uDTime.y/1.5, 1.0));
     }
 }

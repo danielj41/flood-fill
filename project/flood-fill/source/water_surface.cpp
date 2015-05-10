@@ -14,8 +14,8 @@
 
 WaterSurface::WaterSurface(glm::vec3 _position)
   : GameObject(), CollisionObject(_position), position(_position) {}
-///////////
-void WaterSurface::setup() {  
+
+void WaterSurface::setup() {
   
   level = (LevelTemplate *)Director::getScene();
   typeGrid = level->getTypeGrid();
@@ -55,15 +55,15 @@ void WaterSurface::setup() {
   waterBlockTexture->renderBlock(&grid, minX, maxX, minY, maxY, minZ, maxZ, 1.05f); 
   waterSurface->applyWaterBlock(waterBlockTexture->getTexture());
 
+  size = glm::vec3((maxX - minX + 2.0f) / 2.0f, (maxY - minY + 2.0f) / 2.0f, (maxZ - minZ + 2.0f) / 2.0f);
+
   waterColorTexture->render(LoadManager::getShader("render-texture-vertex-color-initial.glsl", "render-texture-fragment-color-initial.glsl"),
-                            waterBlockTexture->getTexture(), glm::vec2(0), glm::vec3(0), glm::vec3(0));
+                            waterBlockTexture->getTexture(), glm::vec2(0, 0), startPosition - position, size);
   waterSurface->applyWaterColor(waterColorTexture->getTexture());
   waterColorTexture->swapTextures();
 
-  size = glm::vec3((maxX - minX + 2.0f) / 2.0f, (maxY - minY + 2.0f) / 2.0f, (maxZ - minZ + 2.0f) / 2.0f);
-
   waterDataTexture->render(LoadManager::getShader("render-texture-vertex-data-initial.glsl", "render-texture-fragment-data-initial.glsl"),
-                            waterBlockTexture->getTexture(), glm::vec2(0), startPosition - position, size);
+                            waterBlockTexture->getTexture(), glm::vec2(0, 0), startPosition - position, size);
   waterSurface->applyWaterData(waterDataTexture->getTexture());
   waterDataTexture->swapTextures();
 

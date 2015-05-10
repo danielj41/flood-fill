@@ -18,12 +18,10 @@ void WaterRender::loadShader(){
     LoadManager::loadShader(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);
     shader = LoadManager::getShader(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);
 
-    shader->loadHandle("aNormal", 'a');
     shader->loadHandle("aPosition", 'a');
     shader->loadHandle("uModel", 'u');
     shader->loadHandle("uView", 'u');
     shader->loadHandle("uProjection", 'u');
-    shader->loadHandle("uNormalMatrix", 'u');
     shader->loadHandle("uDiffuseColor", 'u');
     shader->loadHandle("uSpecularColor", 'u');
     shader->loadHandle("uAmbientColor", 'u');
@@ -45,7 +43,6 @@ void WaterRender::setupEnviroment(){
 
 void WaterRender::tearDownEnviroment(){
     glDisableVertexAttribArray(shader->getHandle("aPosition"));
-    glDisableVertexAttribArray(shader->getHandle("aNormal"));
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     glUseProgram(0);
@@ -95,19 +92,11 @@ void WaterRender::setupMesh(Mesh * mesh){
     glVertexAttribPointer(shader->getHandle("aPosition"), 3,
                           GL_FLOAT, GL_FALSE, 0, 0);
 
-    glEnableVertexAttribArray(shader->getHandle("aNormal"));
-    glBindBuffer(GL_ARRAY_BUFFER, mesh->getNormalBuffer());
-    glVertexAttribPointer(shader->getHandle("aNormal"), 3,
-                          GL_FLOAT, GL_FALSE, 0, 0);
-
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->getIndexBuffer());
 }
 
 void WaterRender::renderObject(Object * object){
     Mesh * mesh = object->getMesh();
-
-    glUniformMatrix4fv(shader->getHandle("uNormalMatrix"), 1, GL_FALSE,
-        glm::value_ptr(glm::transpose(glm::inverse(object->getModelMatrix()))));
 
     glUniformMatrix4fv(shader->getHandle("uModel"), 1, GL_FALSE,
                         glm::value_ptr(object->getModelMatrix()));
