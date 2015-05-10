@@ -18,6 +18,7 @@
 #include "material_manager.hpp"
 #include "regular_polygons_render.hpp"
 #include "textured_polygons_render.hpp"
+#include "water_stream_render.hpp"
 #include "water_render.hpp"
 #include "normal_map_render.hpp"
 
@@ -80,5 +81,6 @@ void TestLevel::createRenders(){
     RenderEngine::addRenderElement("regular", new RegularPolygonsRender());
     RenderEngine::addRenderElement("normalmap", new NormalMapRender());
     RenderEngine::addRenderElement("textured", new TexturedPolygonsRender());
+    RenderEngine::addRenderElement("normal-water-stream", new WaterStreamRender());
     RenderEngine::addRenderElement("water", new WaterRender());
 }

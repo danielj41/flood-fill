@@ -24,7 +24,7 @@
 #include "render_texture.hpp"
 
 using namespace std;
-
+//
 //TODO: Encapsulate ALL opengl functions in a library with error checking
 
 void setupGLFW();
@@ -146,6 +146,15 @@ void loadMeshes(){
 
     LoadManager::loadMesh("grid.obj");
     mesh = LoadManager::getMesh("grid.obj");
+    mesh->resize();
+    mesh->calculateNormals();
+    mesh->generateVertexBuffer();
+    mesh->generateIndexBuffer();
+    mesh->generateNormalBuffer();
+    mesh->calculateLimits();
+
+    LoadManager::loadMesh("stream.obj");
+    mesh = LoadManager::getMesh("stream.obj");
     mesh->resize();
     mesh->calculateNormals();
     mesh->generateVertexBuffer();

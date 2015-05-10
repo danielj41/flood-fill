@@ -30,6 +30,7 @@ private:
   glm::vec3 size;
   bool hasCollided;
   float timer;
+  float angle;
   
 };
 

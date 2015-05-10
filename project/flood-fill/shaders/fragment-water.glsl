@@ -54,10 +54,10 @@ void main(){
 
     vec3 I = Ic*(Id + Is) + Ia + Ie;
 
-    float amount = uDTime.y / 1.5;
-    amount = amount * amount;
-    float blockHeight = (1.0 - amount) * block.r + amount * blockCenter.r;
-    float diff = 1.3 * uModel[1][1] * (max(((1.0 - amount) * info.r * color.a + amount * 1.0/uModel[1][1]) - 0.02/uModel[1][1], blockHeight) - blockHeight);
+    float amountLin = uDTime.y / 1.5;
+    float amount = amountLin * amountLin;
+    float blockHeight = (1.0 - amountLin) * block.r + amountLin * blockCenter.r;
+    float diff = 2.75 * uModel[1][1] * (max(((1.0 - amount) * info.r * color.a + amount * 1.0/uModel[1][1]), blockHeight) - blockHeight - 0.05/uModel[1][1]);
 
-    gl_FragColor = vec4(I, color.a * clamp(pow(diff, 0.5), 0.0, 1.0));
+    gl_FragColor = vec4(I, color.a * clamp(pow(max(diff, 0.0), 0.35), 0.0, 1.0));
 }

@@ -25,10 +25,10 @@ void FluidProjectile::setup() {
   INFO("Shooting a fluid projectile ...");
   
   fluidProjectile = new Object(
-				   LoadManager::getMesh("sphere.obj"),
+				   LoadManager::getMesh("stream.obj"),
 				   MaterialManager::getMaterial("FlatBlue"));
 
-  RenderEngine::getRenderElement("regular")->addObject(fluidProjectile);
+  RenderEngine::getRenderElement("normal-water-stream")->addObject(fluidProjectile);
   
   setCollisionID(0);
   setCollideWithID(1 + 64);
@@ -36,10 +36,13 @@ void FluidProjectile::setup() {
 
   origPosition = position;
 
+  angle = 90.0 - glm::degrees(atan2(movementDirection.z, movementDirection.x));
 
   position += movementDirection;
   setPosition(position);
-  fluidProjectile->translate(position);
+  fluidProjectile->loadIdentity();
+  fluidProjectile->rotate(angle, glm::vec3(0.0, 1.0, 0.0));
+  fluidProjectile->translate(position); 
 
   setBoundingBox(BoundingBox(glm::vec3(0.5f,0.5f,0.5f), glm::vec3(-0.5,-0.5f,-0.5f)));
   getBoundingBox()->setPosition(position);
@@ -57,7 +60,7 @@ void FluidProjectile::update(){
   movementDirection.y -= dTime;
   
   fluidProjectile->loadIdentity();
-  fluidProjectile->scale(glm::vec3(0.5, 0.5, 0.5));
+  fluidProjectile->rotate(angle, glm::vec3(0.0, 1.0, 0.0));
   fluidProjectile->translate(position); 
   getBoundingBox()->setPosition(position); 
 
@@ -66,7 +69,7 @@ void FluidProjectile::update(){
     if(timer > 0.5) {
       Director::getScene()->removeGameObject(this);
       CollisionManager::removeCollisionObject(this);
-      RenderEngine::getRenderElement("regular")->removeObject(fluidProjectile);
+      RenderEngine::getRenderElement("normal-water-stream")->removeObject(fluidProjectile);
     }
   }
 }

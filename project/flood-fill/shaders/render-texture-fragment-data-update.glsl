@@ -25,10 +25,10 @@ void main(){
         texture2D(uPrevTexture, coord + 4.0*dx2).r - 0.3*min(texture2D(uDataTexture, coord + 4.0*dx2).r, 1.0 - 1.0/uSize.y) +
         texture2D(uPrevTexture, coord + 4.0*dy2).r - 0.3*min(texture2D(uDataTexture, coord + 4.0*dy2).r, 1.0 - 1.0/uSize.y) + 
 
-        texture2D(uPrevTexture, coord - 16.0*dx2).r - 0.3*min(texture2D(uDataTexture, coord - 16.0*dx2).r, 1.0 - 1.0/uSize.y) +
-        texture2D(uPrevTexture, coord - 16.0*dy2).r - 0.3*min(texture2D(uDataTexture, coord - 16.0*dy2).r, 1.0 - 1.0/uSize.y) +
-        texture2D(uPrevTexture, coord + 16.0*dx2).r - 0.3*min(texture2D(uDataTexture, coord + 16.0*dx2).r, 1.0 - 1.0/uSize.y) +
-        texture2D(uPrevTexture, coord + 16.0*dy2).r - 0.3*min(texture2D(uDataTexture, coord + 16.0*dy2).r, 1.0 - 1.0/uSize.y)
+        texture2D(uPrevTexture, coord - 12.0*dx2).r - 0.3*min(texture2D(uDataTexture, coord - 12.0*dx2).r, 1.0 - 1.0/uSize.y) +
+        texture2D(uPrevTexture, coord - 12.0*dy2).r - 0.3*min(texture2D(uDataTexture, coord - 12.0*dy2).r, 1.0 - 1.0/uSize.y) +
+        texture2D(uPrevTexture, coord + 12.0*dx2).r - 0.3*min(texture2D(uDataTexture, coord + 12.0*dx2).r, 1.0 - 1.0/uSize.y) +
+        texture2D(uPrevTexture, coord + 12.0*dy2).r - 0.3*min(texture2D(uDataTexture, coord + 12.0*dy2).r, 1.0 - 1.0/uSize.y)
     ) / 12.0;
 
     float vel = info.g * 2.0 - 1.0;
@@ -54,9 +54,10 @@ void main(){
 
     height += vel * 5.0 * uDTime.x;
 
-    float amount = uDTime.y / 1.5;
-    amount = amount * amount * amount;
-    amount = min(amount, 1.0);
+    float amount = pow(uDTime.y / 1.4, 0.5);
+
+    height = max(height, (1.0 - amount) / (dot(coord - increasePosition, coord - increasePosition) + 0.05) / 21.0);
+    height = max(height, (1.0 - amount) * (block.r + (0.3 / uSize.y)));
     
     info.g = (vel + 1.0) / 2.0;
     info.r = height;
