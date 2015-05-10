@@ -57,7 +57,7 @@ void main(){
     float amount = uDTime.y / 1.5;
     amount = amount * amount;
     float blockHeight = (1.0 - amount) * block.r + amount * blockCenter.r;
-    float diff = 1.3 * uModel[1][1] * (max(((1.0 - amount) * info.r * color.a + amount * 1.0/uModel[1][1]) + 0.07/uModel[1][1], blockHeight) - blockHeight);
+    float diff = 1.3 * uModel[1][1] * (max(((1.0 - amount) * info.r * color.a + amount * 1.0/uModel[1][1]) - 0.02/uModel[1][1], blockHeight) - blockHeight);
 
     gl_FragColor = vec4(I, color.a * clamp(pow(diff, 0.5), 0.0, 1.0));
 }
