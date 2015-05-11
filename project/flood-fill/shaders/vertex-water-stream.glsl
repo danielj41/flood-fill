@@ -12,11 +12,9 @@ uniform vec2 uDTime;
 
 varying vec3 vVertex;
 varying vec3 vNormal;
-uniform float alpha;
 varying float vMultiplier;
 
 void main(){
-    alpha;
     vNormal = vec3(normalize(uNormalMatrix*vec4(aNormal, 0)));
     vVertex = vec3(uProjection*uView*uModel*vec4(aPosition, 1));
 

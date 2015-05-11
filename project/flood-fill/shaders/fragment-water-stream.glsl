@@ -16,7 +16,6 @@ varying vec3 vVertex;
 varying vec3 vNormal;
 
 uniform vec2 uDTime;
-uniform float alpha;
 
 varying float vMultiplier;
 

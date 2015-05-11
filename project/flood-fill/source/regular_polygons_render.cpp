@@ -171,4 +171,5 @@ void RegularPolygonsRender::renderPass() {
 
 void RegularPolygonsRender::setGrid(Uniform3DGrid<Object *> _grid) {
     grid = _grid;
+    grid.initialize(NULL);
 }
