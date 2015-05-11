@@ -100,7 +100,7 @@ void createScenes(){
 
     TestLevel * level = new TestLevel();
     Director::addScene(level);
-    Director::setScene("testLevel.txt");
+    Director::setScene("testLevel3.txt");
 }
 
 /**
@@ -239,6 +239,12 @@ void createMaterials(){
                             4.0f);
     MaterialManager::addMaterial("None", material3);
 
+    Material * material4;
+    material4 = new Material(glm::vec3(0.8, 0.3, 0.3),
+                            glm::vec3(0.9, 0.3, 0.1),
+                            glm::vec3(0.8, 0.3, 0.1),
+                            4.0f);
+    MaterialManager::addMaterial("Red", material4);
 }
 
 void loadContent(){
