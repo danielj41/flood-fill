@@ -163,7 +163,9 @@ GameObject * LevelTemplate::createVoxel(int id, int i, int j, int k){
         break;
     case SOLID_CUBE:
     {
-        SolidCube * c = new SolidCube(glm::vec3(minx + i * 2 + 1, miny + j * 2 + 1, minz + (k * 2 + 1)));
+        SolidCube * c = new SolidCube(glm::vec3(minx + i * 2 + 1,
+                                                miny + j * 2 + 1,
+                                                minz + (k * 2 + 1)));
         c->setup();
         CollisionManager::addCollisionObjectToGrid(c);
         return c;

@@ -8,7 +8,7 @@
 
 #define FBO21 // OpenGL 2.1 FBO
 
-FBO::FBO() : depth(false), loaded(false) {}
+FBO::FBO() : depth(false), _hasDepthTexture(false), loaded(false) {}
 
 void FBO::addTexture(Texture * texture){
     if(loaded) DEBUG("You are trying to add a texture to a FBO that was already laoded!");
@@ -16,7 +16,7 @@ void FBO::addTexture(Texture * texture){
     textures.push_back(texture);
 }
 
-void FBO::addDepthBuffer(unsigned int width, unsigned int height){
+void FBO::addDepthRenderBuffer(unsigned int width, unsigned int height){
     if(loaded) DEBUG("You are trying to add a depth buffer to a FBO that was already laoded!");
 
 #ifdef FBO21
@@ -41,6 +41,30 @@ void FBO::addDepthBuffer(unsigned int width, unsigned int height){
     depth = true;
 }
 
+void FBO::addDepthTexture(unsigned int width, unsigned int height){
+    if(loaded) DEBUG("You are trying to add a depth buffer to a FBO that was already laoded!");
+
+    depthTexture = new Texture();
+    depthTexture->createTexture(width, height, GL_DEPTH_COMPONENT16, GL_DEPTH_COMPONENT, GL_FLOAT);
+    depthBuf = depthTexture->getTexture();
+
+    glBindTexture(GL_TEXTURE_2D, depthBuf);
+
+#ifdef FBO21
+    glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_TEXTURE_2D, depthBuf, 0);
+#else
+    // OpenGL 3.1+ FBO
+    glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthBuf, 0);
+#endif
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+    INFO("1");
+
+    depth = true;
+    _hasDepthTexture = true;
+    INFO("Depth Texture added to the FBO");
+}
+
 void FBO::load(){
     if(loaded) DEBUG("Overriding FBO! This FBO was already loaded once!");
 
@@ -55,6 +79,10 @@ void FBO::load(){
         GLenum * attchs = new GLenum[textures.size()];
 
         for (unsigned int i = 0; i < textures.size(); i++){
+            glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT,
+                                      GL_COLOR_ATTACHMENT0_EXT + i,
+                                      GL_TEXTURE_2D, textures[i]->getTexture(),
+                                      0);
             attchs[i] = GL_COLOR_ATTACHMENT0_EXT + i;
         }
 
@@ -82,6 +110,8 @@ void FBO::load(){
         GLenum * attchs = new GLenum[textures.size()];
 
         for (unsigned int i = 0; i < textures.size(); i++){
+            glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i,
+                                 textures[i]->getTexture(), 0);
             attchs[i] = GL_COLOR_ATTACHMENT0 + i;
         }
 
@@ -103,12 +133,22 @@ void FBO::load(){
 }
 
 Texture * FBO::getTexture(unsigned int texID){
+    ASSERT(loaded, "FBO not loaded! Can't get texture");
     ASSERT(texID < textures.size(),
             "Inexisting Texture " << texID << " in the FBO!");
     return textures[texID];
 }
 
+Texture * FBO::getDepthTexture(){
+    ASSERT(loaded, "FBO not loaded! Can't get texture");
+    ASSERT(_hasDepthTexture, "FBO does not have depth texture!");
+
+    return depthTexture;
+}
+
 void FBO::enable(){
+    ASSERT(loaded, "FBO not loaded! Can't get texture");
+
     glBindTexture(GL_TEXTURE_2D, 0);
 
 #ifdef FBO21
@@ -119,6 +159,8 @@ void FBO::enable(){
 }
 
 void FBO::disable(){
+    ASSERT(loaded, "FBO not loaded! Can't get texture");
+
 #ifdef FBO21
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 #else

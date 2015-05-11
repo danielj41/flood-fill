@@ -1,6 +1,7 @@
-#version 120
+#version 130
+#extension GL_ARB_explicit_attrib_location: require
 
-attribute vec4 aPosition;
+in vec4 aPosition;
 
 uniform mat4 uModel;
 uniform mat4 uView;

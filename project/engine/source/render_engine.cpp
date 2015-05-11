@@ -18,7 +18,7 @@
 
 bool RenderEngine::loaded = false;
 std::map< std::string, RenderElement * > RenderEngine::renderElements;
-std::map< std::string, unsigned int > RenderEngine::renderElementsPriority;
+std::map< std::string, int > RenderEngine::renderElementsPriority;
 
 
 void RenderEngine::setup(){
@@ -35,9 +35,9 @@ void RenderEngine::render(){
 
     ASSERT(loaded, "You dind't load the rendering engine!");
 
-    std::vector< std::pair<std::string, unsigned int> > elements(renderElementsPriority.begin(), renderElementsPriority.end());
+    std::vector< std::pair<std::string, int> > elements(renderElementsPriority.begin(), renderElementsPriority.end());
     std::sort(elements.begin(), elements.end(),
-        [](const std::pair<std::string, unsigned int> & a, const std::pair<std::string, unsigned int> & b) -> bool
+        [](const std::pair<std::string, int> & a, const std::pair<std::string, int> & b) -> bool
         {
             if(a.second == b.second){
                 return a.first < b.first;
@@ -50,6 +50,8 @@ void RenderEngine::render(){
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     for(unsigned int i = 0; i < elements.size(); i++){
+        if(elements[i].second < 0) continue;
+
         RenderElement * element = renderElements[elements[i].first];
 
         INFO("Rendering Objects from Render Element " << elements[i].first << "...");
@@ -63,7 +65,7 @@ void RenderEngine::render(){
     }
 }
 
-void RenderEngine::addRenderElement(std::string name, RenderElement * renderElement, unsigned int priority){
+void RenderEngine::addRenderElement(std::string name, RenderElement * renderElement, int priority){
     INFO("Adding render element " << name << " to the render engine...");
     ASSERT(loaded, "You dind't load the rendering engine!");
 

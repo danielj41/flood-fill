@@ -3,6 +3,7 @@
 
 #include "render_element.hpp"
 #include "fbo.hpp"
+#include "light.hpp"
 
 class ShadowOccluderRender : public RenderElement{
 
@@ -18,6 +19,8 @@ public:
     void setupShader();
     void setupMesh(Mesh * mesh);
     void renderObject(Object * object);
+
+    FBO * getFBO();
 
 private:
     static const std::string VERTEX_SHADER_FILE;
