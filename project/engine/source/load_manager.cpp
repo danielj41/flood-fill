@@ -11,7 +11,7 @@ std::map<std::string, Texture *> LoadManager::textures;
 std::map<std::string, RenderTexture *> LoadManager::renderTextures;
 std::map<std::string, Sound *> LoadManager::sounds;
 
-const std::string LoadManager::shaderFolder = "engine/shaders";
+const std::string LoadManager::shaderFolder = "flood-fill/shaders";
 const std::string LoadManager::meshFolder = "flood-fill/objects";
 const std::string LoadManager::imageFolder = "flood-fill/textures";
 const std::string LoadManager::soundFolder = "flood-fill/sounds";

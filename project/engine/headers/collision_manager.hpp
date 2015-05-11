@@ -19,6 +19,7 @@ public:
     static void addCollisionObjectToList(CollisionObject * object);
     static void addCollisionObjectToGrid(CollisionObject * object);
     static void removeCollisionObject(CollisionObject * object);
+    static void removeCollisionObjectFromGrid(CollisionObject * object);
 
     static void checkCollision(CollisionObject * a);
     static void checkCollisionWithOffset(CollisionObject * aObject, int x, int y, int z);

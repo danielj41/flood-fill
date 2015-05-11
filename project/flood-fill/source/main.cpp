@@ -12,7 +12,6 @@
 #include "load_manager.hpp"
 #include "director.hpp"
 #include "global_variables.hpp"
-//#include "main_level.hpp"
 #include "test_level.hpp"
 #include "demo_level.hpp"
 #include "time_manager.hpp"
@@ -123,7 +122,8 @@ void loadMeshes(){
     mesh->generateNormalBuffer();
     mesh->generateTextureCoordinateBuffer();
     mesh->calculateLimits();
-    RenderEngine::addMesh(mesh);
+    mesh->calculateTangents();
+    mesh->generateTangentBuffer();
 
     LoadManager::loadMesh("plane.obj");
     mesh = LoadManager::getMesh("plane.obj");
@@ -134,7 +134,8 @@ void loadMeshes(){
     mesh->generateNormalBuffer();
     mesh->generateTextureCoordinateBuffer();
     mesh->calculateLimits();
-    RenderEngine::addMesh(mesh);
+    mesh->calculateTangents();
+    mesh->generateTangentBuffer();
 
     LoadManager::loadMesh("plane2.obj");
     mesh = LoadManager::getMesh("plane2.obj");
@@ -144,7 +145,6 @@ void loadMeshes(){
     mesh->generateIndexBuffer();
     mesh->generateNormalBuffer();
     mesh->calculateLimits();
-    RenderEngine::addMesh(mesh);
 
 
     LoadManager::loadMesh("grid.obj");
@@ -155,7 +155,6 @@ void loadMeshes(){
     mesh->generateIndexBuffer();
     mesh->generateNormalBuffer();
     mesh->calculateLimits();
-    RenderEngine::addMesh(mesh);
 
     LoadManager::loadMesh("sphere.obj");
     mesh = LoadManager::getMesh("sphere.obj");
@@ -166,7 +165,8 @@ void loadMeshes(){
     mesh->generateNormalBuffer();
     mesh->generateTextureCoordinateBuffer();
     mesh->calculateLimits();
-    RenderEngine::addMesh(mesh);
+    mesh->calculateTangents();
+    mesh->generateTangentBuffer();
 }
 
 void loadTextures(){
@@ -174,8 +174,12 @@ void loadTextures(){
 
     LoadManager::loadImage("default_voxel.bmp");
     LoadManager::loadTexture("VoxelTexture", LoadManager::getImage("default_voxel.bmp"));
+
     LoadManager::loadImage("sky.bmp");
     LoadManager::loadTexture("Sky", LoadManager::getImage("sky.bmp"));
+
+    LoadManager::loadImage("chesterfield_normal_map.png");
+    LoadManager::loadTexture("PaddedNormalMap", LoadManager::getImage("chesterfield_normal_map.png"));
 
     RenderTexture::loadShaders();
     LoadManager::loadRenderTexture("waterData");

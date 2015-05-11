@@ -5,6 +5,9 @@
 #include "collision_object.hpp"
 #include "camera.hpp"
 #include "object.hpp"
+#include "player_hand.hpp"
+#include "color_change.hpp"
+
 
 class Player: public GameObject, public CollisionObject{
 
@@ -28,6 +31,8 @@ private:
     uint colorMask;
 
     Object *sky;
+    PlayerHand *hand;
+    ColorChange *change;
     
     bool shootPressed;
 };

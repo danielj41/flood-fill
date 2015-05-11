@@ -30,6 +30,10 @@ public:
     static const int AIR;
     static const int SOLID_CUBE;
     static const int AVAILABLE_FILL_SPACE;
+    static const int CHANGE_COLOR_BLUE;
+    static const int CHANGE_COLOR_GREEN;
+    static const int CHANGE_COLOR_RED;
+    static const int CHANGE_COLOR_GREY;
 
 protected:
     std::string fileName;

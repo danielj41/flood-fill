@@ -77,15 +77,14 @@ add_executable(
         ### Flood Fill Files ###
         #Source Files
         project/flood-fill/source/main.cpp
-        #project/flood-fill/source/main_level.cpp
         project/flood-fill/source/global_variables.cpp
         project/flood-fill/source/player.cpp
         project/flood-fill/source/ground_plane.cpp
         project/flood-fill/source/debug_player.cpp
-		project/flood-fill/source/demo_level.cpp
-		project/flood-fill/source/box.cpp
-		project/flood-fill/source/level_design.cpp
-		project/flood-fill/source/border.cpp
+        project/flood-fill/source/demo_level.cpp
+        project/flood-fill/source/box.cpp
+        project/flood-fill/source/level_design.cpp
+        project/flood-fill/source/border.cpp
         project/flood-fill/source/fluid_projectile.cpp
         project/flood-fill/source/fluid_box.cpp
         project/flood-fill/source/water_surface.cpp
@@ -93,17 +92,23 @@ add_executable(
         project/flood-fill/source/test_level.cpp
         project/flood-fill/source/void_voxel.cpp
         project/flood-fill/source/solid_cube.cpp
-				
+        project/flood-fill/source/regular_polygons_render.cpp
+        project/flood-fill/source/textured_polygons_render.cpp
+        project/flood-fill/source/water_render.cpp
+        project/flood-fill/source/normal_map_render.cpp
+        project/flood-fill/source/player_hand.cpp
+        project/flood-fill/source/color_change.cpp
+
         #Header Files
         #project/flood-fill/headers/main_level.hpp
         project/flood-fill/headers/global_variables.hpp
         project/flood-fill/headers/player.hpp
         project/flood-fill/headers/ground_plane.hpp
         project/flood-fill/headers/debug_player.hpp
-		project/flood-fill/headers/demo_level.hpp
-		project/flood-fill/headers/box.hpp
-		project/flood-fill/headers/level_design.hpp
-		project/flood-fill/headers/border.hpp
+        project/flood-fill/headers/demo_level.hpp
+        project/flood-fill/headers/box.hpp
+        project/flood-fill/headers/level_design.hpp
+        project/flood-fill/headers/border.hpp
         project/flood-fill/headers/fluid_projectile.hpp
         project/flood-fill/headers/fluid_box.hpp
         project/flood-fill/headers/water_surface.hpp
@@ -111,6 +116,12 @@ add_executable(
         project/flood-fill/headers/test_level.hpp
         project/flood-fill/headers/void_voxel.hpp
         project/flood-fill/headers/solid_cube.hpp
+        project/flood-fill/headers/regular_polygons_render.hpp
+        project/flood-fill/headers/textured_polygons_render.hpp
+        project/flood-fill/headers/water_render.hpp
+        project/flood-fill/headers/normal_map_render.hpp
+        project/flood-fill/headers/player_hand.hpp
+        project/flood-fill/headers/color_change.hpp
 
         ### Engine Files ###
         #Source Files
@@ -135,6 +146,7 @@ add_executable(
         project/engine/source/texture.cpp
         project/engine/source/render_texture.cpp
         project/engine/source/lodepng.cpp
+        project/engine/source/render_element.cpp
         project/engine/source/sound.cpp
 
         #Header Files
@@ -163,23 +175,14 @@ add_executable(
         project/engine/headers/render_texture.hpp
         project/engine/headers/lodepng.h
         project/engine/headers/sound.hpp
+        project/engine/headers/render_element.hpp
 
-        #Shader Files
-        project/engine/shaders/vertex.glsl
-        project/engine/shaders/fragment.glsl
-
-        project/engine/shaders/vertex-texture.glsl
-        project/engine/shaders/fragment-texture.glsl
-
-        project/engine/shaders/vertex-water.glsl
-        project/engine/shaders/fragment-water.glsl
-
-        project/engine/shaders/bounding_box_vertex.glsl
-        project/engine/shaders/bounding_box_fragment.glsl
 )
+
 target_link_libraries(main
 	${ALL_LIBS}
 )
+
 # Xcode and Visual working directories
 set_target_properties(main PROPERTIES XCODE_ATTRIBUTE_CONFIGURATION_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/project/")
 create_target_launcher(main WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/project/")
@@ -187,14 +190,14 @@ create_default_target_launcher(main WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DI
 
 
 
-SOURCE_GROUP(Shaders "project/engine/shaders/.*glsl$" )
+SOURCE_GROUP(Shaders "project/flood-fill/shaders/.*glsl$" )
 
 
 if (NOT ${CMAKE_GENERATOR} MATCHES "Xcode" )
 #Copying new resources to the build folder
 add_custom_command(
    TARGET main POST_BUILD
-   COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/project/engine/shaders" "${CMAKE_CURRENT_BINARY_DIR}/engine/shaders"
+   COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/project/flood-fill/shaders" "${CMAKE_CURRENT_BINARY_DIR}/flood-fill/shaders"
 )
 add_custom_command(
    TARGET main POST_BUILD

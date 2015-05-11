@@ -70,7 +70,7 @@ void WaterSurface::setup() {
   position = glm::vec3((maxX + minX) / 2.0f, (maxY + minY) / 2.0f, (maxZ + minZ) / 2.0f);
   waterSurface->translate(position);
   
-  RenderEngine::addObject(waterSurface);
+  RenderEngine::getRenderElement("water")->addObject(waterSurface);
 
   grid.initialize(0);
   createFluidBox(startPosition);
@@ -92,7 +92,7 @@ void WaterSurface::update(){
   timer += dTime;
   if(timer > 1.55f) {
     Director::getScene()->removeGameObject(this);
-    RenderEngine::removeObject(waterSurface);
+    RenderEngine::getRenderElement("water")->removeObject(waterSurface);
     waterDataTexture->release();
     waterColorTexture->release();
     waterBlockTexture->release();

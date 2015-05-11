@@ -43,6 +43,12 @@ void CollisionManager::addCollisionObjectToGrid(CollisionObject * object){
   }
 }
 
+void CollisionManager::removeCollisionObjectFromGrid(CollisionObject * object){
+  glm::vec3 pos = object->getPosition();
+  grid.setValue(pos.x, pos.y, pos.z, NULL);
+}
+
+
 void CollisionManager::removeCollisionObject(CollisionObject * object){
     INFO("Removing object from the collision list...");
     for(std::list<CollisionObject *>::iterator it = collisionObjects.begin();

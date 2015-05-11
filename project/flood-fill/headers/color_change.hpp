@@ -1,5 +1,5 @@
-#ifndef FLUID_BOX_HPP
-#define FLUID_BOX_HPP
+#ifndef COLOR_CHANGE_HPP
+#define COLOR_CHANGE_HPP
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_PURE
@@ -9,26 +9,26 @@
 #include "collision_object.hpp"
 #include "object.hpp"
 
-class FluidBox : public GameObject, public CollisionObject{
+class ColorChange : public GameObject, public CollisionObject{
 
 public:
-  FluidBox(glm::vec3 _position);
-  FluidBox(glm::vec3 _position, std::string _color);
+  ColorChange(glm::vec3 _position, uint _colorMask);
 
   void setup();
   void update();
 
   void collided(CollisionObject * collidedWith);
+  uint getColor();
 
 private:
 
-  Object * fluidBox;
+  Object * colorChange;
   glm::vec3 position;
   glm::vec3 size;
   std::string color;
+
   float timer;
-  bool visible;
-  bool deleting;
+  uint colorMask;
 };
 
 #endif

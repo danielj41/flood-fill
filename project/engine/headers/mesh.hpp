@@ -10,10 +10,6 @@
 #define GLM_FORCE_PURE
 #include "glm/glm.hpp"
 
-//TODO: Test the Tangent Space
-//TODO: Add a Bitangent to the tangent calculation to find the last component
-//      of the tangent space
-
 class Mesh {
 
 public:

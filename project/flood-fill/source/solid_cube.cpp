@@ -22,9 +22,11 @@ void SolidCube::setup() {
     cube->applyTexture(LoadManager::getTexture("VoxelTexture"));
     cube->enableTexture();
 
+    cube->applyNormalMap(LoadManager::getTexture("PaddedNormalMap"));
+
     cube->translate(position);
 
-    RenderEngine::addObject(cube);
+    RenderEngine::getRenderElement("normalmap")->addObject(cube);
 
     setCollisionID(1);
     setCanCollide(true);

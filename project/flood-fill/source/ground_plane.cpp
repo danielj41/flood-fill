@@ -27,7 +27,7 @@ void GroundPlane::setup(){
     plane->scale(glm::vec3(1, 1, 3));
 
 
-    RenderEngine::addObject(plane);
+    RenderEngine::getRenderElement("regular")->addObject(plane);
 }
 
 void GroundPlane::update(){

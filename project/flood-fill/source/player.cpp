@@ -37,7 +37,7 @@ void Player::setup() {
 	lastPosition = camera->getEye();
 	
     setCollisionID(2);
-    setCollideWithID(1 + 16);
+    setCollideWithID(1 + 16 + 64);
 	setCanCollide(true);
 	
 	INFO("Can Collide: " << canCollide());
@@ -58,18 +58,24 @@ void Player::setup() {
     sky->enableTexture();
     sky->scale(glm::vec3(-50.0f,-50.0f,-50.0f));
     sky->translate(getPosition());
-    RenderEngine::addObject(sky);
+    // RenderEngine::addObject(sky);
 
     colorMask = BLUE;
+    RenderEngine::getRenderElement("textured")->addObject(sky);
+
+    hand = new PlayerHand(getPosition());
+    hand->setup();
+    Director::getScene()->addGameObject(hand);
+    CollisionManager::addCollisionObjectToList(hand);
 }
 
 void Player::update() {
     lastPosition = camera->getEye();
 
     if(glfwGetKey(Global::window, GLFW_KEY_SPACE) == GLFW_PRESS && !jumping){
-        velocity = .4;
-        camera->jump(velocity);
         jumping = true;
+        velocity = .6;
+        camera->jump(velocity * 25.0 * TimeManager::getDeltaTime());
     }
     // jumping = true;
 
@@ -100,8 +106,17 @@ void Player::update() {
         colorMask = GREY;
     }
     
-    velocity += gravity * TimeManager::getDeltaTime();
-    camera->jump(velocity);
+    if(jumping) {
+        velocity += gravity * TimeManager::getDeltaTime();
+        if(velocity < -0.6) {
+            velocity = -0.6;
+        }
+        camera->jump(velocity * 25.0 * TimeManager::getDeltaTime());
+        // if(camera->getEye().y <= 1) {
+        //     jumping = false;    
+        //     velocity = 0;        
+        // }
+    }
 
     getBoundingBox()->setPosition(camera->getEye() - glm::vec3(0,1.0f,0));
 	setPosition(camera->getEye());
@@ -120,6 +135,8 @@ void Player::update() {
     if(glfwGetMouseButton(Global::window, GLFW_MOUSE_BUTTON_1) == GLFW_RELEASE) {
         shootPressed = false;
     }
+
+    hand->setPosition(getBoundingBox()->getPosition() - 1.2f * camera->getViewVector());
 }
 
 void Player::collided(CollisionObject * collidedWith) {
@@ -127,6 +144,7 @@ void Player::collided(CollisionObject * collidedWith) {
   float dist;
   switch (collidedWith->getCollisionID()) {
   case 1:
+  case 64:
 	INFO("DETECTING COLLISION WITH BLOCK!");
     normal = getCollisionNormal(collidedWith);
     dist = getCollisionDistance(collidedWith);
@@ -144,7 +162,8 @@ void Player::collided(CollisionObject * collidedWith) {
 	
     break;
   case 16:
-    
+    INFO("DETECTING COLOR CHANGE!");
+    colorMask = ((ColorChange *)collidedWith)->getColor();
     break;
   default:
 	break;

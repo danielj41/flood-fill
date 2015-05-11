@@ -28,7 +28,7 @@ void main(){
     vec4 block = texture2D(uWaterBlock, vPosition.xz*0.5 + vec2(0.5,0.5));
 
     uDiffuseColor;
-    vec3 kd = color.rgb;
+    vec3 kd = vec3(uDiffuseColor.r * color.r, uDiffuseColor.g * color.g, uDiffuseColor.b * color.b);
     vec3 ks = uSpecularColor;
     vec3 Ia = uAmbientColor;
     vec3 Ie = uEmissionColor;

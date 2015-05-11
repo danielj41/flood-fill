@@ -62,13 +62,12 @@ public:
 protected:
     static const std::string NO_CAMERA_AVAILABLE;
 
+    int labelCount;
+    std::string name, currentCamera;
+
     std::map<std::string, Camera *> cameras;
     std::map<std::string, Light *> lights;
     std::map<std::string, GameObject *> gameObjects;
-
-    std::string name, currentCamera;
-
-    int labelCount;
 };
 
 #endif

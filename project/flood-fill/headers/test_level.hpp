@@ -10,6 +10,9 @@ public:
 
     void setup();
     void update();
+
+private:
+    void createRenders();
 };
 
 #endif

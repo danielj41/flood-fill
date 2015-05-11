@@ -43,7 +43,7 @@ void FluidProjectile::setup() {
 				   LoadManager::getMesh("sphere.obj"),
 				   MaterialManager::getMaterial(color));
 
-  RenderEngine::addObject(fluidProjectile);
+  RenderEngine::getRenderElement("regular")->addObject(fluidProjectile);
   
   setCollisionID(0);
   setCollideWithID(1);
@@ -81,7 +81,7 @@ void FluidProjectile::update(){
     if(timer > 0.5) {
       Director::getScene()->removeGameObject(this);
       CollisionManager::removeCollisionObject(this);
-      RenderEngine::removeObject(fluidProjectile);
+      RenderEngine::getRenderElement("regular")->removeObject(fluidProjectile);
     }
   }
 }
