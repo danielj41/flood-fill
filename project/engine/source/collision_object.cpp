@@ -5,15 +5,21 @@
 #include "debug_macros.h"
 #include "glm/glm.hpp"
 
-CollisionObject::CollisionObject() : _canCollide(false), 
-boundingBox(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(-1.0f, -1.0f, -1.0f)) {}
+CollisionObject::CollisionObject() : _canCollide(false), _applyPhysics(false),
+      velocity(0), boundingBox(glm::vec3(1.0f, 1.0f, 1.0f),
+      glm::vec3(-1.0f, -1.0f, -1.0f)) {}
 
 CollisionObject::CollisionObject(glm::vec3 _position)
-    : position(_position), _canCollide(true), collisionID(0), collideWithID(0),
-      boundingBox(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(-1.0f, -1.0f, -1.0f)){}
+    : position(_position), _canCollide(true), _applyPhysics(false),  velocity(0), 
+      collisionID(0), collideWithID(0), boundingBox(glm::vec3(1.0f, 1.0f, 1.0f),
+      glm::vec3(-1.0f, -1.0f, -1.0f)){}
 
 bool CollisionObject::canCollide(){
     return _canCollide;
+}
+
+bool CollisionObject::applyPhysics(){
+    return _applyPhysics;
 }
 
 int CollisionObject::getCollisionID(){
@@ -42,6 +48,10 @@ void CollisionObject::setPosition(glm::vec3 _position){
 
 void CollisionObject::setCanCollide(bool canCollide){
   _canCollide = canCollide;
+}
+
+void CollisionObject::setApplyPhysics(bool applyPhysics){
+  _applyPhysics = applyPhysics;
 }
 
 void CollisionObject::setBoundingBox(BoundingBox _boundingBox) {

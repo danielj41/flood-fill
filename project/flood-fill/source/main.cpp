@@ -62,6 +62,10 @@ int main()
 
     int FPS = 0;
     double timeStamp = TimeManager::getTimeStamp();
+
+    LoadManager::loadSound("rain.wav");
+    LoadManager::getSound("rain.wav")->playSound();
+
     do{
         Director::updateScene();
         glViewport(windowViewport[0], windowViewport[1], windowViewport[2], windowViewport[3]);
@@ -76,7 +80,6 @@ int main()
 
         TimeManager::setDeltaTime();
         TimeManager::setTimeStamp();
-
         FPS++;
 
         // Swap buffers
@@ -233,18 +236,32 @@ void createMaterials(){
     MaterialManager::addMaterial("FlatBlue", material2);
 
     Material * material3;
-    material3 = new Material(glm::vec3(1.0, 1.0, 1.0),
+    material3 = new Material(glm::vec3(0.3, 0.8, 0.3),
+                            glm::vec3(0.0, 0.9, 0.3),
+                             glm::vec3(0.3, 0.8, 0.3),
+                            4.0f);
+    MaterialManager::addMaterial("FlatRed", material3);
+    
+    Material * material4;
+    material4 = new Material(glm::vec3(0.8, 0.3, 0.3),
+                            glm::vec3(0.0, 0.3, 0.3),
+                             glm::vec3(0.8, 0.3, 0.3),
+                            4.0f);
+    MaterialManager::addMaterial("FlatGreen", material4);
+
+    Material * material5;
+    material5 = new Material(glm::vec3(1.0, 1.0, 1.0),
                             glm::vec3(0.0, 0.0, 0.0),
                              glm::vec3(0.0, 0.0, 0.0),
                             4.0f);
-    MaterialManager::addMaterial("None", material3);
+    MaterialManager::addMaterial("None", material5);
 
-    Material * material4;
-    material4 = new Material(glm::vec3(0.8, 0.3, 0.3),
+    Material * material6;
+    material6 = new Material(glm::vec3(0.8, 0.3, 0.3),
                             glm::vec3(0.9, 0.3, 0.1),
                             glm::vec3(0.8, 0.3, 0.1),
                             4.0f);
-    MaterialManager::addMaterial("Red", material4);
+    MaterialManager::addMaterial("Red", material6);
 }
 
 void loadContent(){

@@ -12,8 +12,8 @@
 class FluidBox : public GameObject, public CollisionObject{
 
 public:
-
   FluidBox(glm::vec3 _position);
+  FluidBox(glm::vec3 _position, std::string _color);
 
   void setup();
   void update();
@@ -25,6 +25,7 @@ private:
   Object * fluidBox;
   glm::vec3 position;
   glm::vec3 size;
+  std::string color;
   float timer;
   bool visible;
   bool deleting;

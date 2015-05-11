@@ -16,7 +16,14 @@
 
 FluidBox::FluidBox(glm::vec3 _position)
   : GameObject(), CollisionObject(_position),
+  position(_position),
+  color("FlatBlue"),
+  size(glm::vec3(1)) {}
+
+FluidBox::FluidBox(glm::vec3 _position, std::string _color)
+  : GameObject(), CollisionObject(_position),
 	position(_position),
+  color(_color),
 	size(glm::vec3(1)) {}
 
 void FluidBox::setup() {  
@@ -24,7 +31,7 @@ void FluidBox::setup() {
   
   fluidBox = new Object(
 				   LoadManager::getMesh("cube.obj"),
-				   MaterialManager::getMaterial("FlatBlue"));
+				   MaterialManager::getMaterial(color));
 
   fluidBox->translate(position);
   timer = 0.0f;

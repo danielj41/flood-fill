@@ -104,6 +104,7 @@ add_executable(
         project/flood-fill/source/winning_block.cpp
         project/flood-fill/source/switch.cpp
         project/flood-fill/source/active_terrain.cpp
+        project/flood-fill/source/color_change.cpp
 
         #Header Files
         #project/flood-fill/headers/main_level.hpp
@@ -135,7 +136,8 @@ add_executable(
         project/flood-fill/headers/winning_block.hpp
         project/flood-fill/headers/switch.hpp
         project/flood-fill/headers/active_terrain.hpp
-        
+        project/flood-fill/headers/color_change.hpp
+
         ### Engine Files ###
         #Source Files
         project/engine/source/tiny_obj_loader.cc
@@ -160,6 +162,7 @@ add_executable(
         project/engine/source/render_texture.cpp
         project/engine/source/lodepng.cpp
         project/engine/source/render_element.cpp
+        project/engine/source/sound.cpp
 
         #Header Files
         project/engine/headers/GLIncludes.h
@@ -186,7 +189,9 @@ add_executable(
         project/engine/headers/texture.hpp
         project/engine/headers/render_texture.hpp
         project/engine/headers/lodepng.h
+        project/engine/headers/sound.hpp
         project/engine/headers/render_element.hpp
+
 )
 
 target_link_libraries(main
@@ -221,6 +226,11 @@ add_custom_command(
    TARGET main POST_BUILD
    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/project/flood-fill/config-files" "${CMAKE_CURRENT_BINARY_DIR}/flood-fill/config-files"
 )
+add_custom_command(
+   TARGET main POST_BUILD
+   COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/project/flood-fill/sounds" "${CMAKE_CURRENT_BINARY_DIR}/flood-fill/sounds"
+)
+
 
 #Copying the compiled project to the project folder, out of the build directory
 add_custom_command(

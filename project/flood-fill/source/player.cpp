@@ -13,13 +13,19 @@
 #include "global_variables.hpp"
 #include "bounding_box.hpp"
 #include "time_manager.hpp"
+#include "load_manager.hpp"
 #include "fluid_projectile.hpp"
 #include "director.hpp"
 #include "collision_manager.hpp"
 #include "load_manager.hpp"
 #include "material_manager.hpp"
 #include "object.hpp"
-#include "render_engine.hpp"
+#include "render_engine.hpp"    
+
+#define BLUE    1
+#define GREEN   2
+#define RED     4
+#define GREY    8
 
 Player::Player(Camera * _camera)
   : GameObject(), CollisionObject(), camera(_camera),
@@ -31,7 +37,7 @@ void Player::setup() {
 	lastPosition = camera->getEye();
 	
     setCollisionID(2);
-    setCollideWithID(1 | 32 | 64 | 128);
+    setCollideWithID(1 | 16 | 32 | 64 | 128);
 
 	setCanCollide(true);
 	
@@ -43,6 +49,8 @@ void Player::setup() {
     setBoundingBox(BoundingBox(glm::vec3(0.8f,0.8f,0.8f), glm::vec3(-0.8f,-0.8f,-0.8f)));
     getBoundingBox()->setPosition(camera->getEye() - glm::vec3(0,1.0f,0));
 
+    LoadManager::loadSound("jump_land.wav");
+
     sky = new Object(
         LoadManager::getMesh("sphere.obj"),
         MaterialManager::getMaterial("None"));
@@ -51,6 +59,9 @@ void Player::setup() {
     sky->enableTexture();
     sky->scale(glm::vec3(-50.0f,-50.0f,-50.0f));
     sky->translate(getPosition());
+    // RenderEngine::addObject(sky);
+
+    colorMask = BLUE;
     RenderEngine::getRenderElement("textured")->addObject(sky);
 
     gun = new Object(
@@ -76,10 +87,11 @@ void Player::setup() {
 void Player::update() {
     lastPosition = camera->getEye();
 
-    if(isKeyPressed(GLFW_KEY_SPACE) && !jumping){
+    if(isKeyPressed(GLFW_KEY_SPACE) && !jumping) {
         velocity = .6;
         camera->jump(velocity * 25.0 * TimeManager::getDeltaTime());
     }
+    
     jumping = true;
 
 
@@ -97,8 +109,19 @@ void Player::update() {
     else if(isKeyPressed(GLFW_KEY_D)){
         camera->strafe(Camera::RIGHT_DIRECTION, cameraSpeed);
     }
-  
 
+    if(glfwGetKey(Global::window, GLFW_KEY_U) == GLFW_PRESS){
+        colorMask = BLUE;
+    } 
+    else if(glfwGetKey(Global::window, GLFW_KEY_I) == GLFW_PRESS){
+        colorMask = GREEN;
+    }
+    else if(glfwGetKey(Global::window, GLFW_KEY_O) == GLFW_PRESS){
+        colorMask = RED;
+    }
+    else if(glfwGetKey(Global::window, GLFW_KEY_P) == GLFW_PRESS){
+        colorMask = GREY;
+    }
     
     if(jumping) {
         velocity += gravity * TimeManager::getDeltaTime();
@@ -116,7 +139,9 @@ void Player::update() {
 
     if(glfwGetMouseButton(Global::window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS && !shootPressed && shootTimer < 0.0f){
         FluidProjectile *fluidProjectile = new FluidProjectile(
-            camera->getEye() - (0.35f * camera->getStrafeVector()) + glm::vec3(0.0f, 0.5f, 0.0f), -glm::normalize(camera->getViewVector()));
+            camera->getEye() - (0.35f * camera->getStrafeVector()) + glm::vec3(0.0f, 0.5f, 0.0f),
+            -glm::normalize(camera->getViewVector()),
+            colorMask);
         fluidProjectile->setup();
         Director::getScene()->addGameObject(fluidProjectile);
         CollisionManager::addCollisionObjectToList(fluidProjectile);
@@ -134,7 +159,7 @@ void Player::update() {
     hand->setPosition(getBoundingBox()->getPosition() - 1.2f * camera->getViewVector());
 }
 
-void Player::collided(CollisionObject * collidedWith){
+void Player::collided(CollisionObject * collidedWith) {
   glm::vec3 normal;
   float dist;
   switch (collidedWith->getCollisionID()) {
@@ -152,10 +177,16 @@ void Player::collided(CollisionObject * collidedWith){
 
     //If on flat ground, jumping is done. 
     if(fabs(normal.y) > 0.1) {
+        if(jumping)
+            LoadManager::getSound("jump_land.wav")->playSound();
         velocity = 0;
         jumping = false;
     }
 	
+    break;
+  case 16:
+    INFO("DETECTING COLOR CHANGE!");
+    colorMask = ((ColorChange *)collidedWith)->getColor();
     break;
   default:
 	break;

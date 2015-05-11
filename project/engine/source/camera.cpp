@@ -101,7 +101,7 @@ void Camera::jump(float velocity) {
 
     INFO("Jumping..." );    
     eye    += up*velocity;
-    target += up*velocity;
+    // target += up*velocity;
 }
 
 void Camera::setTheta(float degreeAngle){

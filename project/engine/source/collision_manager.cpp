@@ -93,7 +93,7 @@ void CollisionManager::checkCollisionWithOffset(CollisionObject * aObject, int x
 
     if ( bObject != NULL && aObject->getCollideWithID() & bObject->getCollisionID() && aObject->checkCollision(bObject)) {
       aObject->collided(bObject);
-      bObject->collided(aObject); 
+      bObject->collided(aObject);
     }
   }
 }

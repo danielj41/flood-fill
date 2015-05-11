@@ -16,19 +16,34 @@
 #include "water_surface.hpp"
 #include "level_template.hpp"
 
-FluidProjectile::FluidProjectile(glm::vec3 _position, glm::vec3 _movementDirection)
+#define BLUE    1
+#define RED     2
+#define GREEN   4
+#define GREY    8
+
+FluidProjectile::FluidProjectile(glm::vec3 _position,
+  glm::vec3 _movementDirection, int _colorMask)
   : GameObject(), CollisionObject(_position),
 	position(_position), movementDirection(_movementDirection),
-	size(glm::vec3(0.1)){}
+	size(glm::vec3(0.1)) {
+    if(_colorMask & BLUE)
+      color = "FlatBlue";
+    else if(_colorMask & GREEN)
+      color = "FlatGreen";
+    else if(_colorMask & RED)
+      color = "FlatRed";
+    else if(_colorMask & GREY)
+      color = "FlatGrey";
+  }
 
 void FluidProjectile::setup() {  
   INFO("Shooting a fluid projectile ...");
   
   fluidProjectile = new Object(LoadManager::getMesh("stream.obj"),
-			                     	   MaterialManager::getMaterial("FlatBlue"));
+			                     	   MaterialManager::getMaterial(color));
 
   fluidParticles = new Object(LoadManager::getMesh("particles.obj"),
-                              MaterialManager::getMaterial("FlatBlue"));
+                              MaterialManager::getMaterial(color));
 
   RenderEngine::getRenderElement("water-stream")->addObject(fluidProjectile);
   RenderEngine::getRenderElement("water-particle")->addObject(fluidParticles);
@@ -93,7 +108,7 @@ void FluidProjectile::collided(CollisionObject * collidedWith){
     glm::vec3 newPos(grid->getRoundX(oldPosition.x), grid->getRoundY(oldPosition.y), grid->getRoundZ(oldPosition.z));
     if(grid->inGrid(newPos.x, newPos.y, newPos.z) && grid->getValue(newPos.x, newPos.y, newPos.z) == LevelTemplate::AVAILABLE_FILL_SPACE) {
       if(!LoadManager::getRenderTexture("waterData")->isInUse()) {
-        WaterSurface *surface = new WaterSurface(newPos);
+        WaterSurface *surface = new WaterSurface(newPos, color);
         surface->setup();
         Director::getScene()->addGameObject(surface);
       }

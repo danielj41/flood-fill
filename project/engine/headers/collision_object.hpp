@@ -1,6 +1,8 @@
 #ifndef COLLISION_OBJECT_HPP
 #define COLLISION_OBJECT_HPP
 
+#include <string>
+
 #include "glm/glm.hpp"
 #include "bounding_box.hpp"
 
@@ -11,6 +13,7 @@ public:
     CollisionObject(glm::vec3 _position);
 
     bool canCollide();
+    bool applyPhysics();
     
     int getCollisionID();
     int getCollideWithID();
@@ -21,7 +24,9 @@ public:
     glm::vec3 getPosition();
     void setPosition(glm::vec3 _position);
     void setCanCollide(bool canCollide);
+    void setApplyPhysics(bool applyPhysics);
 
+    // virtual void updatePhysics();
     virtual void collided(CollisionObject * collidedWith) = 0;
 
     bool checkCollision(CollisionObject *other);
@@ -33,8 +38,8 @@ public:
 private:
     
     glm::vec3 position;
-    bool _canCollide;
-    int collisionID, collideWithID;
+    bool _canCollide, _applyPhysics;
+    int collisionID, collideWithID, velocity;
     BoundingBox boundingBox;
 
 };

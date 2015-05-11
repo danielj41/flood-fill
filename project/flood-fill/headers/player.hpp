@@ -6,6 +6,8 @@
 #include "camera.hpp"
 #include "object.hpp"
 #include "player_hand.hpp"
+#include "color_change.hpp"
+
 
 class Player: public GameObject, public CollisionObject{
 
@@ -27,9 +29,12 @@ private:
     float velocity;
     float gravity;
 
+    int colorMask;
+
     Object *sky;
     Object *gun;
     PlayerHand *hand;
+    ColorChange *change;
     
     bool shootPressed;
     float shootTimer;
