@@ -12,12 +12,14 @@
 class SolidCube : public GameObject, public CollisionObject{
 
 public:
-  SolidCube(glm::vec3 _position);
-
-  void setup();
-  void update();
-
-  void collided(CollisionObject * collidedWith);
+    SolidCube(glm::vec3 _position);
+    
+    void setup();
+    void update();
+    
+    void collided(CollisionObject * collidedWith);
+    
+    Object * getObject();
 
 private:
   Object * cube;

@@ -43,3 +43,7 @@ void SolidCube::update(){
 
 void SolidCube::collided(CollisionObject *){
 }
+
+Object * SolidCube::getObject(){
+    return cube;
+}

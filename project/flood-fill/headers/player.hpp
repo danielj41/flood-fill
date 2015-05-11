@@ -16,6 +16,7 @@ public:
     void update();
 
     void collided(CollisionObject * collidedWith);
+    bool isKeyPressed(unsigned int key);
 
 private:
     Camera * camera;

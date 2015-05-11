@@ -10,6 +10,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 
 #include "camera.hpp"
+#include "switch.hpp"
 #include "global_variables.hpp"
 #include "collision_manager.hpp"
 #include "object.hpp"
@@ -21,17 +22,18 @@
 #include "water_render.hpp"
 #include "normal_map_render.hpp"
 #include "debug_render.hpp"
+#include "active_terrain.hpp"
 
-TestLevel::TestLevel() : LevelTemplate("testLevel.txt"){}
+TestLevel::TestLevel() : LevelTemplate("testLevel3.txt"){}
 
 void TestLevel::setup(){
-    INFO("Generanting Test Level...");
+    INFO("Generating Test Level...");
     createRenders();
 
     createLevel();
 
     INFO("Setting up the cameras for the Test Level...");
-    Camera * cam1 = new Camera(glm::vec3(1, 18, -3), glm::vec3(0, 0, -5),
+    Camera * cam1 = new Camera(glm::vec3(28, 20, -45), glm::vec3(0, 0, -5),
                              glm::vec3(0, 1, 0));
     cam1->setProjectionMatrix(
         glm::perspective(glm::radians(90.0f),
@@ -62,6 +64,20 @@ void TestLevel::setup(){
     addGameObject("debugPlayer" , debugPlayer);
 
     addCamera("DebugCamera", cam2);
+    
+    INFO("Creating Switch for the Test Level...");
+    Switch * s1 = new Switch(glm::vec3(0.9f, 0.1f, 0.1f), glm::vec3(29.7, 19, -45), 
+                             glm::vec3(0,0,1), -20.0f, 1);
+    s1->setup();
+    addGameObject("s1", s1);
+    CollisionManager::addCollisionObjectToGrid(s1);
+
+    INFO("Creating Active Terrain for the Test Level...");
+    ActiveTerrain * a1 = new ActiveTerrain(s1, glm::vec3(), glm::vec3(), 50.0f);
+    a1->setup();
+    addGameObject("a1", a1);
+
+    //Switch * s2 = new Switch(glm::vec3(7, 3, -2.25), glm::vec3(0,0,-1), glm::vec3(1,0,0));
 }
 
 void TestLevel::update(){

@@ -23,7 +23,7 @@
 
 Player::Player(Camera * _camera)
   : GameObject(), CollisionObject(), camera(_camera),
-    jumping(false), velocity(0), gravity(-2){}
+    jumping(true), velocity(0), gravity(-2){}
 
 void Player::setup() {
     INFO("Player Setup...");
@@ -31,7 +31,7 @@ void Player::setup() {
 	lastPosition = camera->getEye();
 	
     setCollisionID(2);
-    setCollideWithID(1 + 64);
+    setCollideWithID(1 + 32 + 64);
 	setCanCollide(true);
 	
 	INFO("Can Collide: " << canCollide());
@@ -61,25 +61,29 @@ void Player::setup() {
 void Player::update() {
     lastPosition = camera->getEye();
 
-    if(glfwGetKey(Global::window, GLFW_KEY_SPACE) == GLFW_PRESS && !jumping){
+    if(isKeyPressed(GLFW_KEY_SPACE) && !jumping){
         velocity = .6;
         camera->jump(velocity * 25.0 * TimeManager::getDeltaTime());
     }
     jumping = true;
 
+
     float cameraSpeed = 5.0f*TimeManager::getDeltaTime();
-    if(glfwGetKey(Global::window, GLFW_KEY_W) == GLFW_PRESS){
+  
+    if(isKeyPressed(GLFW_KEY_W)){
         camera->zoom(Camera::FORWARD_DIRECTION, cameraSpeed);
     }
-    else if(glfwGetKey(Global::window, GLFW_KEY_S) == GLFW_PRESS){
+    else if(isKeyPressed(GLFW_KEY_S)){
         camera->zoom(Camera::BACKWARD_DIRECTION, cameraSpeed);
     }
-    if(glfwGetKey(Global::window, GLFW_KEY_A) == GLFW_PRESS){
+    if(isKeyPressed(GLFW_KEY_A)){
         camera->strafe(Camera::LEFT_DIRECTION, cameraSpeed);
     }
-    else if(glfwGetKey(Global::window, GLFW_KEY_D) == GLFW_PRESS){
+    else if(isKeyPressed(GLFW_KEY_D)){
         camera->strafe(Camera::RIGHT_DIRECTION, cameraSpeed);
     }
+  
+
     
     if(jumping) {
         velocity += gravity * TimeManager::getDeltaTime();
@@ -87,10 +91,6 @@ void Player::update() {
             velocity = -0.6;
         }
         camera->jump(velocity * 25.0 * TimeManager::getDeltaTime());
-        // if(camera->getEye().y <= 1) {
-        //     jumping = false;    
-        //     velocity = 0;        
-        // }
     }
 
     getBoundingBox()->setPosition(camera->getEye() - glm::vec3(0,1.0f,0));
@@ -118,6 +118,9 @@ void Player::collided(CollisionObject * collidedWith){
   glm::vec3 normal;
   float dist;
   switch (collidedWith->getCollisionID()) {
+  case 32: 
+      INFO("DETECTING COLLISION WITH SWITCH!");
+      break;
   case 1:
   case 64:
 	INFO("DETECTING COLLISION WITH BLOCK!");
@@ -138,5 +141,10 @@ void Player::collided(CollisionObject * collidedWith){
 	break;
   }
 
+}
+
+
+bool Player::isKeyPressed(unsigned int key){
+    return glfwGetKey(Global::window, key) == GLFW_PRESS;
 }
 
