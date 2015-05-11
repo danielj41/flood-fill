@@ -99,9 +99,10 @@ void TestLevel::update(){
 
 void TestLevel::createRenders(){
     INFO("Creating Renders...");
-    RenderEngine::addRenderElement("camera", new CameraPolygonsRender());
 
-    RenderEngine::addRenderElement("regular", new RegularPolygonsRender());
+    RenderEngine::addRenderElement("camera", new CameraPolygonsRender(), 1);
+
+    RenderEngine::addRenderElement("regular", new RegularPolygonsRender(), 1);
     Uniform3DGrid<int>* typeGrid = getTypeGrid();
     ((RegularPolygonsRender *)RenderEngine::getRenderElement("regular"))->setGrid(
         Uniform3DGrid<Object *>(typeGrid->getSizeX(), typeGrid->getSizeY(), typeGrid->getSizeZ(),
@@ -109,11 +110,11 @@ void TestLevel::createRenders(){
                                 typeGrid->getMinY(), typeGrid->getMaxY(),
                                 typeGrid->getMinZ(), typeGrid->getMaxZ()));
 
-    RenderEngine::addRenderElement("debug", new DebugRender());
-    RenderEngine::addRenderElement("normalmap", new NormalMapRender());
-    RenderEngine::addRenderElement("textured", new TexturedPolygonsRender());
-    RenderEngine::addRenderElement("water", new WaterRender());
-    RenderEngine::addRenderElement("water-particle", new WaterParticleRender());
-    RenderEngine::addRenderElement("water-stream", new WaterStreamRender());
-    RenderEngine::addRenderElement("shadow", new ShadowOccluderRender());
+    RenderEngine::addRenderElement("debug", new DebugRender(), 5);
+    RenderEngine::addRenderElement("normalmap", new NormalMapRender(), 2);
+    RenderEngine::addRenderElement("textured", new TexturedPolygonsRender(), 3);
+    RenderEngine::addRenderElement("water", new WaterRender(), 4);
+    RenderEngine::addRenderElement("water-particle", new WaterParticleRender(), 4);
+    RenderEngine::addRenderElement("water-stream", new WaterStreamRender(), 4);
+    RenderEngine::addRenderElement("shadow", new ShadowOccluderRender()), 0;
 }

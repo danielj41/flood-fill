@@ -1,5 +1,5 @@
 #version 120
 
 void main(){
-    gl_FragColor[0] = gl_FragCoord.z;
+    gl_FragData[0] = vec4(gl_FragCoord.z);
 }
