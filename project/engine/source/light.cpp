@@ -31,8 +31,6 @@ Light::Light(glm::vec3 _color, float _intensity, glm::vec3 _position,
 
 glm::vec3 Light::getPosition(){
     ASSERT(isValid(), "This light is not a valid light");
-    ASSERT(!isDirectional(),
-        "Directional Lights does not have position");
     return position;
 }
 
@@ -71,8 +69,6 @@ float Light::getCutOffAngle(){
 
 void Light::setPosition(glm::vec3 _position){
     ASSERT(isValid(), "This light is not a valid light");
-    ASSERT(!isDirectional(),
-        "Directional Lights does not have position");
     position = _position;
 }
 

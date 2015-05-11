@@ -57,6 +57,7 @@ void TestLevel::setup(){
                         0.1f, 100.f));
 
     Light * l1 = new Light(glm::vec3(1), 30.0f, glm::vec3(1.0, -1.0, 0.5));
+    l1->setPosition(glm::vec3(1.0, -1.0, 0.5)*-15.0f);
     addLight("Sun", l1);
 
     INFO("Setting up the player for the Test Level...");
