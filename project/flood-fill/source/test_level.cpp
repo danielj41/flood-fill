@@ -31,6 +31,9 @@ TestLevel::TestLevel() : LevelTemplate("testLevel3.txt"){}
 
 void TestLevel::setup(){
     INFO("Generating Test Level...");
+    readFile();
+    initalizeGrid();
+
     createRenders();
 
     createLevel();

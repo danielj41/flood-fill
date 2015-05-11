@@ -16,6 +16,8 @@ class LevelTemplate: public Scene{
 public:
     LevelTemplate(std::string levelFileName);
 
+    void readFile();
+    void initalizeGrid();
     void createLevel();
 
 
@@ -38,6 +40,8 @@ public:
 
 protected:
     std::string fileName;
+    int minx, miny, minz, maxx, maxy, maxz;
+    int numVoxelsInX, numVoxelsInY, numVoxelsInZ;
 
     // The grid holds every game object in the map
     Uniform3DGrid<GameObject *> grid;
@@ -49,12 +53,13 @@ protected:
 
 private:
     void interpLines(std::vector<std::string> lines);
-    int minx, miny, minz, maxx, maxy, maxz;
     GameObject * createVoxel(int id, int i, int j, int k);
 
     //Special Game Object to initialize the grid
     static VoidVoxel * voidVoxel;
     static const std::string templatesFolder;
+    std::vector<std::string> lines;
+    bool mapDefined;
 };
 
 #endif
