@@ -31,6 +31,7 @@ private:
   bool hasCollided;
   float timer;
   float angle;
+  float totalTime;
   
 };
 

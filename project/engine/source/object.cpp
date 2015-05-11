@@ -172,6 +172,14 @@ glm::vec2 Object::getDTime() {
     return dTime;
 }
 
+void Object::setVelocity(glm::vec3 _velocity) {
+    velocity = _velocity;
+}
+
+glm::vec3 Object::getVelocity() {
+    return velocity;
+}
+
 void Object::enableTexture(){
     ASSERT(_hasTexture, "This Object does not have texture!");
     textureEnabled = true;

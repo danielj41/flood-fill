@@ -81,6 +81,6 @@ void TestLevel::createRenders(){
     RenderEngine::addRenderElement("regular", new RegularPolygonsRender());
     RenderEngine::addRenderElement("normalmap", new NormalMapRender());
     RenderEngine::addRenderElement("textured", new TexturedPolygonsRender());
-    RenderEngine::addRenderElement("normal-water-stream", new WaterStreamRender());
     RenderEngine::addRenderElement("water", new WaterRender());
+    RenderEngine::addRenderElement("water-stream", new WaterStreamRender());
 }

@@ -32,6 +32,8 @@ void WaterStreamRender::loadShader(){
     shader->loadHandle("uEyePosition", 'u');
     shader->loadHandle("uLightDirection", 'u');
     shader->loadHandle("uLightColor", 'u');
+    shader->loadHandle("uVelocity", 'u');
+    shader->loadHandle("uDTime", 'u');
     shader->loadHandle("alpha", 'u');
 }
 
@@ -132,6 +134,9 @@ void WaterStreamRender::renderObject(Object * object){
     }
 
     glUniform1f(shader->getHandle("alpha"), object->getAlpha());
+    glUniform2f(shader->getHandle("uDTime"), object->getDTime().x, object->getDTime().y);
+    glUniform3f(shader->getHandle("uVelocity"), object->getVelocity().x, object->getVelocity().y, object->getVelocity().z);
+
 
     glDrawElements(GL_TRIANGLES, (int) mesh->getIndices().size(), GL_UNSIGNED_INT, 0);
 

@@ -29,6 +29,8 @@ public:
     GLuint getWaterData();
     GLuint getWaterColor();
     GLuint getWaterBlock();
+    glm::vec2 getDTime();
+    glm::vec3 getVelocity();
 
     void applyTexture(Texture * _texture);
     void enableTexture();
@@ -45,7 +47,7 @@ public:
     void applyWaterColor(GLuint id);
     void applyWaterBlock(GLuint id);
     void setDTime(glm::vec2 _dTime);
-    glm::vec2 getDTime();
+    void setVelocity(glm::vec3 _velocity);
 
     void setAlpha(float _alpha);
     void scale(glm::vec3 scalingVector);
@@ -72,6 +74,7 @@ protected:
     float normalMapScale;
     float normalMapBias;
     glm::vec2 dTime;
+    glm::vec3 velocity;
 
     void drawElements();
 };

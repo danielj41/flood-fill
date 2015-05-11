@@ -15,7 +15,10 @@ uniform vec3 uLightColor;
 varying vec3 vVertex;
 varying vec3 vNormal;
 
+uniform vec2 uDTime;
 uniform float alpha;
+
+varying float vMultiplier;
 
 void main(){
     vec3 kd = uDiffuseColor;
@@ -41,5 +44,5 @@ void main(){
 
     vec3 I = Ic*(Id + Is) + Ia + Ie;
 
-    gl_FragColor = vec4(I, alpha);
+    gl_FragColor = vec4(I, (1.5 - vMultiplier) * 4.0 * (1.1 - uDTime.y));
 }
