@@ -24,7 +24,6 @@ void WaterParticleRender::loadShader(){
     shader->loadHandle("uModel", 'u');
     shader->loadHandle("uView", 'u');
     shader->loadHandle("uProjection", 'u');
-    shader->loadHandle("uNormalMatrix", 'u');
     shader->loadHandle("uDiffuseColor", 'u');
     shader->loadHandle("uSpecularColor", 'u');
     shader->loadHandle("uAmbientColor", 'u');
@@ -33,7 +32,6 @@ void WaterParticleRender::loadShader(){
     shader->loadHandle("uEyePosition", 'u');
     shader->loadHandle("uLightDirection", 'u');
     shader->loadHandle("uLightColor", 'u');
-    shader->loadHandle("alpha", 'u');
     shader->loadHandle("uDTime", 'u');
     shader->loadHandle("uVelocity", 'u');
 
@@ -43,7 +41,7 @@ void WaterParticleRender::loadShader(){
 void WaterParticleRender::setupEnviroment(){
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glDisable(GL_CULL_FACE);
-    glDisable(GL_DEPTH_TEST);
+    glDepthMask(GL_FALSE);
 }
 
 void WaterParticleRender::tearDownEnviroment(){
@@ -55,7 +53,7 @@ void WaterParticleRender::tearDownEnviroment(){
     glUseProgram(0);
 
     glEnable(GL_CULL_FACE);
-    glEnable(GL_DEPTH_TEST);
+    glDepthMask(GL_TRUE);
 }
 
 void WaterParticleRender::setupShader(){
@@ -116,9 +114,6 @@ void WaterParticleRender::setupMesh(Mesh * mesh){
 void WaterParticleRender::renderObject(Object * object){
     Mesh * mesh = object->getMesh();
 
-    glUniformMatrix4fv(shader->getHandle("uNormalMatrix"), 1, GL_FALSE,
-        glm::value_ptr(glm::transpose(glm::inverse(object->getModelMatrix()))));
-
     glUniformMatrix4fv(shader->getHandle("uModel"), 1, GL_FALSE,
                         glm::value_ptr(object->getModelMatrix()));
 
@@ -140,18 +135,8 @@ void WaterParticleRender::renderObject(Object * object){
                 object->getMaterial()->getEmissionColor().z);
     glUniform1f(shader->getHandle("uShininess"), object->getMaterial()->getShininess());
 
-    if(object->getAlpha() < 0.99f) {
-        glDepthMask(GL_FALSE);
-    }
-
-    glUniform1f(shader->getHandle("alpha"), object->getAlpha());
-
     glUniform2f(shader->getHandle("uDTime"), object->getDTime().x, object->getDTime().y);
     glUniform3f(shader->getHandle("uVelocity"), object->getVelocity().x, object->getVelocity().y, object->getVelocity().z);
 
     glDrawElements(GL_TRIANGLES, (int) mesh->getIndices().size(), GL_UNSIGNED_INT, 0);
-
-    if(object->getAlpha() < 0.99f) {
-        glDepthMask(GL_TRUE);
-    }
 }
