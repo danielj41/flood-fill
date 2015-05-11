@@ -28,7 +28,7 @@ private:
     float velocity;
     float gravity;
 
-    uint colorMask;
+    int colorMask;
 
     Object *sky;
     PlayerHand *hand;

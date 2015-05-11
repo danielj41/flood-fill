@@ -14,7 +14,7 @@ class FluidProjectile : public GameObject, public CollisionObject{
 public:
 
   FluidProjectile(glm::vec3 _position, glm::vec3 _movementDirection,
-    uint _colorMask);
+    int _colorMask);
 
   void setup();
   void update();

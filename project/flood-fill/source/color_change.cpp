@@ -17,7 +17,7 @@
 #define GREEN   4
 #define GREY    8
 
-ColorChange::ColorChange(glm::vec3 _position, uint _colorMask)
+ColorChange::ColorChange(glm::vec3 _position, int _colorMask)
   : GameObject(), CollisionObject(_position),
     position(_position), size(glm::vec3(1)),
     colorMask(_colorMask), timer(0){}
@@ -61,7 +61,7 @@ void ColorChange::update(){
 
 }
 
-uint ColorChange::getColor() {
+int ColorChange::getColor() {
   return colorMask;
 }
 

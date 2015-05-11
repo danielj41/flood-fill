@@ -60,7 +60,6 @@ set(ALL_LIBS
 	${OPENGL_LIBRARY}
 	GLFW_303
 	GLEW_190
-    sfml-audio
 )
 
 add_definitions(

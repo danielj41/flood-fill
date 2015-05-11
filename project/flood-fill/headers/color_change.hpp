@@ -12,13 +12,13 @@
 class ColorChange : public GameObject, public CollisionObject{
 
 public:
-  ColorChange(glm::vec3 _position, uint _colorMask);
+  ColorChange(glm::vec3 _position, int _colorMask);
 
   void setup();
   void update();
 
   void collided(CollisionObject * collidedWith);
-  uint getColor();
+  int getColor();
 
 private:
 
@@ -28,7 +28,7 @@ private:
   std::string color;
 
   float timer;
-  uint colorMask;
+  int colorMask;
 };
 
 #endif
