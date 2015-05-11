@@ -7,7 +7,7 @@
 class RegularPolygonsRender : public RenderElement{
 
 public:
-    RegularPolygonsRender(Uniform3DGrid<Object *> _grid);
+    RegularPolygonsRender();
 
     void loadShader();
 
@@ -22,6 +22,8 @@ public:
     void removeFromGrid(Object * object);
 
     void renderPass();
+
+    void setGrid(Uniform3DGrid<Object *> _grid);
 
 private:
     static const std::string VERTEX_SHADER_FILE;

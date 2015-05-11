@@ -12,7 +12,7 @@
 const std::string RegularPolygonsRender::VERTEX_SHADER_FILE = "vertex.glsl";
 const std::string RegularPolygonsRender::FRAGMENT_SHADER_FILE = "fragment.glsl";
 
-RegularPolygonsRender::RegularPolygonsRender(Uniform3DGrid<Object *> _grid) : RenderElement(), grid(_grid) {}
+RegularPolygonsRender::RegularPolygonsRender() : RenderElement() {}
 
 void RegularPolygonsRender::loadShader(){
     LoadManager::loadShader(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);
@@ -160,12 +160,15 @@ void RegularPolygonsRender::renderPass() {
                 if(grid(i, j, k) != NULL) {
                     if(i == 0 || grid(i - 1, j, k) == NULL || i == grid.getSizeX() - 1 || grid(i + 1, j, k) == NULL ||
                        j == 0 || grid(i, j - 1, k) == NULL || j == grid.getSizeY() - 1 || grid(i, j + 1, k) == NULL ||
-                       k == 0 || grid(i, j, k - 1) == NULL || k == grid.getSizeZ() - 1 || grid(i, j, k + 1) == NULL ||) {
+                       k == 0 || grid(i, j, k - 1) == NULL || k == grid.getSizeZ() - 1 || grid(i, j, k + 1) == NULL) {
                         renderObject(grid(i, j, k));
-                    } 
+                    }
                 }
             }
         }  
     }
 }
 
+void RegularPolygonsRender::setGrid(Uniform3DGrid<Object *> _grid) {
+    grid = _grid;
+}

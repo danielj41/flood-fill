@@ -33,7 +33,6 @@ void TestLevel::setup(){
     INFO("Generating Test Level...");
     readFile();
     initalizeGrid();
-
     createRenders();
 
     createLevel();
@@ -101,7 +100,15 @@ void TestLevel::update(){
 void TestLevel::createRenders(){
     INFO("Creating Renders...");
     RenderEngine::addRenderElement("camera", new CameraPolygonsRender());
+
     RenderEngine::addRenderElement("regular", new RegularPolygonsRender());
+    Uniform3DGrid<int>* typeGrid = getTypeGrid();
+    ((RegularPolygonsRender *)RenderEngine::getRenderElement("regular"))->setGrid(
+        Uniform3DGrid<Object *>(typeGrid->getSizeX(), typeGrid->getSizeY(), typeGrid->getSizeZ(),
+                                typeGrid->getMinX(), typeGrid->getMaxX(),
+                                typeGrid->getMinY(), typeGrid->getMaxY(),
+                                typeGrid->getMinZ(), typeGrid->getMaxZ()));
+
     RenderEngine::addRenderElement("debug", new DebugRender());
     RenderEngine::addRenderElement("normalmap", new NormalMapRender());
     RenderEngine::addRenderElement("textured", new TexturedPolygonsRender());
