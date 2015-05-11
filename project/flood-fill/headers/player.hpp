@@ -30,6 +30,7 @@ private:
     PlayerHand *hand;
     
     bool shootPressed;
+    float shootTimer;
 };
 
 #endif

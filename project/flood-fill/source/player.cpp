@@ -56,6 +56,8 @@ void Player::setup() {
     hand->setup();
     Director::getScene()->addGameObject(hand);
     CollisionManager::addCollisionObjectToList(hand);
+
+    shootTimer = -1.0f;
 }
 
 void Player::update() {
@@ -99,16 +101,21 @@ void Player::update() {
     sky->scale(glm::vec3(-50.0f,-50.0f,-50.0f));
     sky->translate(getPosition());
 
-    if(glfwGetMouseButton(Global::window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS && !shootPressed){
+    if(glfwGetMouseButton(Global::window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS && !shootPressed && shootTimer < 0.0f){
         FluidProjectile *fluidProjectile = new FluidProjectile(
             camera->getEye() - (0.35f * camera->getStrafeVector()) + glm::vec3(0.0f, 0.5f, 0.0f), -glm::normalize(camera->getViewVector()));
         fluidProjectile->setup();
         Director::getScene()->addGameObject(fluidProjectile);
         CollisionManager::addCollisionObjectToList(fluidProjectile);
         shootPressed = true;
+        shootTimer = 2.0f;
     }
     if(glfwGetMouseButton(Global::window, GLFW_MOUSE_BUTTON_1) == GLFW_RELEASE) {
         shootPressed = false;
+    }
+
+    if(shootTimer > 0.0f) {
+        shootTimer -= TimeManager::getDeltaTime();
     }
 
     hand->setPosition(getBoundingBox()->getPosition() - 1.2f * camera->getViewVector());

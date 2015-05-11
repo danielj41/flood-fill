@@ -25,7 +25,7 @@ void main(){
     modelPos.z = aPosition.z * 2.0;
     modelPos = uModel * modelPos;
 
-    modelPos += vec4(10.0 * uVelocity * uDTime.y, 0.0) + vec4(0.0, 6.0 * uVelocity.y * uVelocity.y * uVelocity.y * aPosition.z, 0.0, 0.0) - vec4(0.0, 5.0 * uDTime.y * uDTime.y * multiplier * multiplier, 0.0, 0.0);
+    modelPos += vec4(10.0 * uVelocity * uDTime.y, 0.0) + vec4(0.0, 6.0 * sign(uVelocity.y) * uVelocity.y * uVelocity.y * aPosition.z, 0.0, 0.0) - vec4(0.0, 5.0 * uDTime.y * uDTime.y * multiplier * multiplier, 0.0, 0.0);
 
     gl_Position = uProjection * uView * modelPos;
     vMultiplier = multiplier;
