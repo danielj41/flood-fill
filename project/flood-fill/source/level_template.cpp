@@ -42,8 +42,8 @@ LevelTemplate::LevelTemplate(std::string levelFileName)
     fileName += levelFileName;
 }
 
-void LevelTemplate::createLevel(){
-    INFO("Creating level " << fileName << "...");
+void LevelTemplate::readFile(){
+    INFO("Reading level " << fileName << " level...");
 
     std::ifstream levelFile;
 
@@ -51,7 +51,6 @@ void LevelTemplate::createLevel(){
     ASSERT(levelFile.is_open(), "Could not open file " << fileName << "!");
 
     std::string line;
-    std::vector<std::string> lines;
 
     INFO(fileName << " Layout: ");
     while(std::getline(levelFile, line)){
@@ -60,22 +59,14 @@ void LevelTemplate::createLevel(){
     }
 
     levelFile.close();
-
-    voidVoxel = new VoidVoxel();
-    interpLines(lines);
 }
 
-void LevelTemplate::interpLines(std::vector<std::string> lines){
-    bool mapDefined = false;
+void LevelTemplate::initalizeGrid(){
+    ASSERT(lines.size() != 0, "You didn't read the text level file " << fileName);
 
-    std::string line;
+    voidVoxel = new VoidVoxel();
 
-    int numVoxelsInX, numVoxelsInY, numVoxelsInZ;
-
-    //Counts the line of the grid that is being read. Correspond to the Y component
-    int j = 0;
-    //Counts the slice of the grid that is being rea. Correspond to the Z componentd
-    int k = 0;
+    std::string line = "";
 
     for(unsigned int linesIndex = 0; linesIndex < lines.size(); linesIndex++){
         line = lines[linesIndex];
@@ -85,29 +76,56 @@ void LevelTemplate::interpLines(std::vector<std::string> lines){
 
         std::stringstream ss(line);
 
+        std::string mapDef;
+
+        ss >> mapDef >> numVoxelsInX >> numVoxelsInY >> numVoxelsInZ >>
+                        minx >> miny >> minz >> maxx >> maxy >> maxz ;
+
+        ASSERT(mapDef == "map", "Expecting a map definition:"
+                 << " map numVoxelsInX numVoxelsInY numVoxelsInZ"
+                 << " minx miny minz maxx maxy maxz.\n"
+                 << "Got: " << line);
+
+        grid = Uniform3DGrid<GameObject *>(numVoxelsInX, numVoxelsInY, numVoxelsInZ,
+                                           minx, maxx, miny, maxy, minz, maxz);
+        grid.initialize(voidVoxel);
+
+        typeGrid = Uniform3DGrid<int>(numVoxelsInX, numVoxelsInY, numVoxelsInZ,
+                                      minx, maxx, miny, maxy, minz, maxz);
+        typeGrid.initialize(VOID_SPACE);
+
+        CollisionManager::initGrid(numVoxelsInX, numVoxelsInY, numVoxelsInZ,
+                                      glm::vec3(minx, miny, minz),
+                                      glm::vec3(maxx, maxy, maxz));
+        break;
+    }
+
+    mapDefined = true;
+}
+
+void LevelTemplate::createLevel(){
+    INFO("Creating level " << fileName << "...");
+
+    interpLines(lines);
+}
+
+void LevelTemplate::interpLines(std::vector<std::string> lines){
+    mapDefined = false;
+
+    //Counts the line of the grid that is being read. Correspond to the Y component
+    int j = 0;
+    //Counts the slice of the grid that is being rea. Correspond to the Z componentd
+    int k = 0;
+
+    for(unsigned int linesIndex = 0; linesIndex < lines.size(); linesIndex++){
+        std::string line = lines[linesIndex];
+
+        if(line.size() == 0)   continue;
+        if(line[0] == COMMENT) continue;
+
+        std::stringstream ss(line);
+
         if(!mapDefined){
-            std::string mapDef;
-
-            ss >> mapDef >> numVoxelsInX >> numVoxelsInY >> numVoxelsInZ >>
-                            minx >> miny >> minz >> maxx >> maxy >> maxz ;
-
-            ASSERT(mapDef == "map", "Expecting a map definition:"
-                     << " map numVoxelsInX numVoxelsInY numVoxelsInZ"
-                     << " minx miny minz maxx maxy maxz.\n"
-                     << "Got: " << line);
-
-            grid = Uniform3DGrid<GameObject *>(numVoxelsInX, numVoxelsInY, numVoxelsInZ,
-                                               minx, maxx, miny, maxy, minz, maxz);
-            grid.initialize(voidVoxel);
-
-            typeGrid = Uniform3DGrid<int>(numVoxelsInX, numVoxelsInY, numVoxelsInZ,
-                                          minx, maxx, miny, maxy, minz, maxz);
-            typeGrid.initialize(VOID_SPACE);
-
-            CollisionManager::initGrid(numVoxelsInX, numVoxelsInY, numVoxelsInZ,
-                                          glm::vec3(minx, miny, minz),
-                                          glm::vec3(maxx, maxy, maxz));
-
             mapDefined = true;
         }
         else{
