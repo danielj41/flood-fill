@@ -8,6 +8,8 @@
 
 RenderElement::RenderElement(bool viewFrustumCullingEnable) : cull(viewFrustumCullingEnable) {}
 
+void RenderElement::setup() {}
+
 void RenderElement::addObject(Object * object){
     INFO("Adding object to the Rendering Element...");
 

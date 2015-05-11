@@ -70,7 +70,6 @@ void TestLevel::setup(){
     addGameObject("debugPlayer" , debugPlayer);
 
     addCamera("DebugCamera", cam2);
-    
     INFO("Creating Switch for the Test Level...");
     Switch * s1 = new Switch(glm::vec3(0.9f, 0.1f, 0.1f), glm::vec3(29.7, 19, -45), 
                              glm::vec3(0,0,1), -20.0f, 1);
@@ -116,8 +115,5 @@ void TestLevel::createRenders(){
     RenderEngine::addRenderElement("water", new WaterRender());
     RenderEngine::addRenderElement("water-particle", new WaterParticleRender());
     RenderEngine::addRenderElement("water-stream", new WaterStreamRender());
-
-    ShadowOccluderRender * shadow = new ShadowOccluderRender();
-    shadow->setup();
-    RenderEngine::addRenderElement("shadow", shadow);
+    RenderEngine::addRenderElement("shadow", new ShadowOccluderRender());
 }

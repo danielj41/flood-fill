@@ -48,7 +48,12 @@ void RenderEngine::addRenderElement(std::string name, RenderElement * renderElem
     INFO("Adding render element " << name << " to the render engine...");
     ASSERT(loaded, "You dind't load the rendering engine!");
 
+    INFO("Setting up Render Element...");
+    renderElement->setup();
+
+    INFO("Loading the Render Element Shader...");
     renderElement->loadShader();
+
     renderElements[name] = renderElement;
     INFO("Render element " << name << " added!");
 }

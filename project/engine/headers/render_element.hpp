@@ -16,7 +16,9 @@ public:
     virtual void addObject(Object * object);
     virtual void removeObject(Object * object);
 
-    // It is called when you add the Render Element to the Render Engine
+    // Functions Called when you add the Render Element to the Render Engine
+    // These function are called in this order:
+    virtual void setup();
     virtual void loadShader() = 0;
 
     // Setups the OpenGL state for render your geometry
