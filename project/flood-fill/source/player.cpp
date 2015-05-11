@@ -52,10 +52,22 @@ void Player::setup() {
     sky->translate(getPosition());
     RenderEngine::getRenderElement("textured")->addObject(sky);
 
+    gun = new Object(
+        LoadManager::getMesh("cube.obj"),
+        MaterialManager::getMaterial("FlatBlue"));
+    gun->loadIdentity();
+    gun->scale(glm::vec3(0.07f, 0.07f, 0.3f));
+    gun->rotate(15.0f, glm::vec3(1.0f, 1.0f, 0.0f));
+    gun->translate(glm::vec3(0.27f, -0.26f, -0.4f));
+    RenderEngine::getRenderElement("camera")->addObject(gun);
+
+
     hand = new PlayerHand(getPosition());
     hand->setup();
     Director::getScene()->addGameObject(hand);
     CollisionManager::addCollisionObjectToList(hand);
+
+
 
     shootTimer = -1.0f;
 }

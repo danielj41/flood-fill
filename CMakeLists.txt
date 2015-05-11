@@ -98,6 +98,7 @@ add_executable(
         project/flood-fill/source/player_hand.cpp
         project/flood-fill/source/water_stream_render.cpp
         project/flood-fill/source/water_particle_render.cpp
+        project/flood-fill/source/camera_polygons_render.cpp
         project/flood-fill/source/debug_render.cpp
         project/flood-fill/source/action_invisible_block.cpp
         project/flood-fill/source/winning_block.cpp
@@ -126,6 +127,7 @@ add_executable(
         project/flood-fill/headers/player_hand.hpp
         project/flood-fill/headers/water_stream_render.hpp
         project/flood-fill/headers/water_particle_render.hpp
+        project/flood-fill/headers/camera_polygons_render.hpp
         project/flood-fill/headers/debug_render.hpp
         project/flood-fill/headers/action_invisible_block.hpp
         project/flood-fill/headers/winning_block.hpp

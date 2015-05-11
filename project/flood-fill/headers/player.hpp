@@ -27,6 +27,7 @@ private:
     float gravity;
 
     Object *sky;
+    Object *gun;
     PlayerHand *hand;
     
     bool shootPressed;

@@ -22,6 +22,7 @@
 #include "water_render.hpp"
 #include "water_particle_render.hpp"
 #include "normal_map_render.hpp"
+#include "camera_polygons_render.hpp"
 #include "debug_render.hpp"
 
 TestLevel::TestLevel() : LevelTemplate("testLevel.txt"){}
@@ -80,6 +81,7 @@ void TestLevel::update(){
 
 void TestLevel::createRenders(){
     INFO("Creating Renders...");
+    RenderEngine::addRenderElement("camera", new CameraPolygonsRender());
     RenderEngine::addRenderElement("regular", new RegularPolygonsRender());
     RenderEngine::addRenderElement("debug", new DebugRender());
     RenderEngine::addRenderElement("normalmap", new NormalMapRender());
