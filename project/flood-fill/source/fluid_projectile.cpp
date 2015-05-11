@@ -24,11 +24,14 @@ FluidProjectile::FluidProjectile(glm::vec3 _position, glm::vec3 _movementDirecti
 void FluidProjectile::setup() {  
   INFO("Shooting a fluid projectile ...");
   
-  fluidProjectile = new Object(
-				   LoadManager::getMesh("stream.obj"),
-				   MaterialManager::getMaterial("FlatBlue"));
+  fluidProjectile = new Object(LoadManager::getMesh("stream.obj"),
+			                     	   MaterialManager::getMaterial("FlatBlue"));
+
+  fluidParticles = new Object(LoadManager::getMesh("particles.obj"),
+                              MaterialManager::getMaterial("FlatBlue"));
 
   RenderEngine::getRenderElement("water-stream")->addObject(fluidProjectile);
+  RenderEngine::getRenderElement("water-particle")->addObject(fluidParticles);
   
   setCollisionID(0);
   setCollideWithID(1 + 64);
@@ -39,10 +42,16 @@ void FluidProjectile::setup() {
   angle = 90.0 - glm::degrees(atan2(movementDirection.z, movementDirection.x));
 
   setPosition(position);
+  
   fluidProjectile->setVelocity(movementDirection);
   fluidProjectile->loadIdentity();
   fluidProjectile->rotate(angle, glm::vec3(0.0, 1.0, 0.0));
   fluidProjectile->translate(position - glm::vec3(0.0f, 0.75f, 0.0f)); 
+
+  fluidParticles->setVelocity(movementDirection);
+  fluidParticles->loadIdentity();
+  fluidParticles->rotate(angle, glm::vec3(0.0, 1.0, 0.0));
+  fluidParticles->translate(position - glm::vec3(0.0f, 0.75f, 0.0f)); 
 
   setBoundingBox(BoundingBox(glm::vec3(0.5f,0.5f,0.5f), glm::vec3(-0.5,-0.5f,-0.5f)));
   getBoundingBox()->setPosition(position);
@@ -62,6 +71,8 @@ void FluidProjectile::update(){
   movementDirection.y -= 1.5f * dTime;
 
   fluidProjectile->setDTime(glm::vec2(dTime, totalTime));
+  fluidParticles->setDTime(glm::vec2(dTime, totalTime));
+
   getBoundingBox()->setPosition(position); 
 
   if(hasCollided) {
@@ -70,6 +81,7 @@ void FluidProjectile::update(){
       Director::getScene()->removeGameObject(this);
       CollisionManager::removeCollisionObject(this);
       RenderEngine::getRenderElement("water-stream")->removeObject(fluidProjectile);
+      RenderEngine::getRenderElement("water-particle")->removeObject(fluidParticles);
     }
   }
 }

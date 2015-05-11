@@ -20,6 +20,7 @@ public:
 
     void load();
     void resize();
+    void loadObjNormals();
     void calculateNormals();
     void calculateTangents();
 
@@ -62,6 +63,7 @@ private:
     std::string objfile;
     bool  loaded, normalsFlag;
     std::vector<float> normals;
+    std::vector<float> objNormals;
     std::vector<float> vertices;
     std::vector<float> textureCoordinates;
     std::vector<float> tangents;

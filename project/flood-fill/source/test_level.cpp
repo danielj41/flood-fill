@@ -20,6 +20,7 @@
 #include "textured_polygons_render.hpp"
 #include "water_stream_render.hpp"
 #include "water_render.hpp"
+#include "water_particle_render.hpp"
 #include "normal_map_render.hpp"
 
 TestLevel::TestLevel() : LevelTemplate("testLevel.txt"){}
@@ -83,4 +84,5 @@ void TestLevel::createRenders(){
     RenderEngine::addRenderElement("textured", new TexturedPolygonsRender());
     RenderEngine::addRenderElement("water", new WaterRender());
     RenderEngine::addRenderElement("water-stream", new WaterStreamRender());
+    RenderEngine::addRenderElement("water-particle", new WaterParticleRender());
 }

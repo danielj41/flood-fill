@@ -106,12 +106,19 @@ void Mesh::load(){
         vertices = shape[0].mesh.positions;
         indices = shape[0].mesh.indices;
         textureCoordinates = shape[0].mesh.texcoords;
+        objNormals = shape[0].mesh.normals;
 
         ASSERT(err.empty(), err);
     }
 
     INFO("OBJ " << objfile << " loaded correctly!");
     loaded = true;
+}
+
+void Mesh::loadObjNormals() {
+    ASSERT(isLoaded(), "OBJ " << objfile << "not loaded");
+    normals = objNormals;
+    normalsFlag = true;
 }
 
 void Mesh::calculateNormals(){

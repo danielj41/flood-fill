@@ -1,4 +1,4 @@
-#include "water_stream_render.hpp"
+#include "water_particle_render.hpp"
 
 #include <iostream>
 #include <cstdlib>
@@ -9,17 +9,18 @@
 #include "load_manager.hpp"
 #include "director.hpp"
 
-const std::string WaterStreamRender::VERTEX_SHADER_FILE = "vertex-water-stream.glsl";
-const std::string WaterStreamRender::FRAGMENT_SHADER_FILE = "fragment-water-stream.glsl";
+const std::string WaterParticleRender::VERTEX_SHADER_FILE = "vertex-water-particle.glsl";
+const std::string WaterParticleRender::FRAGMENT_SHADER_FILE = "fragment-water-particle.glsl";
 
-WaterStreamRender::WaterStreamRender() : RenderElement() {}
+WaterParticleRender::WaterParticleRender() : RenderElement() {}
 
-void WaterStreamRender::loadShader(){
+void WaterParticleRender::loadShader(){
     LoadManager::loadShader(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);
     shader = LoadManager::getShader(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);
 
     shader->loadHandle("aNormal", 'a');
     shader->loadHandle("aPosition", 'a');
+    shader->loadHandle("aTexCoord", 'a');
     shader->loadHandle("uModel", 'u');
     shader->loadHandle("uView", 'u');
     shader->loadHandle("uProjection", 'u');
@@ -32,29 +33,32 @@ void WaterStreamRender::loadShader(){
     shader->loadHandle("uEyePosition", 'u');
     shader->loadHandle("uLightDirection", 'u');
     shader->loadHandle("uLightColor", 'u');
-    shader->loadHandle("uVelocity", 'u');
-    shader->loadHandle("uDTime", 'u');
     shader->loadHandle("alpha", 'u');
+    shader->loadHandle("uDTime", 'u');
+    shader->loadHandle("uVelocity", 'u');
 
     cull = false;
 }
 
-void WaterStreamRender::setupEnviroment(){
+void WaterParticleRender::setupEnviroment(){
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    glEnable(GL_CULL_FACE);
+    glDisable(GL_CULL_FACE);
+    glDisable(GL_DEPTH_TEST);
 }
 
-void WaterStreamRender::tearDownEnviroment(){
+void WaterParticleRender::tearDownEnviroment(){
     glDisableVertexAttribArray(shader->getHandle("aPosition"));
     glDisableVertexAttribArray(shader->getHandle("aNormal"));
+    glDisableVertexAttribArray(shader->getHandle("aTexCoord"));
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     glUseProgram(0);
 
-    glDisable(GL_CULL_FACE);
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
 }
 
-void WaterStreamRender::setupShader(){
+void WaterParticleRender::setupShader(){
     glUseProgram(shader->getID());
 
     Camera * camera = Director::getScene()->getCamera();
@@ -90,7 +94,7 @@ void WaterStreamRender::setupShader(){
     }
 }
 
-void WaterStreamRender::setupMesh(Mesh * mesh){
+void WaterParticleRender::setupMesh(Mesh * mesh){
         glEnableVertexAttribArray(shader->getHandle("aPosition"));
         glBindBuffer(GL_ARRAY_BUFFER, mesh->getVertexBuffer());
         glVertexAttribPointer(shader->getHandle("aPosition"), 3,
@@ -101,10 +105,15 @@ void WaterStreamRender::setupMesh(Mesh * mesh){
         glVertexAttribPointer(shader->getHandle("aNormal"), 3,
                               GL_FLOAT, GL_FALSE, 0, 0);
 
+        glEnableVertexAttribArray(shader->getHandle("aTexCoord"));
+        glBindBuffer(GL_ARRAY_BUFFER, mesh->getTextureCoordinateBuffer());
+        glVertexAttribPointer(shader->getHandle("aTexCoord"), 2,
+                              GL_FLOAT, GL_FALSE, 0, 0);
+
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->getIndexBuffer());
 }
 
-void WaterStreamRender::renderObject(Object * object){
+void WaterParticleRender::renderObject(Object * object){
     Mesh * mesh = object->getMesh();
 
     glUniformMatrix4fv(shader->getHandle("uNormalMatrix"), 1, GL_FALSE,
@@ -136,9 +145,9 @@ void WaterStreamRender::renderObject(Object * object){
     }
 
     glUniform1f(shader->getHandle("alpha"), object->getAlpha());
+
     glUniform2f(shader->getHandle("uDTime"), object->getDTime().x, object->getDTime().y);
     glUniform3f(shader->getHandle("uVelocity"), object->getVelocity().x, object->getVelocity().y, object->getVelocity().z);
-
 
     glDrawElements(GL_TRIANGLES, (int) mesh->getIndices().size(), GL_UNSIGNED_INT, 0);
 

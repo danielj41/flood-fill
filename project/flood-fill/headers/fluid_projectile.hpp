@@ -23,6 +23,7 @@ public:
 private:
 
   Object * fluidProjectile;
+  Object * fluidParticles;
   glm::vec3 position;
   glm::vec3 oldPosition;
   glm::vec3 origPosition;

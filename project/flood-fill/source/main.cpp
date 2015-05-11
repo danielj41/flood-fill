@@ -54,6 +54,8 @@ int main()
     // may not be window size on retina displays
     GLint windowViewport[4];
     glGetIntegerv(GL_VIEWPORT, windowViewport);
+    Global::FbWidth = windowViewport[2] - windowViewport[0];
+    Global::FbHeight = windowViewport[3] - windowViewport[1];
 
     TimeManager::setTimeStamp();
     TimeManager::setDeltaTime();
@@ -134,6 +136,17 @@ void loadMeshes(){
     mesh->calculateTangents();
     mesh->generateTangentBuffer();
 
+    LoadManager::loadMesh("particles.obj");
+    mesh = LoadManager::getMesh("particles.obj");
+    mesh->loadObjNormals();
+    mesh->generateVertexBuffer();
+    mesh->generateIndexBuffer();
+    mesh->generateNormalBuffer();
+    mesh->generateTextureCoordinateBuffer();
+    mesh->calculateLimits();
+    mesh->calculateTangents();
+    mesh->generateTangentBuffer();
+
     LoadManager::loadMesh("plane2.obj");
     mesh = LoadManager::getMesh("plane2.obj");
     mesh->resize();
@@ -142,7 +155,6 @@ void loadMeshes(){
     mesh->generateIndexBuffer();
     mesh->generateNormalBuffer();
     mesh->calculateLimits();
-
 
     LoadManager::loadMesh("grid.obj");
     mesh = LoadManager::getMesh("grid.obj");
