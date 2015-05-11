@@ -97,6 +97,8 @@ add_executable(
         project/flood-fill/source/normal_map_render.cpp
         project/flood-fill/source/player_hand.cpp
         project/flood-fill/source/debug_render.cpp
+        project/flood-fill/source/action_invisible_block.cpp
+        project/flood-fill/source/winning_block.cpp
 
         #Header Files
         #project/flood-fill/headers/main_level.hpp
@@ -121,6 +123,8 @@ add_executable(
         project/flood-fill/headers/normal_map_render.hpp
         project/flood-fill/headers/player_hand.hpp
         project/flood-fill/headers/debug_render.hpp
+        project/flood-fill/headers/action_invisible_block.hpp
+        project/flood-fill/headers/winning_block.hpp
 
         ### Engine Files ###
         #Source Files

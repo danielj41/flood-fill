@@ -31,7 +31,7 @@ void Player::setup() {
 	lastPosition = camera->getEye();
 	
     setCollisionID(2);
-    setCollideWithID(1 + 64);
+    setCollideWithID(1 | 64 | 128);
 	setCanCollide(true);
 	
 	INFO("Can Collide: " << canCollide());

@@ -14,6 +14,7 @@
 #include "glm/glm.hpp"
 
 #include "solid_cube.hpp"
+#include "winning_block.hpp"
 #include "collision_manager.hpp"
 
 
@@ -23,10 +24,11 @@ const std::string LevelTemplate::templatesFolder = "flood-fill/config-files/";
 
 const char LevelTemplate::COMMENT = '#';
 
-const int LevelTemplate::VOID_SPACE          = -1;
-const int LevelTemplate::AIR                 =  0;
-const int LevelTemplate::SOLID_CUBE          =  1;
-const int LevelTemplate::AVAILABLE_FILL_SPACE =  2;
+const int LevelTemplate::VOID_SPACE            = -1;
+const int LevelTemplate::AIR                   =  0;
+const int LevelTemplate::SOLID_CUBE            =  1;
+const int LevelTemplate::AVAILABLE_FILL_SPACE  =  2;
+const int LevelTemplate::WINNING_BLOCK         =  8;
 
 
 LevelTemplate::LevelTemplate(std::string levelFileName)
@@ -144,6 +146,14 @@ GameObject * LevelTemplate::createVoxel(int id, int i, int j, int k){
     case AVAILABLE_FILL_SPACE:
         return voidVoxel;
         break;
+    case WINNING_BLOCK:
+    {
+        WinningBlock * c = new WinningBlock(glm::vec3(minx + i * 2 + 1, miny + j * 2 + 1, minz + (k * 2 + 1)));
+        c->setup();
+        CollisionManager::addCollisionObjectToGrid(c);
+        return c;
+        break;
+    }
     default:
         ASSERT(false, "Invalid type of Voxel. ID: " << id);
     }

@@ -30,6 +30,7 @@ public:
     static const int AIR;
     static const int SOLID_CUBE;
     static const int AVAILABLE_FILL_SPACE;
+    static const int WINNING_BLOCK;
 
 protected:
     std::string fileName;
