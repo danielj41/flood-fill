@@ -105,6 +105,7 @@ add_executable(
         project/flood-fill/source/switch.cpp
         project/flood-fill/source/active_terrain.cpp
         project/flood-fill/source/color_change.cpp
+        project/flood-fill/source/shadow_occluder_render.cpp
 
         #Header Files
         #project/flood-fill/headers/main_level.hpp
@@ -137,6 +138,7 @@ add_executable(
         project/flood-fill/headers/switch.hpp
         project/flood-fill/headers/active_terrain.hpp
         project/flood-fill/headers/color_change.hpp
+        project/flood-fill/headers/shadow_occluder_render.hpp
 
         ### Engine Files ###
         #Source Files

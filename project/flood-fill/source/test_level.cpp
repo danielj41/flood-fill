@@ -26,6 +26,7 @@
 #include "camera_polygons_render.hpp"
 #include "debug_render.hpp"
 #include "active_terrain.hpp"
+#include "shadow_occluder_render.hpp"
 
 TestLevel::TestLevel() : LevelTemplate("testLevel3.txt"){}
 
@@ -115,4 +116,8 @@ void TestLevel::createRenders(){
     RenderEngine::addRenderElement("water", new WaterRender());
     RenderEngine::addRenderElement("water-particle", new WaterParticleRender());
     RenderEngine::addRenderElement("water-stream", new WaterStreamRender());
+
+    ShadowOccluderRender * shadow = new ShadowOccluderRender();
+    shadow->setup();
+    RenderEngine::addRenderElement("shadow", shadow);
 }
