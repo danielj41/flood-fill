@@ -40,7 +40,7 @@ void Texture::createTextureFromImage(Image * image, bool mipmap){
 }
 
 void Texture::createTexture(GLsizei width, GLsizei height, GLint internalformat,
-                            GLenum format, GLenum type, bool mipmap = false){
+                            GLenum format, GLenum type, bool mipmap){
     INFO("Creating Texture...");
     if(created) DEBUG("Overriding Texture!");
 

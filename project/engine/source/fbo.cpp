@@ -4,33 +4,51 @@
 #include <cstdlib>
 #include "debug_macros.h"
 
-FBO::FBO(){}
+FBO::FBO() : depth(false), loaded(false) {}
 
-FBO::FBO(int _width, int _height, int _nTextures, bool _depth)
-    : nTextures(_nTextures), depth(_depth), width(_width), height(_height){}
+void FBO::addTexture(Texture * texture){
+    if(loaded) DEBUG("You are trying to add a texture to a FBO that was already laoded!");
 
-void FBO::init(){
-    textures = new GLuint[nTextures];
+    textures.push_back(texture);
+}
+
+void FBO::addDepthBuffer(unsigned int width, unsigned int height){
+    if(loaded) DEBUG("You are trying to add a depth buffer to a FBO that was already laoded!");
+
+    glGenRenderbuffers(1, &depthBuf);
+    glBindRenderbuffer(GL_RENDERBUFFER, depthBuf);
+
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuf);
+
+    glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+    depth = true;
+}
+
+void FBO::load(){
+    if(loaded) DEBUG("Overriding FBO! This FBO was already loaded once!");
 
     glGenFramebuffers(1, &id);
     ASSERT(id != 0, "Could not create FBO");
 
     glBindFramebuffer(GL_FRAMEBUFFER, id);
 
-    for (int i = 0; i < nTextures; i++){
-        addTexture(i);
+
+    if(textures.size() > 0){
+        GLenum * attchs = new GLenum[textures.size()];
+
+        for (unsigned int i = 0; i < textures.size(); i++){
+            attchs[i] = GL_COLOR_ATTACHMENT0 + i;
+        }
+
+        glDrawBuffers(textures.size(), attchs);
+        delete attchs;
+    }
+    else{
+        glDrawBuffer(GL_NONE);
     }
 
-    if (depth){
-        createDepth();
-    }
-
-    GLenum * attchs = new GLenum[nTextures];
-    for (int i = 0; i < nTextures; i++){
-        attchs[i] = GL_COLOR_ATTACHMENT0 + i;
-    }
-
-    glDrawBuffers(nTextures, attchs);
 
     glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -40,36 +58,12 @@ void FBO::init(){
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-    delete attachs;
+    loaded = true;
 }
 
-int FBO::addTexture(int textureID){
-    glGenTextures(1, &textures[textureID]);
-    glBindTexture(GL_TEXTURE_2D, textures[textureID]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGB, GL_FLOAT, 0);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-    glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + textureID, textures[textureID], 0);
-
-    return textureID;
-}
-
-void FBO::createDepth(){
-    glGenRenderbuffers(1, &depthBuf);
-    glBindRenderbuffer(GL_RENDERBUFFER, depthBuf);
-
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuf);
-
-    glBindRenderbuffer(GL_RENDERBUFFER, 0);
-}
-
-GLuint FBO::getTexture(int texID){
-    ASSERT(texID < nTextures && texID >= 0, "Inexisting Texture " << texID);
+Texture * FBO::getTexture(unsigned int texID){
+    ASSERT(texID < textures.size(),
+            "Inexisting Texture " << texID << " in the FBO!");
     return textures[texID];
 }
 
@@ -100,7 +94,7 @@ void FBO::printInfo() {
             INFO("Shader Output Location " << i << " - color attachment " << buffer - GL_COLOR_ATTACHMENT0);
 
             glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER, buffer, GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE, &res);
-            INFO("\tAttachment Type: " << res == GL_TEXTURE ? "Texture" : "Render Buffer");
+            INFO("\tAttachment Type: " << (res == GL_TEXTURE ? "Texture" : "Render Buffer"));
             glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER, buffer, GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME, &res);
             INFO("\tAttachment object name: " << res);
         }

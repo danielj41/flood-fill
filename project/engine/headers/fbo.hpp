@@ -9,26 +9,28 @@
 class FBO{
 public:
     FBO();
-    FBO(int _width, int _height, int _nTextures, bool _depth);
 
+    // Add a 2D texture to the FBO. Must be done before the load()
+    void addTexture(Texture * texture);
+
+    // Add a depth buffer as a Renderer Buffer
+    void addDepthBuffer(unsigned int width, unsigned int height);
+
+    // Load the FBO with all textures attached in the same order that they were
+    // added to it.
     void load();
 
-    void addTexture(Texture * texture);
-    void addDepthBuffer();
-
-    GLuint getTexture(int texID);
+    Texture * getTexture(unsigned int texID);
 
     void enable();
     void disable();
 
 private:
-    int nTextures, width, height;
-    bool depth;
+    bool depth, loaded;
 
-    GLuint id, * textures, depthBuf;
+    std::vector<Texture *> textures;
+    GLuint id, depthBuf;
 
-    int addTexture(int textureID);
-    void createDepth();
     void printInfo();
 };
 

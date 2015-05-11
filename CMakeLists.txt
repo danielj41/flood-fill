@@ -163,6 +163,7 @@ add_executable(
         project/engine/source/lodepng.cpp
         project/engine/source/render_element.cpp
         project/engine/source/sound.cpp
+        project/engine/source/fbo.cpp
 
         #Header Files
         project/engine/headers/GLIncludes.h
@@ -191,7 +192,7 @@ add_executable(
         project/engine/headers/lodepng.h
         project/engine/headers/sound.hpp
         project/engine/headers/render_element.hpp
-
+        project/engine/headers/fbo.hpp
 )
 
 target_link_libraries(main
