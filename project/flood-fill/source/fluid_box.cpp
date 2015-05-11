@@ -13,6 +13,7 @@
 #include "uniform_3d_grid.hpp"
 #include "level_template.hpp"
 #include "global_variables.hpp"
+#include "regular_polygons_render.hpp"
 
 FluidBox::FluidBox(glm::vec3 _position)
   : GameObject(), CollisionObject(_position),
@@ -33,6 +34,7 @@ void FluidBox::setup() {
 				   LoadManager::getMesh("cube.obj"),
 				   MaterialManager::getMaterial(color));
 
+  fluidBox->loadIdentity();
   fluidBox->translate(position);
   timer = 0.0f;
   visible = false;
@@ -57,7 +59,7 @@ void FluidBox::update(){
     getBoundingBox()->setPosition(position - (1.0f - timer/1.55f) * glm::vec3(0, 2.0f, 0));
     if(timer > 1.55f) {
       visible = true;
-      RenderEngine::getRenderElement("regular")->addObject(fluidBox);
+      ((RegularPolygonsRender *)RenderEngine::getRenderElement("regular"))->addToGrid(fluidBox);
       getBoundingBox()->setPosition(position);
     }
   } 
@@ -69,7 +71,7 @@ void FluidBox::update(){
     getBoundingBox()->setPosition(position);
     if(timer > 0.5f) {
       Director::getScene()->removeGameObject(this);
-      RenderEngine::getRenderElement("regular")->removeObject(fluidBox);
+      ((RegularPolygonsRender *)RenderEngine::getRenderElement("regular"))->removeFromGrid(fluidBox);
       CollisionManager::removeCollisionObjectFromGrid(this);
     }
   }

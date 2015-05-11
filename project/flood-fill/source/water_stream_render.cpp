@@ -34,7 +34,6 @@ void WaterStreamRender::loadShader(){
     shader->loadHandle("uLightColor", 'u');
     shader->loadHandle("uVelocity", 'u');
     shader->loadHandle("uDTime", 'u');
-    shader->loadHandle("alpha", 'u');
 
     cull = false;
 }
