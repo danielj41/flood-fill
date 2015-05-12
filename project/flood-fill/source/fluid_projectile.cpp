@@ -73,6 +73,7 @@ void FluidProjectile::setup() {
   getBoundingBox()->setPosition(position);
 
   hasCollided = false;
+  createdSurface = false;
   timer = 0;
   totalTime = 0;
 }
@@ -102,19 +103,37 @@ void FluidProjectile::update(){
   }
 }
 
+void FluidProjectile::createWaterSurfaceAt(Uniform3DGrid<int> *grid, std::set<int>* fillTypes, glm::vec3 newPos) {
+  if(createdSurface) {
+    return;
+  }
+  if(grid->inGrid(newPos.x, newPos.y, newPos.z) &&
+    fillTypes->find(grid->getValue(newPos.x, newPos.y, newPos.z)) != fillTypes->end()) {
+    if(!LoadManager::getRenderTexture("waterData")->isInUse()) {
+      createdSurface = true;
+      WaterSurface *surface = new WaterSurface(newPos, colorMask);
+      surface->setup();
+      Director::getScene()->addGameObject(surface);
+    }
+  }
+}
+
 void FluidProjectile::collided(CollisionObject * collidedWith){
   if((collidedWith->getCollisionID() == 1 || collidedWith->getCollisionID() == 64) && !hasCollided) {
     hasCollided = true;
     std::set<int>* fillTypes = ((LevelTemplate *)Director::getScene())->getFillTypes();
     Uniform3DGrid<int> *grid = ((LevelTemplate *)Director::getScene())->getTypeGrid();
     glm::vec3 newPos(grid->getRoundX(oldPosition.x), grid->getRoundY(oldPosition.y), grid->getRoundZ(oldPosition.z));
-    if(grid->inGrid(newPos.x, newPos.y, newPos.z) &&
-      fillTypes->find(grid->getValue(newPos.x, newPos.y, newPos.z)) != fillTypes->end()) {
-      if(!LoadManager::getRenderTexture("waterData")->isInUse()) {
-        WaterSurface *surface = new WaterSurface(newPos, colorMask);
-        surface->setup();
-        Director::getScene()->addGameObject(surface);
-      }
-    }
+    createWaterSurfaceAt(grid, fillTypes, newPos);
+    // if you can't create a water surface there, look at a few adjacent cells, but not too far.
+    createWaterSurfaceAt(grid, fillTypes, newPos + glm::vec3(0.0f, -grid->getEdgeSizeY(), 0.0f));
+    createWaterSurfaceAt(grid, fillTypes, newPos + glm::vec3(grid->getEdgeSizeX(), -grid->getEdgeSizeY(), 0.0f));
+    createWaterSurfaceAt(grid, fillTypes, newPos + glm::vec3(-grid->getEdgeSizeX(), -grid->getEdgeSizeY(), 0.0f));
+    createWaterSurfaceAt(grid, fillTypes, newPos + glm::vec3(0.0f, -grid->getEdgeSizeY(), grid->getEdgeSizeZ()));
+    createWaterSurfaceAt(grid, fillTypes, newPos + glm::vec3(0.0f, -grid->getEdgeSizeY(), -grid->getEdgeSizeZ()));
+    createWaterSurfaceAt(grid, fillTypes, newPos + glm::vec3(grid->getEdgeSizeX(), -grid->getEdgeSizeY(), grid->getEdgeSizeZ()));
+    createWaterSurfaceAt(grid, fillTypes, newPos + glm::vec3(-grid->getEdgeSizeX(), -grid->getEdgeSizeY(), grid->getEdgeSizeZ()));
+    createWaterSurfaceAt(grid, fillTypes, newPos + glm::vec3(grid->getEdgeSizeX(), -grid->getEdgeSizeY(), -grid->getEdgeSizeZ()));
+    createWaterSurfaceAt(grid, fillTypes, newPos + glm::vec3(-grid->getEdgeSizeX(), -grid->getEdgeSizeY(), -grid->getEdgeSizeZ()));
   } 
 }
