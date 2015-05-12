@@ -128,11 +128,6 @@ void WaterSurface::createFluidBox(glm::vec3 newPos) {
      grid.getValue(newPos.x, newPos.y, newPos.z) == 0 &&
        fillTypes->find(typeGrid->getValue(newPos.x, newPos.y, newPos.z)) != fillTypes->end()) {
         
-        if(newPos.z > -30 &&(), 0, 0));
-    createFluidBox(newPos - glm::vec3(0, grid.getEdgeSizeY newPos.z < -22 && newPos.y >= 6) {
-            assert(typeGrid->getValue(newPos.x, newPos.y, newPos.z) == 2);
-        }
-
       grid.setValue(newPos.x, newPos.y, newPos.z, 1);
     
     if(newPos.y < lowestPosition.y + grid.getEdgeSizeY() / 2.0f) {
