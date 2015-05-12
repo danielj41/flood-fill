@@ -24,11 +24,14 @@ vec2 getTexCoordOffset(vec2 texCoord){
     float bias = uNormalMapBias;
     vec3 tanView = normalize(transpose(vTBN)*vView);
 
-    for(int i = 0; i < 4; i++){
+    /*for(int i = 0; i < 4; i++){
         vec4 uvNormal = 2*texture2D(uNormalTexID, texCoord) - 1;
         float h = uvNormal.w*parallaxScale + bias;
         texCoord += tanView.xy * uvNormal.z * h;
-    }
+    }*/
+    vec4 uvNormal = 2*texture2D(uNormalTexID, texCoord) - 1;
+    float h = uvNormal.w*parallaxScale + bias;
+    texCoord += tanView.xy * uvNormal.z * h;
 
     return texCoord;
 }
