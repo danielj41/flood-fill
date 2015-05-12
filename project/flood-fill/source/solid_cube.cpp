@@ -44,6 +44,12 @@ void SolidCube::update(){
 void SolidCube::collided(CollisionObject *){
 }
 
+void SolidCube::animateFrom(glm::vec3 from, float amount) {
+    cube->loadIdentity();
+    cube->scale(glm::vec3((amount + 1.0) / 2.0, (amount + 1.0) / 2.0, (amount + 1.0) / 2.0));
+    cube->translate(position - from * (1.0f - amount) * (1.0f - amount));
+}
+
 Object * SolidCube::getObject(){
     return cube;
 }

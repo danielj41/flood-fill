@@ -29,7 +29,7 @@
 
 Player::Player(Camera * _camera)
   : GameObject(), CollisionObject(), camera(_camera),
-    jumping(true), velocity(0), gravity(-2){}
+    jumping(true), velocity(0), gravity(-2), strafeVelocity(0), forwardVelocity(0) {}
 
 void Player::setup() {
     INFO("Player Setup...");
@@ -79,8 +79,6 @@ void Player::setup() {
     Director::getScene()->addGameObject(hand);
     CollisionManager::addCollisionObjectToList(hand);
 
-
-
     shootTimer = -1.0f;
 }
 
@@ -98,22 +96,30 @@ void Player::update() {
     }
     
     jumping = true;
-
-
-    float cameraSpeed = 5.0f*TimeManager::getDeltaTime();
   
     if(isKeyPressed(GLFW_KEY_W)){
-        camera->zoom(Camera::FORWARD_DIRECTION, cameraSpeed);
+        forwardVelocity = fmin(forwardVelocity + 1.5 * dt, 0.25f - 0.07f * fabs(strafeVelocity));
+    } else if(forwardVelocity > 0.0f) {
+        forwardVelocity = fmax(forwardVelocity - 1.5 * dt, 0.0f);
     }
-    else if(isKeyPressed(GLFW_KEY_S)){
-        camera->zoom(Camera::BACKWARD_DIRECTION, cameraSpeed);
+    if(isKeyPressed(GLFW_KEY_S)){
+        forwardVelocity = fmax(forwardVelocity - 1.5 * dt, -0.25f + 0.07f * fabs(strafeVelocity));
+    } else if(forwardVelocity < 0.0f) {
+        forwardVelocity = fmin(forwardVelocity + 1.5 * dt, 0.0f);
     }
-    if(isKeyPressed(GLFW_KEY_A)){
-        camera->strafe(Camera::LEFT_DIRECTION, cameraSpeed);
+    if(isKeyPressed(GLFW_KEY_D)){
+        strafeVelocity = fmin(strafeVelocity + 1.5 * dt, 0.25f - 0.07f * fabs(forwardVelocity));
+    } else if(strafeVelocity > 0.0f) {
+        strafeVelocity = fmax(strafeVelocity - 1.5 * dt, 0.0f);
     }
-    else if(isKeyPressed(GLFW_KEY_D)){
-        camera->strafe(Camera::RIGHT_DIRECTION, cameraSpeed);
+    else if(isKeyPressed(GLFW_KEY_A)){
+        strafeVelocity = fmax(strafeVelocity - 1.5 * dt, -0.25f + 0.07f * fabs(forwardVelocity));
+    } else if(strafeVelocity < 0.0f) {
+        strafeVelocity = fmax(strafeVelocity - 1.5 * dt, 0.0f);
     }
+
+    camera->zoom(Camera::FORWARD_DIRECTION, forwardVelocity * dt * 15.0f);
+    camera->strafe(Camera::RIGHT_DIRECTION, strafeVelocity * dt * 15.0f);
 
     if(glfwGetKey(Global::window, GLFW_KEY_U) == GLFW_PRESS){
         colorMask = BLUE;

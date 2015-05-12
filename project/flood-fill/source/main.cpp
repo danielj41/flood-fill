@@ -201,8 +201,8 @@ void loadMeshes(){
 void loadTextures(){
     INFO("Loading all textures...");
 
-    LoadManager::loadImage("default_voxel.bmp");
-    LoadManager::loadTexture("VoxelTexture", LoadManager::getImage("default_voxel.bmp"));
+    LoadManager::loadImage("default_voxel.png");
+    LoadManager::loadTexture("VoxelTexture", LoadManager::getImage("default_voxel.png"));
 
     LoadManager::loadImage("sky.bmp");
     LoadManager::loadTexture("Sky", LoadManager::getImage("sky.bmp"));
@@ -323,7 +323,7 @@ void setupGLFW(){
 
     // Open a window and create its OpenGL context
     Global::window = glfwCreateWindow(Global::ScreenWidth, Global::ScreenHeight,
-                "Lab Project",  NULL, NULL);
+                "Lab Project",  glfwGetPrimaryMonitor(), NULL);
     if (Global::window == NULL){
         DEBUG("Failed to open GLFW window.");
         glfwTerminate();

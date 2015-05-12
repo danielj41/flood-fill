@@ -28,6 +28,8 @@ private:
     glm::vec3 initialPos;
     glm::vec3 finalPos;
     float speed;
+
+    float timer;
     
     bool active;
 };

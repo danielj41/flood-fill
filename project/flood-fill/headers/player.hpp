@@ -29,6 +29,9 @@ private:
     float velocity;
     float gravity;
 
+    float strafeVelocity;
+    float forwardVelocity;
+
     int colorMask;
 
     Object *sky;

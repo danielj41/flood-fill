@@ -9,7 +9,7 @@
 ActiveTerrain::ActiveTerrain(Switch* _s, glm::vec3 _initialPos, glm::vec3 _finalPos, float _speed)
     : GameObject(), s(_s), direction(_finalPos - _initialPos), 
       position(_initialPos), initialPos(_initialPos), 
-      finalPos(_finalPos), speed(_speed), active(true){}
+      finalPos(_finalPos), speed(_speed), active(true), timer(0.0f) {}
 
 void ActiveTerrain::setup(){
     
@@ -33,16 +33,25 @@ void ActiveTerrain::setup(){
 }
 
 void ActiveTerrain::update(){
+    if(s->isOn() && active && timer < 1.0f) {
+        timer += TimeManager::getDeltaTime();
+        for(std::list<SolidCube *>:: iterator it = solidCubes.begin(); it != solidCubes.end(); it++){
+            (*it)->animateFrom(glm::vec3(0.0f, 15.0f, 0.0f), timer);
+        }
+    }
     if (s->isOn()) {
         if (!active){
             
             active = true;
             RenderElement *re = RenderEngine::getRenderElement("normalmap");
 
+            timer = 0.0f;
+
             // Add solidCubes to render engine            
             for(std::list<SolidCube *>:: iterator it = solidCubes.begin(); it != solidCubes.end(); it++){
                 re->addObject((*it)->getObject());
                 CollisionManager::addCollisionObjectToGrid(*it);
+                (*it)->animateFrom(glm::vec3(0.0f, 15.0f, 0.0f), timer);
             }
 
             // Add solidCubes to grid

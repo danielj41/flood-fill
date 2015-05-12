@@ -80,6 +80,7 @@ void FluidBox::update(){
   if(deleting) {
     timer += dTime;
     fluidBox->loadIdentity();
+    fluidBox->scale(glm::vec3(1.0 - timer, 1.0 - timer, 1.0 - timer));
     fluidBox->translate(position - glm::vec3(0, timer * 4.0f, 0));
     getBoundingBox()->setPosition(position - glm::vec3(0, timer * 4.0f, 0));
     if(timer > 0.5f) {

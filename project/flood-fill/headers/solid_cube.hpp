@@ -21,6 +21,8 @@ public:
     
     Object * getObject();
 
+    void animateFrom(glm::vec3 from, float amount);
+
 private:
   Object * cube;
   glm::vec3 position;

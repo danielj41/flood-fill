@@ -72,9 +72,9 @@ void DebugRender::renderPass(){
     setupShader();
     setupMesh(NULL);
 
-    for(auto box = boxes.begin(); box != boxes.end(); box++){
+    /*for(auto box = boxes.begin(); box != boxes.end(); box++){
         renderBoundingBox(*box);
-    }
+    }*/
 }
 
 void DebugRender::addBoundingBox(BoundingBox * box){
