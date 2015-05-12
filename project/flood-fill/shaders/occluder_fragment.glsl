@@ -1,8 +1,6 @@
-#version 130
-#extension GL_ARB_explicit_attrib_location: require
-
-layout(location = 0) out float depth;
+#version 120
 
 void main(){
-    depth = gl_FragCoord.z;
+    gl_FragDepth = gl_FragCoord.z;
+    //gl_FragColor = vec4(vec3(gl_FragCoord.z*0.5 + 0.5), 1.0);
 }

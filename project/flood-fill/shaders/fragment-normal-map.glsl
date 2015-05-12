@@ -1,11 +1,13 @@
-#version 120
+#version 130
 
 varying vec2 vTexCoord;
 varying vec3 vView;
 varying mat3 vTBN;
+varying vec4 vShadowCoord;
 
 uniform sampler2D uTextureID;
 uniform sampler2D uNormalTexID;
+uniform sampler2D uShadowTexID;
 
 uniform float uNormalMapBias;
 uniform float uNormalMapScale;
@@ -18,6 +20,10 @@ uniform float uShininess;
 
 uniform vec3 uLightDirection;
 uniform vec3 uLightColor;
+
+float getShadow(){
+    return texture2D(uShadowTexID, vec2(vShadowCoord.xy)*0.5f + 0.5f).x;
+}
 
 vec2 getTexCoordOffset(vec2 texCoord){
     float parallaxScale = uNormalMapScale;
@@ -62,7 +68,7 @@ void main(){
     vec3 Is = pow(max(dot(N, H), 0.0), n)*ks;
     vec3 Id = max(dot(N, L), 0.0)*kd;
 
-    vec3 I = Ic*(Id + Is) + Ia + Ie;
+    vec3 I = getShadow()*Ic*(Id + Is) + Ia + Ie;
 
-    gl_FragColor = vec4(I, 1)*texel;
+    gl_FragColor = vec4(vec3(getShadow()), 1)*texel;
 }

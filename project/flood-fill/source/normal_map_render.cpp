@@ -8,6 +8,8 @@
 
 #include "load_manager.hpp"
 #include "director.hpp"
+#include "render_engine.hpp"
+#include "shadow_occluder_render.hpp"
 
 const std::string NormalMapRender::VERTEX_SHADER_FILE = "vertex-normal-map.glsl";
 const std::string NormalMapRender::FRAGMENT_SHADER_FILE = "fragment-normal-map.glsl";
@@ -27,6 +29,7 @@ void NormalMapRender::loadShader(){
     shader->loadHandle("uView", 'u');
     shader->loadHandle("uProjection", 'u');
     shader->loadHandle("uNormalMatrix", 'u');
+    shader->loadHandle("uShadowMatrix", 'u');
 
     shader->loadHandle("uDiffuseColor", 'u');
     shader->loadHandle("uSpecularColor", 'u');
@@ -39,6 +42,7 @@ void NormalMapRender::loadShader(){
 
     shader->loadHandle("uTextureID", 'u');
     shader->loadHandle("uNormalTexID", 'u');
+    shader->loadHandle("uShadowTexID", 'u');
     shader->loadHandle("uNormalMapBias", 'u');
     shader->loadHandle("uNormalMapScale", 'u');
 }
@@ -94,6 +98,15 @@ void NormalMapRender::setupShader(){
                     light->getDirection().x,
                     light->getDirection().y,
                     light->getDirection().z);
+
+
+        glm::mat4 view = glm::lookAt(-15.0f*light->getDirection(), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+        glUniformMatrix4fv(shader->getHandle("uShadowMatrix"), 1, GL_FALSE,
+          glm::value_ptr(camera->getProjectionMatrix()*view));
+
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, ((ShadowOccluderRender *) (RenderEngine::getRenderElement("shadow")))->getFBO()->getDepthTexture()->getTexture());
+        glUniform1i(shader->getHandle("uShadowTexID"), 0);
     }
 }
 
@@ -151,13 +164,13 @@ void NormalMapRender::renderObject(Object * object){
     glUniform1f(shader->getHandle("uNormalMapScale"), object->getNormalMapBias());
     glUniform1f(shader->getHandle("uNormalMapBias"), object->getNormalMapScale());
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, object->getTexture()->getTexture());
-    glUniform1i(shader->getHandle("uTextureID"), 0);
-
     glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, object->getTexture()->getTexture());
+    glUniform1i(shader->getHandle("uTextureID"), 1);
+
+    glActiveTexture(GL_TEXTURE2);
     glBindTexture(GL_TEXTURE_2D, object->getNormalMap()->getTexture());
-    glUniform1i(shader->getHandle("uNormalTexID"), 1);
+    glUniform1i(shader->getHandle("uNormalTexID"), 2);
 
     glDrawElements(GL_TRIANGLES, (int) mesh->getIndices().size(), GL_UNSIGNED_INT, 0);
 }

@@ -1,4 +1,4 @@
-#version 120
+#version 130
 
 attribute vec3 aPosition;
 attribute vec3 aNormal;
@@ -9,10 +9,12 @@ uniform mat4 uModel;
 uniform mat4 uView;
 uniform mat4 uProjection;
 uniform mat4 uNormalMatrix;
+uniform mat4 uShadowMatrix;
 
 uniform vec3 uEyePosition;
 
 varying vec2 vTexCoord;
+varying vec4 vShadowCoord;
 varying vec3 vView;
 varying mat3 vTBN;
 
@@ -40,6 +42,7 @@ void main(){
     vTexCoord = aTexCoord;
     vView = uEyePosition - wPos;
     vTBN = tangentToObjectSpaceMatrix(wTangent, wBitangent, wNormal);
+    vShadowCoord = uShadowMatrix*uModel*vec4(aPosition, 1);
 
-    gl_Position = uProjection*uView*uModel*vec4(aPosition, 1);
+    gl_Position = uShadowMatrix*uModel*vec4(aPosition, 1);
 }

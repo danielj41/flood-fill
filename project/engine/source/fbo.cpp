@@ -11,15 +11,19 @@
 FBO::FBO() : depth(false), _hasDepthTexture(false), loaded(false) {}
 
 void FBO::addTexture(Texture * texture){
+    INFO("Adding texture to FBO...");
     if(loaded) DEBUG("You are trying to add a texture to a FBO that was already laoded!");
 
     textures.push_back(texture);
 }
 
 void FBO::addDepthRenderBuffer(unsigned int width, unsigned int height){
+    INFO("Adding depth render buffer to FBO...");
     if(loaded) DEBUG("You are trying to add a depth buffer to a FBO that was already laoded!");
 
 #ifdef FBO21
+    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, id);
+
     glGenRenderbuffersEXT(1, &depthBuf);
     glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, depthBuf);
 
@@ -27,8 +31,11 @@ void FBO::addDepthRenderBuffer(unsigned int width, unsigned int height){
     glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, depthBuf);
 
     glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, 0);
+    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 #else
     // OpenGL 3.1+ FBO
+    glBindFramebuffer(GL_FRAMEBUFFER, id);
+
     glGenRenderbuffers(1, &depthBuf);
     glBindRenderbuffer(GL_RENDERBUFFER, depthBuf);
 
@@ -36,44 +43,60 @@ void FBO::addDepthRenderBuffer(unsigned int width, unsigned int height){
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuf);
 
     glBindRenderbuffer(GL_RENDERBUFFER, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 #endif
 
     depth = true;
 }
 
 void FBO::addDepthTexture(unsigned int width, unsigned int height){
+    INFO("Adding depth texture to FBO...");
     if(loaded) DEBUG("You are trying to add a depth buffer to a FBO that was already laoded!");
 
     depthTexture = new Texture();
     depthTexture->createTexture(width, height, GL_DEPTH_COMPONENT16, GL_DEPTH_COMPONENT, GL_FLOAT);
     depthBuf = depthTexture->getTexture();
 
-    glBindTexture(GL_TEXTURE_2D, depthBuf);
+    glBindTexture(GL_TEXTURE_2D, depthTexture->getTexture());
 
 #ifdef FBO21
-    glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_TEXTURE_2D, depthBuf, 0);
+    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, id);
+
+    glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_TEXTURE_2D, depthTexture->getTexture(), 0);
+    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 #else
     // OpenGL 3.1+ FBO
+    glBindFramebuffer(GL_FRAMEBUFFER, id);
+
     glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthBuf, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 #endif
 
     glBindTexture(GL_TEXTURE_2D, 0);
-    INFO("1");
 
     depth = true;
     _hasDepthTexture = true;
     INFO("Depth Texture added to the FBO");
 }
 
-void FBO::load(){
-    if(loaded) DEBUG("Overriding FBO! This FBO was already loaded once!");
-
+void FBO::create(){
+    INFO("Creating FBO...");
 #ifdef FBO21
     glGenFramebuffersEXT(1, &id);
     ASSERT(id != 0, "Could not create FBO");
+#else
+    // OpenGL 3.1+ FBO
+    glGenFramebuffers(1, &id);
+    ASSERT(id != 0, "Could not create FBO");
+#endif
+}
 
+void FBO::load(){
+    INFO("Loading FBO...");
+    if(loaded) DEBUG("Overriding FBO! This FBO was already loaded once!");
+
+#ifdef FBO21
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, id);
-
 
     if(textures.size() > 0){
         GLenum * attchs = new GLenum[textures.size()];
@@ -94,15 +117,12 @@ void FBO::load(){
     }
 
     GLenum e = glCheckFramebufferStatus(GL_FRAMEBUFFER_EXT);
-    ASSERT(e != GL_FRAMEBUFFER_COMPLETE_EXT, "Problem in FBO creation");
+    ASSERT(e == GL_FRAMEBUFFER_COMPLETE_EXT, "Problem in FBO creation. " << e);
     printInfo();
 
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-#else
-    // OpenGL 3.1+ FBO
-    glGenFramebuffers(1, &id);
-    ASSERT(id != 0, "Could not create FBO");
 
+#else
     glBindFramebuffer(GL_FRAMEBUFFER, id);
 
 
@@ -123,7 +143,7 @@ void FBO::load(){
     }
 
     GLenum e = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-    ASSERT(e != GL_FRAMEBUFFER_COMPLETE, "Problem in FBO creation");
+    ASSERT(e == GL_FRAMEBUFFER_COMPLETE, "Problem in FBO creation");
     printInfo();
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -172,7 +192,7 @@ void FBO::printInfo() {
     //Code modified from:
     //      http://www.lighthouse3d.com/tutorials/glsl-core-tutorial/fragment-shader/
 
-    glBindFramebuffer(GL_FRAMEBUFFER, id);
+    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, id);
 
     int res;
 
@@ -182,11 +202,11 @@ void FBO::printInfo() {
         glGetIntegerv(GL_DRAW_BUFFER0 + i, &buffer);
 
         if (buffer != GL_NONE) {
-            INFO("Shader Output Location " << i << " - color attachment " << buffer - GL_COLOR_ATTACHMENT0);
+            INFO("Shader Output Location " << i << " - color attachment " << buffer - GL_COLOR_ATTACHMENT0_EXT);
 
-            glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER, buffer, GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE, &res);
+            glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER_EXT, buffer, GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE, &res);
             INFO("\tAttachment Type: " << (res == GL_TEXTURE ? "Texture" : "Render Buffer"));
-            glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER, buffer, GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME, &res);
+            glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER_EXT, buffer, GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME, &res);
             INFO("\tAttachment object name: " << res);
         }
         ++i;

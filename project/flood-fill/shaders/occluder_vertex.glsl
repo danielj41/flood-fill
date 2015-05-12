@@ -1,12 +1,11 @@
-#version 130
-#extension GL_ARB_explicit_attrib_location: require
+#version 120
 
-in vec4 aPosition;
+attribute vec3 aPosition;
 
 uniform mat4 uModel;
 uniform mat4 uView;
 uniform mat4 uProjection;
 
 void main(){
-    gl_Position = uProjection*uView*uModel*aPosition;
+    gl_Position = uProjection*uView*uModel*vec4(aPosition, 1.0f);
 }

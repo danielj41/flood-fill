@@ -19,9 +19,8 @@ ShadowOccluderRender::ShadowOccluderRender() : RenderElement(false) {}
 
 void ShadowOccluderRender::setup(){
     fbo = new FBO();
-
+    fbo->create();
     fbo->addDepthTexture(Global::ScreenWidth, Global::ScreenHeight);
-
     fbo->load();
 }
 
@@ -66,7 +65,7 @@ void ShadowOccluderRender::setupShader(){
       glm::value_ptr(view));
 
     glUniformMatrix4fv(shader->getHandle("uProjection"), 1, GL_FALSE,
-      glm::value_ptr(camera->getProjectionMatrix()));
+      glm::value_ptr(glm::ortho<float>(-10,10,-10,10,-10,100)));
 }
 
 void ShadowOccluderRender::setupMesh(Mesh * mesh){
