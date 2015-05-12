@@ -2,6 +2,7 @@
 
 #include <cstdlib>
 #include <iostream>
+#include <set>
 #include "debug_macros.h"
 
 #include "load_manager.hpp"
@@ -50,9 +51,9 @@ void WaterSurface::setup() {
   if(!checkAdjacent(position)) {
     timer = 2.0f; // remove next frame
   }
-  if(maxX - grid.getEdgeSizeY() * 1.5f < minY) {
+  /*if(maxY - grid.getEdgeSizeY() * 1.5f < minY) {
     checkAdjacent(position + glm::vec3(0, grid.getEdgeSizeY(), 0));
-  }
+  }*/
 
   startPosition = position;
   waterSurface = new Object(
@@ -120,12 +121,15 @@ void WaterSurface::update(){
 }
 
 void WaterSurface::createFluidBox(glm::vec3 newPos) {
-  if(grid.inGrid(newPos.x, newPos.y, newPos.z) &&
+  
+    std::set<int>* fillTypes = level->getFillTypes();
+
+    if(grid.inGrid(newPos.x, newPos.y, newPos.z) &&
      grid.getValue(newPos.x, newPos.y, newPos.z) == 0 &&
-     typeGrid->getValue(newPos.x, newPos.y, newPos.z) == LevelTemplate::AVAILABLE_FILL_SPACE) {
-
-    grid.setValue(newPos.x, newPos.y, newPos.z, 1);
-
+       fillTypes->find(typeGrid->getValue(newPos.x, newPos.y, newPos.z)) != fillTypes->end()) {
+        
+      grid.setValue(newPos.x, newPos.y, newPos.z, 1);
+    
     if(newPos.y < lowestPosition.y + grid.getEdgeSizeY() / 2.0f) {
       typeGrid->setValue(newPos.x, newPos.y, newPos.z, LevelTemplate::SOLID_CUBE);
       FluidBox *fluidBox = new FluidBox(newPos, colorMask);
@@ -142,30 +146,35 @@ void WaterSurface::createFluidBox(glm::vec3 newPos) {
 }
 
 bool WaterSurface::checkAdjacent(glm::vec3 newPos) {
-  if(grid.inGrid(newPos.x, newPos.y, newPos.z) &&
-     grid.getValue(newPos.x, newPos.y, newPos.z) == 0 &&
-     typeGrid->getValue(newPos.x, newPos.y, newPos.z) == LevelTemplate::AVAILABLE_FILL_SPACE) {
-    grid.setValue(newPos.x, newPos.y, newPos.z, 1);
+  
+    std::set<int>* fillTypes = level->getFillTypes();
 
-    if(newPos.x > maxX) {
-      maxX = newPos.x;
-    }
-    if(newPos.x < minX) {
-      minX = newPos.x;
-    }
-    if(newPos.y > maxY) {
-      maxY = newPos.y;
-    }
-    if(newPos.y < minY) {
-      minY = newPos.y;
-      lowestPosition = newPos;
-    }
-    if(newPos.z > maxZ) {
-      maxZ = newPos.z;
-    }
-    if(newPos.z < minZ) {
-      minZ = newPos.z;
-    }
+    if(grid.inGrid(newPos.x, newPos.y, newPos.z) &&
+       grid.getValue(newPos.x, newPos.y, newPos.z) == 0 &&
+       fillTypes->find(typeGrid->getValue(newPos.x, newPos.y, newPos.z)) != fillTypes->end()) { 
+        
+        grid.setValue(newPos.x, newPos.y, newPos.z, 1);
+      
+   
+        if(newPos.x > maxX) {
+            maxX = newPos.x;
+        }
+        if(newPos.x < minX) {
+            minX = newPos.x;
+        }
+        if(newPos.y > maxY) {
+            maxY = newPos.y;
+        }
+        if(newPos.y < minY) {
+            minY = newPos.y;
+            lowestPosition = newPos;
+        }
+        if(newPos.z > maxZ) {
+            maxZ = newPos.z;
+        }
+        if(newPos.z < minZ) {
+            minZ = newPos.z;
+        }
 
     checkAdjacent(newPos + glm::vec3(grid.getEdgeSizeX(), 0, 0));
     checkAdjacent(newPos - glm::vec3(grid.getEdgeSizeX(), 0, 0));

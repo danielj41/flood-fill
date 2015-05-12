@@ -32,8 +32,6 @@ private:
     float strafeVelocity;
     float forwardVelocity;
 
-    int colorMask;
-
     Object *sky;
     Object *gun;
     PlayerHand *hand;

@@ -12,5 +12,5 @@ void WinningBlock::setCollisionIDs(){
 }
 
 void WinningBlock::doAction(){
-    INFO("#################### You got in the end of this Level!!! ##########################");
+    INFO("#################### You got to the end of this Level!!! ##########################");
 }

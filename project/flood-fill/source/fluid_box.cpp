@@ -16,7 +16,7 @@
 #include "regular_polygons_render.hpp"
 
 #define BLUE    1
-#define GREEN   2
+#define GREEN   2  
 #define RED     4
 #define GREY    8
 

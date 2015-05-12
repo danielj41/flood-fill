@@ -54,8 +54,8 @@ int main()
     // may not be window size on retina displays
     GLint windowViewport[4];
     glGetIntegerv(GL_VIEWPORT, windowViewport);
-    Global::FbWidth = windowViewport[2] - windowViewport[0];
-    Global::FbHeight = windowViewport[3] - windowViewport[1];
+    //Global::FbWidth = windowViewport[2] - windowViewport[0];
+    //Global::FbHeight = windowViewport[3] - windowViewport[1];
 
     TimeManager::setTimeStamp();
     TimeManager::setDeltaTime();

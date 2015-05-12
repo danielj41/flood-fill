@@ -20,10 +20,11 @@
 #include "load_manager.hpp"
 #include "material_manager.hpp"
 #include "object.hpp"
-#include "render_engine.hpp"    
+#include "render_engine.hpp" 
+#include "winning_block.hpp"   
 
 #define BLUE    1
-#define GREEN   2
+#define GREEN   2  
 #define RED     4
 #define GREY    8
 
@@ -61,7 +62,6 @@ void Player::setup() {
     sky->translate(getPosition());
     // RenderEngine::addObject(sky);
 
-    colorMask = BLUE;
     RenderEngine::getRenderElement("textured")->addObject(sky);
 
     gun = new Object(
@@ -74,7 +74,7 @@ void Player::setup() {
     RenderEngine::getRenderElement("camera")->addObject(gun);
 
 
-    hand = new PlayerHand(getPosition());
+    hand = new PlayerHand(getPosition(), gun);
     hand->setup();
     Director::getScene()->addGameObject(hand);
     CollisionManager::addCollisionObjectToList(hand);
@@ -121,23 +121,11 @@ void Player::update() {
     camera->zoom(Camera::FORWARD_DIRECTION, forwardVelocity * dt * 15.0f);
     camera->strafe(Camera::RIGHT_DIRECTION, strafeVelocity * dt * 15.0f);
 
-    if(glfwGetKey(Global::window, GLFW_KEY_U) == GLFW_PRESS){
-        colorMask = BLUE;
-        gun->setMaterial(MaterialManager::getMaterial("FlatBlue"));
-    } 
-    else if(glfwGetKey(Global::window, GLFW_KEY_I) == GLFW_PRESS){
-        colorMask = GREEN;
-        gun->setMaterial(MaterialManager::getMaterial("FlatGreen"));
+    if(isKeyPressed(GLFW_KEY_P)){
+        if ( TimeManager::getTimeStamp() - hand->getToggleTime() > .2){
+            hand->changeColorMask();
+        }
     }
-    else if(glfwGetKey(Global::window, GLFW_KEY_O) == GLFW_PRESS){
-        colorMask = RED;
-        gun->setMaterial(MaterialManager::getMaterial("FlatRed"));
-    }
-    else if(glfwGetKey(Global::window, GLFW_KEY_P) == GLFW_PRESS){
-        colorMask = GREY;
-        gun->setMaterial(MaterialManager::getMaterial("FlatGrey"));
-    }
-    hand->setColorMask(colorMask);
     
     if(jumping) {
         velocity += gravity * dt;
@@ -157,7 +145,7 @@ void Player::update() {
         FluidProjectile *fluidProjectile = new FluidProjectile(
             camera->getEye() - (0.35f * camera->getStrafeVector()) + glm::vec3(0.0f, 0.5f, 0.0f),
             -glm::normalize(camera->getViewVector()),
-            colorMask);
+            hand->getColorMask());
         fluidProjectile->setup();
         Director::getScene()->addGameObject(fluidProjectile);
         CollisionManager::addCollisionObjectToList(fluidProjectile);
@@ -182,6 +170,8 @@ void Player::collided(CollisionObject * collidedWith) {
   case 32: 
       INFO("DETECTING COLLISION WITH SWITCH!");
       break;
+  case 128:
+      ((WinningBlock *)collidedWith)->doAction();      
   case 1:
   case 64:
 	INFO("DETECTING COLLISION WITH BLOCK!");
@@ -202,15 +192,8 @@ void Player::collided(CollisionObject * collidedWith) {
     break;
   case 16:
     INFO("DETECTING COLOR CHANGE!");
-    colorMask = ((ColorChange *)collidedWith)->getColor();
-    if(colorMask & BLUE)
-      gun->setMaterial(MaterialManager::getMaterial("FlatBlue"));
-    else if(colorMask & GREEN)
-      gun->setMaterial(MaterialManager::getMaterial("FlatGreen"));
-    else if(colorMask & RED)
-      gun->setMaterial(MaterialManager::getMaterial("FlatRed"));
-    else if(colorMask & GREY)
-      gun->setMaterial(MaterialManager::getMaterial("FlatGrey"));
+    hand->setColorMask(((ColorChange *)collidedWith)->getColor());
+    
     break;
   default:
 	break;

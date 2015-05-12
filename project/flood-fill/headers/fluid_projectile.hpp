@@ -4,10 +4,12 @@
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_PURE
 #include "glm/glm.hpp"
+#include <set>
 
 #include "game_object.hpp"
 #include "collision_object.hpp"
 #include "object.hpp"
+#include "uniform_3d_grid.hpp"
 
 class FluidProjectile : public GameObject, public CollisionObject{
 
@@ -23,6 +25,8 @@ public:
 
 private:
 
+  void createWaterSurfaceAt(Uniform3DGrid<int> *grid, std::set<int>* fillTypes, glm::vec3 newPos);
+
   Object * fluidProjectile;
   Object * fluidParticles;
   glm::vec3 position;
@@ -33,9 +37,11 @@ private:
   std::string color;
   int colorMask;
   bool hasCollided;
+  bool createdSurface;
   float timer;
   float angle;
   float totalTime;
+
   
 };
 
