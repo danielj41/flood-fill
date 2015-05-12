@@ -38,7 +38,7 @@ void TestLevel::setup(){
     createLevel();
 
     INFO("Setting up the cameras for the Test Level...");
-    Camera * cam1 = new Camera(glm::vec3(12, 30, -30), glm::vec3(0, 0, -5),
+    Camera * cam1 = new Camera(glm::vec3(25, 30, -5), glm::vec3(0, 0, -5),
                              glm::vec3(0, 1, 0));
     cam1->setProjectionMatrix(
         glm::perspective(glm::radians(90.0f),
@@ -84,9 +84,7 @@ void TestLevel::setup(){
 
     // Adding AVAILABLE_FILL_SPACE to fillTypes
     fillTypes.insert(LevelTemplate::AVAILABLE_FILL_SPACE);
-    fillTypes.insert(LevelTemplate::TOGGLE_FILL);
-    
-
+    //fillTypes.insert(LevelTemplate::TOGGLE_FILL);
 }
 
 void TestLevel::update(){

@@ -105,9 +105,11 @@ void FluidProjectile::update(){
 void FluidProjectile::collided(CollisionObject * collidedWith){
   if((collidedWith->getCollisionID() == 1 || collidedWith->getCollisionID() == 64) && !hasCollided) {
     hasCollided = true;
+    std::set<int>* fillTypes = ((LevelTemplate *)Director::getScene())->getFillTypes();
     Uniform3DGrid<int> *grid = ((LevelTemplate *)Director::getScene())->getTypeGrid();
     glm::vec3 newPos(grid->getRoundX(oldPosition.x), grid->getRoundY(oldPosition.y), grid->getRoundZ(oldPosition.z));
-    if(grid->inGrid(newPos.x, newPos.y, newPos.z) && grid->getValue(newPos.x, newPos.y, newPos.z) == LevelTemplate::AVAILABLE_FILL_SPACE) {
+    if(grid->inGrid(newPos.x, newPos.y, newPos.z) &&
+      fillTypes->find(grid->getValue(newPos.x, newPos.y, newPos.z)) != fillTypes->end()) {
       if(!LoadManager::getRenderTexture("waterData")->isInUse()) {
         WaterSurface *surface = new WaterSurface(newPos, colorMask);
         surface->setup();

@@ -51,9 +51,9 @@ void WaterSurface::setup() {
   if(!checkAdjacent(position)) {
     timer = 2.0f; // remove next frame
   }
-  if(maxX - grid.getEdgeSizeY() * 1.5f < minY) {
+  /*if(maxY - grid.getEdgeSizeY() * 1.5f < minY) {
     checkAdjacent(position + glm::vec3(0, grid.getEdgeSizeY(), 0));
-  }
+  }*/
 
   startPosition = position;
   waterSurface = new Object(
