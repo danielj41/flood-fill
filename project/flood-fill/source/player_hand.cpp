@@ -45,3 +45,12 @@ void PlayerHand::collided(CollisionObject * collidedWith){
 	break;
   } 
 }
+
+void PlayerHand::setColorMask(int _colorMask) {
+  colorMask = _colorMask;
+}
+
+int PlayerHand::getColorMask() {
+  return colorMask;
+}
+

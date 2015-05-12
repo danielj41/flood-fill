@@ -13,8 +13,8 @@
 
 
 #define BLUE    1
-#define RED     2
-#define GREEN   4
+#define GREEN   2
+#define RED     4
 #define GREY    8
 
 ColorChange::ColorChange(glm::vec3 _position, int _colorMask)

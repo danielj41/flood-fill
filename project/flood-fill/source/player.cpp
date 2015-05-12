@@ -85,11 +85,16 @@ void Player::setup() {
 }
 
 void Player::update() {
+    float dt = TimeManager::getDeltaTime();
+    if(dt > 0.04) {
+        dt = 0.04; // prevent falling through blocks with low framerate
+    }
+
     lastPosition = camera->getEye();
 
     if(isKeyPressed(GLFW_KEY_SPACE) && !jumping) {
         velocity = .6;
-        camera->jump(velocity * 25.0 * TimeManager::getDeltaTime());
+        camera->jump(velocity * 25.0 * dt);
     }
     
     jumping = true;
@@ -112,23 +117,28 @@ void Player::update() {
 
     if(glfwGetKey(Global::window, GLFW_KEY_U) == GLFW_PRESS){
         colorMask = BLUE;
+        gun->setMaterial(MaterialManager::getMaterial("FlatBlue"));
     } 
     else if(glfwGetKey(Global::window, GLFW_KEY_I) == GLFW_PRESS){
         colorMask = GREEN;
+        gun->setMaterial(MaterialManager::getMaterial("FlatGreen"));
     }
     else if(glfwGetKey(Global::window, GLFW_KEY_O) == GLFW_PRESS){
         colorMask = RED;
+        gun->setMaterial(MaterialManager::getMaterial("FlatRed"));
     }
     else if(glfwGetKey(Global::window, GLFW_KEY_P) == GLFW_PRESS){
         colorMask = GREY;
+        gun->setMaterial(MaterialManager::getMaterial("FlatGrey"));
     }
+    hand->setColorMask(colorMask);
     
     if(jumping) {
-        velocity += gravity * TimeManager::getDeltaTime();
-        if(velocity < -0.6) {
-            velocity = -0.6;
+        velocity += gravity * dt;
+        if(velocity < -0.5) {
+            velocity = -0.5;
         }
-        camera->jump(velocity * 25.0 * TimeManager::getDeltaTime());
+        camera->jump(velocity * 25.0 * dt);
     }
 
     getBoundingBox()->setPosition(camera->getEye() - glm::vec3(0,1.0f,0));
@@ -176,7 +186,7 @@ void Player::collided(CollisionObject * collidedWith) {
     getBoundingBox()->setPosition(camera->getEye() - glm::vec3(0,1.0f,0));
 
     //If on flat ground, jumping is done. 
-    if(fabs(normal.y) > 0.1) {
+    if(normal.y > 0.5) {
         if(jumping)
             LoadManager::getSound("jump_land.wav")->playSound();
         velocity = 0;
@@ -187,6 +197,14 @@ void Player::collided(CollisionObject * collidedWith) {
   case 16:
     INFO("DETECTING COLOR CHANGE!");
     colorMask = ((ColorChange *)collidedWith)->getColor();
+    if(colorMask & BLUE)
+      gun->setMaterial(MaterialManager::getMaterial("FlatBlue"));
+    else if(colorMask & GREEN)
+      gun->setMaterial(MaterialManager::getMaterial("FlatGreen"));
+    else if(colorMask & RED)
+      gun->setMaterial(MaterialManager::getMaterial("FlatRed"));
+    else if(colorMask & GREY)
+      gun->setMaterial(MaterialManager::getMaterial("FlatGrey"));
     break;
   default:
 	break;

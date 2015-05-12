@@ -12,12 +12,26 @@
 #include "render_engine.hpp"
 #include "fluid_box.hpp"
 
-WaterSurface::WaterSurface(glm::vec3 _position, std::string _color)
+#define BLUE    1
+#define GREEN   2
+#define RED     4
+#define GREY    8
+
+WaterSurface::WaterSurface(glm::vec3 _position, int _colorMask)
   : GameObject(), CollisionObject(_position), position(_position),
-    color(_color){}
+    colorMask(_colorMask){}
 
 void WaterSurface::setup() {
   
+  if(colorMask & BLUE)
+    color = "FlatBlue";
+  else if(colorMask & GREEN)
+    color = "FlatGreen";
+  else if(colorMask & RED)
+    color = "FlatRed";
+  else if(colorMask & GREY)
+    color = "FlatGrey";
+
   level = (LevelTemplate *)Director::getScene();
   typeGrid = level->getTypeGrid();
 
@@ -114,7 +128,7 @@ void WaterSurface::createFluidBox(glm::vec3 newPos) {
 
     if(newPos.y < lowestPosition.y + grid.getEdgeSizeY() / 2.0f) {
       typeGrid->setValue(newPos.x, newPos.y, newPos.z, LevelTemplate::SOLID_CUBE);
-      FluidBox *fluidBox = new FluidBox(newPos, color);
+      FluidBox *fluidBox = new FluidBox(newPos, colorMask);
       fluidBox->setup();
       Director::getScene()->addGameObject(fluidBox);
     }

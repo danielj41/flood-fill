@@ -15,20 +15,34 @@
 #include "global_variables.hpp"
 #include "regular_polygons_render.hpp"
 
+#define BLUE    1
+#define GREEN   2
+#define RED     4
+#define GREY    8
+
 FluidBox::FluidBox(glm::vec3 _position)
   : GameObject(), CollisionObject(_position),
   position(_position),
-  color("FlatBlue"),
+  colorMask(1),
   size(glm::vec3(1)) {}
 
-FluidBox::FluidBox(glm::vec3 _position, std::string _color)
+FluidBox::FluidBox(glm::vec3 _position, int _colorMask)
   : GameObject(), CollisionObject(_position),
 	position(_position),
-  color(_color),
+  colorMask(_colorMask),
 	size(glm::vec3(1)) {}
 
 void FluidBox::setup() {  
   INFO("Creating a box ...");
+
+  if(colorMask & BLUE)
+    color = "FlatBlue";
+  else if(colorMask & GREEN)
+    color = "FlatGreen";
+  else if(colorMask & RED)
+    color = "FlatRed";
+  else if(colorMask & GREY)
+    color = "FlatGrey";
   
   fluidBox = new Object(
 				   LoadManager::getMesh("cube.obj"),
@@ -65,11 +79,12 @@ void FluidBox::update(){
   } 
   if(deleting) {
     timer += dTime;
-    position -= glm::vec3(0, dTime * 4.0f, 0);
     fluidBox->loadIdentity();
-    fluidBox->translate(position);
-    getBoundingBox()->setPosition(position);
+    fluidBox->translate(position - glm::vec3(0, timer * 4.0f, 0));
+    getBoundingBox()->setPosition(position - glm::vec3(0, timer * 4.0f, 0));
     if(timer > 0.5f) {
+      fluidBox->loadIdentity();
+      fluidBox->translate(position);
       Director::getScene()->removeGameObject(this);
       ((RegularPolygonsRender *)RenderEngine::getRenderElement("regular"))->removeFromGrid(fluidBox);
       CollisionManager::removeCollisionObjectFromGrid(this);
@@ -81,7 +96,8 @@ void FluidBox::collided(CollisionObject * collidedWith){
   
   switch (collidedWith->getCollisionID()){
   case 4:
-    if(glfwGetMouseButton(Global::window, GLFW_MOUSE_BUTTON_2) == GLFW_PRESS && !deleting) {
+    if(glfwGetMouseButton(Global::window, GLFW_MOUSE_BUTTON_2) == GLFW_PRESS && !deleting &&
+       ((PlayerHand *)collidedWith)->getColorMask() & colorMask) {
       deleting = true;
       timer = 0.0f;
     }

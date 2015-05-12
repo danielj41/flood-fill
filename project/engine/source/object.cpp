@@ -231,3 +231,7 @@ void Object::loadIdentity(){
 void Object::setMatrix(glm::mat4 matrix){
     modelMatrix = matrix;
 }
+
+void Object::setMaterial(Material * _material) {
+    material = _material;
+}

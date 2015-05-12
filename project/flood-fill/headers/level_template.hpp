@@ -37,6 +37,8 @@ public:
     static const int CHANGE_COLOR_RED;
     static const int CHANGE_COLOR_GREY;
     static const int WINNING_BLOCK;
+    static const int FLUID_GREEN;
+    static const int FLUID_RED;
 
 protected:
     std::string fileName;

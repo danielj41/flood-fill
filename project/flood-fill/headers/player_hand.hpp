@@ -20,9 +20,12 @@ public:
   void setPosition(glm::vec3 _position);
 
   void collided(CollisionObject * collidedWith);
+  void setColorMask(int _colorMask);
+  int getColorMask();
 
 private:
   glm::vec3 position;
+  int colorMask;
 };
 
 #endif

@@ -17,7 +17,7 @@ class WaterSurface : public GameObject, public CollisionObject{
 
 public:
 
-  WaterSurface(glm::vec3 _position, std::string _color);
+  WaterSurface(glm::vec3 _position, int _colorMask);
 
   void setup();
   void update();
@@ -39,6 +39,7 @@ private:
   LevelTemplate * level;
 
   std::string color;
+  int colorMask;
 
   float minX, maxX, minY, maxY, minZ, maxZ;
   glm::vec3 lowestPosition;

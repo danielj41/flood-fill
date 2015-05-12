@@ -31,6 +31,7 @@ private:
   glm::vec3 movementDirection; 
   glm::vec3 size;
   std::string color;
+  int colorMask;
   bool hasCollided;
   float timer;
   float angle;

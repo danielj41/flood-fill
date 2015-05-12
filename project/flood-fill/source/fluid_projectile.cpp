@@ -17,8 +17,8 @@
 #include "level_template.hpp"
 
 #define BLUE    1
-#define RED     2
-#define GREEN   4
+#define GREEN   2
+#define RED     4
 #define GREY    8
 
 FluidProjectile::FluidProjectile(glm::vec3 _position,
@@ -26,6 +26,7 @@ FluidProjectile::FluidProjectile(glm::vec3 _position,
   : GameObject(), CollisionObject(_position),
 	position(_position), movementDirection(_movementDirection),
 	size(glm::vec3(0.1)) {
+    colorMask = _colorMask;
     if(_colorMask & BLUE)
       color = "FlatBlue";
     else if(_colorMask & GREEN)
@@ -108,7 +109,7 @@ void FluidProjectile::collided(CollisionObject * collidedWith){
     glm::vec3 newPos(grid->getRoundX(oldPosition.x), grid->getRoundY(oldPosition.y), grid->getRoundZ(oldPosition.z));
     if(grid->inGrid(newPos.x, newPos.y, newPos.z) && grid->getValue(newPos.x, newPos.y, newPos.z) == LevelTemplate::AVAILABLE_FILL_SPACE) {
       if(!LoadManager::getRenderTexture("waterData")->isInUse()) {
-        WaterSurface *surface = new WaterSurface(newPos, color);
+        WaterSurface *surface = new WaterSurface(newPos, colorMask);
         surface->setup();
         Director::getScene()->addGameObject(surface);
       }

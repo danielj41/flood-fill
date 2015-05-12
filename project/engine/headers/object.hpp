@@ -55,6 +55,7 @@ public:
     void translate(glm::vec3 translationVector);
     void loadIdentity();
     void setMatrix(glm::mat4 matrix);
+    void setMaterial(Material * _material);
 
 protected:
     Mesh *   mesh;
