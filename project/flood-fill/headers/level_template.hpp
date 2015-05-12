@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <set>
 
 #include "scene.hpp"
 #include "uniform_3d_grid.hpp"
@@ -24,10 +25,13 @@ public:
     virtual void setup() = 0;
     virtual void update() = 0;
 
+    
     Uniform3DGrid<int>* getTypeGrid();
+    std::set<int>* getFillTypes();
 
     // Level blocks identifiers
     static const char COMMENT;
+    static const int TOGGLE_FILL;
     static const int VOID_SPACE;
     static const int AIR;
     static const int SOLID_CUBE;
@@ -49,6 +53,7 @@ protected:
     Uniform3DGrid<GameObject *> grid;
     // The type grid hold the types of every game object in the map
     Uniform3DGrid<int> typeGrid;
+    std::set<int> fillTypes;
 
     DebugPlayer * debugPlayer;
     Player * player;

@@ -1,10 +1,19 @@
 #include "active_terrain.hpp"
+
+#include <set>
+#include <string>
+
+#include <iostream>
+#include "debug_macros.h"
+
 #include "glm/glm.hpp"
 #include "collision_object.hpp"
 #include "collision_manager.hpp"
 #include "solid_cube.hpp"
 #include "time_manager.hpp"
 #include "render_engine.hpp"
+#include "level_template.hpp"
+#include "director.hpp"
 
 ActiveTerrain::ActiveTerrain(Switch* _s, glm::vec3 _initialPos, glm::vec3 _finalPos, float _speed)
     : GameObject(), s(_s), direction(_finalPos - _initialPos), 
@@ -14,8 +23,10 @@ ActiveTerrain::ActiveTerrain(Switch* _s, glm::vec3 _initialPos, glm::vec3 _final
 void ActiveTerrain::setup(){
     
                             
+    fillTypes = ((LevelTemplate *)Director::getScene())->getFillTypes();
+
     for(int i = 0; i < 16; i++) {
-        for(int j = 4; j < 9; j++) {
+        for(int j = 6; j < 11; j++) {
                  
             
             SolidCube * at1 = new SolidCube(glm::vec3(i*2 + 1, j*2 + 1, -37));
@@ -33,6 +44,12 @@ void ActiveTerrain::setup(){
 }
 
 void ActiveTerrain::update(){
+
+   
+    for (std::set<int>::iterator i = fillTypes->begin(); i != fillTypes->end(); i++) {
+        INFO("In fillTypes Set: " << std::to_string(*i));
+    }
+    
     if(s->isOn() && active && timer < 1.0f) {
         timer += TimeManager::getDeltaTime();
         for(std::list<SolidCube *>:: iterator it = solidCubes.begin(); it != solidCubes.end(); it++){
@@ -53,8 +70,11 @@ void ActiveTerrain::update(){
                 CollisionManager::addCollisionObjectToGrid(*it);
                 (*it)->animateFrom(glm::vec3(0.0f, 15.0f, 0.0f), timer);
             }
-
-            // Add solidCubes to grid
+            
+            fillTypes->insert(LevelTemplate::TOGGLE_FILL);
+          
+           
+           
 
             
         }
@@ -77,8 +97,8 @@ void ActiveTerrain::update(){
                 re->removeObject((*it)->getObject());
                 CollisionManager::removeCollisionObjectFromGrid(*it);
             }
-
-
+            
+            fillTypes->erase(LevelTemplate::TOGGLE_FILL);
 
         }
         /*if (position != initialPos) { 

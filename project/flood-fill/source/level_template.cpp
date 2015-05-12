@@ -34,7 +34,8 @@ const int LevelTemplate::AVAILABLE_FILL_SPACE  =  2;
 const int LevelTemplate::CHANGE_COLOR_BLUE     =  3;
 const int LevelTemplate::CHANGE_COLOR_GREEN    =  4;
 const int LevelTemplate::CHANGE_COLOR_RED      =  5;
-const int LevelTemplate::CHANGE_COLOR_GREY     =  6;
+//const int LevelTemplate::CHANGE_COLOR_GREY     =  6;
+const int LevelTemplate::TOGGLE_FILL           =  6;
 const int LevelTemplate::FLUID_GREEN           =  7;
 const int LevelTemplate::WINNING_BLOCK         =  8;
 const int LevelTemplate::FLUID_RED             =  9;
@@ -185,7 +186,6 @@ GameObject * LevelTemplate::createVoxel(int id, int i, int j, int k){
         ColorChange * c = new ColorChange(glm::vec3(minx + i * 2 + 1, miny + j * 2 + 1, minz + (k * 2 + 1)), 1);
         c->setup();
         CollisionManager::addCollisionObjectToGrid(c);
-        Director::getScene()->addGameObject(c);
         return c;
         break;
     }
@@ -225,7 +225,7 @@ GameObject * LevelTemplate::createVoxel(int id, int i, int j, int k){
         return c;
         break;
     }
-    case CHANGE_COLOR_GREY:
+    /*case CHANGE_COLOR_GREY:
     {
         ColorChange * c = new ColorChange(glm::vec3(minx + i * 2 + 1, miny + j * 2 + 1, minz + (k * 2 + 1)), 8);
         c->setup();
@@ -233,7 +233,11 @@ GameObject * LevelTemplate::createVoxel(int id, int i, int j, int k){
         Director::getScene()->addGameObject(c);
         return c;
         break;
-    }
+        }*/
+    case TOGGLE_FILL:
+    {
+        break;
+    }    
     default:
         ASSERT(false, "Invalid type of Voxel. ID: " << id);
     }
@@ -243,4 +247,9 @@ GameObject * LevelTemplate::createVoxel(int id, int i, int j, int k){
 
 Uniform3DGrid<int>* LevelTemplate::getTypeGrid() {
     return &typeGrid;
+}
+
+std::set<int>* LevelTemplate::getFillTypes()
+{
+    return &fillTypes;
 }

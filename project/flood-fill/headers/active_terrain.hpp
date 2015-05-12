@@ -9,6 +9,7 @@
 #include "object.hpp"
 #include "switch.hpp"
 #include "solid_cube.hpp"
+#include "level_template.hpp"
 
 class ActiveTerrain : public GameObject{
 
@@ -29,9 +30,12 @@ private:
     glm::vec3 finalPos;
     float speed;
 
-    float timer;
-    
     bool active;
+    float timer;
+
+    std::set<int>* fillTypes;
+    
+
 };
     
 #endif

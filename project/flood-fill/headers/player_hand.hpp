@@ -10,22 +10,31 @@
 #include "object.hpp"
 
 class PlayerHand : public GameObject, public CollisionObject {
-
+    
 public:
-
-  PlayerHand(glm::vec3 _position);
-
-  void setup();
-  void update();
-  void setPosition(glm::vec3 _position);
-
-  void collided(CollisionObject * collidedWith);
-  void setColorMask(int _colorMask);
-  int getColorMask();
+    
+    PlayerHand(glm::vec3 _position, Object * _gun);  
+    void setup();
+    void update();
+    void setPosition(glm::vec3 _position);
+    
+    void collided(CollisionObject * collidedWith);
+    void setColorMask(int color);
+    int getColorMask();
+    void changeColorMask();
+    double getToggleTime();
 
 private:
-  glm::vec3 position;
-  int colorMask;
+    
+    glm::vec3 position;
+    
+    Object * gun;
+
+    int colors[2];
+    int numColors;
+    int clrndx;
+    double toggleTime;
+    
 };
 
 #endif

@@ -38,7 +38,7 @@ void TestLevel::setup(){
     createLevel();
 
     INFO("Setting up the cameras for the Test Level...");
-    Camera * cam1 = new Camera(glm::vec3(28, 16, -5), glm::vec3(0, 0, -5),
+    Camera * cam1 = new Camera(glm::vec3(12, 30, -30), glm::vec3(0, 0, -5),
                              glm::vec3(0, 1, 0));
     cam1->setProjectionMatrix(
         glm::perspective(glm::radians(90.0f),
@@ -71,7 +71,7 @@ void TestLevel::setup(){
     addCamera("DebugCamera", cam2);
     
     INFO("Creating Switch for the Test Level...");
-    Switch * s1 = new Switch(glm::vec3(0.9f, 0.1f, 0.1f), glm::vec3(29.7, 19, -45), 
+    Switch * s1 = new Switch(glm::vec3(0.9f, 0.1f, 0.1f), glm::vec3(29.7, 23, -45), 
                              glm::vec3(0,0,1), -20.0f, 1);
     s1->setup();
     addGameObject("s1", s1);
@@ -82,7 +82,11 @@ void TestLevel::setup(){
     a1->setup();
     addGameObject("a1", a1);
 
-    //Switch * s2 = new Switch(glm::vec3(7, 3, -2.25), glm::vec3(0,0,-1), glm::vec3(1,0,0));
+    // Adding AVAILABLE_FILL_SPACE to fillTypes
+    fillTypes.insert(LevelTemplate::AVAILABLE_FILL_SPACE);
+    fillTypes.insert(LevelTemplate::TOGGLE_FILL);
+    
+
 }
 
 void TestLevel::update(){
@@ -95,6 +99,7 @@ void TestLevel::update(){
         setMainCamera("Camera1");
         getCamera("Camera1")->fix(false, true, false);
     }
+    //INFO("yay");
 }
 
 void TestLevel::createRenders(){

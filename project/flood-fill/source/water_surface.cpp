@@ -2,6 +2,7 @@
 
 #include <cstdlib>
 #include <iostream>
+#include <set>
 #include "debug_macros.h"
 
 #include "load_manager.hpp"
@@ -120,12 +121,20 @@ void WaterSurface::update(){
 }
 
 void WaterSurface::createFluidBox(glm::vec3 newPos) {
-  if(grid.inGrid(newPos.x, newPos.y, newPos.z) &&
+  
+    std::set<int>* fillTypes = level->getFillTypes();
+
+    if(grid.inGrid(newPos.x, newPos.y, newPos.z) &&
      grid.getValue(newPos.x, newPos.y, newPos.z) == 0 &&
-     typeGrid->getValue(newPos.x, newPos.y, newPos.z) == LevelTemplate::AVAILABLE_FILL_SPACE) {
+       fillTypes->find(typeGrid->getValue(newPos.x, newPos.y, newPos.z)) != fillTypes->end()) {
+        
+        if(newPos.z > -30 &&(), 0, 0));
+    createFluidBox(newPos - glm::vec3(0, grid.getEdgeSizeY newPos.z < -22 && newPos.y >= 6) {
+            assert(typeGrid->getValue(newPos.x, newPos.y, newPos.z) == 2);
+        }
 
-    grid.setValue(newPos.x, newPos.y, newPos.z, 1);
-
+      grid.setValue(newPos.x, newPos.y, newPos.z, 1);
+    
     if(newPos.y < lowestPosition.y + grid.getEdgeSizeY() / 2.0f) {
       typeGrid->setValue(newPos.x, newPos.y, newPos.z, LevelTemplate::SOLID_CUBE);
       FluidBox *fluidBox = new FluidBox(newPos, colorMask);
@@ -142,30 +151,35 @@ void WaterSurface::createFluidBox(glm::vec3 newPos) {
 }
 
 bool WaterSurface::checkAdjacent(glm::vec3 newPos) {
-  if(grid.inGrid(newPos.x, newPos.y, newPos.z) &&
-     grid.getValue(newPos.x, newPos.y, newPos.z) == 0 &&
-     typeGrid->getValue(newPos.x, newPos.y, newPos.z) == LevelTemplate::AVAILABLE_FILL_SPACE) {
-    grid.setValue(newPos.x, newPos.y, newPos.z, 1);
+  
+    std::set<int>* fillTypes = level->getFillTypes();
 
-    if(newPos.x > maxX) {
-      maxX = newPos.x;
-    }
-    if(newPos.x < minX) {
-      minX = newPos.x;
-    }
-    if(newPos.y > maxY) {
-      maxY = newPos.y;
-    }
-    if(newPos.y < minY) {
-      minY = newPos.y;
-      lowestPosition = newPos;
-    }
-    if(newPos.z > maxZ) {
-      maxZ = newPos.z;
-    }
-    if(newPos.z < minZ) {
-      minZ = newPos.z;
-    }
+    if(grid.inGrid(newPos.x, newPos.y, newPos.z) &&
+       grid.getValue(newPos.x, newPos.y, newPos.z) == 0 &&
+       fillTypes->find(typeGrid->getValue(newPos.x, newPos.y, newPos.z)) != fillTypes->end()) { 
+        
+        grid.setValue(newPos.x, newPos.y, newPos.z, 1);
+      
+   
+        if(newPos.x > maxX) {
+            maxX = newPos.x;
+        }
+        if(newPos.x < minX) {
+            minX = newPos.x;
+        }
+        if(newPos.y > maxY) {
+            maxY = newPos.y;
+        }
+        if(newPos.y < minY) {
+            minY = newPos.y;
+            lowestPosition = newPos;
+        }
+        if(newPos.z > maxZ) {
+            maxZ = newPos.z;
+        }
+        if(newPos.z < minZ) {
+            minZ = newPos.z;
+        }
 
     checkAdjacent(newPos + glm::vec3(grid.getEdgeSizeX(), 0, 0));
     checkAdjacent(newPos - glm::vec3(grid.getEdgeSizeX(), 0, 0));
