@@ -14,7 +14,7 @@
 
 bool RenderEngine::loaded = false;
 std::map< std::string, RenderElement * > RenderEngine::renderElements;
-
+RenderGrid *RenderEngine::renderGrid = NULL;
 
 void RenderEngine::setup(){
     INFO("Setup RenderEngine...");
@@ -26,6 +26,8 @@ void RenderEngine::setup(){
 }
 
 void RenderEngine::render(){
+    renderGrid->clean();
+
     INFO("Render Engine: rendering objects...");
 
     ASSERT(loaded, "You dind't load the rendering engine!");

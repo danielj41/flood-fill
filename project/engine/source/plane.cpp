@@ -17,14 +17,16 @@ Plane::Plane(int _left, int _right,
              int _back, int _front,
              int _direction,
              int _centerX, int _centerY, int _centerZ,
-             Uniform3DGrid<RenderGridItem>* _grid,
+             float _minX, float _minY, float _minZ,
+             float _edgeX, float _edgeY, float _edgeZ,
              Object *_refObject) :
              left(_left), right(_right),
              bottom(_bottom), top(_top),
              back(_back), front(_front),
-             direction(_direction);
+             direction(_direction),
              centerX(_centerX), centerY(_centerY), centerZ(_centerZ),
-             grid(_grid), 
+             minX(_minX), minY(_minY), minZ(_minZ),
+             edgeX(_edgeX), edgeY(_edgeY), edgeZ(_edgeZ), 
              refObject(_refObject) {}
 
 void Plane::setup() {
@@ -55,12 +57,12 @@ void Plane::setup() {
     object->rotate(180.0f, glm::vec3(1.0f, 0.0f, 0.0f));
   }
   
-  object->scale(glm::vec3((right - left) * grid->getEdgeSizeX() / 2.0f,
-                          (top - bottom) * grid->getEdgeSizeY() / 2.0f,
-                          (back - front) * grid->getEdgeSizeZ() / 2.0f);
-  object->translate(glm::vec3((right + left) * grid->getEdgeSizeX() / 2.0f + grid->getMinX(),
-                              (top + bottom) * grid->getEdgeSizeY() / 2.0f + grid->getMinY(),
-                              (back + front) * grid->getEdgeSizeZ() / 2.0f + grid->getMinZ()));
+  object->scale(glm::vec3((right - left) * edgeX / 2.0f,
+                          (top - bottom) * edgeY / 2.0f,
+                          (back - front) * edgeZ / 2.0f));
+  object->translate(glm::vec3((right + left) * edgeX / 2.0f + minX,
+                              (top + bottom) * edgeY / 2.0f + minY,
+                              (back + front) * edgeZ / 2.0f + minZ));
 }
 
 int Plane::getLeft() { return left; }

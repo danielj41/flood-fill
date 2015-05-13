@@ -17,6 +17,6 @@ class RenderGridItem {
         bool dirty;
 
         bool isEqual(RenderGridItem *other);
-}
+};
 
 #endif

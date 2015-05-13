@@ -20,14 +20,21 @@ public:
              float _minY, float _maxY,
              float _minZ, float _maxZ);
 
+  void initialize();
+
   void addObject(Object *object, RenderElement *renderElement);
   void removeObject(Object *object);
 
-private:
+  void clean();  
 
+private:
   Uniform3DGrid<RenderGridItem> grid;
   bool dirty;
 
+  void createPlane(int x, int y, int z, int dir);
+  void removePlane(Plane *plane);
+  void dirtyAdjacent(glm::vec4 pos);
+  void dirtyCell(glm::vec4 pos);
 };
 
 #endif

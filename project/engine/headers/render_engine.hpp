@@ -23,7 +23,7 @@ private:
     static bool loaded;
 
     static std::map< std::string, RenderElement * > renderElements;
-    RenderGrid *renderGrid;
+    static RenderGrid *renderGrid;
 
     static void setupOpenGL();
 };

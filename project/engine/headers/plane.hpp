@@ -16,7 +16,8 @@ class Plane {
               int _back, int _front,
               int _direction,
               int _centerX, int _centerY, int _centerZ,
-              Uniform3DGrid<RenderGridItem>* _grid,
+              float _minX, float _minY, float _minZ,
+              float _edgeX, float _edgeY, float _edgeZ,
               Object *_refObject);
 
         void setup();
@@ -36,7 +37,7 @@ class Plane {
     private:
         Object *object, *refObject;
         int left, right, bottom, top, back, front, direction, centerX, centerY, centerZ;
-        Uniform3DGrid<RenderGridItem>* grid;
-}
+        float minX, minY, minZ, edgeX, edgeY, edgeZ;
+};
 
 #endif

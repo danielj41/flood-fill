@@ -111,8 +111,8 @@ void TestLevel::createRenders(){
     RenderEngine::addRenderElement("water", new WaterRender());
     RenderEngine::addRenderElement("water-particle", new WaterParticleRender());
     RenderEngine::addRenderElement("water-stream", new WaterStreamRender());
-    RenderEngine::setRenderGrid(new RenderGrid(typeGrid->getSizeX(), typeGrid->getSizeY(), typeGrid->getSizeZ(),
-                                               typeGrid->getMinX(), typeGrid->getMaxX(),
-                                               typeGrid->getMinY(), typeGrid->getMaxY(),
-                                               typeGrid->getMinZ(), typeGrid->getMaxZ()));
+    RenderEngine::setRenderGrid(new RenderGrid(typeGrid.getSizeX(), typeGrid.getSizeY(), typeGrid.getSizeZ(),
+                                               typeGrid.getMinX(), typeGrid.getMaxX(),
+                                               typeGrid.getMinY(), typeGrid.getMaxY(),
+                                               typeGrid.getMinZ(), typeGrid.getMaxZ()));
 }

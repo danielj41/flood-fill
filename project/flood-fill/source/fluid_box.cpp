@@ -73,7 +73,7 @@ void FluidBox::update(){
     getBoundingBox()->setPosition(position - (1.0f - timer/1.55f) * glm::vec3(0, 2.0f, 0));
     if(timer > 1.55f) {
       visible = true;
-      ((RegularPolygonsRender *)RenderEngine::getRenderElement("regular"))->addToGrid(fluidBox);
+      RenderEngine::getRenderElement("regular")->addObject(fluidBox);
       getBoundingBox()->setPosition(position);
     }
   } 
@@ -87,7 +87,7 @@ void FluidBox::update(){
       fluidBox->loadIdentity();
       fluidBox->translate(position);
       Director::getScene()->removeGameObject(this);
-      ((RegularPolygonsRender *)RenderEngine::getRenderElement("regular"))->removeFromGrid(fluidBox);
+      RenderEngine::getRenderElement("regular")->removeObject(fluidBox);
       CollisionManager::removeCollisionObjectFromGrid(this);
     }
   }
