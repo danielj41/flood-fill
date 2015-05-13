@@ -32,6 +32,7 @@ private:
 
     bool active;
     float timer;
+    bool doneAnimating;
 
     std::set<int>* fillTypes;
     

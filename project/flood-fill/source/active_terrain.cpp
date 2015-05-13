@@ -18,7 +18,7 @@
 ActiveTerrain::ActiveTerrain(Switch* _s, glm::vec3 _initialPos, glm::vec3 _finalPos, float _speed)
     : GameObject(), s(_s), direction(_finalPos - _initialPos), 
       position(_initialPos), initialPos(_initialPos), 
-      finalPos(_finalPos), speed(_speed), active(false), timer(0.0f) {}
+      finalPos(_finalPos), speed(_speed), active(false), doneAnimating(true), timer(0.0f) {}
 
 void ActiveTerrain::setup(){
     
@@ -52,10 +52,18 @@ void ActiveTerrain::update(){
         INFO("In fillTypes Set: " << std::to_string(*i));
     }
     
-    if(s->isOn() && active && timer < 1.0f) {
+    if(s->isOn() && active && !doneAnimating) {
         timer += TimeManager::getDeltaTime();
         for(std::list<SolidCube *>:: iterator it = solidCubes.begin(); it != solidCubes.end(); it++){
             (*it)->animateFrom(glm::vec3(0.0f, 15.0f, 0.0f), timer);
+        }
+        if(timer > 1.0f) {
+            doneAnimating = true;
+            for(std::list<SolidCube *>:: iterator it = solidCubes.begin(); it != solidCubes.end(); it++) {
+                RenderElement *re = RenderEngine::getRenderElement("normalmap");
+                re->removeObject((*it)->getObject());
+                RenderEngine::getRenderGrid()->addObject((*it)->getObject(), re);
+            }
         }
     }
     if (s->isOn()) {
@@ -65,6 +73,7 @@ void ActiveTerrain::update(){
             RenderElement *re = RenderEngine::getRenderElement("normalmap");
 
             timer = 0.0f;
+            doneAnimating = false;
 
             // Add solidCubes to render engine            
             for(std::list<SolidCube *>:: iterator it = solidCubes.begin(); it != solidCubes.end(); it++){
@@ -90,13 +99,13 @@ void ActiveTerrain::update(){
             // update solidcubes with new pos
             }*/ 
     } else {
-        if (active) {
+        if (active && doneAnimating) {
             
             active = false;
             RenderElement *re = RenderEngine::getRenderElement("normalmap");
 
             for(std::list<SolidCube *>:: iterator it = solidCubes.begin(); it != solidCubes.end(); it++){
-                re->removeObject((*it)->getObject());
+                RenderEngine::getRenderGrid()->removeObject((*it)->getObject());
                 CollisionManager::removeCollisionObjectFromGrid(*it);
             }
             
