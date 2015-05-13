@@ -60,7 +60,7 @@ void main(){
     vec3 Ie = uEmissionColor;
     vec3 Ic = uLightColor;
 
-    float n = 10.0f;//uShininess;
+    float n = uShininess;
 
     vec3 N = normalize(normal);
     vec3 L = normalize(-uLightDirection);
@@ -71,7 +71,7 @@ void main(){
     vec3 Is = pow(max(dot(N, H), 0.0), n)*ks;
     vec3 Id = max(dot(N, L), 0.0)*kd;
 
-    vec3 I = getShadow()*(Id + Is);
+    vec3 I = getShadow()*(Id + Is) + Ia*Id;
 
     gl_FragColor = vec4(vec3(I), 1);
 }

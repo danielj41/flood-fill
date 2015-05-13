@@ -58,14 +58,14 @@ void ShadowOccluderRender::setupShader(){
     std::map<std::string, Light *> lights = Director::getScene()->getLights();
     Light * light = lights.begin()->second;
 
-    //TODO: Find the perfect position for the directional light
-    glm::mat4 view = glm::lookAt(-15.0f*light->getDirection(), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+    glm::mat4 view = glm::lookAt(-glm::length(light->getPosition())*light->getDirection(), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
 
     glUniformMatrix4fv(shader->getHandle("uView"), 1, GL_FALSE,
       glm::value_ptr(view));
 
+    glm::mat4 projection = camera->getProjectionMatrix(); //glm::ortho<float>(-10,10,-10,10,-10,100);
     glUniformMatrix4fv(shader->getHandle("uProjection"), 1, GL_FALSE,
-      glm::value_ptr(glm::ortho<float>(-10,10,-10,10,-10,100)));
+      glm::value_ptr(projection));
 }
 
 void ShadowOccluderRender::setupMesh(Mesh * mesh){
