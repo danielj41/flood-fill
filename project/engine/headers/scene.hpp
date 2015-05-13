@@ -49,6 +49,7 @@ public:
     Camera * getCamera(std::string label);
     //Get the main camera
     Camera * getCamera();
+    Camera * getCullingCamera();
 
     GameObject * getGameObject(std::string label);
     Light * getLight(std::string label);
@@ -56,6 +57,7 @@ public:
 
     //Sets the camera that will look to scene
     void setMainCamera(std::string label);
+    void setCullingCamera(std::string label);
 
     bool hasMainCamera();
 
@@ -63,7 +65,7 @@ protected:
     static const std::string NO_CAMERA_AVAILABLE;
 
     int labelCount;
-    std::string name, currentCamera;
+    std::string name, currentCamera, cullingCamera;
 
     std::map<std::string, Camera *> cameras;
     std::map<std::string, Light *> lights;

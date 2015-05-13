@@ -166,6 +166,7 @@ void Camera::unfix(){
 
 const int POSITVE_SIDE = 1;
 const int NEGATVE_SIDE = -1;
+const int UNDEFINED_SIDE = 0;
 
 int getPlaneSide(glm::vec4 plane, glm::vec4 point){
     float distanceFromPlane = glm::dot(plane, point);
@@ -233,7 +234,31 @@ bool Camera::insideViewFrustum(Object * object){
     vertices[6] = glm::vec4(min.x, max.y, min.z, 1);
     vertices[7] = glm::vec4(min.x, min.y, min.z, 1);
 
-    for(int i = 0; i < 8; i++){
+    bool inPair[3] = {false, false, false};
+    bool spanPair[3] = {false, false, false};
+
+    for (int j = 0; j < 3; j += 1) {
+        bool negSide1 = false;
+        bool negSide2 = false;
+        for(int i = 0; i < 8; i++) {
+            int side1 = getPlaneSide(planes[j * 2 + 0], vertices[i]);
+            int side2 = getPlaneSide(planes[j * 2 + 1], vertices[i]);
+
+            if(side1 == POSITVE_SIDE && side2 == POSITVE_SIDE) {
+                inPair[j] = true;
+                break;
+            } else {
+                negSide1 = negSide1 || side1 == NEGATVE_SIDE;
+                negSide2 = negSide2 || side2 == NEGATVE_SIDE;
+            }
+        }
+        spanPair[j] = negSide1 && negSide2;
+    }
+
+    return (inPair[0] || spanPair[0]) && (inPair[1] || spanPair[1]) && (inPair[2] || spanPair[2]);
+
+    /*for(int i = 0; i < 8; i++){
+        getPlaneSide(planes[0])
         int pointsInside = 0;
         for(int j = 0; j < 6; j+=2){
             if(getPlaneSide(planes[j + 0], vertices[i]) ==
@@ -248,7 +273,7 @@ bool Camera::insideViewFrustum(Object * object){
         }
     }
 
-    return false;
+    return false;*/
 }
 
 /** Private Methods **/

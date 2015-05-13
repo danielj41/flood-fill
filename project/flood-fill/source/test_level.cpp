@@ -48,6 +48,7 @@ void TestLevel::setup(){
 
     addCamera("Camera1", cam1);
     setMainCamera("Camera1");
+    setCullingCamera("Camera1");
 
     Camera * cam2 = new Camera(glm::vec3(0, 1, 0), glm::vec3(0, 0, -5),
                              glm::vec3(0, 1, 0));

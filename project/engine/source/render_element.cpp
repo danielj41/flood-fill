@@ -39,6 +39,7 @@ void RenderElement::renderPass(){
     INFO("Render Pass: render all objects");
 
     Camera * camera = Director::getScene()->getCamera();
+    Camera * cullingCamera = Director::getScene()->getCullingCamera();
 
     if(objects.size() == 0) return;
 
@@ -55,7 +56,7 @@ void RenderElement::renderPass(){
 
         for(auto objIt = it->second.begin(); objIt != it->second.end(); objIt++){
             //View Frustum Culling
-            if(cull == false || (cull && camera->insideViewFrustum((*objIt)))){
+            if(cull == false || (cull && cullingCamera->insideViewFrustum((*objIt)))){
                 renderObject(*objIt);
             }
         }

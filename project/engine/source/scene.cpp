@@ -161,6 +161,10 @@ Camera * Scene::getCamera(){
     return getCamera(currentCamera);
 }
 
+Camera * Scene::getCullingCamera() {
+    return getCamera(cullingCamera);
+}
+
 GameObject * Scene::getGameObject(std::string label){
     ASSERT(gameObjects.find(label) != gameObjects.end(),
            "Object " << label << " does not exist in this scene!");
@@ -175,6 +179,10 @@ Light * Scene::getLight(std::string label){
 
 std::map<std::string, Light *> Scene::getLights(){
     return lights;
+}
+
+void Scene::setCullingCamera(std::string label) {
+    cullingCamera = label;
 }
 
 void Scene::setMainCamera(std::string label){
