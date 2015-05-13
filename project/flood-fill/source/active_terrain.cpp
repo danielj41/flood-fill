@@ -18,7 +18,7 @@
 ActiveTerrain::ActiveTerrain(Switch* _s, glm::vec3 _initialPos, glm::vec3 _finalPos, float _speed)
     : GameObject(), s(_s), direction(_finalPos - _initialPos), 
       position(_initialPos), initialPos(_initialPos), 
-      finalPos(_finalPos), speed(_speed), active(true), timer(0.0f) {}
+      finalPos(_finalPos), speed(_speed), active(false), timer(0.0f) {}
 
 void ActiveTerrain::setup(){
     
@@ -89,7 +89,7 @@ void ActiveTerrain::update(){
             }*/ 
     } else {
         if (active) {
-           
+            
             active = false;
             RenderElement *re = RenderEngine::getRenderElement("normalmap");
 

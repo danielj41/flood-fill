@@ -17,7 +17,7 @@ Plane::Plane(int _left, int _right,
              int _back, int _front,
              int _direction,
              int _centerX, int _centerY, int _centerZ,
-             float _minX, float _minY, float _minZ,
+             float _minX, float _maxY, float _minZ,
              float _edgeX, float _edgeY, float _edgeZ,
              Object *_refObject) :
              left(_left), right(_right),
@@ -25,7 +25,7 @@ Plane::Plane(int _left, int _right,
              back(_back), front(_front),
              direction(_direction),
              centerX(_centerX), centerY(_centerY), centerZ(_centerZ),
-             minX(_minX), minY(_minY), minZ(_minZ),
+             minX(_minX), maxY(_maxY), minZ(_minZ),
              edgeX(_edgeX), edgeY(_edgeY), edgeZ(_edgeZ), 
              refObject(_refObject) {}
 
@@ -33,8 +33,8 @@ void Plane::setup() {
   object = new Object(LoadManager::getMesh("plane.obj"), refObject->getMaterial());
 
   if(refObject->hasTexture()) {
-    object->enableTexture();
     object->applyTexture(refObject->getTexture());
+    object->enableTexture();
   }
 
   if(refObject->hasNormalMap()) {
@@ -43,6 +43,8 @@ void Plane::setup() {
 
   object->loadIdentity();
 
+  object->translate(glm::vec3(0.0f, 0.0f, 1.0f));
+
   if(direction == XP) {
     object->rotate(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
   } else if(direction == XN) {
@@ -50,19 +52,19 @@ void Plane::setup() {
   } else if(direction == YP) {
     object->rotate(90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
   } else if(direction == YN) {
-    object->rotate(90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+    object->rotate(-90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
   } else if(direction == ZP) {
 
-  } else if(direction == ZP) {
+  } else if(direction == ZN) {
     object->rotate(180.0f, glm::vec3(1.0f, 0.0f, 0.0f));
   }
   
-  object->scale(glm::vec3((right - left) * edgeX / 2.0f,
-                          (top - bottom) * edgeY / 2.0f,
-                          (back - front) * edgeZ / 2.0f));
-  object->translate(glm::vec3((right + left) * edgeX / 2.0f + minX,
-                              (top + bottom) * edgeY / 2.0f + minY,
-                              (back + front) * edgeZ / 2.0f + minZ));
+  object->scale(glm::vec3((right - left + 1) * edgeX / 2.0f,
+                          (top - bottom + 1) * edgeY / 2.0f,
+                          (front - back + 1) * edgeZ / 2.0f));
+  object->translate(glm::vec3((right + left + 1.0f) * edgeX / 2.0f + minX,
+                              -(top + bottom + 1.0f) * edgeY / 2.0f + maxY,
+                              (back + front + 1.0f) * edgeZ / 2.0f + minZ));
 }
 
 int Plane::getLeft() { return left; }

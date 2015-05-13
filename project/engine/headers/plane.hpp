@@ -16,7 +16,7 @@ class Plane {
               int _back, int _front,
               int _direction,
               int _centerX, int _centerY, int _centerZ,
-              float _minX, float _minY, float _minZ,
+              float _minX, float _maxY, float _minZ,
               float _edgeX, float _edgeY, float _edgeZ,
               Object *_refObject);
 
@@ -37,7 +37,7 @@ class Plane {
     private:
         Object *object, *refObject;
         int left, right, bottom, top, back, front, direction, centerX, centerY, centerZ;
-        float minX, minY, minZ, edgeX, edgeY, edgeZ;
+        float minX, maxY, minZ, edgeX, edgeY, edgeZ;
 };
 
 #endif
