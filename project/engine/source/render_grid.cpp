@@ -190,16 +190,23 @@ void RenderGrid::addObject(Object *object, RenderElement *renderElement) {
 
 void RenderGrid::removeObject(Object *object) {
   glm::vec4 pos = object->getModelMatrix() * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
-  RenderGridItem item;
+  dirtyAdjacent(pos);
+  RenderGridItem item = grid.getValue(pos.x, pos.y, pos.z);
   item.object = NULL;
   item.renderElement = NULL;
   item.dirty = true;
   grid.setValue(pos.x, pos.y, pos.z, item);
-  dirtyAdjacent(pos);
 }
 
 void RenderGrid::dirtyAdjacent(glm::vec4 pos) {
-  dirtyCell(pos);
+  int i, j, k;
+  for(i = -1; i <= 1; i++) {
+    for(j = -1; j <= 1; j++) {
+      for(k = -1; k <= 1; k++) {
+        dirtyCell(pos + glm::vec4(i * grid.getEdgeSizeX(), j * grid.getEdgeSizeY(), k * grid.getEdgeSizeZ(), 0.0f));
+      }
+    }
+  }
   dirtyCell(pos + glm::vec4(grid.getEdgeSizeX(), 0.0f, 0.0f, 0.0f));
   dirtyCell(pos + glm::vec4(-grid.getEdgeSizeX(), 0.0f, 0.0f, 0.0f));
   dirtyCell(pos + glm::vec4(0.0f, grid.getEdgeSizeY(), 0.0f, 0.0f));
@@ -211,6 +218,8 @@ void RenderGrid::dirtyAdjacent(glm::vec4 pos) {
 void RenderGrid::dirtyCell(glm::vec4 pos) {
   if(grid.inGrid(pos.x, pos.y, pos.z)) {
     RenderGridItem item = grid.getValue(pos.x, pos.y, pos.z);
+    item.dirty = true;
+    grid.setValue(pos.x, pos.y, pos.z, item);
     int i;
     for(i = 0; i < 6; i++) {
       removePlane(item.planes[i]);

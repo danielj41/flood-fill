@@ -31,11 +31,13 @@ void ActiveTerrain::setup(){
             
             SolidCube * at1 = new SolidCube(glm::vec3(i*2 + 1, j*2 + 1, -37));
             at1->setup();
+            RenderEngine::getRenderGrid()->removeObject(at1->getObject());
 
             solidCubes.push_back(at1);
 
             SolidCube * at2 = new SolidCube(glm::vec3(i*2 + 1, j*2 + 1, -21));
             at2->setup();
+            RenderEngine::getRenderGrid()->removeObject(at2->getObject());
 
             solidCubes.push_back(at2);
             

@@ -48,6 +48,9 @@ void FluidBox::setup() {
 				   LoadManager::getMesh("cube.obj"),
 				   MaterialManager::getMaterial(color));
 
+  fluidBox->applyTexture(LoadManager::getTexture("VoxelTexture"));
+  fluidBox->enableTexture();
+
   fluidBox->loadIdentity();
   fluidBox->translate(position);
   timer = 0.0f;
@@ -73,7 +76,7 @@ void FluidBox::update(){
     getBoundingBox()->setPosition(position - (1.0f - timer/1.55f) * glm::vec3(0, 2.0f, 0));
     if(timer > 1.55f) {
       visible = true;
-      RenderEngine::getRenderElement("regular")->addObject(fluidBox);
+      RenderEngine::getRenderGrid()->addObject(fluidBox, RenderEngine::getRenderElement("textured"));
       getBoundingBox()->setPosition(position);
     }
   } 
@@ -87,7 +90,7 @@ void FluidBox::update(){
       fluidBox->loadIdentity();
       fluidBox->translate(position);
       Director::getScene()->removeGameObject(this);
-      RenderEngine::getRenderElement("regular")->removeObject(fluidBox);
+      RenderEngine::getRenderElement("textured")->removeObject(fluidBox);
       CollisionManager::removeCollisionObjectFromGrid(this);
     }
   }
@@ -101,6 +104,8 @@ void FluidBox::collided(CollisionObject * collidedWith){
        ((PlayerHand *)collidedWith)->getColorMask() & colorMask) {
       deleting = true;
       timer = 0.0f;
+      RenderEngine::getRenderGrid()->removeObject(fluidBox);
+      RenderEngine::getRenderElement("textured")->addObject(fluidBox);
     }
 	break;
   } 
