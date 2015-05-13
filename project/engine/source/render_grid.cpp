@@ -73,11 +73,12 @@ void RenderGrid::createPlane(int x, int y, int z, int dir) {
 
   if(dir != XN && dir != XP) {
     done = false;
-    for(left = x; left >= 0 && !done; left--) {
+    for(left = x - 1; left >= 0 && !done; left--) {
       for(j = bottom; j <= top; j++) {
         for(k = back; k <= front; k++) {
           if(!grid(left, j, k).isEqual(&center) || grid(left, j, k).object == NULL || grid(left, j, k).planes[dir] != NULL || (checkN && grid(left + xN, j + yN, k + zN).object != NULL)) {
             done = true;
+            left++;
           }
         }
       }
@@ -85,11 +86,12 @@ void RenderGrid::createPlane(int x, int y, int z, int dir) {
     left++;
 
     done = false;
-    for(right = x; right < grid.getSizeX() && !done; right++) {
+    for(right = x + 1; right < grid.getSizeX() && !done; right++) {
       for(j = bottom; j <= top; j++) {
         for(k = back; k <= front; k++) {
           if(!grid(right, j, k).isEqual(&center) || grid(right, j, k).object == NULL || grid(right, j, k).planes[dir] != NULL || (checkN && grid(right + xN, j + yN, k + zN).object != NULL)) {
             done = true;
+            right--;
           }
         }
       }
@@ -99,11 +101,12 @@ void RenderGrid::createPlane(int x, int y, int z, int dir) {
   
   if(dir != YN && dir != YP) {
     done = false;
-    for(bottom = y; bottom >= 0 && !done; bottom--) {
+    for(bottom = y - 1; bottom >= 0 && !done; bottom--) {
       for(i = left; i <= right; i++) {
         for(k = back; k <= front; k++) {
           if(!grid(i, bottom, k).isEqual(&center) || grid(i, bottom, k).object == NULL || grid(i, bottom, k).planes[dir] != NULL || (checkN && grid(i + xN, bottom + yN, k + zN).object != NULL)) {
             done = true;
+            bottom++;
           }
         }
       }
@@ -111,11 +114,12 @@ void RenderGrid::createPlane(int x, int y, int z, int dir) {
     bottom++;
 
     done = false;
-    for(top = y; top < grid.getSizeY() && !done; top++) {
+    for(top = y + 1; top < grid.getSizeY() && !done; top++) {
       for(i = left; i <= right; i++) {
         for(k = back; k <= front; k++) {
           if(!grid(i, top, k).isEqual(&center) || grid(i, top, k).object == NULL || grid(i, top, k).planes[dir] != NULL || (checkN && grid(i + xN, top + yN, k + zN).object != NULL)) {
             done = true;
+            top--;
           }
         }
       }
@@ -125,11 +129,12 @@ void RenderGrid::createPlane(int x, int y, int z, int dir) {
 
   if(dir != ZN && dir != ZP) {
     done = false;
-    for(back = z; back >= 0 && done; back--) {
+    for(back = z - 1; back >= 0 && !done; back--) {
       for(i = left; i <= right; i++) {
         for(j = bottom; j <= top; j++) {
           if(!grid(i, j, back).isEqual(&center) || grid(i, j, back).object == NULL || grid(i, j, back).planes[dir] != NULL || (checkN && grid(i + xN, j + yN, back + zN).object != NULL)) {
             done = true;
+            back++;
           }
         }
       }
@@ -137,11 +142,12 @@ void RenderGrid::createPlane(int x, int y, int z, int dir) {
     back++;
 
     done = false;
-    for(front = z; front < grid.getSizeZ() && done; front++) {
+    for(front = z + 1; front < grid.getSizeZ() && !done; front++) {
       for(i = left; i <= right; i++) {
         for(j = bottom; j <= top; j++) {
           if(!grid(i, j, front).isEqual(&center) || grid(i, j, front).object == NULL || grid(i, j, front).planes[dir] != NULL || (checkN && grid(i + xN, j + yN, front + zN).object != NULL)) {
             done = true;
+            front--;
           }
         }
       }
