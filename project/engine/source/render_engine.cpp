@@ -79,6 +79,14 @@ void RenderEngine::removeRenderElement(std::string name){
     DEBUG("Could not find Render Element!");
 }
 
+void RenderEngine::setRenderGrid(RenderGrid *_renderGrid) {
+    renderGrid = _renderGrid;
+}
+
+RenderGrid *RenderEngine::getRenderGrid() {
+    return renderGrid;
+}
+
 /* Private Methods */
 
 void RenderEngine::setupOpenGL(){

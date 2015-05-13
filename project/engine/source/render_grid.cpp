@@ -4,13 +4,6 @@
 #include <iostream>
 #include "debug_macros.h"
 
-#include "load_manager.hpp"
-#include "time_manager.hpp"
-#include "collision_manager.hpp"
-#include "director.hpp"
-#include "material_manager.hpp"
-#include "render_engine.hpp"
-
 #define XP 0
 #define YP 1
 #define ZP 2
@@ -18,7 +11,14 @@
 #define YN 4
 #define ZN 5
 
-RenderGrid::RenderGrid() {}
+RenderGrid::RenderGrid(unsigned int numberOfCubesInX,
+                       unsigned int numberOfCubesInY,
+                       unsigned int numberOfCubesInZ,
+                       float _minX, float _maxX,
+                       float _minY, float _maxY,
+                       float _minZ, float _maxZ) :
+                       grid(numberOfCubesInX, numberOfCubesInY, numberOfCubesInZ,
+                            _minX, _maxX, _minY, _maxY, _minZ, _maxZ) {}
 
 void RenderGrid::initialize() {
   dirty = false;

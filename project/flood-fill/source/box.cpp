@@ -28,6 +28,7 @@ void Box::setup() {
   box->translate(position);
   
   RenderEngine::getRenderElement("textured")->addObject(box);
+  //RenderEngine::getRenderGrid()->addObject(box, RenderEngine::getRenderElement("textured"));
   
   setCollisionID(1);
   setCanCollide(true);

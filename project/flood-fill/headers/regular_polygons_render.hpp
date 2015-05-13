@@ -18,18 +18,9 @@ public:
     void setupMesh(Mesh * mesh);
     void renderObject(Object * object);
 
-    void addToGrid(Object * object);
-    void removeFromGrid(Object * object);
-
-    void renderPass();
-
-    void setGrid(Uniform3DGrid<Object *> _grid);
-
 private:
     static const std::string VERTEX_SHADER_FILE;
     static const std::string FRAGMENT_SHADER_FILE;
-
-    Uniform3DGrid<Object *> grid;
 };
 
 #endif

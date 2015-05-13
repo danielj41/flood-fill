@@ -163,6 +163,9 @@ add_executable(
         project/engine/source/lodepng.cpp
         project/engine/source/render_element.cpp
         project/engine/source/sound.cpp
+        project/engine/source/plane.cpp
+        project/engine/source/render_grid_item.cpp
+        project/engine/source/render_grid.cpp
 
         #Header Files
         project/engine/headers/GLIncludes.h
@@ -191,6 +194,9 @@ add_executable(
         project/engine/headers/lodepng.h
         project/engine/headers/sound.hpp
         project/engine/headers/render_element.hpp
+        project/engine/headers/plane.hpp
+        project/engine/headers/render_grid_item.hpp
+        project/engine/headers/render_grid.hpp
 
 )
 

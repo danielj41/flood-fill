@@ -5,8 +5,6 @@
 #define GLM_FORCE_PURE
 #include "glm/glm.hpp"
 
-#include "game_object.hpp"
-#include "collision_object.hpp"
 #include "object.hpp"
 #include "uniform_3d_grid.hpp"
 #include "render_grid_item.hpp"
@@ -15,7 +13,12 @@ class RenderGrid {
 
 public:
 
-  Box(glm::vec3 _position, glm::vec3 _movementDirection, float _speed);
+  RenderGrid(unsigned int numberOfCubesInX,
+             unsigned int numberOfCubesInY,
+             unsigned int numberOfCubesInZ,
+             float _minX, float _maxX,
+             float _minY, float _maxY,
+             float _minZ, float _maxZ);
 
   void addObject(Object *object, RenderElement *renderElement);
   void removeObject(Object *object);

@@ -3,13 +3,7 @@
 #include <cstdlib>
 #include <iostream>
 #include "debug_macros.h"
-
 #include "load_manager.hpp"
-#include "time_manager.hpp"
-#include "collision_manager.hpp"
-#include "director.hpp"
-#include "material_manager.hpp"
-#include "render_engine.hpp"
 
 #define XP 0
 #define YP 1

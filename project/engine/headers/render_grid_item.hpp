@@ -5,10 +5,9 @@
 #define GLM_FORCE_PURE
 #include "glm/glm.hpp"
 
-#include "game_object.hpp"
-#include "collision_object.hpp"
+#include "plane.hpp"
 #include "object.hpp"
-#include "uniform_3d_grid.hpp"
+#include "render_element.hpp"
 
 class RenderGridItem {
     public:

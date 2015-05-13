@@ -139,37 +139,3 @@ void RegularPolygonsRender::renderObject(Object * object){
         glDepthMask(GL_TRUE);
     }
 }
-
-void RegularPolygonsRender::addToGrid(Object * object) {
-    glm::vec4 pos = object->getModelMatrix() * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
-    grid.setValue(pos.x, pos.y, pos.z, object);
-}
-
-void RegularPolygonsRender::removeFromGrid(Object * object) {
-    glm::vec4 pos = object->getModelMatrix() * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
-    grid.setValue(pos.x, pos.y, pos.z, NULL);
-}
-
-void RegularPolygonsRender::renderPass() {
-    RenderElement::renderPass();
-
-    setupMesh(LoadManager::getMesh("cube.obj"));
-    for(unsigned int i = 0; i < grid.getSizeX(); i++) {
-        for(unsigned int j = 0; j < grid.getSizeY(); j++) {
-            for(unsigned int k = 0; k < grid.getSizeZ(); k++) {
-                if(grid(i, j, k) != NULL) {
-                    if(i == 0 || grid(i - 1, j, k) == NULL || i == grid.getSizeX() - 1 || grid(i + 1, j, k) == NULL ||
-                       j == 0 || grid(i, j - 1, k) == NULL || j == grid.getSizeY() - 1 || grid(i, j + 1, k) == NULL ||
-                       k == 0 || grid(i, j, k - 1) == NULL || k == grid.getSizeZ() - 1 || grid(i, j, k + 1) == NULL) {
-                        renderObject(grid(i, j, k));
-                    }
-                }
-            }
-        }  
-    }
-}
-
-void RegularPolygonsRender::setGrid(Uniform3DGrid<Object *> _grid) {
-    grid = _grid;
-    grid.initialize(NULL);
-}

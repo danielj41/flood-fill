@@ -26,6 +26,7 @@
 #include "camera_polygons_render.hpp"
 #include "debug_render.hpp"
 #include "active_terrain.hpp"
+#include "render_grid.hpp"
 
 TestLevel::TestLevel() : LevelTemplate("testLevel3.txt"){}
 
@@ -103,19 +104,15 @@ void TestLevel::update(){
 void TestLevel::createRenders(){
     INFO("Creating Renders...");
     RenderEngine::addRenderElement("camera", new CameraPolygonsRender());
-
     RenderEngine::addRenderElement("regular", new RegularPolygonsRender());
-    Uniform3DGrid<int>* typeGrid = getTypeGrid();
-    ((RegularPolygonsRender *)RenderEngine::getRenderElement("regular"))->setGrid(
-        Uniform3DGrid<Object *>(typeGrid->getSizeX(), typeGrid->getSizeY(), typeGrid->getSizeZ(),
-                                typeGrid->getMinX(), typeGrid->getMaxX(),
-                                typeGrid->getMinY(), typeGrid->getMaxY(),
-                                typeGrid->getMinZ(), typeGrid->getMaxZ()));
-
     RenderEngine::addRenderElement("debug", new DebugRender());
     RenderEngine::addRenderElement("normalmap", new NormalMapRender());
     RenderEngine::addRenderElement("textured", new TexturedPolygonsRender());
     RenderEngine::addRenderElement("water", new WaterRender());
     RenderEngine::addRenderElement("water-particle", new WaterParticleRender());
     RenderEngine::addRenderElement("water-stream", new WaterStreamRender());
+    RenderEngine::setRenderGrid(new RenderGrid(typeGrid->getSizeX(), typeGrid->getSizeY(), typeGrid->getSizeZ(),
+                                               typeGrid->getMinX(), typeGrid->getMaxX(),
+                                               typeGrid->getMinY(), typeGrid->getMaxY(),
+                                               typeGrid->getMinZ(), typeGrid->getMaxZ()));
 }
