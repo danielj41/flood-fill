@@ -6,8 +6,6 @@
 
 //TODO: Check if the HW support FBO and check if the FBO EXT is supported
 
-#define FBO21 // OpenGL 2.1 FBO
-
 FBO::FBO() : depth(false), _hasDepthTexture(false), loaded(false) {}
 
 void FBO::addTexture(Texture * texture){
@@ -21,31 +19,8 @@ void FBO::addDepthRenderBuffer(unsigned int width, unsigned int height){
     INFO("Adding depth render buffer to FBO...");
     if(loaded) DEBUG("You are trying to add a depth buffer to a FBO that was already laoded!");
 
-#ifdef FBO21
-    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, id);
-
-    glGenRenderbuffersEXT(1, &depthBuf);
-    glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, depthBuf);
-
-    glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT, width, height);
-    glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, depthBuf);
-
-    glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, 0);
-    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-#else
-    // OpenGL 3.1+ FBO
-    glBindFramebuffer(GL_FRAMEBUFFER, id);
-
-    glGenRenderbuffers(1, &depthBuf);
-    glBindRenderbuffer(GL_RENDERBUFFER, depthBuf);
-
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuf);
-
-    glBindRenderbuffer(GL_RENDERBUFFER, 0);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-#endif
-
+    _width = width;
+    _height = height;
     depth = true;
 }
 
@@ -57,51 +32,29 @@ void FBO::addDepthTexture(unsigned int width, unsigned int height){
     depthTexture->createTexture(width, height, GL_DEPTH_COMPONENT16, GL_DEPTH_COMPONENT, GL_FLOAT);
     depthBuf = depthTexture->getTexture();
 
-    glBindTexture(GL_TEXTURE_2D, depthTexture->getTexture());
-
-#ifdef FBO21
-    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, id);
-
-    glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_TEXTURE_2D, depthTexture->getTexture(), 0);
-    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-#else
-    // OpenGL 3.1+ FBO
-    glBindFramebuffer(GL_FRAMEBUFFER, id);
-
-    glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthBuf, 0);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-#endif
-
-    glBindTexture(GL_TEXTURE_2D, 0);
-
+    _width = width;
+    _height = height;
     depth = true;
     _hasDepthTexture = true;
-    INFO("Depth Texture added to the FBO");
-}
-
-void FBO::create(){
-    INFO("Creating FBO...");
-#ifdef FBO21
-    glGenFramebuffersEXT(1, &id);
-    ASSERT(id != 0, "Could not create FBO");
-#else
-    // OpenGL 3.1+ FBO
-    glGenFramebuffers(1, &id);
-    ASSERT(id != 0, "Could not create FBO");
-#endif
 }
 
 void FBO::load(){
-    INFO("Loading FBO...");
     if(loaded) DEBUG("Overriding FBO! This FBO was already loaded once!");
 
-#ifdef FBO21
+    INFO("Creating FBO...");
+    glGenFramebuffersEXT(1, &id);
+    ASSERT(id != 0, "Could not create FBO");
+
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, id);
 
+    //Color Buffers
+    INFO("Attaching Colors to FBO...");
     if(textures.size() > 0){
         GLenum * attchs = new GLenum[textures.size()];
 
         for (unsigned int i = 0; i < textures.size(); i++){
+            glBindTexture(GL_TEXTURE_2D, textures[i]->getTexture());
+
             glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT,
                                       GL_COLOR_ATTACHMENT0_EXT + i,
                                       GL_TEXTURE_2D, textures[i]->getTexture(),
@@ -111,43 +64,39 @@ void FBO::load(){
 
         glDrawBuffers(textures.size(), attchs);
         delete attchs;
+
+        INFO(textures.size() << " colors were attached!");
     }
     else{
         glDrawBuffer(GL_NONE);
+        INFO("There is no color to attach!");
     }
 
-    GLenum e = glCheckFramebufferStatus(GL_FRAMEBUFFER_EXT);
+    //Depth Buffer
+    if(depth && _hasDepthTexture){
+        INFO("Attaching Depth Texture...");
+
+        glBindTexture(GL_TEXTURE_2D, depthBuf);
+        glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT,
+                                  GL_TEXTURE_2D, depthBuf, 0);
+    }
+    else if(depth){
+        INFO("Attaching Depth Render Buffer...");
+
+        glGenRenderbuffersEXT(1, &depthBuf);
+        glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, depthBuf);
+
+        glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT,
+                                 _width, _height);
+        glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT,
+                                     GL_RENDERBUFFER_EXT, depthBuf);
+    }
+
+    GLenum e = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
     ASSERT(e == GL_FRAMEBUFFER_COMPLETE_EXT, "Problem in FBO creation. " << e);
     printInfo();
 
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-
-#else
-    glBindFramebuffer(GL_FRAMEBUFFER, id);
-
-
-    if(textures.size() > 0){
-        GLenum * attchs = new GLenum[textures.size()];
-
-        for (unsigned int i = 0; i < textures.size(); i++){
-            glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i,
-                                 textures[i]->getTexture(), 0);
-            attchs[i] = GL_COLOR_ATTACHMENT0 + i;
-        }
-
-        glDrawBuffers(textures.size(), attchs);
-        delete attchs;
-    }
-    else{
-        glDrawBuffer(GL_NONE);
-    }
-
-    GLenum e = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-    ASSERT(e == GL_FRAMEBUFFER_COMPLETE, "Problem in FBO creation");
-    printInfo();
-
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-#endif
 
     loaded = true;
 }
@@ -170,22 +119,15 @@ void FBO::enable(){
     ASSERT(loaded, "FBO not loaded! Can't get texture");
 
     glBindTexture(GL_TEXTURE_2D, 0);
-
-#ifdef FBO21
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, id);
-#else
-    glBindFramebuffer(GL_FRAMEBUFFER, id);
-#endif
+    glClearColor(1.0, 1.0, 1.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void FBO::disable(){
     ASSERT(loaded, "FBO not loaded! Can't get texture");
 
-#ifdef FBO21
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-#else
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-#endif
 }
 
 void FBO::printInfo() {

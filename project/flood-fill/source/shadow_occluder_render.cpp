@@ -19,8 +19,8 @@ ShadowOccluderRender::ShadowOccluderRender() : RenderElement(false) {}
 
 void ShadowOccluderRender::setup(){
     fbo = new FBO();
-    fbo->create();
     fbo->addDepthTexture(Global::ScreenWidth, Global::ScreenHeight);
+
     fbo->load();
 }
 

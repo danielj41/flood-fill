@@ -102,10 +102,11 @@ void NormalMapRender::setupShader(){
 
         glm::mat4 view = glm::lookAt(-15.0f*light->getDirection(), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
         glUniformMatrix4fv(shader->getHandle("uShadowMatrix"), 1, GL_FALSE,
-          glm::value_ptr(camera->getProjectionMatrix()*view));
+          glm::value_ptr(glm::ortho<float>(-10,10,-10,10,-10,100)*view));
 
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, ((ShadowOccluderRender *) (RenderEngine::getRenderElement("shadow")))->getFBO()->getDepthTexture()->getTexture());
+        glBindTexture(GL_TEXTURE_2D,
+            ((ShadowOccluderRender *) (RenderEngine::getRenderElement("shadow")))->getFBO()->getDepthTexture()->getTexture());
         glUniform1i(shader->getHandle("uShadowTexID"), 0);
     }
 }

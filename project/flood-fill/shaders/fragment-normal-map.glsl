@@ -22,7 +22,11 @@ uniform vec3 uLightDirection;
 uniform vec3 uLightColor;
 
 float getShadow(){
-    return texture2D(uShadowTexID, vec2(vShadowCoord.xy)*0.5f + 0.5f).x;
+    float shadowmap =  texture2D(uShadowTexID, vec2(vShadowCoord.xy/vShadowCoord.w)*0.5f + 0.5f).x;
+    if(shadowmap + 0.00001 < 0.5*vShadowCoord.z/vShadowCoord.w + 0.5){
+        return 0.0f;
+    }
+    return shadowmap;
 }
 
 vec2 getTexCoordOffset(vec2 texCoord){
@@ -50,14 +54,13 @@ void main(){
 
     vec3 normal = vTBN*texNormal;
 
-
-    vec3 kd = uDiffuseColor;
+    vec3 kd = vec3(texel);
     vec3 ks = uSpecularColor;
     vec3 Ia = uAmbientColor;
     vec3 Ie = uEmissionColor;
     vec3 Ic = uLightColor;
 
-    float n = uShininess;
+    float n = 10.0f;//uShininess;
 
     vec3 N = normalize(normal);
     vec3 L = normalize(-uLightDirection);
@@ -68,7 +71,7 @@ void main(){
     vec3 Is = pow(max(dot(N, H), 0.0), n)*ks;
     vec3 Id = max(dot(N, L), 0.0)*kd;
 
-    vec3 I = getShadow()*Ic*(Id + Is) + Ia + Ie;
+    vec3 I = getShadow()*(Id + Is);
 
-    gl_FragColor = vec4(vec3(getShadow()), 1)*texel;
+    gl_FragColor = vec4(vec3(I), 1);
 }

@@ -19,9 +19,6 @@ public:
     // Add a depth buffer as a Texture
     void addDepthTexture(unsigned int width, unsigned int height);
 
-    // Generates the framebuffer id
-    void create();
-
     // Load the FBO with all textures attached in the same order that they were
     // added to it.
     void load();
@@ -34,6 +31,7 @@ public:
 
 private:
     bool depth, _hasDepthTexture, loaded;
+    unsigned int _width, _height;
 
     std::vector<Texture *> textures;
     GLuint id, depthBuf;

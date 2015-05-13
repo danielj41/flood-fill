@@ -44,5 +44,5 @@ void main(){
     vTBN = tangentToObjectSpaceMatrix(wTangent, wBitangent, wNormal);
     vShadowCoord = uShadowMatrix*uModel*vec4(aPosition, 1);
 
-    gl_Position = uShadowMatrix*uModel*vec4(aPosition, 1);
+    gl_Position = uProjection*uView*uModel*vec4(aPosition, 1);
 }

@@ -224,8 +224,8 @@ void createMaterials(){
     Material * material;
     material = new Material(glm::vec3(0.4, 0.4, 0.4),
                             glm::vec3(0.3, 0.3, 0.4),
-                            glm::vec3(0.3, 0.3, 0.4),
-                            4.0f);
+                            glm::vec3(0.1, 0.1, 0.1),
+                            100.0f);
     MaterialManager::addMaterial("FlatGrey", material);
 
     Material * material2;
