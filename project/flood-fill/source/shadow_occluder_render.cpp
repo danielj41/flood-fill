@@ -63,7 +63,8 @@ void ShadowOccluderRender::setupShader(){
     glUniformMatrix4fv(shader->getHandle("uView"), 1, GL_FALSE,
       glm::value_ptr(view));
 
-    glm::mat4 projection = camera->getProjectionMatrix(); //glm::ortho<float>(-10,10,-10,10,-10,100);
+    glm::mat4 projection = camera->getProjectionMatrix();
+    projection = glm::ortho<float>(-10,10,-10,10,-10,100);
     glUniformMatrix4fv(shader->getHandle("uProjection"), 1, GL_FALSE,
       glm::value_ptr(projection));
 }

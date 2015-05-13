@@ -77,6 +77,9 @@ void FBO::load(){
         INFO("Attaching Depth Texture...");
 
         glBindTexture(GL_TEXTURE_2D, depthBuf);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
+
         glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT,
                                   GL_TEXTURE_2D, depthBuf, 0);
     }
