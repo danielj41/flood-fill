@@ -76,7 +76,7 @@ void FluidBox::update(){
     getBoundingBox()->setPosition(position - (1.0f - timer/1.55f) * glm::vec3(0, 2.0f, 0));
     if(timer > 1.55f) {
       visible = true;
-      RenderEngine::getRenderGrid()->addObject(fluidBox, RenderEngine::getRenderElement("textured"));
+      RenderEngine::getRenderGrid()->addObject(fluidBox, RenderEngine::getRenderElement("regular"));
       getBoundingBox()->setPosition(position);
     }
   } 
@@ -90,7 +90,7 @@ void FluidBox::update(){
       fluidBox->loadIdentity();
       fluidBox->translate(position);
       Director::getScene()->removeGameObject(this);
-      RenderEngine::getRenderElement("textured")->removeObject(fluidBox);
+      RenderEngine::getRenderElement("regular")->removeObject(fluidBox);
       CollisionManager::removeCollisionObjectFromGrid(this);
     }
   }
@@ -105,7 +105,7 @@ void FluidBox::collided(CollisionObject * collidedWith){
       deleting = true;
       timer = 0.0f;
       RenderEngine::getRenderGrid()->removeObject(fluidBox);
-      RenderEngine::getRenderElement("textured")->addObject(fluidBox);
+      RenderEngine::getRenderElement("regular")->addObject(fluidBox);
     }
 	break;
   } 

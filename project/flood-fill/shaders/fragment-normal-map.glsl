@@ -9,6 +9,7 @@ uniform sampler2D uNormalTexID;
 
 uniform float uNormalMapBias;
 uniform float uNormalMapScale;
+uniform vec2 uGridScale;
 
 uniform vec3 uDiffuseColor;
 uniform vec3 uSpecularColor;
@@ -20,6 +21,9 @@ uniform vec3 uLightDirection;
 uniform vec3 uLightColor;
 
 vec2 getTexCoordOffset(vec2 texCoord){
+    texCoord.x = (texCoord.x * uGridScale.x) - floor(texCoord.x * uGridScale.x);
+    texCoord.y = (texCoord.y * uGridScale.y) - floor(texCoord.y * uGridScale.y);
+
     float parallaxScale = uNormalMapScale;
     float bias = uNormalMapBias;
     vec3 tanView = normalize(transpose(vTBN)*vView);

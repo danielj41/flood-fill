@@ -41,6 +41,8 @@ void NormalMapRender::loadShader(){
     shader->loadHandle("uNormalTexID", 'u');
     shader->loadHandle("uNormalMapBias", 'u');
     shader->loadHandle("uNormalMapScale", 'u');
+
+    shader->loadHandle("uGridScale", 'u');
 }
 
 void NormalMapRender::setupEnviroment(){
@@ -150,6 +152,7 @@ void NormalMapRender::renderObject(Object * object){
 
     glUniform1f(shader->getHandle("uNormalMapScale"), object->getNormalMapBias());
     glUniform1f(shader->getHandle("uNormalMapBias"), object->getNormalMapScale());
+    glUniform2f(shader->getHandle("uGridScale"), object->getGridScale().x, object->getGridScale().y);
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, object->getTexture()->getTexture());

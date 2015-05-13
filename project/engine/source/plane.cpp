@@ -47,16 +47,21 @@ void Plane::setup() {
 
   if(direction == XP) {
     object->rotate(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    object->setGridScale(glm::vec2(front - back + 1, top - bottom + 1));
   } else if(direction == XN) {
     object->rotate(-90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    object->setGridScale(glm::vec2(front - back + 1, top - bottom + 1));
   } else if(direction == YP) {
     object->rotate(90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+    object->setGridScale(glm::vec2(right - left + 1, front - back + 1));
   } else if(direction == YN) {
     object->rotate(-90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+    object->setGridScale(glm::vec2(right - left + 1, front - back + 1));
   } else if(direction == ZP) {
-
+    object->setGridScale(glm::vec2(right - left + 1, top - bottom + 1));
   } else if(direction == ZN) {
     object->rotate(180.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+    object->setGridScale(glm::vec2(right - left + 1, top - bottom + 1));
   }
   
   object->scale(glm::vec3((right - left + 1) * edgeX / 2.0f,

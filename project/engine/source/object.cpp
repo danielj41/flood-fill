@@ -14,6 +14,7 @@ Object::Object() : _hasTexture(false), textureEnabled(false), water(false), alph
     _hasNormalMap = false;
     normalMapScale = 0.0f;
     normalMapBias = 0.0f;
+    gridScale = glm::vec2(0.0f, 0.0f);
 }
 
 Object::Object(Mesh * _mesh, Material * _material)
@@ -26,6 +27,7 @@ Object::Object(Mesh * _mesh, Material * _material)
     _hasNormalMap = false;
     normalMapScale = 0.0f;
     normalMapBias = 0.0f;
+    gridScale = glm::vec2(0.0f, 0.0f);
 }
 
 void Object::draw(Shader * shader){
@@ -178,6 +180,14 @@ void Object::setVelocity(glm::vec3 _velocity) {
 
 glm::vec3 Object::getVelocity() {
     return velocity;
+}
+
+void Object::setGridScale(glm::vec2 _gridScale) {
+    gridScale = _gridScale;
+}
+
+glm::vec2 Object::getGridScale() {
+    return gridScale;
 }
 
 void Object::enableTexture(){

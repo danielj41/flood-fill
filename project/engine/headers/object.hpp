@@ -31,6 +31,7 @@ public:
     GLuint getWaterBlock();
     glm::vec2 getDTime();
     glm::vec3 getVelocity();
+    glm::vec2 getGridScale();
 
     void applyTexture(Texture * _texture);
     void enableTexture();
@@ -48,6 +49,7 @@ public:
     void applyWaterBlock(GLuint id);
     void setDTime(glm::vec2 _dTime);
     void setVelocity(glm::vec3 _velocity);
+    void setGridScale(glm::vec2 _gridScale);
 
     void setAlpha(float _alpha);
     void scale(glm::vec3 scalingVector);
@@ -76,6 +78,7 @@ protected:
     float normalMapBias;
     glm::vec2 dTime;
     glm::vec3 velocity;
+    glm::vec2 gridScale;
 
     void drawElements();
 };
