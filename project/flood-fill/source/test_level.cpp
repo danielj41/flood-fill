@@ -122,9 +122,9 @@ void TestLevel::createRenders(){
                                 typeGrid->getMinY(), typeGrid->getMaxY(),
                                 typeGrid->getMinZ(), typeGrid->getMaxZ()));
 
-    RenderEngine::addRenderElement("debug", new DebugRender(), 5);
-    RenderEngine::addRenderElement("normalmap", new NormalMapRender(), 2);
-    RenderEngine::addRenderElement("textured", new TexturedPolygonsRender(), 3);
+    RenderEngine::addRenderElement("debug", new DebugRender(), -5);
+    RenderEngine::addRenderElement("normalmap", new NormalMapRender(), 1);
+    RenderEngine::addRenderElement("textured", new TexturedPolygonsRender(), 1);
     RenderEngine::addRenderElement("water", new WaterRender(), 4);
     RenderEngine::addRenderElement("water-particle", new WaterParticleRender(),4);
     RenderEngine::addRenderElement("water-stream", new WaterStreamRender(), 4);
