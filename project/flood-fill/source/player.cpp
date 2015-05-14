@@ -65,12 +65,14 @@ void Player::setup() {
     RenderEngine::getRenderElement("textured")->addObject(sky);
 
     gun = new Object(
-        LoadManager::getMesh("cube.obj"),
+        LoadManager::getMesh("gun.obj"),
         MaterialManager::getMaterial("FlatBlue"));
     gun->loadIdentity();
-    gun->scale(glm::vec3(0.07f, 0.07f, 0.3f));
+    //gun->scale(glm::vec3(0.07f, 0.07f, 0.3f));
     gun->rotate(15.0f, glm::vec3(1.0f, 1.0f, 0.0f));
     gun->translate(glm::vec3(0.27f, -0.26f, -0.4f));
+    gun->applyTexture(LoadManager::getTexture("GunTexture"));
+    gun->enableTexture();
     RenderEngine::getRenderElement("camera")->addObject(gun);
 
 

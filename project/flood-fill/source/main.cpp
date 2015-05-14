@@ -189,6 +189,18 @@ void loadMeshes(){
     mesh->calculateTangents();
     mesh->generateTangentBuffer();
 
+    LoadManager::loadMesh("gun.obj");
+    mesh = LoadManager::getMesh("gun.obj");
+    mesh->resize();
+    mesh->calculateNormals();
+    mesh->generateVertexBuffer();
+    mesh->generateIndexBuffer();
+    mesh->generateNormalBuffer();
+    mesh->generateTextureCoordinateBuffer();
+    mesh->calculateLimits();
+    mesh->calculateTangents();
+    mesh->generateTangentBuffer();
+
     LoadManager::loadMesh("interpcube.obj");
     mesh = LoadManager::getMesh("interpcube.obj");
     //mesh->resize(); // Don't resize this
@@ -209,6 +221,9 @@ void loadTextures(){
 
     LoadManager::loadImage("chesterfield_normal_map.png");
     LoadManager::loadTexture("PaddedNormalMap", LoadManager::getImage("chesterfield_normal_map.png"));
+
+    LoadManager::loadImage("gun_texture.png");
+    LoadManager::loadTexture("GunTexture", LoadManager::getImage("gun_texture.png"));
 
     RenderTexture::loadShaders();
     LoadManager::loadRenderTexture("waterData");
