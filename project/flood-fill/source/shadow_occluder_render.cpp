@@ -15,7 +15,8 @@
 const std::string ShadowOccluderRender::VERTEX_SHADER_FILE   = "occluder_vertex.glsl";
 const std::string ShadowOccluderRender::FRAGMENT_SHADER_FILE = "occluder_fragment.glsl";
 
-ShadowOccluderRender::ShadowOccluderRender() : RenderElement(false) {}
+ShadowOccluderRender::ShadowOccluderRender()
+    : RenderElement(false) {}
 
 void ShadowOccluderRender::setup(){
     fbo = new FBO();
@@ -58,15 +59,11 @@ void ShadowOccluderRender::setupShader(){
     std::map<std::string, Light *> lights = Director::getScene()->getLights();
     Light * light = lights.begin()->second;
 
-    glm::mat4 view = glm::lookAt(-glm::length(light->getPosition())*light->getDirection(), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
-
     glUniformMatrix4fv(shader->getHandle("uView"), 1, GL_FALSE,
-      glm::value_ptr(view));
+      glm::value_ptr(light->getViewMatrix()));
 
-    glm::mat4 projection = camera->getProjectionMatrix();
-    projection = glm::ortho<float>(-10,10,-10,10,-10,100);
     glUniformMatrix4fv(shader->getHandle("uProjection"), 1, GL_FALSE,
-      glm::value_ptr(projection));
+      glm::value_ptr(light->getProjectionMatrix()));
 }
 
 void ShadowOccluderRender::setupMesh(Mesh * mesh){

@@ -49,15 +49,26 @@ void TestLevel::setup(){
     addCamera("Camera1", cam1);
     setMainCamera("Camera1");
 
-    Camera * cam2 = new Camera(glm::vec3(0, 1, 0), glm::vec3(0, 0, -5),
+    Camera * cam2 = new Camera(glm::vec3(0, 1, 0), glm::vec3(-6, -3, 6),
                              glm::vec3(0, 1, 0));
     cam2->setProjectionMatrix(
         glm::perspective(glm::radians(90.0f),
                         (float) Global::ScreenWidth/Global::ScreenHeight,
                         0.1f, 100.f));
 
-    Light * l1 = new Light(glm::vec3(1), 30.0f, glm::vec3(1.0, -1.0, 0.5));
-    l1->setPosition(glm::vec3(1.0, -1.0, 0.5)*-15.0f);
+    Light * l1 = new Light(glm::vec3(1), 30.0f, glm::vec3(0, 30, 0));
+    l1->setPosition(l1->getDirection()*1.0f);
+
+    Uniform3DGrid<int>* typeGrid = getTypeGrid();
+    glm::vec3 gridCenter((typeGrid->getMaxX() - typeGrid->getMinX())/2.0f,
+                         (typeGrid->getMaxY() - typeGrid->getMinY())/2.0f,
+                         (typeGrid->getMinZ() - typeGrid->getMaxZ())/2.0f);
+
+    l1->setViewMatrix(glm::lookAt(
+        l1->getDirection(),
+        gridCenter, glm::vec3(0, 1, 0)));
+    l1->setProjectionMatrix(glm::ortho<float>(-30,30,-30,30,-100,100));
+
     addLight("Sun", l1);
 
     INFO("Setting up the player for the Test Level...");
@@ -115,7 +126,8 @@ void TestLevel::createRenders(){
     RenderEngine::addRenderElement("normalmap", new NormalMapRender(), 2);
     RenderEngine::addRenderElement("textured", new TexturedPolygonsRender(), 3);
     RenderEngine::addRenderElement("water", new WaterRender(), 4);
-    RenderEngine::addRenderElement("water-particle", new WaterParticleRender(), 4);
+    RenderEngine::addRenderElement("water-particle", new WaterParticleRender(),4);
     RenderEngine::addRenderElement("water-stream", new WaterStreamRender(), 4);
-    RenderEngine::addRenderElement("shadow", new ShadowOccluderRender()), 0;
+
+    RenderEngine::addRenderElement("shadow", new ShadowOccluderRender(), 0);
 }

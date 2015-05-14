@@ -323,7 +323,7 @@ void setupGLFW(){
 
     // Open a window and create its OpenGL context
     Global::window = glfwCreateWindow(Global::ScreenWidth, Global::ScreenHeight,
-                "Lab Project",  glfwGetPrimaryMonitor(), NULL);
+                "Lab Project",  NULL, NULL);
     if (Global::window == NULL){
         DEBUG("Failed to open GLFW window.");
         glfwTerminate();

@@ -94,14 +94,8 @@ void NormalMapRender::setupShader(){
                     light->getDirection().y,
                     light->getDirection().z);
 
-
-        glm::mat4 view = glm::lookAt(-glm::length(light->getPosition())*light->getDirection(), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
-
-        glm::mat4 projection = camera->getProjectionMatrix();
-        projection = glm::ortho<float>(-10,10,-10,10,-10,100);
-
         glUniformMatrix4fv(shader->getHandle("uShadowMatrix"), 1, GL_FALSE,
-          glm::value_ptr(projection*view));
+          glm::value_ptr(light->getProjectionMatrix()*light->getViewMatrix()));
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D,

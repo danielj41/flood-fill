@@ -50,6 +50,7 @@ void ActiveTerrain::update(){
             // Add solidCubes to render engine            
             for(std::list<SolidCube *>:: iterator it = solidCubes.begin(); it != solidCubes.end(); it++){
                 re->addObject((*it)->getObject());
+                RenderEngine::getRenderElement("shadow")->addObject((*it)->getObject());
                 CollisionManager::addCollisionObjectToGrid(*it);
                 (*it)->animateFrom(glm::vec3(0.0f, 15.0f, 0.0f), timer);
             }
@@ -75,6 +76,7 @@ void ActiveTerrain::update(){
 
             for(std::list<SolidCube *>:: iterator it = solidCubes.begin(); it != solidCubes.end(); it++){
                 re->removeObject((*it)->getObject());
+                RenderEngine::getRenderElement("shadow")->removeObject((*it)->getObject());
                 CollisionManager::removeCollisionObjectFromGrid(*it);
             }
 

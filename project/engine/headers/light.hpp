@@ -31,6 +31,8 @@ public:
     glm::vec3 getFallOff();
     float getIntensity();
     float getCutOffAngle();
+    glm::mat4 getViewMatrix();
+    glm::mat4 getProjectionMatrix();
 
     void setPosition(glm::vec3 _position);
     void setColor(glm::vec3 _color);
@@ -38,6 +40,8 @@ public:
     void setFallOff(glm::vec3 _fallOff);
     void setIntensity(float _intensity);
     void setCutOffAngle(float _cutOffAngle);
+    void setViewMatrix(glm::mat4 matrix);
+    void setProjectionMatrix(glm::mat4 matrix);
 
     bool isDirectional();
     bool isPointLight();
@@ -55,6 +59,8 @@ private:
     glm::vec3 color, position, direction, fallOff;
     float intensity, cutOffAngle;
     bool ON;
+
+    glm::mat4 view, projection;
 
     bool isValid(); // Test if the light type is not NOT_VALID_LIGHT
 };

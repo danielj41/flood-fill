@@ -26,7 +26,6 @@ float getShadow(){
     shadowUV = 0.5f*shadowUV + 0.5f;
     //float shadowmap =  texture2D(uShadowTexID, shadowUV.xy).x;
 
-    //TODO: get screen size
     float xOffset = 1.0f/uScreenSize.x;
     float yOffset = 1.0f/uScreenSize.x;
 
@@ -43,7 +42,7 @@ float getShadow(){
 
     shadowness = shadowness/(kernel_size*kernel_size);
     if(shadowness + 0.001 < shadowUV.z){
-        return shadowness;
+        return 0.2f;
     }
     return 1.0f;
 
@@ -77,7 +76,7 @@ void main(){
     float n = uShininess;
 
     vec3 N = normalize(normal);
-    vec3 L = normalize(-uLightDirection);
+    vec3 L = normalize(uLightDirection);
     vec3 V = normalize(vView);
 
     vec3 H = normalize(L + V);
