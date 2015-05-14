@@ -82,6 +82,7 @@ void RenderEngine::removeRenderElement(std::string name){
 }
 
 void RenderEngine::setRenderGrid(RenderGrid *_renderGrid) {
+    _renderGrid->initialize();
     renderGrid = _renderGrid;
 }
 
