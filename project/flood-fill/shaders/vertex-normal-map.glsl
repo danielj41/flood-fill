@@ -1,4 +1,4 @@
-#version 130
+#version 120
 
 attribute vec3 aPosition;
 attribute vec3 aNormal;
@@ -18,14 +18,14 @@ varying vec4 vShadowCoord;
 varying vec3 vView;
 varying mat3 vTBN;
 
-mat3 objectToTangentSpaceMatrix(vec3 tangent, vec3 bitangent, vec3 normal){
-    /* Tangent space is the space where the Texture is. :: TBN^-1
-       | T'x T'y T'z |
-       | B'x B'y B'z |
-       | N'x N'y N'z |
-    */
+/*mat3 objectToTangentSpaceMatrix(vec3 tangent, vec3 bitangent, vec3 normal){
+    // Tangent space is the space where the Texture is. :: TBN^-1
+    //   | T'x T'y T'z |
+    //   | B'x B'y B'z |
+    //   | N'x N'y N'z |
+
     return transpose(mat3(tangent, bitangent, normal));
-}
+}*/
 
 mat3 tangentToObjectSpaceMatrix(vec3 tangent, vec3 bitangent, vec3 normal){
     return mat3(tangent, bitangent, normal);

@@ -1,4 +1,4 @@
-#version 130
+#version 120
 
 varying vec2 vTexCoord;
 varying vec3 vView;
@@ -32,7 +32,7 @@ float getShadow(){
     float shadowness = 0.0f;
 
     // Must be an even number
-    int kernel_size = 5;
+    int kernel_size = 7;
     for(int y = -kernel_size/2; y <= kernel_size/2; y++){
         for(int x = -kernel_size/2; x <= kernel_size/2; x ++){
             vec2 Offsets = vec2(x * xOffset, y * yOffset);
@@ -45,7 +45,6 @@ float getShadow(){
         return 0.2f;
     }
     return 1.0f;
-
 }
 
 /*vec2 getTexCoordOffset(vec2 texCoord){
