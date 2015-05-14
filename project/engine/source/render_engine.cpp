@@ -30,21 +30,20 @@ void RenderEngine::setup(){
     INFO("RenderEngine set!");
 }
 
+bool renderElementCompare(const std::pair<std::string, int> & a, const std::pair<std::string, int> & b){
+    if(a.second == b.second){
+        return a.first < b.first;
+    }
+    return a.second < b.second;
+}
+
 void RenderEngine::render(){
     INFO("Render Engine: rendering objects...");
 
     ASSERT(loaded, "You dind't load the rendering engine!");
 
     std::vector< std::pair<std::string, int> > elements(renderElementsPriority.begin(), renderElementsPriority.end());
-    std::sort(elements.begin(), elements.end(),
-        [](const std::pair<std::string, int> & a, const std::pair<std::string, int> & b) -> bool
-        {
-            if(a.second == b.second){
-                return a.first < b.first;
-            }
-            return a.second < b.second;
-        }
-    );
+    std::sort(elements.begin(), elements.end(), renderElementCompare);
 
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
