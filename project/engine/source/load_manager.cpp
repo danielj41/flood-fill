@@ -4,6 +4,8 @@
 #include <cstdlib>
 #include "debug_macros.h"
 
+//TODO: Remove this class from the engine, too specific for the flood fill project
+
 std::map<std::string, Shader *> LoadManager::shaders;
 std::map<std::string, Mesh *>   LoadManager::meshes;
 std::map<std::string, Image *> LoadManager::images;
@@ -60,8 +62,8 @@ void LoadManager::loadTexture(std::string name, Image * image){
             "form image " << image->getFileName() << "...");
 
     if(textures.find(name) == textures.end()){
-        textures[name] = new Texture(image);
-        textures[name]->load();
+        textures[name] = new Texture();
+        textures[name]->createTextureFromImage(image, true);
     }
 
     INFO("LoadManager: Texture " << name << " loaded!");

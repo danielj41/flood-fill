@@ -32,12 +32,14 @@ void ActiveTerrain::setup(){
             SolidCube * at1 = new SolidCube(glm::vec3(i*2 + 1, j*2 + 1, -37));
             at1->setup();
             RenderEngine::getRenderGrid()->removeObject(at1->getObject());
+            RenderEngine::getRenderElement("shadow")->removeObject(at1->getObject());
 
             solidCubes.push_back(at1);
 
             SolidCube * at2 = new SolidCube(glm::vec3(i*2 + 1, j*2 + 1, -21));
             at2->setup();
             RenderEngine::getRenderGrid()->removeObject(at2->getObject());
+            RenderEngine::getRenderElement("shadow")->removeObject(at2->getObject());
 
             solidCubes.push_back(at2);
             
@@ -78,6 +80,7 @@ void ActiveTerrain::update(){
             // Add solidCubes to render engine            
             for(std::list<SolidCube *>:: iterator it = solidCubes.begin(); it != solidCubes.end(); it++){
                 re->addObject((*it)->getObject());
+                RenderEngine::getRenderElement("shadow")->addObject((*it)->getObject());
                 CollisionManager::addCollisionObjectToGrid(*it);
                 (*it)->animateFrom(glm::vec3(0.0f, 15.0f, 0.0f), timer);
             }
@@ -102,10 +105,10 @@ void ActiveTerrain::update(){
         if (active && doneAnimating) {
             
             active = false;
-            RenderElement *re = RenderEngine::getRenderElement("normalmap");
 
             for(std::list<SolidCube *>:: iterator it = solidCubes.begin(); it != solidCubes.end(); it++){
                 RenderEngine::getRenderGrid()->removeObject((*it)->getObject());
+                RenderEngine::getRenderElement("shadow")->removeObject((*it)->getObject());
                 CollisionManager::removeCollisionObjectFromGrid(*it);
             }
             

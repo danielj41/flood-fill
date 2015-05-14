@@ -1,5 +1,9 @@
 #include "render_engine.hpp"
 
+#include <vector>
+#include <algorithm>
+#include <utility>
+
 #include "glm/gtc/type_ptr.hpp"
 
 #include <iostream>
@@ -15,6 +19,7 @@
 bool RenderEngine::loaded = false;
 std::map< std::string, RenderElement * > RenderEngine::renderElements;
 RenderGrid *RenderEngine::renderGrid = NULL;
+std::map< std::string, int > RenderEngine::renderElementsPriority;
 
 void RenderEngine::setup(){
     INFO("Setup RenderEngine...");
@@ -25,6 +30,13 @@ void RenderEngine::setup(){
     INFO("RenderEngine set!");
 }
 
+bool renderElementCompare(const std::pair<std::string, int> & a, const std::pair<std::string, int> & b){
+    if(a.second == b.second){
+        return a.first < b.first;
+    }
+    return a.second < b.second;
+}
+
 void RenderEngine::render(){
     renderGrid->clean();
 
@@ -32,26 +44,40 @@ void RenderEngine::render(){
 
     ASSERT(loaded, "You dind't load the rendering engine!");
 
+    std::vector< std::pair<std::string, int> > elements(renderElementsPriority.begin(), renderElementsPriority.end());
+    std::sort(elements.begin(), elements.end(), renderElementCompare);
+
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    for(auto it = renderElements.begin(); it != renderElements.end(); it++){
-        INFO("Rendering Objects from Render Element " << it->first << "...");
+    for(unsigned int i = 0; i < elements.size(); i++){
+        if(elements[i].second < 0) continue;
+
+        RenderElement * element = renderElements[elements[i].first];
+
+        INFO("Rendering Objects from Render Element " << elements[i].first << "...");
+
         INFO("Setup Enviroment...")
-        it->second->setupEnviroment();
+        element->setupEnviroment();
         INFO("Render Pass...")
-        it->second->renderPass();
+        element->renderPass();
         INFO("Tear Down Enviroment...")
-        it->second->tearDownEnviroment();
+        element->tearDownEnviroment();
     }
 }
 
-void RenderEngine::addRenderElement(std::string name, RenderElement * renderElement){
+void RenderEngine::addRenderElement(std::string name, RenderElement * renderElement, int priority){
     INFO("Adding render element " << name << " to the render engine...");
     ASSERT(loaded, "You dind't load the rendering engine!");
 
+    INFO("Setting up Render Element...");
+    renderElement->setup();
+
+    INFO("Loading the Render Element Shader...");
     renderElement->loadShader();
+
     renderElements[name] = renderElement;
+    renderElementsPriority[name] = priority;
     INFO("Render element " << name << " added!");
 }
 
@@ -73,6 +99,7 @@ void RenderEngine::removeRenderElement(std::string name){
     for(auto it = renderElements.begin(); it != renderElements.end(); it++){
         if(it->first == name){
             renderElements.erase(it);
+            renderElementsPriority.erase(renderElementsPriority.find(name));
             INFO("Render Element Removed!");
             return;
         }

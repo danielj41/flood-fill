@@ -31,8 +31,6 @@ Light::Light(glm::vec3 _color, float _intensity, glm::vec3 _position,
 
 glm::vec3 Light::getPosition(){
     ASSERT(isValid(), "This light is not a valid light");
-    ASSERT(!isDirectional(),
-        "Directional Lights does not have position");
     return position;
 }
 
@@ -69,10 +67,16 @@ float Light::getCutOffAngle(){
     return cutOffAngle;
 }
 
+glm::mat4 Light::getViewMatrix(){
+    return view;
+}
+
+glm::mat4 Light::getProjectionMatrix(){
+    return projection;
+}
+
 void Light::setPosition(glm::vec3 _position){
     ASSERT(isValid(), "This light is not a valid light");
-    ASSERT(!isDirectional(),
-        "Directional Lights does not have position");
     position = _position;
 }
 
@@ -107,6 +111,14 @@ void Light::setCutOffAngle(float _cutOffAngle){
     ASSERT(!isPointLight(),
         "Point Lights does not have a cut off angle");
     cutOffAngle = _cutOffAngle;
+}
+
+void Light::setViewMatrix(glm::mat4 matrix){
+    view = matrix;
+}
+
+void Light::setProjectionMatrix(glm::mat4 matrix){
+    projection = matrix;
 }
 
 bool Light::isDirectional(){

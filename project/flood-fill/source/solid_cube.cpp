@@ -27,8 +27,8 @@ void SolidCube::setup() {
 
     cube->translate(position);
 
-    //RenderEngine::getRenderElement("normalmap")->addObject(cube);
     RenderEngine::getRenderGrid()->addObject(cube, RenderEngine::getRenderElement("normalmap"));
+    RenderEngine::getRenderElement("shadow")->addObject(cube);
 
     setCollisionID(1);
     setCanCollide(true);

@@ -9,21 +9,23 @@ uniform mat4 uModel;
 uniform mat4 uView;
 uniform mat4 uProjection;
 uniform mat4 uNormalMatrix;
+uniform mat4 uShadowMatrix;
 
 uniform vec3 uEyePosition;
 
 varying vec2 vTexCoord;
+varying vec4 vShadowCoord;
 varying vec3 vView;
 varying mat3 vTBN;
 
-mat3 objectToTangentSpaceMatrix(vec3 tangent, vec3 bitangent, vec3 normal){
-    /* Tangent space is the space where the Texture is. :: TBN^-1
-       | T'x T'y T'z |
-       | B'x B'y B'z |
-       | N'x N'y N'z |
-    */
+/*mat3 objectToTangentSpaceMatrix(vec3 tangent, vec3 bitangent, vec3 normal){
+    // Tangent space is the space where the Texture is. :: TBN^-1
+    //   | T'x T'y T'z |
+    //   | B'x B'y B'z |
+    //   | N'x N'y N'z |
+
     return transpose(mat3(tangent, bitangent, normal));
-}
+}*/
 
 mat3 tangentToObjectSpaceMatrix(vec3 tangent, vec3 bitangent, vec3 normal){
     return mat3(tangent, bitangent, normal);
@@ -40,6 +42,7 @@ void main(){
     vTexCoord = aTexCoord;
     vView = uEyePosition - wPos;
     vTBN = tangentToObjectSpaceMatrix(wTangent, wBitangent, wNormal);
+    vShadowCoord = uShadowMatrix*uModel*vec4(aPosition, 1);
 
     gl_Position = uProjection*uView*uModel*vec4(aPosition, 1);
 }

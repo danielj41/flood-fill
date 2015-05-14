@@ -10,17 +10,17 @@
 class Texture{
 public:
     Texture();
-    Texture(Image * _image);
 
-    void load();
+    void createTexture(GLsizei width, GLsizei height, GLint internalformat,
+                        GLenum format, GLenum type, bool mipmap = false);
+    void createTextureFromImage(Image * image, bool mipmap = false);
 
     GLuint getTexture();
 
 private:
-    Image * image;
     GLuint texture;
 
-    bool loaded;
+    bool created;
 };
 
 #endif

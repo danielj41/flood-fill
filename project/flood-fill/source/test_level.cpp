@@ -27,6 +27,7 @@
 #include "debug_render.hpp"
 #include "active_terrain.hpp"
 #include "render_grid.hpp"
+#include "shadow_occluder_render.hpp"
 
 TestLevel::TestLevel() : LevelTemplate("testLevel3.txt"){}
 
@@ -50,14 +51,26 @@ void TestLevel::setup(){
     setMainCamera("Camera1");
     setCullingCamera("Camera1");
 
-    Camera * cam2 = new Camera(glm::vec3(0, 1, 0), glm::vec3(0, 0, -5),
+    Camera * cam2 = new Camera(glm::vec3(0, 1, 0), glm::vec3(-6, -3, 6),
                              glm::vec3(0, 1, 0));
     cam2->setProjectionMatrix(
         glm::perspective(glm::radians(90.0f),
                         (float) Global::ScreenWidth/Global::ScreenHeight,
                         0.1f, 100.f));
 
-    Light * l1 = new Light(glm::vec3(1), 30.0f, glm::vec3(1.0, -1.0, 0.5));
+    Light * l1 = new Light(glm::vec3(1), 30.0f, glm::vec3(0, 30, 0));
+    l1->setPosition(l1->getDirection()*1.0f);
+
+    Uniform3DGrid<int>* typeGrid = getTypeGrid();
+    glm::vec3 gridCenter((typeGrid->getMaxX() - typeGrid->getMinX())/2.0f,
+                         (typeGrid->getMaxY() - typeGrid->getMinY())/2.0f,
+                         (typeGrid->getMinZ() - typeGrid->getMaxZ())/2.0f);
+
+    l1->setViewMatrix(glm::lookAt(
+        l1->getDirection(),
+        gridCenter, glm::vec3(0, 1, 0)));
+    l1->setProjectionMatrix(glm::ortho<float>(-30,30,-30,30,-100,100));
+
     addLight("Sun", l1);
 
     INFO("Setting up the player for the Test Level...");
@@ -71,7 +84,6 @@ void TestLevel::setup(){
     addGameObject("debugPlayer" , debugPlayer);
 
     addCamera("DebugCamera", cam2);
-    
     INFO("Creating Switch for the Test Level...");
     Switch * s1 = new Switch(glm::vec3(0.9f, 0.1f, 0.1f), glm::vec3(29.7, 23, -45), 
                              glm::vec3(0,0,1), -20.0f, 1);
@@ -104,14 +116,19 @@ void TestLevel::update(){
 
 void TestLevel::createRenders(){
     INFO("Creating Renders...");
-    RenderEngine::addRenderElement("camera", new CameraPolygonsRender());
-    RenderEngine::addRenderElement("regular", new RegularPolygonsRender());
-    RenderEngine::addRenderElement("debug", new DebugRender());
-    RenderEngine::addRenderElement("normalmap", new NormalMapRender());
-    RenderEngine::addRenderElement("textured", new TexturedPolygonsRender());
-    RenderEngine::addRenderElement("water", new WaterRender());
-    RenderEngine::addRenderElement("water-particle", new WaterParticleRender());
-    RenderEngine::addRenderElement("water-stream", new WaterStreamRender());
+
+    RenderEngine::addRenderElement("camera", new CameraPolygonsRender(), 1);
+
+    RenderEngine::addRenderElement("regular", new RegularPolygonsRender(), 1);
+    RenderEngine::addRenderElement("debug", new DebugRender(), -5);
+    RenderEngine::addRenderElement("normalmap", new NormalMapRender(), 1);
+    RenderEngine::addRenderElement("textured", new TexturedPolygonsRender(), 1);
+    RenderEngine::addRenderElement("water", new WaterRender(), 4);
+    RenderEngine::addRenderElement("water-particle", new WaterParticleRender(),4);
+    RenderEngine::addRenderElement("water-stream", new WaterStreamRender(), 4);
+
+    RenderEngine::addRenderElement("shadow", new ShadowOccluderRender(), 0);
+
     RenderEngine::setRenderGrid(new RenderGrid(typeGrid.getSizeX(), typeGrid.getSizeY(), typeGrid.getSizeZ(),
                                                typeGrid.getMinX(), typeGrid.getMaxX(),
                                                typeGrid.getMinY(), typeGrid.getMaxY(),
