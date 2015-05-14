@@ -10,6 +10,7 @@
 #include "director.hpp"
 #include "render_engine.hpp"
 #include "shadow_occluder_render.hpp"
+#include "global_variables.hpp"
 
 const std::string NormalMapRender::VERTEX_SHADER_FILE = "vertex-normal-map.glsl";
 const std::string NormalMapRender::FRAGMENT_SHADER_FILE = "fragment-normal-map.glsl";
@@ -34,17 +35,14 @@ void NormalMapRender::loadShader(){
     shader->loadHandle("uDiffuseColor", 'u');
     shader->loadHandle("uSpecularColor", 'u');
     shader->loadHandle("uAmbientColor", 'u');
-    shader->loadHandle("uEmissionColor", 'u');
     shader->loadHandle("uShininess", 'u');
     shader->loadHandle("uEyePosition", 'u');
     shader->loadHandle("uLightDirection", 'u');
-    shader->loadHandle("uLightColor", 'u');
 
     shader->loadHandle("uTextureID", 'u');
     shader->loadHandle("uNormalTexID", 'u');
     shader->loadHandle("uShadowTexID", 'u');
-    shader->loadHandle("uNormalMapBias", 'u');
-    shader->loadHandle("uNormalMapScale", 'u');
+    shader->loadHandle("uScreenSize", 'u');
 }
 
 void NormalMapRender::setupEnviroment(){
@@ -70,6 +68,8 @@ void NormalMapRender::setupShader(){
 
     Camera * camera = Director::getScene()->getCamera();
 
+    glUniform2f(shader->getHandle("uScreenSize"), Global::ScreenWidth, Global::ScreenHeight);
+
     //Common information to all Objects
     glUniformMatrix4fv(shader->getHandle("uView"), 1, GL_FALSE,
       glm::value_ptr(camera->getViewMatrix()));
@@ -88,11 +88,6 @@ void NormalMapRender::setupShader(){
     for(std::map<std::string, Light *>::iterator it = lights.begin();
             it != lights.end(); it++ ){
         Light * light = it->second;
-
-        glUniform3f(shader->getHandle("uLightColor"),
-                    light->getColor().x,
-                    light->getColor().y,
-                    light->getColor().z);
 
         glUniform3f(shader->getHandle("uLightDirection"),
                     light->getDirection().x,
@@ -160,14 +155,7 @@ void NormalMapRender::renderObject(Object * object){
                 object->getMaterial()->getAmbientColor().x,
                 object->getMaterial()->getAmbientColor().y,
                 object->getMaterial()->getAmbientColor().z);
-    glUniform3f(shader->getHandle("uEmissionColor"),
-                object->getMaterial()->getEmissionColor().x,
-                object->getMaterial()->getEmissionColor().y,
-                object->getMaterial()->getEmissionColor().z);
     glUniform1f(shader->getHandle("uShininess"), object->getMaterial()->getShininess());
-
-    glUniform1f(shader->getHandle("uNormalMapScale"), object->getNormalMapBias());
-    glUniform1f(shader->getHandle("uNormalMapBias"), object->getNormalMapScale());
 
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, object->getTexture()->getTexture());
