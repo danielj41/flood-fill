@@ -14,7 +14,6 @@ RenderTexture::RenderTexture() : loaded(false){}
 void RenderTexture::loadShaders() {
     LoadManager::loadShader("render-texture-vertex-data-initial.glsl", "render-texture-fragment-data-initial.glsl");
     Shader *shader = LoadManager::getShader("render-texture-vertex-data-initial.glsl", "render-texture-fragment-data-initial.glsl");
-    shader->loadHandle("aNormal", 'a');
     shader->loadHandle("aPosition", 'a');
     shader->loadHandle("aTexCoord", 'a');
     shader->loadHandle("uPrevTexture", 'u');
@@ -25,7 +24,6 @@ void RenderTexture::loadShaders() {
 
     LoadManager::loadShader("render-texture-vertex-color-initial.glsl", "render-texture-fragment-color-initial.glsl");
     shader = LoadManager::getShader("render-texture-vertex-color-initial.glsl", "render-texture-fragment-color-initial.glsl");
-    shader->loadHandle("aNormal", 'a');
     shader->loadHandle("aPosition", 'a');
     shader->loadHandle("aTexCoord", 'a');
     shader->loadHandle("uPrevTexture", 'u');
@@ -36,7 +34,6 @@ void RenderTexture::loadShaders() {
 
     LoadManager::loadShader("render-texture-vertex-data-update.glsl", "render-texture-fragment-data-update.glsl");
     shader = LoadManager::getShader("render-texture-vertex-data-update.glsl", "render-texture-fragment-data-update.glsl");
-    shader->loadHandle("aNormal", 'a');
     shader->loadHandle("aPosition", 'a');
     shader->loadHandle("aTexCoord", 'a');
     shader->loadHandle("uPrevTexture", 'u');
@@ -47,7 +44,6 @@ void RenderTexture::loadShaders() {
 
     LoadManager::loadShader("render-texture-vertex-color-update.glsl", "render-texture-fragment-color-update.glsl");
     shader = LoadManager::getShader("render-texture-vertex-color-update.glsl", "render-texture-fragment-color-update.glsl");
-    shader->loadHandle("aNormal", 'a');
     shader->loadHandle("aPosition", 'a');
     shader->loadHandle("aTexCoord", 'a');
     shader->loadHandle("uPrevTexture", 'u');
@@ -58,7 +54,6 @@ void RenderTexture::loadShaders() {
 
     LoadManager::loadShader("render-texture-vertex-block.glsl", "render-texture-fragment-block.glsl");
     shader = LoadManager::getShader("render-texture-vertex-block.glsl", "render-texture-fragment-block.glsl");
-    shader->loadHandle("aNormal", 'a');
     shader->loadHandle("aPosition", 'a');
     shader->loadHandle("aTexCoord", 'a');
     shader->loadHandle("uModelMatrix", 'u');
@@ -135,10 +130,6 @@ void RenderTexture::render(Shader *shader, GLuint dataTexture,
     glVertexAttribPointer(shader->getHandle("aPosition"), 3,
                           GL_FLOAT, GL_FALSE, 0, 0);
 
-    glEnableVertexAttribArray(shader->getHandle("aNormal"));
-    glBindBuffer(GL_ARRAY_BUFFER, mesh->getNormalBuffer());
-    glVertexAttribPointer(shader->getHandle("aNormal"), 3,
-                          GL_FLOAT, GL_FALSE, 0, 0);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->getIndexBuffer());
 
@@ -160,7 +151,6 @@ void RenderTexture::render(Shader *shader, GLuint dataTexture,
                    GL_UNSIGNED_INT, 0);
 
     glDisableVertexAttribArray(shader->getHandle("aPosition"));
-    glDisableVertexAttribArray(shader->getHandle("aNormal"));
     glBindTexture(GL_TEXTURE_2D, 0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -205,10 +195,6 @@ void RenderTexture::renderBlock(Uniform3DGrid<int> *grid,
     glVertexAttribPointer(shader->getHandle("aPosition"), 3,
                           GL_FLOAT, GL_FALSE, 0, 0);
 
-    glEnableVertexAttribArray(shader->getHandle("aNormal"));
-    glBindBuffer(GL_ARRAY_BUFFER, mesh->getNormalBuffer());
-    glVertexAttribPointer(shader->getHandle("aNormal"), 3,
-                          GL_FLOAT, GL_FALSE, 0, 0);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->getIndexBuffer());
 
@@ -239,7 +225,6 @@ void RenderTexture::renderBlock(Uniform3DGrid<int> *grid,
     }
 
     glDisableVertexAttribArray(shader->getHandle("aPosition"));
-    glDisableVertexAttribArray(shader->getHandle("aNormal"));
     glBindTexture(GL_TEXTURE_2D, 0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
