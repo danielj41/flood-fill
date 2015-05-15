@@ -20,16 +20,20 @@ public:
 
   void collided(CollisionObject * collidedWith);
 
+  void remove();
+
 private:
+  glm::vec3 position;
+  int colorMask;
+  glm::vec3 size;
 
   Object * fluidBox;
-  glm::vec3 position;
-  glm::vec3 size;
-  int colorMask;
   std::string color;
   float timer;
   bool visible;
   bool deleting;
+
+  void remotionAnimation();
 };
 
 #endif
