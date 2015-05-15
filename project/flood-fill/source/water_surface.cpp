@@ -131,9 +131,17 @@ void WaterSurface::createFluidBox(glm::vec3 newPos) {
       grid.setValue(newPos.x, newPos.y, newPos.z, 1);
     
     if(newPos.y < lowestPosition.y + grid.getEdgeSizeY() / 2.0f) {
-      typeGrid->setValue(newPos.x, newPos.y, newPos.z, LevelTemplate::SOLID_CUBE);
+      if(colorMask & BLUE)
+          typeGrid->setValue(newPos.x, newPos.y, newPos.z, LevelTemplate::FLUID_BLUE);
+      else if(colorMask & GREEN)
+          typeGrid->setValue(newPos.x, newPos.y, newPos.z, LevelTemplate::FLUID_GREEN);
+      else if(colorMask & RED)
+          typeGrid->setValue(newPos.x, newPos.y, newPos.z, LevelTemplate::FLUID_RED);
+      else
+          ASSERT(false, "There is no fluid type avaible");
       FluidBox *fluidBox = new FluidBox(newPos, colorMask);
       fluidBox->setup();
+      level->setGridValue(fluidBox->getPosition(), fluidBox);
       Director::getScene()->addGameObject(fluidBox);
     }
     

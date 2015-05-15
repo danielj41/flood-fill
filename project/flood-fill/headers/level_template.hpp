@@ -25,9 +25,14 @@ public:
     virtual void setup() = 0;
     virtual void update() = 0;
 
-    
     Uniform3DGrid<int>* getTypeGrid();
     std::set<int>* getFillTypes();
+    GameObject * getGridValue(glm::vec3 pos);
+    void setGridValue(glm::vec3 pos, GameObject * obj);
+    void setTypeCell(glm::vec3 pos, int type);
+
+    bool isFilledWithPaint(glm::vec3 pos);
+    bool isEmpty(glm::vec3 pos);
 
     // Level blocks identifiers
     static const char COMMENT;
@@ -41,12 +46,13 @@ public:
     static const int CHANGE_COLOR_RED;
     static const int CHANGE_COLOR_GREY;
     static const int WINNING_BLOCK;
-    static const int FLUID_GREEN;
+    static const int FLUID_BLUE;
     static const int FLUID_RED;
+    static const int FLUID_GREEN;
 
 protected:
     std::string fileName;
-    int minx, miny, minz, maxx, maxy, maxz;
+    float minx, miny, minz, maxx, maxy, maxz;
     int numVoxelsInX, numVoxelsInY, numVoxelsInZ;
 
     // The grid holds every game object in the map

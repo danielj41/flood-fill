@@ -44,8 +44,8 @@ void FluidBox::setup() {
                         LoadManager::getMesh("cube.obj"),
                         MaterialManager::getMaterial(color));
 
-  fluidBox->applyTexture(LoadManager::getTexture("VoxelTexture"));
-  fluidBox->enableTexture();
+  //fluidBox->applyTexture(LoadManager::getTexture("VoxelTexture"));
+  //fluidBox->enableTexture();
 
   fluidBox->loadIdentity();
   fluidBox->translate(position);
@@ -83,6 +83,8 @@ void FluidBox::update(){
 void FluidBox::remove(){
     INFO("Removing Fluid Box...");
 
+    if(deleting) return;
+
     deleting = true;
     timer = 0.0f;
     RenderEngine::getRenderGrid()->removeObject(fluidBox);
@@ -104,18 +106,21 @@ void FluidBox::remotionAnimation(){
 
         // Removing it from the grid
         Director::getScene()->removeGameObject(this);
+        ((LevelTemplate *) Director::getScene())->setTypeCell(position, LevelTemplate::AVAILABLE_FILL_SPACE);
         RenderEngine::getRenderElement("regular")->removeObject(fluidBox);
         CollisionManager::removeCollisionObjectFromGrid(this);
     }
 }
 
-void FluidBox::collided(CollisionObject * collidedWith){
-  switch (collidedWith->getCollisionID()){
-  case 4:
-    if(glfwGetMouseButton(Global::window, GLFW_MOUSE_BUTTON_2) == GLFW_PRESS && !deleting &&
-       ((PlayerHand *)collidedWith)->getColorMask() & colorMask) {
-       remove();
-    }
-  break;
-  }
+void FluidBox::collided(CollisionObject *){
+}
+
+int FluidBox::getColorMask(){
+    return colorMask;
+}
+
+void FluidBox::highlightForRemotion(){
+}
+
+void FluidBox::deselect(){
 }

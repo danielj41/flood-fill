@@ -20,17 +20,23 @@
 #include "load_manager.hpp"
 #include "material_manager.hpp"
 #include "object.hpp"
-#include "render_engine.hpp" 
-#include "winning_block.hpp"   
+#include "render_engine.hpp"
+#include "winning_block.hpp"
+#include "level_template.hpp"
+#include "fluid_box.hpp"
+#include "solid_cube.hpp"
 
 #define BLUE    1
-#define GREEN   2  
+#define GREEN   2
 #define RED     4
 #define GREY    8
 
 Player::Player(Camera * _camera)
   : GameObject(), CollisionObject(), camera(_camera),
-    jumping(true), velocity(0), gravity(-2), strafeVelocity(0), forwardVelocity(0) {}
+    jumping(true), velocity(0), gravity(-2), strafeVelocity(0), forwardVelocity(0) {
+    removeFluidShootRange = 3;
+    removeFluidNumberBlocks = 3;
+}
 
 void Player::setup() {
     INFO("Player Setup...");
@@ -158,6 +164,15 @@ void Player::update() {
         shootPressed = false;
     }
 
+    //Picks all fluid boxes that can be removed
+    if(glfwGetMouseButton(Global::window, GLFW_MOUSE_BUTTON_2) == GLFW_PRESS) {
+        pickFluidBoxesToRemove();
+    }
+    //Try to remove the fluid boxes when you release the mouse left button
+    else if(glfwGetMouseButton(Global::window, GLFW_MOUSE_BUTTON_2) == GLFW_RELEASE) {
+        removeFluidBoxes();
+    }
+
     if(shootTimer > 0.0f) {
         shootTimer -= TimeManager::getDeltaTime();
     }
@@ -206,5 +221,66 @@ void Player::collided(CollisionObject * collidedWith) {
 
 bool Player::isKeyPressed(unsigned int key){
     return glfwGetKey(Global::window, key) == GLFW_PRESS;
+}
+
+void Player::pickOneFluidBoxToRemove(glm::vec3 pos){
+    int currentColor = hand->getColorMask();
+
+    if(((LevelTemplate *) Director::getScene())->isFilledWithPaint(pos)){
+        FluidBox * box = (FluidBox *) ((LevelTemplate *) Director::getScene())->getGridValue(pos);
+
+        //Checks if the player is holding the same color that is being removed
+        if(box->getColorMask() & currentColor){
+            box->highlightForRemotion();
+            boxesToRemove.push_back(box);
+        }
+    }
+}
+
+void Player::pickFluidBoxesToRemove(){
+    // Ray Casting into the grid to check which fluid boxes are around
+    glm::vec3 p0 = camera->getEye();
+    glm::vec3 direction = -glm::normalize(camera->getViewVector());
+
+    for(unsigned int i = 0; i < boxesToRemove.size(); i++){
+        boxesToRemove[i]->deselect();
+    }
+
+    boxesToRemove.clear();
+    float gridCellSize = 2.0f;
+    int nBlocks = removeFluidNumberBlocks;
+
+    for(unsigned int i = 1; i <= removeFluidShootRange; i++){
+        glm::vec3 rayPos = p0 + direction*((float) i);
+
+        INFO("Casting Ray to remove box: (" << rayPos.x << ", " << rayPos.y << ", " << rayPos.z << ")");
+
+        if(!((LevelTemplate *) Director::getScene())->isEmpty(rayPos)){
+            pickOneFluidBoxToRemove(rayPos);
+
+            if(boxesToRemove.size() != 0){
+                for(int bi = -nBlocks/2; bi <= nBlocks/2; bi++){
+                    for(int bk = -nBlocks/2; bk <= nBlocks/2; bk++){
+                        if(bi == bk && bi == 0) continue;
+
+                        glm::vec3 newRay = rayPos;
+                        newRay.x += bi * gridCellSize;
+                        newRay.z += bk * gridCellSize;
+                        pickOneFluidBoxToRemove(newRay);
+                    }
+                }
+            }
+
+            break;
+        }
+    }
+}
+
+void Player::removeFluidBoxes(){
+    if(boxesToRemove.size() == 0) return;
+
+    for(unsigned int i = 0; i < boxesToRemove.size(); i++){
+        boxesToRemove[i]->remove();
+    }
 }
 

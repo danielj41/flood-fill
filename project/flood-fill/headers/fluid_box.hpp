@@ -19,8 +19,12 @@ public:
   void update();
 
   void collided(CollisionObject * collidedWith);
+  int getColorMask();
 
+  //Remotion related methods
   void remove();
+  void highlightForRemotion();
+  void deselect();
 
 private:
   glm::vec3 position;
@@ -31,6 +35,8 @@ private:
   std::string color;
   float timer;
   bool visible;
+
+  //Remotion related private fields and methods
   bool deleting;
 
   void remotionAnimation();

@@ -39,6 +39,7 @@ const int LevelTemplate::TOGGLE_FILL           =  6;
 const int LevelTemplate::FLUID_GREEN           =  7;
 const int LevelTemplate::WINNING_BLOCK         =  8;
 const int LevelTemplate::FLUID_RED             =  9;
+const int LevelTemplate::FLUID_BLUE             =  10;
 
 LevelTemplate::LevelTemplate(std::string levelFileName)
     : Scene(levelFileName) {
@@ -254,4 +255,37 @@ Uniform3DGrid<int>* LevelTemplate::getTypeGrid() {
 std::set<int>* LevelTemplate::getFillTypes()
 {
     return &fillTypes;
+}
+
+bool LevelTemplate::isFilledWithPaint(glm::vec3 pos){
+    //Check if the pos is inside the grid range
+    if(minx > pos.x || pos.x > maxx ||
+       miny > pos.y || pos.y > maxy ||
+       minz > pos.z || pos.z > maxz){
+       return false;
+    }
+    int type = typeGrid.getValue(pos.x, pos.y, pos.z);
+    return type == FLUID_BLUE || type == FLUID_GREEN || type == FLUID_RED;
+}
+
+bool LevelTemplate::isEmpty(glm::vec3 pos){
+    //Check if the pos is inside the grid range
+    if(minx > pos.x || pos.x > maxx ||
+       miny > pos.y || pos.y > maxy ||
+       minz > pos.z || pos.z > maxz){
+       return false;
+    }
+    int type = typeGrid.getValue(pos.x, pos.y, pos.z);
+    return type == AVAILABLE_FILL_SPACE || type == VOID_SPACE || type == AIR || type == TOGGLE_FILL;
+}
+
+GameObject * LevelTemplate::getGridValue(glm::vec3 pos){
+    return grid.getValue(pos.x, pos.y, pos.z);
+}
+void LevelTemplate::setGridValue(glm::vec3 pos, GameObject * obj){
+    grid.setValue(pos.x, pos.y, pos.z, obj);
+}
+
+void LevelTemplate::setTypeCell(glm::vec3 pos, int type){
+    typeGrid.setValue(pos.x, pos.y, pos.z, type);
 }
