@@ -14,7 +14,7 @@ uniform mat4 uShadowMatrix;
 uniform vec3 uEyePosition;
 
 varying vec2 vTexCoord;
-varying vec4 vShadowCoord;
+varying vec3 vShadowCoord;
 varying vec3 vView;
 varying mat3 vTBN;
 
@@ -42,7 +42,8 @@ void main(){
     vTexCoord = aTexCoord;
     vView = uEyePosition - wPos;
     vTBN = tangentToObjectSpaceMatrix(wTangent, wBitangent, wNormal);
-    vShadowCoord = uShadowMatrix*uModel*vec4(aPosition, 1);
+    vec4 shadowCoord = uShadowMatrix*uModel*vec4(aPosition, 1);
+    vShadowCoord = shadowCoord.xyz/shadowCoord.w;
 
     gl_Position = uProjection*uView*uModel*vec4(aPosition, 1);
 }

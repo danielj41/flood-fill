@@ -3,7 +3,7 @@
 varying vec2 vTexCoord;
 varying vec3 vView;
 varying mat3 vTBN;
-varying vec4 vShadowCoord;
+varying vec3 vShadowCoord;
 
 uniform sampler2D uTextureID;
 uniform sampler2D uNormalTexID;
@@ -28,10 +28,23 @@ vec2 getTexCoordOffset(vec2 texCoord){
     return texCoord;
 }
 
-float getShadow(){
-    vec3 shadowUV = vShadowCoord.xyz/vShadowCoord.w;
+float getShadow(vec3 shadowCoord){
+    // The Shadow UV coordinate must be between [0, 1]
+    // You can use linear interpolation to get it: 0.5*value + 0.5
+
+    // You need to apply the homogeneous divide in the UV vector
+
+    float shadowmap =  texture2D(uShadowTexID, shadowCoord.xy).x;
+
+    if(shadowmap + 0.00001 < shadowCoord.z){
+        return 0.2f;
+    }
+    return 1.0f;
+}
+
+float pcfShadow(){
+    vec3 shadowUV = vShadowCoord;
     shadowUV = 0.5f*shadowUV + 0.5f;
-    //float shadowmap =  texture2D(uShadowTexID, shadowUV.xy).x;
 
     float xOffset = 1.0f/uScreenSize.x;
     float yOffset = 1.0f/uScreenSize.x;
@@ -39,19 +52,16 @@ float getShadow(){
     float shadowness = 0.0f;
 
     // Must be an even number
-    int kernel_size = 7;
+    int kernel_size = 9;
     for(int y = -kernel_size/2; y <= kernel_size/2; y++){
         for(int x = -kernel_size/2; x <= kernel_size/2; x ++){
             vec2 Offsets = vec2(x * xOffset, y * yOffset);
-            shadowness += texture2D(uShadowTexID, shadowUV.xy + Offsets).x;
+            shadowness += getShadow(vec3(shadowUV.xy + Offsets, shadowUV.z));
         }
     }
 
     shadowness = shadowness/(kernel_size*kernel_size);
-    if(shadowness + 0.001 < shadowUV.z){
-        return 0.2f;
-    }
-    return 1.0f;
+    return shadowness;
 }
 
 /*vec2 getTexCoordOffset(vec2 texCoord){
@@ -92,7 +102,7 @@ void main(){
     vec3 Is = pow(max(dot(N, H), 0.0), n)*ks;
     vec3 Id = max(dot(N, L), 0.0)*kd;
 
-    vec3 I = getShadow()*(Id + Is) + Ia;
+    vec3 I = pcfShadow()*(Id + Is) + Ia;
 
     gl_FragColor = vec4(vec3(I), 1)*texel;
 }

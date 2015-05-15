@@ -39,6 +39,7 @@ void ShadowOccluderRender::loadShader(){
 void ShadowOccluderRender::setupEnviroment(){
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glEnable(GL_CULL_FACE);
+    glCullFace(GL_FRONT);
     fbo->enable();
 }
 
@@ -49,6 +50,7 @@ void ShadowOccluderRender::tearDownEnviroment(){
     glUseProgram(0);
     fbo->disable();
 
+    glCullFace(GL_BACK);
     glDisable(GL_CULL_FACE);
 }
 
