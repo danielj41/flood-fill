@@ -31,7 +31,7 @@ void main(){
     //float d = distance(uLightPosition, vVertex);
 
     vec3 N = normalize(vec3(vNormal));
-    vec3 L = normalize(-uLightDirection);
+    vec3 L = normalize(uLightDirection);
     vec3 V = normalize(uEyePosition - vVertex);
 
     vec3 H = normalize(L + V);

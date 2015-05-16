@@ -17,6 +17,9 @@ public:
     void setupMesh(Mesh * mesh);
     void renderObject(Object * object);
 
+    void addObject(Object *object);
+    void removeObject(Object *object);
+
 private:
     static const std::string VERTEX_SHADER_FILE;
     static const std::string FRAGMENT_SHADER_FILE;

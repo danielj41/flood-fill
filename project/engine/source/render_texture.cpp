@@ -15,7 +15,6 @@ void RenderTexture::loadShaders() {
     LoadManager::loadShader("render-texture-vertex-data-initial.glsl", "render-texture-fragment-data-initial.glsl");
     Shader *shader = LoadManager::getShader("render-texture-vertex-data-initial.glsl", "render-texture-fragment-data-initial.glsl");
     shader->loadHandle("aPosition", 'a');
-    shader->loadHandle("aTexCoord", 'a');
     shader->loadHandle("uPrevTexture", 'u');
     shader->loadHandle("uDataTexture", 'u');
     shader->loadHandle("uSize", 'u');
@@ -25,7 +24,6 @@ void RenderTexture::loadShaders() {
     LoadManager::loadShader("render-texture-vertex-color-initial.glsl", "render-texture-fragment-color-initial.glsl");
     shader = LoadManager::getShader("render-texture-vertex-color-initial.glsl", "render-texture-fragment-color-initial.glsl");
     shader->loadHandle("aPosition", 'a');
-    shader->loadHandle("aTexCoord", 'a');
     shader->loadHandle("uPrevTexture", 'u');
     shader->loadHandle("uDataTexture", 'u');
     shader->loadHandle("uSize", 'u');
@@ -35,7 +33,6 @@ void RenderTexture::loadShaders() {
     LoadManager::loadShader("render-texture-vertex-data-update.glsl", "render-texture-fragment-data-update.glsl");
     shader = LoadManager::getShader("render-texture-vertex-data-update.glsl", "render-texture-fragment-data-update.glsl");
     shader->loadHandle("aPosition", 'a');
-    shader->loadHandle("aTexCoord", 'a');
     shader->loadHandle("uPrevTexture", 'u');
     shader->loadHandle("uDataTexture", 'u');
     shader->loadHandle("uSize", 'u');
@@ -45,7 +42,6 @@ void RenderTexture::loadShaders() {
     LoadManager::loadShader("render-texture-vertex-color-update.glsl", "render-texture-fragment-color-update.glsl");
     shader = LoadManager::getShader("render-texture-vertex-color-update.glsl", "render-texture-fragment-color-update.glsl");
     shader->loadHandle("aPosition", 'a');
-    shader->loadHandle("aTexCoord", 'a');
     shader->loadHandle("uPrevTexture", 'u');
     shader->loadHandle("uDataTexture", 'u');
     shader->loadHandle("uSize", 'u');
@@ -55,7 +51,6 @@ void RenderTexture::loadShaders() {
     LoadManager::loadShader("render-texture-vertex-block.glsl", "render-texture-fragment-block.glsl");
     shader = LoadManager::getShader("render-texture-vertex-block.glsl", "render-texture-fragment-block.glsl");
     shader->loadHandle("aPosition", 'a');
-    shader->loadHandle("aTexCoord", 'a');
     shader->loadHandle("uModelMatrix", 'u');
 }
 

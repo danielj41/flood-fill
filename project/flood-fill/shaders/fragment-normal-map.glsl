@@ -52,7 +52,7 @@ float pcfShadow(){
     float shadowness = 0.0f;
 
     // Must be an even number
-    int kernel_size = 9;
+    int kernel_size = 3;
     for(int y = -kernel_size/2; y <= kernel_size/2; y++){
         for(int x = -kernel_size/2; x <= kernel_size/2; x ++){
             vec2 Offsets = vec2(x * xOffset, y * yOffset);

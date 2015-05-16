@@ -69,6 +69,7 @@ void FBO::load(){
     }
     else{
         glDrawBuffer(GL_NONE);
+        glReadBuffer(GL_NONE);
         INFO("There is no color to attach!");
     }
 

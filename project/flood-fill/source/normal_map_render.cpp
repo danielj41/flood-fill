@@ -165,3 +165,13 @@ void NormalMapRender::renderObject(Object * object){
 
     glDrawElements(GL_TRIANGLES, (int) mesh->getIndices().size(), GL_UNSIGNED_INT, 0);
 }
+
+void NormalMapRender::addObject(Object *object) {
+    RenderElement::addObject(object);
+    RenderEngine::getRenderElement("shadow")->addObject(object);
+}
+
+void NormalMapRender::removeObject(Object *object) {
+    RenderElement::addObject(object);
+    RenderEngine::getRenderElement("shadow")->removeObject(object);
+}
