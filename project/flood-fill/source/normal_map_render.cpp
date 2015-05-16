@@ -172,6 +172,6 @@ void NormalMapRender::addObject(Object *object) {
 }
 
 void NormalMapRender::removeObject(Object *object) {
-    RenderElement::addObject(object);
+    RenderElement::removeObject(object);
     RenderEngine::getRenderElement("shadow")->removeObject(object);
 }
