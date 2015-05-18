@@ -44,8 +44,8 @@ void WaterSurface::setup() {
   minZ = typeGrid->getMaxZ();
   maxZ = typeGrid->getMinZ();
 
-  grid = Uniform3DGrid<int>(*typeGrid);
-  grid.initialize(0);
+  grid = Uniform3DGridPtr<int>(new Uniform3DGrid<int>(*typeGrid));
+  grid->initialize(0);
 
   timer = 0.0f;
   if(!checkAdjacent(position)) {
@@ -65,7 +65,7 @@ void WaterSurface::setup() {
   waterColorTexture->clear();
   waterBlockTexture->clear();
 
-  waterBlockTexture->renderBlock(&grid, minX, maxX, minY, maxY, minZ, maxZ, 1.05f); 
+  waterBlockTexture->renderBlock(grid, minX, maxX, minY, maxY, minZ, maxZ, 1.05f); 
   waterSurface->applyWaterBlock(waterBlockTexture->getTexture());
 
   size = glm::vec3((maxX - minX + 2.0f) / 2.0f, (maxY - minY + 2.0f) / 2.0f, (maxZ - minZ + 2.0f) / 2.0f);
@@ -88,7 +88,7 @@ void WaterSurface::setup() {
   
   RenderEngine::getRenderElement("water")->addObject(waterSurface);
 
-  grid.initialize(0);
+  grid->initialize(0);
   createFluidBox(startPosition);
 }
 
@@ -121,13 +121,13 @@ void WaterSurface::createFluidBox(glm::vec3 newPos) {
   
     std::set<int>* fillTypes = level->getFillTypes();
 
-    if(grid.inGrid(newPos.x, newPos.y, newPos.z) &&
-     grid.getValue(newPos.x, newPos.y, newPos.z) == 0 &&
+    if(grid->inGrid(newPos.x, newPos.y, newPos.z) &&
+     grid->getValue(newPos.x, newPos.y, newPos.z) == 0 &&
        fillTypes->find(typeGrid->getValue(newPos.x, newPos.y, newPos.z)) != fillTypes->end()) {
         
-      grid.setValue(newPos.x, newPos.y, newPos.z, 1);
+      grid->setValue(newPos.x, newPos.y, newPos.z, 1);
     
-    if(newPos.y < lowestPosition.y + grid.getEdgeSizeY() / 2.0f) {
+    if(newPos.y < lowestPosition.y + grid->getEdgeSizeY() / 2.0f) {
       if(colorMask & BLUE)
           typeGrid->setValue(newPos.x, newPos.y, newPos.z, LevelTemplate::FLUID_BLUE);
       else if(colorMask & GREEN)
@@ -143,11 +143,11 @@ void WaterSurface::createFluidBox(glm::vec3 newPos) {
       CollisionManager::addCollisionObjectToGrid(fluidBox);
     }
     
-    createFluidBox(newPos + glm::vec3(grid.getEdgeSizeX(), 0, 0));
-    createFluidBox(newPos - glm::vec3(grid.getEdgeSizeX(), 0, 0));
-    createFluidBox(newPos - glm::vec3(0, grid.getEdgeSizeY(), 0));
-    createFluidBox(newPos + glm::vec3(0, 0, grid.getEdgeSizeZ()));
-    createFluidBox(newPos - glm::vec3(0, 0, grid.getEdgeSizeZ()));
+    createFluidBox(newPos + glm::vec3(grid->getEdgeSizeX(), 0, 0));
+    createFluidBox(newPos - glm::vec3(grid->getEdgeSizeX(), 0, 0));
+    createFluidBox(newPos - glm::vec3(0, grid->getEdgeSizeY(), 0));
+    createFluidBox(newPos + glm::vec3(0, 0, grid->getEdgeSizeZ()));
+    createFluidBox(newPos - glm::vec3(0, 0, grid->getEdgeSizeZ()));
   }
 }
 
@@ -155,11 +155,11 @@ bool WaterSurface::checkAdjacent(glm::vec3 newPos) {
   
     std::set<int>* fillTypes = level->getFillTypes();
 
-    if(grid.inGrid(newPos.x, newPos.y, newPos.z) &&
-       grid.getValue(newPos.x, newPos.y, newPos.z) == 0 &&
+    if(grid->inGrid(newPos.x, newPos.y, newPos.z) &&
+       grid->getValue(newPos.x, newPos.y, newPos.z) == 0 &&
        fillTypes->find(typeGrid->getValue(newPos.x, newPos.y, newPos.z)) != fillTypes->end()) { 
         
-        grid.setValue(newPos.x, newPos.y, newPos.z, 1);
+        grid->setValue(newPos.x, newPos.y, newPos.z, 1);
       
    
         if(newPos.x > maxX) {
@@ -182,11 +182,11 @@ bool WaterSurface::checkAdjacent(glm::vec3 newPos) {
             minZ = newPos.z;
         }
 
-    checkAdjacent(newPos + glm::vec3(grid.getEdgeSizeX(), 0, 0));
-    checkAdjacent(newPos - glm::vec3(grid.getEdgeSizeX(), 0, 0));
-    checkAdjacent(newPos - glm::vec3(0, grid.getEdgeSizeY(), 0));
-    checkAdjacent(newPos + glm::vec3(0, 0, grid.getEdgeSizeZ()));
-    checkAdjacent(newPos - glm::vec3(0, 0, grid.getEdgeSizeZ()));
+    checkAdjacent(newPos + glm::vec3(grid->getEdgeSizeX(), 0, 0));
+    checkAdjacent(newPos - glm::vec3(grid->getEdgeSizeX(), 0, 0));
+    checkAdjacent(newPos - glm::vec3(0, grid->getEdgeSizeY(), 0));
+    checkAdjacent(newPos + glm::vec3(0, 0, grid->getEdgeSizeZ()));
+    checkAdjacent(newPos - glm::vec3(0, 0, grid->getEdgeSizeZ()));
 
     return true;
   }

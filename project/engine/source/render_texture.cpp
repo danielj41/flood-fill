@@ -119,7 +119,7 @@ void RenderTexture::swapTextures() {
     currentTexture = (currentTexture + 1) % 2;
 }
 
-void RenderTexture::renderBlock(Uniform3DGrid<int> *grid,
+void RenderTexture::renderBlock(Uniform3DGridPtr<int> grid,
                                 float minX, float maxX,
                                 float minY, float maxY,
                                 float minZ, float maxZ,

@@ -27,11 +27,11 @@ public:
     static void checkCollision(CollisionObjectPtr a);
     static void checkCollisionWithOffset(CollisionObjectPtr aObject, int x, int y, int z);
     static void initGrid(int x, int y, int z, glm::vec3 min, glm::vec3 max);
-    static Uniform3DGrid<CollisionObjectPtr>* getGrid();
+    static Uniform3DGridPtr<CollisionObjectPtr> getGrid();
 
 private:
     static std::list<CollisionObjectPtr> collisionObjects;
-    static Uniform3DGrid<CollisionObjectPtr> grid;
+    static Uniform3DGridPtr<CollisionObjectPtr> grid;
 };
 
 #endif

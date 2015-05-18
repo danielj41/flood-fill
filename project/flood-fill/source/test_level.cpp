@@ -61,7 +61,7 @@ void TestLevel::setup(){
     LightPtr l1(new Light(glm::vec3(1), 30.0f, glm::vec3(0, 30, 0)));
     l1->setPosition(l1->getDirection()*1.0f);
 
-    Uniform3DGrid<int>* typeGrid = getTypeGrid();
+    Uniform3DGridPtr<int> typeGrid = getTypeGrid();
     glm::vec3 gridCenter((typeGrid->getMaxX() - typeGrid->getMinX())/2.0f,
                          (typeGrid->getMaxY() - typeGrid->getMinY())/2.0f,
                          (typeGrid->getMinZ() - typeGrid->getMaxZ())/2.0f);
@@ -128,8 +128,8 @@ void TestLevel::createRenders(){
     RenderEngine::addRenderElement("water-stream", RenderElementPtr(new WaterStreamRender()), 4);
     RenderEngine::addRenderElement("shadow", RenderElementPtr(new ShadowOccluderRender()), 0);
 
-    RenderEngine::setRenderGrid(RenderGridPtr(new RenderGrid(typeGrid.getSizeX(), typeGrid.getSizeY(), typeGrid.getSizeZ(),
-                                               typeGrid.getMinX(), typeGrid.getMaxX(),
-                                               typeGrid.getMinY(), typeGrid.getMaxY(),
-                                               typeGrid.getMinZ(), typeGrid.getMaxZ())));
+    RenderEngine::setRenderGrid(RenderGridPtr(new RenderGrid(typeGrid->getSizeX(), typeGrid->getSizeY(), typeGrid->getSizeZ(),
+                                               typeGrid->getMinX(), typeGrid->getMaxX(),
+                                               typeGrid->getMinY(), typeGrid->getMaxY(),
+                                               typeGrid->getMinZ(), typeGrid->getMaxZ())));
 }

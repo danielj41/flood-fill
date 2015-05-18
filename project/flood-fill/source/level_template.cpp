@@ -91,13 +91,15 @@ void LevelTemplate::initalizeGrid(){
                  << " minx miny minz maxx maxy maxz.\n"
                  << "Got: " << line);
 
-        grid = Uniform3DGrid<GameObjectPtr>(numVoxelsInX, numVoxelsInY, numVoxelsInZ,
-                                           minx, maxx, miny, maxy, minz, maxz);
-        grid.initialize(voidVoxel);
+        grid = Uniform3DGridPtr<GameObjectPtr>(
+            new Uniform3DGrid<GameObjectPtr>(numVoxelsInX, numVoxelsInY, numVoxelsInZ,
+                                             minx, maxx, miny, maxy, minz, maxz));
+        grid->initialize(voidVoxel);
 
-        typeGrid = Uniform3DGrid<int>(numVoxelsInX, numVoxelsInY, numVoxelsInZ,
-                                      minx, maxx, miny, maxy, minz, maxz);
-        typeGrid.initialize(VOID_SPACE);
+        typeGrid = Uniform3DGridPtr<int>(
+            new Uniform3DGrid<int>(numVoxelsInX, numVoxelsInY, numVoxelsInZ,
+                                   minx, maxx, miny, maxy, minz, maxz));
+        typeGrid->initialize(VOID_SPACE);
 
         CollisionManager::initGrid(numVoxelsInX, numVoxelsInY, numVoxelsInZ,
                                       glm::vec3(minx, miny, minz),
@@ -138,8 +140,8 @@ void LevelTemplate::interpLines(std::vector<std::string> lines){
 
             for(int i = 0; i < numVoxelsInX; i++){
                 ss >> voxelId;
-                typeGrid(i, j, k) = voxelId;
-                grid(i, j, k)     = createVoxel(voxelId, i, (numVoxelsInY - j - 1), k);
+                (*typeGrid)(i, j, k) = voxelId;
+                (*grid)(i, j, k)     = createVoxel(voxelId, i, (numVoxelsInY - j - 1), k);
             }
 
             j++;
@@ -248,8 +250,8 @@ GameObjectPtr LevelTemplate::createVoxel(int id, int i, int j, int k){
     return voidVoxel;
 }
 
-Uniform3DGrid<int>* LevelTemplate::getTypeGrid() {
-    return &typeGrid;
+Uniform3DGridPtr<int> LevelTemplate::getTypeGrid() {
+    return typeGrid;
 }
 
 std::set<int>* LevelTemplate::getFillTypes()
@@ -264,7 +266,7 @@ bool LevelTemplate::isFilledWithPaint(glm::vec3 pos){
        minz > pos.z || pos.z > maxz){
        return false;
     }
-    int type = typeGrid.getValue(pos.x, pos.y, pos.z);
+    int type = typeGrid->getValue(pos.x, pos.y, pos.z);
     return type == FLUID_BLUE || type == FLUID_GREEN || type == FLUID_RED;
 }
 
@@ -275,17 +277,17 @@ bool LevelTemplate::isEmpty(glm::vec3 pos){
        minz > pos.z || pos.z > maxz){
        return false;
     }
-    int type = typeGrid.getValue(pos.x, pos.y, pos.z);
+    int type = typeGrid->getValue(pos.x, pos.y, pos.z);
     return type == AVAILABLE_FILL_SPACE || type == VOID_SPACE || type == AIR || type == TOGGLE_FILL;
 }
 
 GameObjectPtr LevelTemplate::getGridValue(glm::vec3 pos){
-    return grid.getValue(pos.x, pos.y, pos.z);
+    return grid->getValue(pos.x, pos.y, pos.z);
 }
 void LevelTemplate::setGridValue(glm::vec3 pos, GameObjectPtr obj){
-    grid.setValue(pos.x, pos.y, pos.z, obj);
+    grid->setValue(pos.x, pos.y, pos.z, obj);
 }
 
 void LevelTemplate::setTypeCell(glm::vec3 pos, int type){
-    typeGrid.setValue(pos.x, pos.y, pos.z, type);
+    typeGrid->setValue(pos.x, pos.y, pos.z, type);
 }

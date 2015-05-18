@@ -31,7 +31,7 @@ public:
   void clean();  
 
 private:
-  Uniform3DGrid<RenderGridItem> grid;
+  Uniform3DGridPtr<RenderGridItem> grid;
   bool dirty;
 
   void createPlane(int x, int y, int z, int dir);

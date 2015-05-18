@@ -16,9 +16,12 @@ RenderGrid::RenderGrid(unsigned int numberOfCubesInX,
                        unsigned int numberOfCubesInZ,
                        float _minX, float _maxX,
                        float _minY, float _maxY,
-                       float _minZ, float _maxZ) :
-                       grid(numberOfCubesInX, numberOfCubesInY, numberOfCubesInZ,
-                            _minX, _maxX, _minY, _maxY, _minZ, _maxZ) {}
+                       float _minZ, float _maxZ) {
+
+  grid = Uniform3DGridPtr<RenderGridItem>(
+         new Uniform3DGrid<RenderGridItem>(numberOfCubesInX, numberOfCubesInY, numberOfCubesInZ,
+                                           _minX, _maxX, _minY, _maxY, _minZ, _maxZ));
+}
 
 void RenderGrid::initialize() {
   dirty = false;
@@ -32,11 +35,11 @@ void RenderGrid::initialize() {
   item.planes[5] = NULL_PTR;
   item.renderElement = NULL_PTR;
   item.dirty = true;
-  grid.initialize(item);
+  grid->initialize(item);
 }
 
 void RenderGrid::createPlane(int x, int y, int z, int dir) {
-  RenderGridItem center = grid(x, y, z);
+  RenderGridItem center = (*grid)(x, y, z);
   int left = x, right = x, top = y, bottom = y, front = z, back = z, i, j, k;
   int xN = 0, yN = 0, zN = 0;
   bool checkN = true, done = false;
@@ -63,11 +66,11 @@ void RenderGrid::createPlane(int x, int y, int z, int dir) {
   if(dir == ZN) {
     zN--;
   }
-  checkN = x + xN >= 0 && x + xN < grid.getSizeX() &&
-           y + yN >= 0 && y + yN < grid.getSizeY() &&
-           z + zN >= 0 && z + zN < grid.getSizeZ();
+  checkN = x + xN >= 0 && x + xN < grid->getSizeX() &&
+           y + yN >= 0 && y + yN < grid->getSizeY() &&
+           z + zN >= 0 && z + zN < grid->getSizeZ();
 
-  if(checkN && grid(x + xN, y + yN, z + zN).object != NULL_PTR) {
+  if(checkN && (*grid)(x + xN, y + yN, z + zN).object != NULL_PTR) {
     return;
   }
 
@@ -76,7 +79,7 @@ void RenderGrid::createPlane(int x, int y, int z, int dir) {
     for(left = x - 1; left >= 0 && !done; left--) {
       for(j = bottom; j <= top; j++) {
         for(k = back; k <= front; k++) {
-          if(!grid(left, j, k).isEqual(&center) || grid(left, j, k).object == NULL_PTR|| grid(left, j, k).planes[dir] != NULL_PTR|| (checkN && grid(left + xN, j + yN, k + zN).object != NULL_PTR)) {
+          if(!(*grid)(left, j, k).isEqual(&center) || (*grid)(left, j, k).object == NULL_PTR|| (*grid)(left, j, k).planes[dir] != NULL_PTR|| (checkN && (*grid)(left + xN, j + yN, k + zN).object != NULL_PTR)) {
             done = true;
             left++;
           }
@@ -86,10 +89,10 @@ void RenderGrid::createPlane(int x, int y, int z, int dir) {
     left++;
 
     done = false;
-    for(right = x + 1; right < grid.getSizeX() && !done; right++) {
+    for(right = x + 1; right < grid->getSizeX() && !done; right++) {
       for(j = bottom; j <= top; j++) {
         for(k = back; k <= front; k++) {
-          if(!grid(right, j, k).isEqual(&center) || grid(right, j, k).object == NULL_PTR || grid(right, j, k).planes[dir] != NULL_PTR || (checkN && grid(right + xN, j + yN, k + zN).object != NULL_PTR)) {
+          if(!(*grid)(right, j, k).isEqual(&center) || (*grid)(right, j, k).object == NULL_PTR || (*grid)(right, j, k).planes[dir] != NULL_PTR || (checkN && (*grid)(right + xN, j + yN, k + zN).object != NULL_PTR)) {
             done = true;
             right--;
           }
@@ -104,7 +107,7 @@ void RenderGrid::createPlane(int x, int y, int z, int dir) {
     for(bottom = y - 1; bottom >= 0 && !done; bottom--) {
       for(i = left; i <= right; i++) {
         for(k = back; k <= front; k++) {
-          if(!grid(i, bottom, k).isEqual(&center) || grid(i, bottom, k).object == NULL_PTR || grid(i, bottom, k).planes[dir] != NULL_PTR || (checkN && grid(i + xN, bottom + yN, k + zN).object != NULL_PTR)) {
+          if(!(*grid)(i, bottom, k).isEqual(&center) || (*grid)(i, bottom, k).object == NULL_PTR || (*grid)(i, bottom, k).planes[dir] != NULL_PTR || (checkN && (*grid)(i + xN, bottom + yN, k + zN).object != NULL_PTR)) {
             done = true;
             bottom++;
           }
@@ -114,10 +117,10 @@ void RenderGrid::createPlane(int x, int y, int z, int dir) {
     bottom++;
 
     done = false;
-    for(top = y + 1; top < grid.getSizeY() && !done; top++) {
+    for(top = y + 1; top < grid->getSizeY() && !done; top++) {
       for(i = left; i <= right; i++) {
         for(k = back; k <= front; k++) {
-          if(!grid(i, top, k).isEqual(&center) || grid(i, top, k).object == NULL_PTR || grid(i, top, k).planes[dir] != NULL_PTR || (checkN && grid(i + xN, top + yN, k + zN).object != NULL_PTR)) {
+          if(!(*grid)(i, top, k).isEqual(&center) || (*grid)(i, top, k).object == NULL_PTR || (*grid)(i, top, k).planes[dir] != NULL_PTR || (checkN && (*grid)(i + xN, top + yN, k + zN).object != NULL_PTR)) {
             done = true;
             top--;
           }
@@ -132,7 +135,7 @@ void RenderGrid::createPlane(int x, int y, int z, int dir) {
     for(back = z - 1; back >= 0 && !done; back--) {
       for(i = left; i <= right; i++) {
         for(j = bottom; j <= top; j++) {
-          if(!grid(i, j, back).isEqual(&center) || grid(i, j, back).object == NULL_PTR || grid(i, j, back).planes[dir] != NULL_PTR || (checkN && grid(i + xN, j + yN, back + zN).object != NULL_PTR)) {
+          if(!(*grid)(i, j, back).isEqual(&center) || (*grid)(i, j, back).object == NULL_PTR || (*grid)(i, j, back).planes[dir] != NULL_PTR || (checkN && (*grid)(i + xN, j + yN, back + zN).object != NULL_PTR)) {
             done = true;
             back++;
           }
@@ -142,10 +145,10 @@ void RenderGrid::createPlane(int x, int y, int z, int dir) {
     back++;
 
     done = false;
-    for(front = z + 1; front < grid.getSizeZ() && !done; front++) {
+    for(front = z + 1; front < grid->getSizeZ() && !done; front++) {
       for(i = left; i <= right; i++) {
         for(j = bottom; j <= top; j++) {
-          if(!grid(i, j, front).isEqual(&center) || grid(i, j, front).object == NULL_PTR || grid(i, j, front).planes[dir] != NULL_PTR || (checkN && grid(i + xN, j + yN, front + zN).object != NULL_PTR)) {
+          if(!(*grid)(i, j, front).isEqual(&center) || (*grid)(i, j, front).object == NULL_PTR || (*grid)(i, j, front).planes[dir] != NULL_PTR || (checkN && (*grid)(i + xN, j + yN, front + zN).object != NULL_PTR)) {
             done = true;
             front--;
           }
@@ -156,15 +159,15 @@ void RenderGrid::createPlane(int x, int y, int z, int dir) {
   }
 
   PlanePtr plane(new Plane(left, right, bottom, top, back, front, dir, x, y, z,
-                           grid.getMinX(), grid.getMaxY(), grid.getMinZ(),
-                           grid.getEdgeSizeX(), grid.getEdgeSizeY(), grid.getEdgeSizeZ(),
+                           grid->getMinX(), grid->getMaxY(), grid->getMinZ(),
+                           grid->getEdgeSizeX(), grid->getEdgeSizeY(), grid->getEdgeSizeZ(),
                            center.object));
   plane->setup();
 
   for(i = left; i <= right; i++) {
     for(j = bottom; j <= top; j++) {
       for(k = back; k <= front; k++) {
-        grid(i, j, k).planes[dir] = plane;
+        (*grid)(i, j, k).planes[dir] = plane;
       }
     }
   }
@@ -184,18 +187,18 @@ void RenderGrid::addObject(ObjectPtr object, RenderElementPtr renderElement) {
   item.planes[5] = NULL_PTR;
   item.renderElement = renderElement;
   item.dirty = true;
-  grid.setValue(pos.x, pos.y, pos.z, item);
+  grid->setValue(pos.x, pos.y, pos.z, item);
   dirtyAdjacent(pos);
 }
 
 void RenderGrid::removeObject(ObjectPtr object) {
   glm::vec4 pos = object->getModelMatrix() * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
   dirtyAdjacent(pos);
-  RenderGridItem item = grid.getValue(pos.x, pos.y, pos.z);
+  RenderGridItem item = grid->getValue(pos.x, pos.y, pos.z);
   item.object = NULL_PTR;
   item.renderElement = NULL_PTR;
   item.dirty = true;
-  grid.setValue(pos.x, pos.y, pos.z, item);
+  grid->setValue(pos.x, pos.y, pos.z, item);
 }
 
 void RenderGrid::dirtyAdjacent(glm::vec4 pos) {
@@ -203,23 +206,23 @@ void RenderGrid::dirtyAdjacent(glm::vec4 pos) {
   for(i = -1; i <= 1; i++) {
     for(j = -1; j <= 1; j++) {
       for(k = -1; k <= 1; k++) {
-        dirtyCell(pos + glm::vec4(i * grid.getEdgeSizeX(), j * grid.getEdgeSizeY(), k * grid.getEdgeSizeZ(), 0.0f));
+        dirtyCell(pos + glm::vec4(i * grid->getEdgeSizeX(), j * grid->getEdgeSizeY(), k * grid->getEdgeSizeZ(), 0.0f));
       }
     }
   }
-  dirtyCell(pos + glm::vec4(grid.getEdgeSizeX(), 0.0f, 0.0f, 0.0f));
-  dirtyCell(pos + glm::vec4(-grid.getEdgeSizeX(), 0.0f, 0.0f, 0.0f));
-  dirtyCell(pos + glm::vec4(0.0f, grid.getEdgeSizeY(), 0.0f, 0.0f));
-  dirtyCell(pos + glm::vec4(0.0f, -grid.getEdgeSizeY(), 0.0f, 0.0f));
-  dirtyCell(pos + glm::vec4(0.0f, 0.0f, grid.getEdgeSizeZ(), 0.0f));
-  dirtyCell(pos + glm::vec4(0.0f, 0.0f, -grid.getEdgeSizeZ(), 0.0f));
+  dirtyCell(pos + glm::vec4(grid->getEdgeSizeX(), 0.0f, 0.0f, 0.0f));
+  dirtyCell(pos + glm::vec4(-grid->getEdgeSizeX(), 0.0f, 0.0f, 0.0f));
+  dirtyCell(pos + glm::vec4(0.0f, grid->getEdgeSizeY(), 0.0f, 0.0f));
+  dirtyCell(pos + glm::vec4(0.0f, -grid->getEdgeSizeY(), 0.0f, 0.0f));
+  dirtyCell(pos + glm::vec4(0.0f, 0.0f, grid->getEdgeSizeZ(), 0.0f));
+  dirtyCell(pos + glm::vec4(0.0f, 0.0f, -grid->getEdgeSizeZ(), 0.0f));
 }
 
 void RenderGrid::dirtyCell(glm::vec4 pos) {
-  if(grid.inGrid(pos.x, pos.y, pos.z)) {
-    RenderGridItem item = grid.getValue(pos.x, pos.y, pos.z);
+  if(grid->inGrid(pos.x, pos.y, pos.z)) {
+    RenderGridItem item = grid->getValue(pos.x, pos.y, pos.z);
     item.dirty = true;
-    grid.setValue(pos.x, pos.y, pos.z, item);
+    grid->setValue(pos.x, pos.y, pos.z, item);
     int i;
     for(i = 0; i < 6; i++) {
       removePlane(item.planes[i]);
@@ -233,11 +236,11 @@ void RenderGrid::clean() {
     int i, j, k;
     dirty = false;
 
-    for(i = 0; i < grid.getSizeX(); i++) {
-      for(j = 0; j < grid.getSizeY(); j++) {
-        for(k = 0; k < grid.getSizeZ(); k++) {
-          if(grid(i, j, k).dirty) {
-            if(grid(i, j, k).object != NULL_PTR) {
+    for(i = 0; i < grid->getSizeX(); i++) {
+      for(j = 0; j < grid->getSizeY(); j++) {
+        for(k = 0; k < grid->getSizeZ(); k++) {
+          if((*grid)(i, j, k).dirty) {
+            if((*grid)(i, j, k).object != NULL_PTR) {
               createPlane(i, j, k, XP);
               createPlane(i, j, k, XN);
               createPlane(i, j, k, YP);
@@ -245,7 +248,7 @@ void RenderGrid::clean() {
               createPlane(i, j, k, ZP);
               createPlane(i, j, k, ZN);
             }
-            grid(i, j, k).dirty = false;
+            (*grid)(i, j, k).dirty = false;
           }
         }
       }
@@ -258,12 +261,12 @@ void RenderGrid::removePlane(PlanePtr plane) {
     return;
   }
   int i, j, k;
-  grid(plane->getCenterX(), plane->getCenterY(), plane->getCenterZ()).renderElement->removeObject(plane->getObject());
+  (*grid)(plane->getCenterX(), plane->getCenterY(), plane->getCenterZ()).renderElement->removeObject(plane->getObject());
   for(i = plane->getLeft(); i <= plane->getRight(); i++) {
     for(j = plane->getBottom(); j <= plane->getTop(); j++) {
       for(k = plane->getBack(); k <= plane->getFront(); k++) {
-        grid(i, j, k).planes[plane->getDirection()] = NULL_PTR;
-        grid(i, j, k).dirty = true;
+        (*grid)(i, j, k).planes[plane->getDirection()] = NULL_PTR;
+        (*grid)(i, j, k).dirty = true;
       }
     }
   }

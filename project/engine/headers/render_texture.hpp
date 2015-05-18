@@ -24,7 +24,7 @@ public:
      glm::vec2 dTime, glm::vec3 startPosition, glm::vec3 size);
     void swapTextures();
     void clear();
-    void renderBlock(Uniform3DGrid<int> *grid,
+    void renderBlock(Uniform3DGridPtr<int> grid,
                      float minX, float maxX,
                      float minY, float maxY,
                      float minZ, float maxZ,

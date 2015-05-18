@@ -30,8 +30,8 @@ public:
 
 private:
 
-  Uniform3DGrid<int> *typeGrid;
-  Uniform3DGrid<int> grid;
+  Uniform3DGridPtr<int> typeGrid;
+  Uniform3DGridPtr<int> grid;
   ObjectPtr waterSurface;
   glm::vec3 position;
   glm::vec3 movementDirection; 

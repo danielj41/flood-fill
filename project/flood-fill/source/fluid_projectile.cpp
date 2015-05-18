@@ -103,7 +103,7 @@ void FluidProjectile::update(){
   }
 }
 
-void FluidProjectile::createWaterSurfaceAt(Uniform3DGrid<int> *grid, std::set<int>* fillTypes, glm::vec3 newPos) {
+void FluidProjectile::createWaterSurfaceAt(Uniform3DGridPtr<int> grid, std::set<int>* fillTypes, glm::vec3 newPos) {
   if(createdSurface) {
     return;
   }
@@ -122,7 +122,7 @@ void FluidProjectile::collided(CollisionObjectPtr collidedWith){
   if((collidedWith->getCollisionID() == 1 || collidedWith->getCollisionID() == 64) && !hasCollided) {
     hasCollided = true;
     std::set<int>* fillTypes = PTR_CAST(LevelTemplate, Director::getScene())->getFillTypes();
-    Uniform3DGrid<int> *grid = PTR_CAST(LevelTemplate, Director::getScene())->getTypeGrid();
+    Uniform3DGridPtr<int> grid = PTR_CAST(LevelTemplate, Director::getScene())->getTypeGrid();
     glm::vec3 newPos(grid->getRoundX(oldPosition.x), grid->getRoundY(oldPosition.y), grid->getRoundZ(oldPosition.z));
      createWaterSurfaceAt(grid, fillTypes, newPos + glm::vec3(0.0f, grid->getEdgeSizeY(), 0.0f));
     createWaterSurfaceAt(grid, fillTypes, newPos);

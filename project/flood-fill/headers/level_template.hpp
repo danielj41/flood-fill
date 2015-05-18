@@ -28,7 +28,7 @@ public:
     virtual void setup() = 0;
     virtual void update() = 0;
 
-    Uniform3DGrid<int>* getTypeGrid();
+    Uniform3DGridPtr<int> getTypeGrid();
     std::set<int>* getFillTypes();
     GameObjectPtr getGridValue(glm::vec3 pos);
     void setGridValue(glm::vec3 pos, GameObjectPtr obj);
@@ -59,9 +59,9 @@ protected:
     int numVoxelsInX, numVoxelsInY, numVoxelsInZ;
 
     // The grid holds every game object in the map
-    Uniform3DGrid<GameObjectPtr> grid;
+    Uniform3DGridPtr<GameObjectPtr> grid;
     // The type grid hold the types of every game object in the map
-    Uniform3DGrid<int> typeGrid;
+    Uniform3DGridPtr<int> typeGrid;
     std::set<int> fillTypes;
 
     DebugPlayerPtr debugPlayer;
