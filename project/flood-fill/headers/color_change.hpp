@@ -9,6 +9,9 @@
 #include "collision_object.hpp"
 #include "object.hpp"
 
+#include "pointer_macros.h"
+DEF_PTR(ColorChange, ColorChangePtr);
+
 class ColorChange : public GameObject, public CollisionObject{
 
 public:

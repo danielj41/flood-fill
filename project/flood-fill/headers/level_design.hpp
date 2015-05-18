@@ -5,6 +5,9 @@
 #define LEN_Y 3
 #define LEN_Z 14
 
+#include "pointer_macros.h"
+DEF_PTR(LevelDesign, LevelDesignPtr);
+
 class LevelDesign {
   
 public:

@@ -6,6 +6,9 @@
 #include "glm/glm.hpp"
 #include "bounding_box.hpp"
 
+#include "pointer_macros.h"
+DEF_PTR(CollisionObject, CollisionObjectPtr);
+
 class CollisionObject{
 
 public:

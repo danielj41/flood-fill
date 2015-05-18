@@ -4,6 +4,9 @@
 #include "render_element.hpp"
 #include "uniform_3d_grid.hpp"
 
+#include "pointer_macros.h"
+DEF_PTR(RegularPolygonsRender, RegularPolygonsRenderPtr);
+
 class RegularPolygonsRender : public RenderElement{
 
 public:

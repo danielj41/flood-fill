@@ -8,6 +8,9 @@
 #include "object.hpp"
 #include "mesh.hpp"
 
+#include "pointer_macros.h"
+DEF_PTR(RenderElement, RenderElementPtr);
+
 class RenderElement {
 
 public:

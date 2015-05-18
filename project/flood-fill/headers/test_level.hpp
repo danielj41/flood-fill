@@ -3,6 +3,9 @@
 
 #include "level_template.hpp"
 
+#include "pointer_macros.h"
+DEF_PTR(TestLevel, TestLevelPtr);
+
 class TestLevel : public LevelTemplate{
 
 public:

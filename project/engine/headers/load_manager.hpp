@@ -12,6 +12,9 @@
 #include "sound.hpp"
 // TODO: create an unload operation to delete the pointers created
 
+#include "pointer_macros.h"
+DEF_PTR(LoadManager, LoadManagerPtr);
+
 class LoadManager {
 public:
     static void loadShader(std::string vertex, std::string fragment);

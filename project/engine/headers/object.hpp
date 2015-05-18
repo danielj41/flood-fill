@@ -10,6 +10,9 @@
 #include "shader.hpp"
 #include "texture.hpp"
 
+#include "pointer_macros.h"
+DEF_PTR(Object, ObjectPtr);
+
 class Object {
 
 public:

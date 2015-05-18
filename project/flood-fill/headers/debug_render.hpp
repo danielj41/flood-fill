@@ -4,6 +4,9 @@
 #include "render_element.hpp"
 #include "bounding_box.hpp"
 
+#include "pointer_macros.h"
+DEF_PTR(DebugRender, DebugRenderPtr);
+
 class DebugRender : public RenderElement{
 
 public:

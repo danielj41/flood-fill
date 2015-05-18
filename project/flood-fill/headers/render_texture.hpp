@@ -12,6 +12,9 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
+#include "pointer_macros.h"
+DEF_PTR(RenderTexture, RenderTexturePtr);
+
 class RenderTexture {
 public:
     RenderTexture();

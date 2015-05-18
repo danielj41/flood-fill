@@ -7,6 +7,9 @@
 #include "GLIncludes.h"
 #include "image.hpp"
 
+#include "pointer_macros.h"
+DEF_PTR(Texture, TexturePtr);
+
 class Texture{
 public:
     Texture();

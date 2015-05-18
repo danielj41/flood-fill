@@ -6,6 +6,9 @@
 
 #include "GLIncludes.h"
 
+#include "pointer_macros.h"
+DEF_PTR(Shader, ShaderPtr);
+
 class Shader {
 
 public:

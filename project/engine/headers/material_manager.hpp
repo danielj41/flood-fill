@@ -6,6 +6,9 @@
 
 #include "material.hpp"
 
+#include "pointer_macros.h"
+DEF_PTR(MaterialManager, MaterialManagerPtr);
+
 class MaterialManager{
 
 public:

@@ -11,6 +11,9 @@
 #include "solid_cube.hpp"
 #include "level_template.hpp"
 
+#include "pointer_macros.h"
+DEF_PTR(ActiveTerrain, ActiveTerrainPtr);
+
 class ActiveTerrain : public GameObject{
 
 public:

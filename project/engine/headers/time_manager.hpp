@@ -1,6 +1,9 @@
 #ifndef TIME_MANAGER_HPP
 #define TIME_MANAGER_HPP
 
+#include "pointer_macros.h"
+DEF_PTR(TimeManager, TimeManagerPtr);
+
 class TimeManager{
 
 public:

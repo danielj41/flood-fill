@@ -12,6 +12,8 @@
 #include "level_template.hpp"
 #include "director.hpp"
 
+#include "pointer_macros.h"
+DEF_PTR(WaterSurface, WaterSurfacePtr);
 
 class WaterSurface : public GameObject, public CollisionObject{
 

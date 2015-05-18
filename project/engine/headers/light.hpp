@@ -5,6 +5,9 @@
 #define GLM_FORCE_PURE
 #include "glm/glm.hpp"
 
+#include "pointer_macros.h"
+DEF_PTR(Light, LightPtr);
+
 class Light {
 
 public:

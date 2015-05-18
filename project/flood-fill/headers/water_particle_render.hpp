@@ -3,6 +3,9 @@
 
 #include "render_element.hpp"
 
+#include "pointer_macros.h"
+DEF_PTR(WaterParticleRender, WaterParticleRenderPtr);
+
 class WaterParticleRender : public RenderElement{
 
 public:

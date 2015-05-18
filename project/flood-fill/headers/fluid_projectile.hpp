@@ -11,6 +11,9 @@
 #include "object.hpp"
 #include "uniform_3d_grid.hpp"
 
+#include "pointer_macros.h"
+DEF_PTR(FluidProjectile, FluidProjectilePtr);
+
 class FluidProjectile : public GameObject, public CollisionObject{
 
 public:

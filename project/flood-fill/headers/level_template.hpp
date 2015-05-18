@@ -12,6 +12,9 @@
 #include "player.hpp"
 #include "void_voxel.hpp"
 
+#include "pointer_macros.h"
+DEF_PTR(LevelTemplate, LevelTemplatePtr);
+
 class LevelTemplate: public Scene{
 
 public:

@@ -17,6 +17,9 @@
 *
 */
 
+#include "pointer_macros.h"
+DEF_PTR(Scene, ScenePtr);
+
 class Scene{
 
 public:

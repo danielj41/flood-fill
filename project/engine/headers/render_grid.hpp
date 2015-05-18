@@ -9,6 +9,9 @@
 #include "uniform_3d_grid.hpp"
 #include "render_grid_item.hpp"
 
+#include "pointer_macros.h"
+DEF_PTR(RenderGrid, RenderGridPtr);
+
 class RenderGrid {
 
 public:

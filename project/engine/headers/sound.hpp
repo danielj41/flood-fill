@@ -5,6 +5,9 @@
 //#include <SFML/Audio.hpp>
 #include "GLIncludes.h"
 
+#include "pointer_macros.h"
+DEF_PTR(Sound, SoundPtr);
+
 class Sound{
 public:
     Sound();

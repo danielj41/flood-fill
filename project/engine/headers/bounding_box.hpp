@@ -19,6 +19,9 @@ Bounding Box Vertex Mapping:
 3--------0
 */
 
+#include "pointer_macros.h"
+DEF_PTR(BoundingBox, BoundingBoxPtr);
+
 class BoundingBox{
 
 public:

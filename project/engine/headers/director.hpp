@@ -13,6 +13,9 @@
 
 #include "scene.hpp"
 
+#include "pointer_macros.h"
+DEF_PTR(Director, DirectorPtr);
+
 class Director{
 
 public:

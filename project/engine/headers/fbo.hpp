@@ -6,6 +6,9 @@
 #include "GLIncludes.h"
 #include "texture.hpp"
 
+#include "pointer_macros.h"
+DEF_PTR(FBO, FBOPtr);
+
 class FBO{
 public:
     FBO();

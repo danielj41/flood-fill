@@ -9,6 +9,9 @@
 #include "color_change.hpp"
 #include "fluid_box.hpp"
 
+#include "pointer_macros.h"
+DEF_PTR(Player, PlayerPtr);
+
 class Player: public GameObject, public CollisionObject{
 
 public:

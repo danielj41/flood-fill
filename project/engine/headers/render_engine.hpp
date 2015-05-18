@@ -7,6 +7,9 @@
 #include "render_element.hpp"
 #include "render_grid.hpp"
 
+#include "pointer_macros.h"
+DEF_PTR(RenderEngine, RenderEnginePtr);
+
 class RenderEngine{
 
 public:

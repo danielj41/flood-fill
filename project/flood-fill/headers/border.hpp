@@ -11,6 +11,9 @@
 #define MAXX 12.0f
 #define MAXZ 0.0f
 
+#include "pointer_macros.h"
+DEF_PTR(Border, BorderPtr);
+
 class Border {
   
 public:

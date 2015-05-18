@@ -4,6 +4,9 @@
 #include "game_object.hpp"
 #include "camera.hpp"
 
+#include "pointer_macros.h"
+DEF_PTR(DebugPlayer, DebugPlayerPtr);
+
 class DebugPlayer: public GameObject{
 
 public:

@@ -7,6 +7,9 @@
 
 #include "object.hpp"
 
+#include "pointer_macros.h"
+DEF_PTR(Camera, CameraPtr);
+
 class Camera {
 public:
     static const int FORWARD_DIRECTION;

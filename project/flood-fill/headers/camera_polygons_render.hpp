@@ -3,6 +3,9 @@
 
 #include "render_element.hpp"
 
+#include "pointer_macros.h"
+DEF_PTR(CameraPolygonsRender, CameraPolygonsRenderPtr);
+
 class CameraPolygonsRender : public RenderElement{
 
 public:

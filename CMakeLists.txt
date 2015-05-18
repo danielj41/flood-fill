@@ -46,6 +46,10 @@ elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -g -W -Wall -Wno-long-long -Wno-comment -pedantic -Wno-variadic-macros")
 endif()
 
+IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+  SET(CMAKE_CXX_COMPILER "/usr/bin/clang++")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++ -Wno-c++11-extensions")
+ENDIF()
 
 
 include_directories(
@@ -106,6 +110,7 @@ add_executable(
         project/flood-fill/source/active_terrain.cpp
         project/flood-fill/source/color_change.cpp
         project/flood-fill/source/shadow_occluder_render.cpp
+        project/flood-fill/source/render_texture.cpp
 
         #Header Files
         #project/flood-fill/headers/main_level.hpp
@@ -139,6 +144,7 @@ add_executable(
         project/flood-fill/headers/active_terrain.hpp
         project/flood-fill/headers/color_change.hpp
         project/flood-fill/headers/shadow_occluder_render.hpp
+        project/flood-fill/headers/render_texture.hpp
 
         ### Engine Files ###
         #Source Files
@@ -161,7 +167,6 @@ add_executable(
         project/engine/source/material_manager.cpp
         project/engine/source/image.cpp
         project/engine/source/texture.cpp
-        project/engine/source/render_texture.cpp
         project/engine/source/lodepng.cpp
         project/engine/source/render_element.cpp
         project/engine/source/sound.cpp
@@ -193,7 +198,6 @@ add_executable(
         project/engine/headers/uniform_3d_grid.hpp
         project/engine/headers/image.hpp
         project/engine/headers/texture.hpp
-        project/engine/headers/render_texture.hpp
         project/engine/headers/lodepng.h
         project/engine/headers/sound.hpp
         project/engine/headers/render_element.hpp

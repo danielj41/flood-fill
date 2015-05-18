@@ -9,6 +9,9 @@
 #include "collision_object.hpp"
 #include "object.hpp"
 
+#include "pointer_macros.h"
+DEF_PTR(PlayerHand, PlayerHandPtr);
+
 class PlayerHand : public GameObject, public CollisionObject {
     
 public:

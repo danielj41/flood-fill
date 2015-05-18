@@ -8,6 +8,9 @@
 #include "object.hpp"
 #include "player.hpp"
 
+#include "pointer_macros.h"
+DEF_PTR(Switch, SwitchPtr);
+
 class Switch: public GameObject, public CollisionObject{
 
 public:

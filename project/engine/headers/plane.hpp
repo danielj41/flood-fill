@@ -8,6 +8,9 @@
 #include "object.hpp"
 #include "uniform_3d_grid.hpp"
 
+#include "pointer_macros.h"
+DEF_PTR(Plane, PlanePtr);
+
 class Plane {
     public:
 

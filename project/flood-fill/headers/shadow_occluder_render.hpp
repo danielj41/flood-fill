@@ -5,6 +5,9 @@
 #include "fbo.hpp"
 #include "light.hpp"
 
+#include "pointer_macros.h"
+DEF_PTR(ShadowOccluderRender, ShadowOccluderRenderPtr);
+
 class ShadowOccluderRender : public RenderElement{
 
 public:

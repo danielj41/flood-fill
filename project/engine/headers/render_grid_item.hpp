@@ -9,6 +9,9 @@
 #include "object.hpp"
 #include "render_element.hpp"
 
+#include "pointer_macros.h"
+DEF_PTR(RenderGridItem, RenderGridItemPtr);
+
 class RenderGridItem {
     public:
         Plane *planes[6];

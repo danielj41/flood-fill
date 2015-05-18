@@ -7,6 +7,9 @@
 
 NOTE: Files must be 24-bit Bitmap format (BMP)*/
 
+#include "pointer_macros.h"
+DEF_PTR(Image, ImagePtr);
+
 class Image{
 public:
     Image();

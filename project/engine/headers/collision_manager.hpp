@@ -10,7 +10,8 @@
 #define GLM_FORCE_PURE
 #include "glm/glm.hpp"
 
-
+#include "pointer_macros.h"
+DEF_PTR(CollisionManager, CollisionManagerPtr);
 
 class CollisionManager{
 

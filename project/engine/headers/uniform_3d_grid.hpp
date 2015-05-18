@@ -4,6 +4,9 @@
 #include <exception>
 #include <cstring>
 
+#include "pointer_macros.h"
+DEF_PTR_TMPL(Uniform3DGrid, Uniform3DGridPtr, template<typename T>, T);
+
 template<typename T>
 class Uniform3DGrid{
 

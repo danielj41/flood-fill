@@ -5,6 +5,9 @@
 #include "debug_player.hpp"
 #include "player.hpp"
 
+#include "pointer_macros.h"
+DEF_PTR(MainLevel, MainLevelPtr);
+
 class MainLevel : public Scene{
 
 public:
