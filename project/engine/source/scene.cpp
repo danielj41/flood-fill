@@ -123,6 +123,22 @@ void Scene::removeGameObject(GameObjectPtr gameObject){
     DEBUG("Object does not exist in this scene!");
 }
 
+void Scene::removeGameObject(GameObject* gameObject){
+    INFO("Removing game object from scene...");
+
+    for(std::map<std::string, GameObjectPtr>::iterator it = gameObjects.begin();
+        it != gameObjects.end(); it++){
+
+        if(it->second.get() == gameObject){
+            INFO("Game Object " << it->first << " removed!");
+            gameObjects.erase(it);
+
+            return;
+        }
+    }
+    DEBUG("Object does not exist in this scene!");
+}
+
 void Scene::removeLight(std::string label){
     INFO("Removing light " << label << "...");
 

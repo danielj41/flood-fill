@@ -84,7 +84,7 @@ void CameraPolygonsRender::setupShader(){
     }
 }
 
-void CameraPolygonsRender::setupMesh(MeshPtr mesh){
+void CameraPolygonsRender::setupMesh(Mesh* mesh){
         glEnableVertexAttribArray(shader->getHandle("aPosition"));
         glBindBuffer(GL_ARRAY_BUFFER, mesh->getVertexBuffer());
         glVertexAttribPointer(shader->getHandle("aPosition"), 3,

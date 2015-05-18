@@ -29,8 +29,8 @@ DemoLevel::DemoLevel() : Scene("DemoLevel"){}
 void DemoLevel::setup(){
     INFO("Setting up the Demo Level...");
 	
-    Camera * cam1 = new Camera(glm::vec3(6, 8, -4), glm::vec3(6, 0, -10),
-                             glm::vec3(0, 1, 0));
+    CameraPtr cam1(new Camera(glm::vec3(6, 8, -4), glm::vec3(6, 0, -10),
+                             glm::vec3(0, 1, 0)));
     cam1->setProjectionMatrix(
         glm::perspective(glm::radians(90.0f),
                         (float) Global::ScreenWidth/Global::ScreenHeight,
@@ -39,24 +39,24 @@ void DemoLevel::setup(){
     addCamera("Camera1", cam1);
     setMainCamera("Camera1");
 
-    Camera * cam2 = new Camera(glm::vec3(0, 1, 0), glm::vec3(0, 0, -5),
-							   glm::vec3(0, 1, 0));
+    CameraPtr cam2(new Camera(glm::vec3(0, 1, 0), glm::vec3(0, 0, -5),
+							   glm::vec3(0, 1, 0)));
     cam2->setProjectionMatrix(
         glm::perspective(glm::radians(90.0f),
                         (float) Global::ScreenWidth/Global::ScreenHeight,
                         0.1f, 100.f));
     addCamera("DebugCamera", cam2);
 
-    player = new Player(cam1);
+    player = PlayerPtr(new Player(cam1));
     player->setup();
     addGameObject("player" , player);
     CollisionManager::addCollisionObjectToList(player);
 
-    debugPlayer = new DebugPlayer(cam2);
+    debugPlayer = DebugPlayerPtr(new DebugPlayer(cam2));
     debugPlayer->setup();
     addGameObject("debugPlayer" , debugPlayer);
 
-    LightPtr l1 = new Light(glm::vec3(1), 5.0f, glm::vec3(0, -1, 0));
+    LightPtr l1(new Light(glm::vec3(1), 5.0f, glm::vec3(0, -1, 0)));
     addLight("Sun", l1);
 
 	// Init Grid and Map
@@ -69,8 +69,8 @@ void DemoLevel::setup(){
 		  if ( LevelDesign::getVal(i, j, k) == 1 ) {
 			
 			glm::vec3 pos = glm::vec3(2*i+3,2*j+1,-2*k-3);
-			BoxPtr box = new Box( pos, 
-								glm::vec3(0,0,0), 0.0f);
+			BoxPtr box(new Box( pos, 
+								glm::vec3(0,0,0), 0.0f));
 			box->setup();
 			CollisionManager::addCollisionObjectToGrid(box);
 			addGameObject("box", box);

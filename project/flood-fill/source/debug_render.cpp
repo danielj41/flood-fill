@@ -51,8 +51,8 @@ void DebugRender::setupShader(){
       glm::value_ptr(camera->getProjectionMatrix()));
 }
 
-void DebugRender::setupMesh(MeshPtr){
-    Mesh * mesh = LoadManager::getMesh("cube.obj");
+void DebugRender::setupMesh(Mesh*){
+    MeshPtr mesh = LoadManager::getMesh("cube.obj");
 
     glEnableVertexAttribArray(shader->getHandle("aPosition"));
     glBindBuffer(GL_ARRAY_BUFFER, mesh->getVertexBuffer());
@@ -70,18 +70,18 @@ void DebugRender::renderPass(){
 
     INFO("Setup Shader...");
     setupShader();
-    setupMesh(NULL);
+    setupMesh(NULL_PTR);
 
     /*for(auto box = boxes.begin(); box != boxes.end(); box++){
         renderBoundingBox(*box);
     }*/
 }
 
-void DebugRender::addBoundingBox(BoundingBoxPtr box){
+void DebugRender::addBoundingBox(BoundingBox* box){
     boxes.push_front(box);
 }
 
-void DebugRender::removeBoundingBox(BoundingBoxPtr box){
+void DebugRender::removeBoundingBox(BoundingBox* box){
     for(auto it = boxes.begin(); it != boxes.end(); it++){
         if(box == *it){
             boxes.erase(it);
@@ -89,7 +89,7 @@ void DebugRender::removeBoundingBox(BoundingBoxPtr box){
     }
 }
 
-void DebugRender::renderBoundingBox(BoundingBoxPtr box){
+void DebugRender::renderBoundingBox(BoundingBox* box){
     MeshPtr mesh = LoadManager::getMesh("cube.obj");
 
     glUniformMatrix4fv(shader->getHandle("uModel"), 1, GL_FALSE,

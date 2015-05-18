@@ -86,7 +86,7 @@ void RegularPolygonsRender::setupShader(){
     }
 }
 
-void RegularPolygonsRender::setupMesh(MeshPtr mesh){
+void RegularPolygonsRender::setupMesh(Mesh* mesh){
         glEnableVertexAttribArray(shader->getHandle("aPosition"));
         glBindBuffer(GL_ARRAY_BUFFER, mesh->getVertexBuffer());
         glVertexAttribPointer(shader->getHandle("aPosition"), 3,

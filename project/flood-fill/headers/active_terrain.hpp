@@ -24,7 +24,7 @@ public:
     
 private:
     
-    std::list<SolidCube*> solidCubes;
+    std::list<SolidCubePtr> solidCubes;
     
     SwitchPtr s;
     glm::vec3 direction;

@@ -8,4 +8,6 @@
 
 #define PTR_CAST(type, value) (std::dynamic_pointer_cast<type>(value))
 
+#define NULL_PTR nullptr
+
 #endif

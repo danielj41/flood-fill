@@ -19,7 +19,7 @@ ShadowOccluderRender::ShadowOccluderRender()
     : RenderElement(false) {}
 
 void ShadowOccluderRender::setup(){
-    fbo = new FBO();
+    fbo = FBOPtr(new FBO());
     fbo->addDepthTexture(Global::FbWidth, Global::FbHeight);
 
     fbo->load();
@@ -68,7 +68,7 @@ void ShadowOccluderRender::setupShader(){
       glm::value_ptr(light->getProjectionMatrix()));
 }
 
-void ShadowOccluderRender::setupMesh(MeshPtr mesh){
+void ShadowOccluderRender::setupMesh(Mesh* mesh){
     glEnableVertexAttribArray(shader->getHandle("aPosition"));
     glBindBuffer(GL_ARRAY_BUFFER, mesh->getVertexBuffer());
     glVertexAttribPointer(shader->getHandle("aPosition"), 3,

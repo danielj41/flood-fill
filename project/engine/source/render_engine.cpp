@@ -18,7 +18,7 @@
 
 bool RenderEngine::loaded = false;
 std::map< std::string, RenderElementPtr > RenderEngine::renderElements;
-RenderGridPtr RenderEngine::renderGrid = NULL;
+RenderGridPtr RenderEngine::renderGrid = NULL_PTR;
 std::map< std::string, int > RenderEngine::renderElementsPriority;
 
 void RenderEngine::setup(){
@@ -53,7 +53,7 @@ void RenderEngine::render(){
     for(unsigned int i = 0; i < elements.size(); i++){
         if(elements[i].second < 0) continue;
 
-        RenderElement * element = renderElements[elements[i].first];
+        RenderElementPtr element = renderElements[elements[i].first];
 
         INFO("Rendering Objects from Render Element " << elements[i].first << "...");
 
@@ -89,7 +89,7 @@ RenderElementPtr RenderEngine::getRenderElement(std::string name){
     }
 
     ASSERT(false, "Render Element " << name << " not found!");
-    return NULL;
+    return NULL_PTR;
 }
 
 void RenderEngine::removeRenderElement(std::string name){

@@ -110,7 +110,6 @@ add_executable(
         project/flood-fill/source/active_terrain.cpp
         project/flood-fill/source/color_change.cpp
         project/flood-fill/source/shadow_occluder_render.cpp
-        project/flood-fill/source/render_texture.cpp
 
         #Header Files
         #project/flood-fill/headers/main_level.hpp
@@ -144,7 +143,6 @@ add_executable(
         project/flood-fill/headers/active_terrain.hpp
         project/flood-fill/headers/color_change.hpp
         project/flood-fill/headers/shadow_occluder_render.hpp
-        project/flood-fill/headers/render_texture.hpp
 
         ### Engine Files ###
         #Source Files
@@ -173,6 +171,7 @@ add_executable(
         project/engine/source/plane.cpp
         project/engine/source/render_grid_item.cpp
         project/engine/source/render_grid.cpp
+        project/engine/source/render_texture.cpp
         project/engine/source/fbo.cpp
 
         #Header Files
@@ -204,6 +203,7 @@ add_executable(
         project/engine/headers/plane.hpp
         project/engine/headers/render_grid_item.hpp
         project/engine/headers/render_grid.hpp
+        project/engine/headers/render_texture.hpp
         project/engine/headers/fbo.hpp
 )
 

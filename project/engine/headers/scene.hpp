@@ -45,6 +45,7 @@ public:
     void removeCamera(CameraPtr camera);
     void removeGameObject(std::string label);
     void removeGameObject(GameObjectPtr gameObject);
+    void removeGameObject(GameObject* gameObject);
     void removeLight(std::string label);
     void removeLight(LightPtr light);
 

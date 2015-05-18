@@ -209,7 +209,7 @@ void Player::collided(CollisionObjectPtr collidedWith) {
     break;
   case 16:
     INFO("DETECTING COLOR CHANGE!");
-    hand->setColorMask(((ColorChange *)collidedWith)->getColor());
+    hand->setColorMask((PTR_CAST(ColorChange, collidedWith)->getColor()));
     
     break;
   default:

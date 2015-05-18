@@ -82,7 +82,7 @@ void Switch::collided(CollisionObjectPtr collidedWith){
     switch (collidedWith->getCollisionID()){
     case 2: //Player
         INFO("COLLISION DETECTED WITH SWITCH");
-        if (((Player*)collidedWith)->isKeyPressed(GLFW_KEY_E) && !triggered){
+        if (PTR_CAST(Player, collidedWith)->isKeyPressed(GLFW_KEY_E) && !triggered){
             triggered = true;
             on = !on;
         }

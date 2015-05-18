@@ -22,6 +22,7 @@
 #include "image.hpp"
 #include "texture.hpp"
 #include "render_texture.hpp"
+#include "water_surface.hpp"
 
 using namespace std;
 //

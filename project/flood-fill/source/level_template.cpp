@@ -178,7 +178,7 @@ GameObjectPtr LevelTemplate::createVoxel(int id, int i, int j, int k){
         break;
     case WINNING_BLOCK:
     {
-        GameObjectPtr c(new WinningBlock(glm::vec3(minx + i * 2 + 1, miny + j * 2 + 1, minz + (k * 2 + 1))));
+        WinningBlockPtr c(new WinningBlock(glm::vec3(minx + i * 2 + 1, miny + j * 2 + 1, minz + (k * 2 + 1))));
         c->setup();
         CollisionManager::addCollisionObjectToGrid(c);
         return c;
@@ -186,7 +186,7 @@ GameObjectPtr LevelTemplate::createVoxel(int id, int i, int j, int k){
     }
     case CHANGE_COLOR_BLUE:
     {
-        GameObjectPtr c(new ColorChange(glm::vec3(minx + i * 2 + 1, miny + j * 2 + 1, minz + (k * 2 + 1)), 1));
+        ColorChangePtr c(new ColorChange(glm::vec3(minx + i * 2 + 1, miny + j * 2 + 1, minz + (k * 2 + 1)), 1));
         c->setup();
         CollisionManager::addCollisionObjectToGrid(c);
         return c;
@@ -194,7 +194,7 @@ GameObjectPtr LevelTemplate::createVoxel(int id, int i, int j, int k){
     }
     case CHANGE_COLOR_GREEN:
     {
-        GameObjectPtr c(new ColorChange(glm::vec3(minx + i * 2 + 1, miny + j * 2 + 1, minz + (k * 2 + 1)), 2));
+        ColorChangePtr c(new ColorChange(glm::vec3(minx + i * 2 + 1, miny + j * 2 + 1, minz + (k * 2 + 1)), 2));
         c->setup();
         CollisionManager::addCollisionObjectToGrid(c);
         Director::getScene()->addGameObject(c);
@@ -203,7 +203,7 @@ GameObjectPtr LevelTemplate::createVoxel(int id, int i, int j, int k){
     }
     case FLUID_GREEN:
     {
-        GameObjectPtr c(new FluidBox(glm::vec3(minx + i * 2 + 1, miny + j * 2 + 1, minz + (k * 2 + 1)), 2));
+        FluidBoxPtr c(new FluidBox(glm::vec3(minx + i * 2 + 1, miny + j * 2 + 1, minz + (k * 2 + 1)), 2));
         c->setup();
         CollisionManager::addCollisionObjectToGrid(c);
         Director::getScene()->addGameObject(c);
@@ -212,7 +212,7 @@ GameObjectPtr LevelTemplate::createVoxel(int id, int i, int j, int k){
     }
     case CHANGE_COLOR_RED:
     {
-        GameObjectPtr c(new ColorChange(glm::vec3(minx + i * 2 + 1, miny + j * 2 + 1, minz + (k * 2 + 1)), 4));
+        ColorChangePtr c(new ColorChange(glm::vec3(minx + i * 2 + 1, miny + j * 2 + 1, minz + (k * 2 + 1)), 4));
         c->setup();
         CollisionManager::addCollisionObjectToGrid(c);
         Director::getScene()->addGameObject(c);
@@ -221,7 +221,7 @@ GameObjectPtr LevelTemplate::createVoxel(int id, int i, int j, int k){
     }
     case FLUID_RED:
     {
-        GameObjectPtr c(new FluidBox(glm::vec3(minx + i * 2 + 1, miny + j * 2 + 1, minz + (k * 2 + 1)), 4));
+        FluidBoxPtr c(new FluidBox(glm::vec3(minx + i * 2 + 1, miny + j * 2 + 1, minz + (k * 2 + 1)), 4));
         c->setup();
         CollisionManager::addCollisionObjectToGrid(c);
         Director::getScene()->addGameObject(c);

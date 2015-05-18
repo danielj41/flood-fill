@@ -51,9 +51,6 @@ void WaterSurface::setup() {
   if(!checkAdjacent(position)) {
     timer = 2.0f; // remove next frame
   }
-  /*if(maxY - grid.getEdgeSizeY() * 1.5f < minY) {
-    checkAdjacent(position + glm::vec3(0, grid.getEdgeSizeY(), 0));
-  }*/
 
   startPosition = position;
   waterSurface = ObjectPtr(new Object(
@@ -143,6 +140,7 @@ void WaterSurface::createFluidBox(glm::vec3 newPos) {
       fluidBox->setup();
       level->setGridValue(fluidBox->getPosition(), fluidBox);
       Director::getScene()->addGameObject(fluidBox);
+      CollisionManager::addCollisionObjectToGrid(fluidBox);
     }
     
     createFluidBox(newPos + glm::vec3(grid.getEdgeSizeX(), 0, 0));

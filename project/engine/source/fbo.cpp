@@ -28,7 +28,7 @@ void FBO::addDepthTexture(unsigned int width, unsigned int height){
     INFO("Adding depth texture to FBO...");
     if(loaded) DEBUG("You are trying to add a depth buffer to a FBO that was already laoded!");
 
-    depthTexture = new Texture();
+    depthTexture = TexturePtr(new Texture());
     depthTexture->createTexture(width, height, GL_DEPTH_COMPONENT16, GL_DEPTH_COMPONENT, GL_FLOAT);
     depthBuf = depthTexture->getTexture();
 

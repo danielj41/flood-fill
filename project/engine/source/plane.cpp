@@ -30,7 +30,7 @@ Plane::Plane(int _left, int _right,
              refObject(_refObject) {}
 
 void Plane::setup() {
-  object = new Object(LoadManager::getMesh("plane.obj"), refObject->getMaterial());
+  object = ObjectPtr(new Object(LoadManager::getMesh("plane.obj"), refObject->getMaterial()));
 
   if(refObject->hasTexture()) {
     object->applyTexture(refObject->getTexture());
@@ -82,4 +82,4 @@ int Plane::getCenterX() { return centerX; }
 int Plane::getCenterY() { return centerY; }
 int Plane::getCenterZ() { return centerZ; }
 int Plane::getDirection() { return direction; }
-Object *Plane::getObject() { return object; }
+ObjectPtr Plane::getObject() { return object; }

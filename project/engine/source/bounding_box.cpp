@@ -86,10 +86,10 @@ void BoundingBox::draw(){
     INFO("Drawing a Bounding Box...");
 
     // TODO: Change to a more lightweight shader
-    Shader * shader = LoadManager::getShader("bounding_box_vertex.glsl",
+    ShaderPtr shader = LoadManager::getShader("bounding_box_vertex.glsl",
                                              "bounding_box_fragment.glsl");
     // TODO: Change to a more lightweight mesh if it is possible
-    Mesh * mesh = LoadManager::getMesh("cube.obj");
+    MeshPtr mesh = LoadManager::getMesh("cube.obj");
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 

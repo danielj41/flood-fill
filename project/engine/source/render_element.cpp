@@ -49,7 +49,7 @@ void RenderElement::renderPass(){
     setupShader();
 
     for(auto it = objects.begin(); it != objects.end(); it++){
-        MeshPtr mesh = it->first;
+        Mesh* mesh = it->first;
 
         if(it->second.size() == 0) continue;
 

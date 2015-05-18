@@ -41,7 +41,7 @@ public:
     // Second to be executed in the Rendering Engine
     // Sets the Enviorment for each Mesh, sends to the GPU the common information
     // of all objects that uses this mesh
-    virtual void setupMesh(MeshPtr mesh) = 0;
+    virtual void setupMesh(Mesh* mesh) = 0;
 
     // Third to be excuted
     // Draw each object with their specific data
@@ -54,7 +54,7 @@ protected:
     bool cull;
 
     ShaderPtr shader;
-    std::map<Mesh*, std::list<ObjectPtr>> objects;
+    std::map<Mesh*, std::list<ObjectPtr> > objects;
 };
 
 #endif

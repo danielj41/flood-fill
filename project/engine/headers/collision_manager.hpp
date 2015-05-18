@@ -21,6 +21,8 @@ public:
     static void addCollisionObjectToGrid(CollisionObjectPtr object);
     static void removeCollisionObject(CollisionObjectPtr object);
     static void removeCollisionObjectFromGrid(CollisionObjectPtr object);
+    static void removeCollisionObject(CollisionObject* object);
+    static void removeCollisionObjectFromGrid(CollisionObject* object);
 
     static void checkCollision(CollisionObjectPtr a);
     static void checkCollisionWithOffset(CollisionObjectPtr aObject, int x, int y, int z);

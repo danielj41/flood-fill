@@ -18,7 +18,7 @@ public:
     void tearDownEnviroment();
 
     void setupShader();
-    void setupMesh(MeshPtr mesh);
+    void setupMesh(Mesh* mesh);
     void renderObject(ObjectPtr object);
 
 private:

@@ -89,7 +89,7 @@ void WaterStreamRender::setupShader(){
     }
 }
 
-void WaterStreamRender::setupMesh(MeshPtr mesh){
+void WaterStreamRender::setupMesh(Mesh* mesh){
         glEnableVertexAttribArray(shader->getHandle("aPosition"));
         glBindBuffer(GL_ARRAY_BUFFER, mesh->getVertexBuffer());
         glVertexAttribPointer(shader->getHandle("aPosition"), 3,

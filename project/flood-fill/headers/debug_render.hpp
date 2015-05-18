@@ -18,21 +18,21 @@ public:
     void tearDownEnviroment();
 
     void setupShader();
-    void setupMesh(MeshPtr mesh);
+    void setupMesh(Mesh* mesh);
     void renderObject(ObjectPtr object);
 
     void renderPass();
 
-    void addBoundingBox(BoundingBoxPtr box);
-    void removeBoundingBox(BoundingBoxPtr box);
+    void addBoundingBox(BoundingBox* box);
+    void removeBoundingBox(BoundingBox* box);
 
-    void renderBoundingBox(BoundingBoxPtr box);
+    void renderBoundingBox(BoundingBox* box);
 
 private:
     static const std::string VERTEX_SHADER_FILE;
     static const std::string FRAGMENT_SHADER_FILE;
 
-    std::list<BoundingBoxPtr> boxes;
+    std::list<BoundingBox*> boxes;
 };
 
 #endif

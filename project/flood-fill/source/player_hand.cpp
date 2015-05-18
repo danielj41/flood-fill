@@ -28,8 +28,6 @@ void PlayerHand::setup() {
 
   setBoundingBox(BoundingBox(glm::vec3(0.1f,0.1f,0.1f), glm::vec3(-0.1f,-0.1f,-0.1f)));
   getBoundingBox()->setPosition(position);
-
-  CollisionManager::addCollisionObjectToGrid(this);  
 }
 
 void PlayerHand::update() {

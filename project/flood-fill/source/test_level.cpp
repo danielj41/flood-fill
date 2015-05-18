@@ -117,16 +117,16 @@ void TestLevel::update(){
 void TestLevel::createRenders(){
     INFO("Creating Renders...");
 
-    RenderEngine::addRenderElement("camera", RenderElementPtr(new CameraPolygonsRender(), 1));
+    RenderEngine::addRenderElement("camera", RenderElementPtr(new CameraPolygonsRender()), 1);
 
-    RenderEngine::addRenderElement("regular", RenderElementPtr(new RegularPolygonsRender(), 1));
-    RenderEngine::addRenderElement("debug", RenderElementPtr(new DebugRender(), -5));
-    RenderEngine::addRenderElement("normalmap", RenderElementPtr(new NormalMapRender(), 1));
-    RenderEngine::addRenderElement("textured", RenderElementPtr(new TexturedPolygonsRender(), 1));
-    RenderEngine::addRenderElement("water", RenderElementPtr(new WaterRender(), 4));
-    RenderEngine::addRenderElement("water-particle", RenderElementPtr(new WaterParticleRender(), 4));
-    RenderEngine::addRenderElement("water-stream", RenderElementPtr(new WaterStreamRender(), 4));
-    RenderEngine::addRenderElement("shadow", RenderElementPtr(new ShadowOccluderRender(), 0));
+    RenderEngine::addRenderElement("regular", RenderElementPtr(new RegularPolygonsRender()), 1);
+    RenderEngine::addRenderElement("debug", RenderElementPtr(new DebugRender()), -5);
+    RenderEngine::addRenderElement("normalmap", RenderElementPtr(new NormalMapRender()), 1);
+    RenderEngine::addRenderElement("textured", RenderElementPtr(new TexturedPolygonsRender()), 1);
+    RenderEngine::addRenderElement("water", RenderElementPtr(new WaterRender()), 4);
+    RenderEngine::addRenderElement("water-particle", RenderElementPtr(new WaterParticleRender()), 4);
+    RenderEngine::addRenderElement("water-stream", RenderElementPtr(new WaterStreamRender()), 4);
+    RenderEngine::addRenderElement("shadow", RenderElementPtr(new ShadowOccluderRender()), 0);
 
     RenderEngine::setRenderGrid(RenderGridPtr(new RenderGrid(typeGrid.getSizeX(), typeGrid.getSizeY(), typeGrid.getSizeZ(),
                                                typeGrid.getMinX(), typeGrid.getMaxX(),

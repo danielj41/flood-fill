@@ -111,7 +111,7 @@ void FluidProjectile::createWaterSurfaceAt(Uniform3DGrid<int> *grid, std::set<in
     fillTypes->find(grid->getValue(newPos.x, newPos.y, newPos.z)) != fillTypes->end()) {
     if(!LoadManager::getRenderTexture("waterData")->isInUse()) {
       createdSurface = true;
-      WaterSurface *surface = new WaterSurface(newPos, colorMask);
+      WaterSurfacePtr surface(new WaterSurface(newPos, colorMask));
       surface->setup();
       Director::getScene()->addGameObject(surface);
     }

@@ -45,15 +45,33 @@ void CollisionManager::addCollisionObjectToGrid(CollisionObjectPtr object){
 
 void CollisionManager::removeCollisionObjectFromGrid(CollisionObjectPtr object){
   glm::vec3 pos = object->getPosition();
-  grid.setValue(pos.x, pos.y, pos.z, NULL);
+  grid.setValue(pos.x, pos.y, pos.z, NULL_PTR);
+}
+
+void CollisionManager::removeCollisionObjectFromGrid(CollisionObject* object){
+  glm::vec3 pos = object->getPosition();
+  grid.setValue(pos.x, pos.y, pos.z, NULL_PTR);
 }
 
 
 void CollisionManager::removeCollisionObject(CollisionObjectPtr object){
     INFO("Removing object from the collision list...");
-    for(std::list<CollisionObject *>::iterator it = collisionObjects.begin();
+    for(std::list<CollisionObjectPtr>::iterator it = collisionObjects.begin();
             it != collisionObjects.end(); it++){
         if(*it == object){
+            collisionObjects.erase(it);
+            INFO("Object Removed from collision list");
+            return;
+        }
+    }
+    DEBUG("Could not find the object in the collision list");
+}
+
+void CollisionManager::removeCollisionObject(CollisionObject* object){
+    INFO("Removing object from the collision list...");
+    for(std::list<CollisionObjectPtr>::iterator it = collisionObjects.begin();
+            it != collisionObjects.end(); it++){
+        if((*it).get() == object){
             collisionObjects.erase(it);
             INFO("Object Removed from collision list");
             return;
@@ -89,9 +107,9 @@ void CollisionManager::checkCollisionWithOffset(CollisionObjectPtr aObject, int 
   glm::vec3 pos = aObject->getBoundingBox()->getPosition();
 
   if(grid.inGrid(pos.x + x * grid.getEdgeSizeX(), pos.y + y * grid.getEdgeSizeY(), pos.z + z * grid.getEdgeSizeZ())) {
-    CollisionObject *bObject = grid.getValue(pos.x + x * grid.getEdgeSizeX(), pos.y + y * grid.getEdgeSizeY(), pos.z + z * grid.getEdgeSizeZ());
+    CollisionObjectPtr bObject = grid.getValue(pos.x + x * grid.getEdgeSizeX(), pos.y + y * grid.getEdgeSizeY(), pos.z + z * grid.getEdgeSizeZ());
 
-    if ( bObject != NULL && aObject->getCollideWithID() & bObject->getCollisionID() && aObject->checkCollision(bObject)) {
+    if ( bObject != NULL_PTR && aObject->getCollideWithID() & bObject->getCollisionID() && aObject->checkCollision(bObject)) {
       aObject->collided(bObject);
       bObject->collided(aObject);
     }
@@ -101,7 +119,7 @@ void CollisionManager::checkCollisionWithOffset(CollisionObjectPtr aObject, int 
 void CollisionManager::initGrid(int x, int y, int z, glm::vec3 min, glm::vec3 max){
   INFO("Initializing the Grid");
   grid = Uniform3DGrid<CollisionObjectPtr>(x, y, z, min.x, max.x, min.y, max.y, min.z, max.z); 
-  CollisionObjectPtr obj(NULL);
+  CollisionObjectPtr obj(NULL_PTR);
   grid.initialize(obj);
 }
 
