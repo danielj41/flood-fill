@@ -7,10 +7,10 @@
 const std::string Director::NO_VALID_SCENE = "NO_VALID_SCENE";
 
 std::string Director::currentScene = NO_VALID_SCENE;
-std::map<std::string, Scene *> Director::scenes;
+std::map<std::string, ScenePtr> Director::scenes;
 
 
-void Director::addScene(Scene * scene){
+void Director::addScene(ScenePtr scene){
     INFO("Adding scene " << scene->getName() << "...");
 
     if(scenes.find(scene->getName()) == scenes.end()){
@@ -33,13 +33,13 @@ void Director::removeScene(std::string label){
 
 }
 
-Scene * Director::getScene(std::string label){
+ScenePtr Director::getScene(std::string label){
     ASSERT(scenes.find(label) != scenes.end(),
             "Scene " << label << " does not exist!");
     return scenes[label];
 }
 
-Scene * Director::getScene(){
+ScenePtr Director::getScene(){
     ASSERT(currentScene != NO_VALID_SCENE, "There is not a main scene");
     return Director::getScene(currentScene);
 }

@@ -14,9 +14,9 @@ DEF_PTR(RenderGridItem, RenderGridItemPtr);
 
 class RenderGridItem {
     public:
-        Plane *planes[6];
-        Object *object;
-        RenderElement *renderElement;
+        PlanePtr planes[6];
+        ObjectPtr object;
+        RenderElementPtr renderElement;
         bool dirty;
 
         bool isEqual(RenderGridItem *other);

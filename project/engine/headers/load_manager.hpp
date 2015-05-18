@@ -20,24 +20,24 @@ public:
     static void loadShader(std::string vertex, std::string fragment);
     static void loadMesh(std::string filename);
     static void loadImage(std::string filename);
-    static void loadTexture(std::string name, Image * image);
+    static void loadTexture(std::string name, ImagePtr image);
     static void loadRenderTexture(std::string name);
     static void loadSound(std::string name);
 
-    static Shader * getShader(std::string vertex, std::string fragment);
-    static Mesh * getMesh(std::string name);
-    static Image * getImage(std::string name);
-    static Texture * getTexture(std::string name);
-    static RenderTexture * getRenderTexture(std::string name);
-    static Sound * getSound(std::string name);
+    static ShaderPtr getShader(std::string vertex, std::string fragment);
+    static MeshPtr getMesh(std::string name);
+    static ImagePtr getImage(std::string name);
+    static TexturePtr getTexture(std::string name);
+    static RenderTexturePtr getRenderTexture(std::string name);
+    static SoundPtr getSound(std::string name);
 
 private:
-    static std::map<std::string, Shader *> shaders;
-    static std::map<std::string, Mesh *> meshes;
-    static std::map<std::string, Image *> images;
-    static std::map<std::string, Texture *> textures;
-    static std::map<std::string, RenderTexture *> renderTextures;
-    static std::map<std::string, Sound *> sounds;
+    static std::map<std::string, ShaderPtr> shaders;
+    static std::map<std::string, MeshPtr> meshes;
+    static std::map<std::string, ImagePtr> images;
+    static std::map<std::string, TexturePtr> textures;
+    static std::map<std::string, RenderTexturePtr> renderTextures;
+    static std::map<std::string, SoundPtr> sounds;
 
     static const std::string shaderFolder;
     static const std::string meshFolder;

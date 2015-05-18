@@ -17,15 +17,15 @@ class Object {
 
 public:
     Object();
-    Object(Mesh * _mesh, Material * _material);
+    Object(MeshPtr _mesh, MaterialPtr _material);
 
-    virtual void draw(Shader * shader);
+    virtual void draw(ShaderPtr shader);
 
-    Mesh * getMesh();
-    Material * getMaterial();
+    MeshPtr getMesh();
+    MaterialPtr getMaterial();
     glm::mat4 getModelMatrix();
-    Texture * getTexture();
-    Texture * getNormalMap();
+    TexturePtr getTexture();
+    TexturePtr getNormalMap();
     float getAlpha();
     float getNormalMapScale();
     float getNormalMapBias();
@@ -36,13 +36,13 @@ public:
     glm::vec3 getVelocity();
     glm::vec2 getGridScale();
 
-    void applyTexture(Texture * _texture);
+    void applyTexture(TexturePtr _texture);
     void enableTexture();
     void disableTexture();
     bool isTextureEnabled();
     bool hasTexture();
 
-    void applyNormalMap(Texture * _texture);
+    void applyNormalMap(TexturePtr _texture);
     bool hasNormalMap();
 
     bool isWater();
@@ -60,14 +60,14 @@ public:
     void translate(glm::vec3 translationVector);
     void loadIdentity();
     void setMatrix(glm::mat4 matrix);
-    void setMaterial(Material * _material);
+    void setMaterial(MaterialPtr _material);
 
 protected:
-    Mesh *   mesh;
-    Material * material;
+    MeshPtr mesh;
+    MaterialPtr material;
 
-    Texture * texture;
-    Texture * normalMap;
+    TexturePtr texture;
+    TexturePtr normalMap;
 
     GLuint waterData;
     GLuint waterColor;

@@ -23,7 +23,7 @@ public:
     virtual void setCollisionIDs() = 0;
     virtual void doAction() = 0;
 
-    virtual void collided(CollisionObject * collidedWith);
+    virtual void collided(CollisionObjectPtr collidedWith);
 
 protected:
     glm::vec3 position;

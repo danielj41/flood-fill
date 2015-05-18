@@ -34,9 +34,9 @@ void ColorChange::setup() {
   else if(colorMask & GREY)
     color = "FlatGrey";
   
-  colorChange = new Object(
+  colorChange = ObjectPtr(new Object(
                    LoadManager::getMesh("cube.obj"),
-                   MaterialManager::getMaterial(color));
+                   MaterialManager::getMaterial(color)));
 
   RenderEngine::getRenderElement("regular")->addObject(colorChange);
 
@@ -65,7 +65,7 @@ int ColorChange::getColor() {
   return colorMask;
 }
 
-void ColorChange::collided(CollisionObject * collidedWith){
+void ColorChange::collided(CollisionObjectPtr collidedWith){
   
   switch (collidedWith->getCollisionID()){
   case 2:

@@ -56,7 +56,7 @@ void DemoLevel::setup(){
     debugPlayer->setup();
     addGameObject("debugPlayer" , debugPlayer);
 
-    Light * l1 = new Light(glm::vec3(1), 5.0f, glm::vec3(0, -1, 0));
+    LightPtr l1 = new Light(glm::vec3(1), 5.0f, glm::vec3(0, -1, 0));
     addLight("Sun", l1);
 
 	// Init Grid and Map
@@ -69,7 +69,7 @@ void DemoLevel::setup(){
 		  if ( LevelDesign::getVal(i, j, k) == 1 ) {
 			
 			glm::vec3 pos = glm::vec3(2*i+3,2*j+1,-2*k-3);
-			Box * box = new Box( pos, 
+			BoxPtr box = new Box( pos, 
 								glm::vec3(0,0,0), 0.0f);
 			box->setup();
 			CollisionManager::addCollisionObjectToGrid(box);

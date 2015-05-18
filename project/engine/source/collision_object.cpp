@@ -62,7 +62,7 @@ BoundingBox* CollisionObject::getBoundingBox() {
     return &boundingBox;
 }
 
-bool CollisionObject::checkCollision(CollisionObject *other) {
+bool CollisionObject::checkCollision(CollisionObjectPtr other) {
     glm::vec3 min = boundingBox.getMin();
     glm::vec3 oMin = other->boundingBox.getMin();
     glm::vec3 max = boundingBox.getMax();
@@ -73,7 +73,7 @@ bool CollisionObject::checkCollision(CollisionObject *other) {
      && (max.z >= oMin.z && min.z <= oMax.z);
 }
 
-glm::vec3 CollisionObject::getCollisionNormal(CollisionObject *other) {
+glm::vec3 CollisionObject::getCollisionNormal(CollisionObjectPtr other) {
     glm::vec3 min = boundingBox.getMin();
     glm::vec3 oMin = other->boundingBox.getMin();
     glm::vec3 max = boundingBox.getMax();
@@ -110,7 +110,7 @@ glm::vec3 CollisionObject::getCollisionNormal(CollisionObject *other) {
     return best;
 }
 
-float CollisionObject::getCollisionDistance(CollisionObject *other) {
+float CollisionObject::getCollisionDistance(CollisionObjectPtr other) {
     glm::vec3 min = boundingBox.getMin();
     glm::vec3 oMin = other->boundingBox.getMin();
     glm::vec3 max = boundingBox.getMax();

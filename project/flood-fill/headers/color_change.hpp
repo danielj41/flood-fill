@@ -20,12 +20,12 @@ public:
   void setup();
   void update();
 
-  void collided(CollisionObject * collidedWith);
+  void collided(CollisionObjectPtr collidedWith);
   int getColor();
 
 private:
 
-  Object * colorChange;
+  ObjectPtr colorChange;
   glm::vec3 position;
   glm::vec3 size;
   std::string color;

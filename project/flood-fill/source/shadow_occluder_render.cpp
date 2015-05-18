@@ -57,9 +57,9 @@ void ShadowOccluderRender::tearDownEnviroment(){
 void ShadowOccluderRender::setupShader(){
     glUseProgram(shader->getID());
 
-    Camera * camera = Director::getScene()->getCamera();
-    std::map<std::string, Light *> lights = Director::getScene()->getLights();
-    Light * light = lights.begin()->second;
+    CameraPtr camera = Director::getScene()->getCamera();
+    std::map<std::string, LightPtr> lights = Director::getScene()->getLights();
+    LightPtr light = lights.begin()->second;
 
     glUniformMatrix4fv(shader->getHandle("uView"), 1, GL_FALSE,
       glm::value_ptr(light->getViewMatrix()));
@@ -68,7 +68,7 @@ void ShadowOccluderRender::setupShader(){
       glm::value_ptr(light->getProjectionMatrix()));
 }
 
-void ShadowOccluderRender::setupMesh(Mesh * mesh){
+void ShadowOccluderRender::setupMesh(MeshPtr mesh){
     glEnableVertexAttribArray(shader->getHandle("aPosition"));
     glBindBuffer(GL_ARRAY_BUFFER, mesh->getVertexBuffer());
     glVertexAttribPointer(shader->getHandle("aPosition"), 3,
@@ -77,8 +77,8 @@ void ShadowOccluderRender::setupMesh(Mesh * mesh){
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->getIndexBuffer());
 }
 
-void ShadowOccluderRender::renderObject(Object * object){
-    Mesh * mesh = object->getMesh();
+void ShadowOccluderRender::renderObject(ObjectPtr object){
+    MeshPtr mesh = object->getMesh();
 
     glUniformMatrix4fv(shader->getHandle("uModel"), 1, GL_FALSE,
                         glm::value_ptr(object->getModelMatrix()));
@@ -86,6 +86,6 @@ void ShadowOccluderRender::renderObject(Object * object){
     glDrawElements(GL_TRIANGLES, (int) mesh->getIndices().size(), GL_UNSIGNED_INT, 0);
 }
 
-FBO * ShadowOccluderRender::getFBO(){
+FBOPtr ShadowOccluderRender::getFBO(){
     return fbo;
 }

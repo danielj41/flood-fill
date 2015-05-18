@@ -36,27 +36,27 @@ public:
 
     std::string getName();
 
-    void addCamera(std::string label, Camera * camera);
-    void addLight(std::string label, Light * light);
-    void addGameObject(std::string label, GameObject * gameObject);
-    void addGameObject(GameObject * gameObject);
+    void addCamera(std::string label, CameraPtr camera);
+    void addLight(std::string label, LightPtr light);
+    void addGameObject(std::string label, GameObjectPtr gameObject);
+    void addGameObject(GameObjectPtr gameObject);
 
     void removeCamera(std::string label);
-    void removeCamera(Camera * camera);
+    void removeCamera(CameraPtr camera);
     void removeGameObject(std::string label);
-    void removeGameObject(GameObject * gameObject);
+    void removeGameObject(GameObjectPtr gameObject);
     void removeLight(std::string label);
-    void removeLight(Light * light);
+    void removeLight(LightPtr light);
 
     //Get a specific camera
-    Camera * getCamera(std::string label);
+    CameraPtr getCamera(std::string label);
     //Get the main camera
-    Camera * getCamera();
-    Camera * getCullingCamera();
+    CameraPtr getCamera();
+    CameraPtr getCullingCamera();
 
-    GameObject * getGameObject(std::string label);
-    Light * getLight(std::string label);
-    std::map<std::string, Light *> getLights();
+    GameObjectPtr getGameObject(std::string label);
+    LightPtr getLight(std::string label);
+    std::map<std::string, LightPtr> getLights();
 
     //Sets the camera that will look to scene
     void setMainCamera(std::string label);
@@ -70,9 +70,9 @@ protected:
     int labelCount;
     std::string name, currentCamera, cullingCamera;
 
-    std::map<std::string, Camera *> cameras;
-    std::map<std::string, Light *> lights;
-    std::map<std::string, GameObject *> gameObjects;
+    std::map<std::string, CameraPtr> cameras;
+    std::map<std::string, LightPtr> lights;
+    std::map<std::string, GameObjectPtr> gameObjects;
 };
 
 #endif

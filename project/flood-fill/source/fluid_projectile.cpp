@@ -40,11 +40,11 @@ FluidProjectile::FluidProjectile(glm::vec3 _position,
 void FluidProjectile::setup() {  
   INFO("Shooting a fluid projectile ...");
   
-  fluidProjectile = new Object(LoadManager::getMesh("stream.obj"),
-			                     	   MaterialManager::getMaterial(color));
+  fluidProjectile = ObjectPtr(new Object(LoadManager::getMesh("stream.obj"),
+			                     	   MaterialManager::getMaterial(color)));
 
-  fluidParticles = new Object(LoadManager::getMesh("particles.obj"),
-                              MaterialManager::getMaterial(color));
+  fluidParticles = ObjectPtr(new Object(LoadManager::getMesh("particles.obj"),
+                              MaterialManager::getMaterial(color)));
 
   RenderEngine::getRenderElement("water-stream")->addObject(fluidProjectile);
   RenderEngine::getRenderElement("water-particle")->addObject(fluidParticles);
@@ -118,11 +118,11 @@ void FluidProjectile::createWaterSurfaceAt(Uniform3DGrid<int> *grid, std::set<in
   }
 }
 
-void FluidProjectile::collided(CollisionObject * collidedWith){
+void FluidProjectile::collided(CollisionObjectPtr collidedWith){
   if((collidedWith->getCollisionID() == 1 || collidedWith->getCollisionID() == 64) && !hasCollided) {
     hasCollided = true;
-    std::set<int>* fillTypes = ((LevelTemplate *)Director::getScene())->getFillTypes();
-    Uniform3DGrid<int> *grid = ((LevelTemplate *)Director::getScene())->getTypeGrid();
+    std::set<int>* fillTypes = PTR_CAST(LevelTemplate, Director::getScene())->getFillTypes();
+    Uniform3DGrid<int> *grid = PTR_CAST(LevelTemplate, Director::getScene())->getTypeGrid();
     glm::vec3 newPos(grid->getRoundX(oldPosition.x), grid->getRoundY(oldPosition.y), grid->getRoundZ(oldPosition.z));
      createWaterSurfaceAt(grid, fillTypes, newPos + glm::vec3(0.0f, grid->getEdgeSizeY(), 0.0f));
     createWaterSurfaceAt(grid, fillTypes, newPos);

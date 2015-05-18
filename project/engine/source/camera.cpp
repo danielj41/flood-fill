@@ -179,7 +179,7 @@ int getPlaneSide(glm::vec4 plane, glm::vec4 point){
     }
 }
 
-bool Camera::insideViewFrustum(Object * object){
+bool Camera::insideViewFrustum(ObjectPtr object){
     glm::mat4 MVP = projectionMatrix*getViewMatrix()*object->getModelMatrix();
 
     glm::vec4 planes[6] = {

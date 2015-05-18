@@ -25,8 +25,8 @@ public:
 
   void initialize();
 
-  void addObject(Object *object, RenderElement *renderElement);
-  void removeObject(Object *object);
+  void addObject(ObjectPtr object, RenderElementPtr renderElement);
+  void removeObject(ObjectPtr object);
 
   void clean();  
 
@@ -35,7 +35,7 @@ private:
   bool dirty;
 
   void createPlane(int x, int y, int z, int dir);
-  void removePlane(Plane *plane);
+  void removePlane(PlanePtr plane);
   void dirtyAdjacent(glm::vec4 pos);
   void dirtyCell(glm::vec4 pos);
 };

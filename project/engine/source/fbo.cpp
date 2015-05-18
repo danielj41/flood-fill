@@ -8,7 +8,7 @@
 
 FBO::FBO() : depth(false), _hasDepthTexture(false), loaded(false) {}
 
-void FBO::addTexture(Texture * texture){
+void FBO::addTexture(TexturePtr texture){
     INFO("Adding texture to FBO...");
     if(loaded) DEBUG("You are trying to add a texture to a FBO that was already laoded!");
 
@@ -105,14 +105,14 @@ void FBO::load(){
     loaded = true;
 }
 
-Texture * FBO::getTexture(unsigned int texID){
+TexturePtr FBO::getTexture(unsigned int texID){
     ASSERT(loaded, "FBO not loaded! Can't get texture");
     ASSERT(texID < textures.size(),
             "Inexisting Texture " << texID << " in the FBO!");
     return textures[texID];
 }
 
-Texture * FBO::getDepthTexture(){
+TexturePtr FBO::getDepthTexture(){
     ASSERT(loaded, "FBO not loaded! Can't get texture");
     ASSERT(_hasDepthTexture, "FBO does not have depth texture!");
 

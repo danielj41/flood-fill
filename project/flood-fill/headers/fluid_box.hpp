@@ -21,7 +21,7 @@ public:
   void setup();
   void update();
 
-  void collided(CollisionObject * collidedWith);
+  void collided(CollisionObjectPtr collidedWith);
   int getColorMask();
 
   //Remotion related methods
@@ -34,7 +34,7 @@ private:
   int colorMask;
   glm::vec3 size;
 
-  Object * fluidBox;
+  ObjectPtr fluidBox;
   std::string color;
   float timer;
   bool visible;

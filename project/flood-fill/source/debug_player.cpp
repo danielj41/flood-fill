@@ -13,7 +13,7 @@
 #include "global_variables.hpp"
 #include "time_manager.hpp"
 
-DebugPlayer::DebugPlayer(Camera * _camera) : camera(_camera), active(false) {}
+DebugPlayer::DebugPlayer(CameraPtr _camera) : camera(_camera), active(false) {}
 
 void DebugPlayer::setup() {
     INFO("DebugPlayer Setup...");

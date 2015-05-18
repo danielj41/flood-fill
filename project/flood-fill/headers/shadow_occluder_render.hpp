@@ -20,16 +20,16 @@ public:
     void tearDownEnviroment();
 
     void setupShader();
-    void setupMesh(Mesh * mesh);
-    void renderObject(Object * object);
+    void setupMesh(MeshPtr mesh);
+    void renderObject(ObjectPtr object);
 
-    FBO * getFBO();
+    FBOPtr getFBO();
 
 private:
     static const std::string VERTEX_SHADER_FILE;
     static const std::string FRAGMENT_SHADER_FILE;
 
-    FBO * fbo;
+    FBOPtr fbo;
 };
 
 #endif

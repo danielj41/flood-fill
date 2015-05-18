@@ -40,9 +40,9 @@ void FluidBox::setup() {
   else if(colorMask & GREY)
     color = "FlatGrey";
 
-  fluidBox = new Object(
+  fluidBox = ObjectPtr(new Object(
                         LoadManager::getMesh("cube.obj"),
-                        MaterialManager::getMaterial(color));
+                        MaterialManager::getMaterial(color)));
 
   //fluidBox->applyTexture(LoadManager::getTexture("VoxelTexture"));
   //fluidBox->enableTexture();
@@ -106,13 +106,13 @@ void FluidBox::remotionAnimation(){
 
         // Removing it from the grid
         Director::getScene()->removeGameObject(this);
-        ((LevelTemplate *) Director::getScene())->setTypeCell(position, LevelTemplate::AVAILABLE_FILL_SPACE);
+        PTR_CAST(LevelTemplate, Director::getScene())->setTypeCell(position, LevelTemplate::AVAILABLE_FILL_SPACE);
         RenderEngine::getRenderElement("regular")->removeObject(fluidBox);
         CollisionManager::removeCollisionObjectFromGrid(this);
     }
 }
 
-void FluidBox::collided(CollisionObject *){
+void FluidBox::collided(CollisionObjectPtr){
 }
 
 int FluidBox::getColorMask(){

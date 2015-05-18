@@ -4,15 +4,15 @@
 #include <cstdlib>
 #include "debug_macros.h"
 
-std::map<std::string, Material *> MaterialManager::materials;
+std::map<std::string, MaterialPtr> MaterialManager::materials;
 
-void MaterialManager::addMaterial(std::string name, Material * material){
+void MaterialManager::addMaterial(std::string name, MaterialPtr material){
     materials[name] = material;
 
     INFO("Material " << name << " added!");
 }
 
-Material * MaterialManager::getMaterial(std::string name){
+MaterialPtr MaterialManager::getMaterial(std::string name){
     ASSERT(materials.find(name) != materials.end(),
            "The material " << name << " does not exist!");
 

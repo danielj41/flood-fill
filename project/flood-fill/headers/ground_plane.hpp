@@ -16,7 +16,7 @@ public:
     void update();
 
 private:
-    Object * plane;
+    ObjectPtr plane;
 };
 
 #endif

@@ -18,8 +18,8 @@ public:
     void tearDownEnviroment();
 
     void setupShader();
-    void setupMesh(Mesh * mesh);
-    void renderObject(Object * object);
+    void setupMesh(MeshPtr mesh);
+    void renderObject(ObjectPtr object);
 
 private:
     static const std::string VERTEX_SHADER_FILE;

@@ -16,7 +16,7 @@ public:
 
     void createTexture(GLsizei width, GLsizei height, GLint internalformat,
                         GLenum format, GLenum type, bool mipmap = false);
-    void createTextureFromImage(Image * image, bool mipmap = false);
+    void createTextureFromImage(ImagePtr image, bool mipmap = false);
 
     GLuint getTexture();
 

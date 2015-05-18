@@ -6,7 +6,7 @@
 
 Texture::Texture() : created(false){}
 
-void Texture::createTextureFromImage(Image * image, bool mipmap){
+void Texture::createTextureFromImage(ImagePtr image, bool mipmap){
     INFO("Creating Texture From Image...");
     if(created) DEBUG("Overriding Texture!");
 

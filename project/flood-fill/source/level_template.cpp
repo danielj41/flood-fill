@@ -21,7 +21,7 @@
 #include "fluid_box.hpp"
 
 
-VoidVoxel * LevelTemplate::voidVoxel;
+VoidVoxelPtr LevelTemplate::voidVoxel;
 
 const std::string LevelTemplate::templatesFolder = "flood-fill/config-files/";
 
@@ -69,7 +69,7 @@ void LevelTemplate::readFile(){
 void LevelTemplate::initalizeGrid(){
     ASSERT(lines.size() != 0, "You didn't read the text level file " << fileName);
 
-    voidVoxel = new VoidVoxel();
+    voidVoxel = VoidVoxelPtr(new VoidVoxel());
 
     std::string line = "";
 
@@ -91,7 +91,7 @@ void LevelTemplate::initalizeGrid(){
                  << " minx miny minz maxx maxy maxz.\n"
                  << "Got: " << line);
 
-        grid = Uniform3DGrid<GameObject *>(numVoxelsInX, numVoxelsInY, numVoxelsInZ,
+        grid = Uniform3DGrid<GameObjectPtr>(numVoxelsInX, numVoxelsInY, numVoxelsInZ,
                                            minx, maxx, miny, maxy, minz, maxz);
         grid.initialize(voidVoxel);
 
@@ -158,16 +158,16 @@ void LevelTemplate::interpLines(std::vector<std::string> lines){
                         fileName);
 }
 
-GameObject * LevelTemplate::createVoxel(int id, int i, int j, int k){
+GameObjectPtr LevelTemplate::createVoxel(int id, int i, int j, int k){
     switch(id){
     case AIR:
         return voidVoxel;
         break;
     case SOLID_CUBE:
     {
-        SolidCube * c = new SolidCube(glm::vec3(minx + i * 2 + 1,
+        SolidCubePtr c(new SolidCube(glm::vec3(minx + i * 2 + 1,
                                                 miny + j * 2 + 1,
-                                                minz + (k * 2 + 1)));
+                                                minz + (k * 2 + 1))));
         c->setup();
         CollisionManager::addCollisionObjectToGrid(c);
         return c;
@@ -178,7 +178,7 @@ GameObject * LevelTemplate::createVoxel(int id, int i, int j, int k){
         break;
     case WINNING_BLOCK:
     {
-        WinningBlock * c = new WinningBlock(glm::vec3(minx + i * 2 + 1, miny + j * 2 + 1, minz + (k * 2 + 1)));
+        GameObjectPtr c(new WinningBlock(glm::vec3(minx + i * 2 + 1, miny + j * 2 + 1, minz + (k * 2 + 1))));
         c->setup();
         CollisionManager::addCollisionObjectToGrid(c);
         return c;
@@ -186,7 +186,7 @@ GameObject * LevelTemplate::createVoxel(int id, int i, int j, int k){
     }
     case CHANGE_COLOR_BLUE:
     {
-        ColorChange * c = new ColorChange(glm::vec3(minx + i * 2 + 1, miny + j * 2 + 1, minz + (k * 2 + 1)), 1);
+        GameObjectPtr c(new ColorChange(glm::vec3(minx + i * 2 + 1, miny + j * 2 + 1, minz + (k * 2 + 1)), 1));
         c->setup();
         CollisionManager::addCollisionObjectToGrid(c);
         return c;
@@ -194,7 +194,7 @@ GameObject * LevelTemplate::createVoxel(int id, int i, int j, int k){
     }
     case CHANGE_COLOR_GREEN:
     {
-        ColorChange * c = new ColorChange(glm::vec3(minx + i * 2 + 1, miny + j * 2 + 1, minz + (k * 2 + 1)), 2);
+        GameObjectPtr c(new ColorChange(glm::vec3(minx + i * 2 + 1, miny + j * 2 + 1, minz + (k * 2 + 1)), 2));
         c->setup();
         CollisionManager::addCollisionObjectToGrid(c);
         Director::getScene()->addGameObject(c);
@@ -203,7 +203,7 @@ GameObject * LevelTemplate::createVoxel(int id, int i, int j, int k){
     }
     case FLUID_GREEN:
     {
-        FluidBox * c = new FluidBox(glm::vec3(minx + i * 2 + 1, miny + j * 2 + 1, minz + (k * 2 + 1)), 2);
+        GameObjectPtr c(new FluidBox(glm::vec3(minx + i * 2 + 1, miny + j * 2 + 1, minz + (k * 2 + 1)), 2));
         c->setup();
         CollisionManager::addCollisionObjectToGrid(c);
         Director::getScene()->addGameObject(c);
@@ -212,7 +212,7 @@ GameObject * LevelTemplate::createVoxel(int id, int i, int j, int k){
     }
     case CHANGE_COLOR_RED:
     {
-        ColorChange * c = new ColorChange(glm::vec3(minx + i * 2 + 1, miny + j * 2 + 1, minz + (k * 2 + 1)), 4);
+        GameObjectPtr c(new ColorChange(glm::vec3(minx + i * 2 + 1, miny + j * 2 + 1, minz + (k * 2 + 1)), 4));
         c->setup();
         CollisionManager::addCollisionObjectToGrid(c);
         Director::getScene()->addGameObject(c);
@@ -221,7 +221,7 @@ GameObject * LevelTemplate::createVoxel(int id, int i, int j, int k){
     }
     case FLUID_RED:
     {
-        FluidBox * c = new FluidBox(glm::vec3(minx + i * 2 + 1, miny + j * 2 + 1, minz + (k * 2 + 1)), 4);
+        GameObjectPtr c(new FluidBox(glm::vec3(minx + i * 2 + 1, miny + j * 2 + 1, minz + (k * 2 + 1)), 4));
         c->setup();
         CollisionManager::addCollisionObjectToGrid(c);
         Director::getScene()->addGameObject(c);
@@ -279,10 +279,10 @@ bool LevelTemplate::isEmpty(glm::vec3 pos){
     return type == AVAILABLE_FILL_SPACE || type == VOID_SPACE || type == AIR || type == TOGGLE_FILL;
 }
 
-GameObject * LevelTemplate::getGridValue(glm::vec3 pos){
+GameObjectPtr LevelTemplate::getGridValue(glm::vec3 pos){
     return grid.getValue(pos.x, pos.y, pos.z);
 }
-void LevelTemplate::setGridValue(glm::vec3 pos, GameObject * obj){
+void LevelTemplate::setGridValue(glm::vec3 pos, GameObjectPtr obj){
     grid.setValue(pos.x, pos.y, pos.z, obj);
 }
 

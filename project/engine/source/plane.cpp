@@ -19,7 +19,7 @@ Plane::Plane(int _left, int _right,
              int _centerX, int _centerY, int _centerZ,
              float _minX, float _maxY, float _minZ,
              float _edgeX, float _edgeY, float _edgeZ,
-             Object *_refObject) :
+             ObjectPtr _refObject) :
              left(_left), right(_right),
              bottom(_bottom), top(_top),
              back(_back), front(_front),

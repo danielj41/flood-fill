@@ -17,19 +17,19 @@ class CollisionManager{
 
 public:
     static void detectCollisions();
-    static void addCollisionObjectToList(CollisionObject * object);
-    static void addCollisionObjectToGrid(CollisionObject * object);
-    static void removeCollisionObject(CollisionObject * object);
-    static void removeCollisionObjectFromGrid(CollisionObject * object);
+    static void addCollisionObjectToList(CollisionObjectPtr object);
+    static void addCollisionObjectToGrid(CollisionObjectPtr object);
+    static void removeCollisionObject(CollisionObjectPtr object);
+    static void removeCollisionObjectFromGrid(CollisionObjectPtr object);
 
-    static void checkCollision(CollisionObject * a);
-    static void checkCollisionWithOffset(CollisionObject * aObject, int x, int y, int z);
+    static void checkCollision(CollisionObjectPtr a);
+    static void checkCollisionWithOffset(CollisionObjectPtr aObject, int x, int y, int z);
     static void initGrid(int x, int y, int z, glm::vec3 min, glm::vec3 max);
-    static Uniform3DGrid<CollisionObject *>* getGrid();
+    static Uniform3DGrid<CollisionObjectPtr>* getGrid();
 
 private:
-    static std::list<CollisionObject *> collisionObjects;
-    static Uniform3DGrid<CollisionObject *> grid;
+    static std::list<CollisionObjectPtr> collisionObjects;
+    static Uniform3DGrid<CollisionObjectPtr> grid;
 };
 
 #endif

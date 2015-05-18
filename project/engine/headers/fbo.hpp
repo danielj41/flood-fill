@@ -14,7 +14,7 @@ public:
     FBO();
 
     // Add a 2D texture to the FBO. Must be done before the load()
-    void addTexture(Texture * texture);
+    void addTexture(TexturePtr texture);
 
     // Add a depth buffer as a Render Buffer
     void addDepthRenderBuffer(unsigned int width, unsigned int height);
@@ -26,8 +26,8 @@ public:
     // added to it.
     void load();
 
-    Texture * getTexture(unsigned int texID);
-    Texture * getDepthTexture();
+    TexturePtr getTexture(unsigned int texID);
+    TexturePtr getDepthTexture();
 
     void enable();
     void disable();
@@ -36,10 +36,10 @@ private:
     bool depth, _hasDepthTexture, loaded;
     unsigned int _width, _height;
 
-    std::vector<Texture *> textures;
+    std::vector<TexturePtr> textures;
     GLuint id, depthBuf;
 
-    Texture * depthTexture;
+    TexturePtr depthTexture;
 
     void printInfo();
 };

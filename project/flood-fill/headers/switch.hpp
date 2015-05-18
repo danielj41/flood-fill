@@ -20,14 +20,14 @@ public:
     void setup();
     void update();
 
-    void collided(CollisionObject * collideWith);
+    void collided(CollisionObjectPtr collideWith);
 
     bool isOn();
 
 private:
 
-    Object * handle;
-    Object * shaft;
+    ObjectPtr handle;
+    ObjectPtr shaft;
         
     glm::vec3 scale;
     glm::vec3 position;

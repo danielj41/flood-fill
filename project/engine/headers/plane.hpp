@@ -21,7 +21,7 @@ class Plane {
               int _centerX, int _centerY, int _centerZ,
               float _minX, float _maxY, float _minZ,
               float _edgeX, float _edgeY, float _edgeZ,
-              Object *_refObject);
+              ObjectPtr _refObject);
 
         void setup();
 
@@ -35,10 +35,10 @@ class Plane {
         int getCenterY();
         int getCenterZ();
         int getDirection();
-        Object *getObject();
+        ObjectPtr getObject();
 
     private:
-        Object *object, *refObject;
+        ObjectPtr object, refObject;
         int left, right, bottom, top, back, front, direction, centerX, centerY, centerZ;
         float minX, maxY, minZ, edgeX, edgeY, edgeZ;
 };

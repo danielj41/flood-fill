@@ -17,8 +17,8 @@ public:
     void update();
 
 private:
-    DebugPlayer * debugPlayer;
-    Player * player;
+    DebugPlayerPtr debugPlayer;
+    PlayerPtr player;
 
     int  maxNumObstacles, numObstaclesLeft;
     double lastSpawnTime, timeToSpawn;

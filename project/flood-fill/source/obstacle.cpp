@@ -21,9 +21,9 @@ Obstacle::Obstacle(glm::vec3 _position, glm::vec3 _movementDirection,
 void Obstacle::setup() {
     INFO("Creating an obstacle plane...");
 
-    box = new Object(
+    box = ObjectPtr(new Object(
                     LoadManager::getMesh("cube.obj"),
-                    MaterialManager::getMaterial("FlatGrey"));
+                    MaterialManager::getMaterial("FlatGrey")));
     //box->rotate(45.0f, glm::vec3(0, 1, 0));
     box->translate(position);
 
@@ -59,7 +59,7 @@ void Obstacle::update() {
     boundingBox.setModelMatrix(box->getModelMatrix());
 }
 
-void Obstacle::collided(CollisionObject * collidedWith){
+void Obstacle::collided(CollisionObjectPtr collidedWith){
     if(collidedWith->getCollisionID() == 1 ||
        collidedWith->getCollisionID() == 4){
         movementDirection = -movementDirection;

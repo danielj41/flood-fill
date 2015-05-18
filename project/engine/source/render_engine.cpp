@@ -17,8 +17,8 @@
 
 
 bool RenderEngine::loaded = false;
-std::map< std::string, RenderElement * > RenderEngine::renderElements;
-RenderGrid *RenderEngine::renderGrid = NULL;
+std::map< std::string, RenderElementPtr > RenderEngine::renderElements;
+RenderGridPtr RenderEngine::renderGrid = NULL;
 std::map< std::string, int > RenderEngine::renderElementsPriority;
 
 void RenderEngine::setup(){
@@ -66,7 +66,7 @@ void RenderEngine::render(){
     }
 }
 
-void RenderEngine::addRenderElement(std::string name, RenderElement * renderElement, int priority){
+void RenderEngine::addRenderElement(std::string name, RenderElementPtr renderElement, int priority){
     INFO("Adding render element " << name << " to the render engine...");
     ASSERT(loaded, "You dind't load the rendering engine!");
 
@@ -81,7 +81,7 @@ void RenderEngine::addRenderElement(std::string name, RenderElement * renderElem
     INFO("Render element " << name << " added!");
 }
 
-RenderElement * RenderEngine::getRenderElement(std::string name){
+RenderElementPtr RenderEngine::getRenderElement(std::string name){
     ASSERT(loaded, "You dind't load the rendering engine!");
 
     if(renderElements.find(name) != renderElements.end()){
@@ -108,12 +108,12 @@ void RenderEngine::removeRenderElement(std::string name){
     DEBUG("Could not find Render Element!");
 }
 
-void RenderEngine::setRenderGrid(RenderGrid *_renderGrid) {
+void RenderEngine::setRenderGrid(RenderGridPtr _renderGrid) {
     _renderGrid->initialize();
     renderGrid = _renderGrid;
 }
 
-RenderGrid *RenderEngine::getRenderGrid() {
+RenderGridPtr RenderEngine::getRenderGrid() {
     return renderGrid;
 }
 

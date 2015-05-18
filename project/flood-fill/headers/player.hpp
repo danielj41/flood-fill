@@ -15,16 +15,16 @@ DEF_PTR(Player, PlayerPtr);
 class Player: public GameObject, public CollisionObject{
 
 public:
-    Player(Camera * _camera);
+    Player(CameraPtr _camera);
 
     void setup();
     void update();
 
-    void collided(CollisionObject * collidedWith);
+    void collided(CollisionObjectPtr collidedWith);
     bool isKeyPressed(unsigned int key);
 
 private:
-    Camera * camera;
+    CameraPtr camera;
 
     glm::vec3 lastPosition;
 
@@ -35,10 +35,10 @@ private:
     float strafeVelocity;
     float forwardVelocity;
 
-    Object *sky;
-    Object *gun;
-    PlayerHand *hand;
-    ColorChange *change;
+    ObjectPtr sky;
+    ObjectPtr gun;
+    PlayerHandPtr hand;
+    ColorChangePtr change;
 
     bool shootPressed;
     float shootTimer;
@@ -46,7 +46,7 @@ private:
     //Fluid Box Remotion Control Variables and Methods
     unsigned int removeFluidShootRange; // How far you can remove the fluid
     unsigned int removeFluidNumberBlocks; // How many boxes you can remove at once
-    std::vector<FluidBox *> boxesToRemove;
+    std::vector<FluidBoxPtr> boxesToRemove;
 
     void pickFluidBoxesToRemove();
     void pickOneFluidBoxToRemove(glm::vec3 pos);

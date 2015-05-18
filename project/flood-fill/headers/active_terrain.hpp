@@ -17,7 +17,7 @@ DEF_PTR(ActiveTerrain, ActiveTerrainPtr);
 class ActiveTerrain : public GameObject{
 
 public:
-    ActiveTerrain(Switch* _s, glm::vec3 _initialPos, glm::vec3 _finalPos, float _speed);
+    ActiveTerrain(SwitchPtr _s, glm::vec3 _initialPos, glm::vec3 _finalPos, float _speed);
 
     void setup();
     void update();
@@ -26,7 +26,7 @@ private:
     
     std::list<SolidCube*> solidCubes;
     
-    Switch *s;
+    SwitchPtr s;
     glm::vec3 direction;
     glm::vec3 position;
     glm::vec3 initialPos;

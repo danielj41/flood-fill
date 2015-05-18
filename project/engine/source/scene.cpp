@@ -25,8 +25,8 @@ std::string Scene::getName(){
 void Scene::updateObjects(){
     INFO("Updating scene " << name << "...");
 
-    std::map<std::string, GameObject *> tempMap = gameObjects;
-    for(std::map<std::string, GameObject *>::iterator it = tempMap.begin();
+    std::map<std::string, GameObjectPtr> tempMap = gameObjects;
+    for(std::map<std::string, GameObjectPtr>::iterator it = tempMap.begin();
             it != tempMap.end(); ++it){
         INFO("Updating " << it->first << "...");
         it->second->update();
@@ -47,7 +47,7 @@ void Scene::renderObjects(){
     RenderEngine::render();
 }
 
-void Scene::addCamera(std::string label, Camera * camera){
+void Scene::addCamera(std::string label, CameraPtr camera){
     ASSERT(camera->isReady(), "The camera is empty!");
 
     cameras[label] = camera;
@@ -55,17 +55,17 @@ void Scene::addCamera(std::string label, Camera * camera){
     INFO("Camera " << label << " added to scene " << name);
 }
 
-void Scene::addGameObject(std::string label, GameObject * gameObject){
+void Scene::addGameObject(std::string label, GameObjectPtr gameObject){
     gameObjects[label] = gameObject;
 
     INFO("Object " << label << " added to scene " << name);
 }
 
-void Scene::addGameObject(GameObject * gameObject){
+void Scene::addGameObject(GameObjectPtr gameObject){
     addGameObject(std::to_string(labelCount++), gameObject);
 }
 
-void Scene::addLight(std::string label, Light * light){
+void Scene::addLight(std::string label, LightPtr light){
     lights[label] = light;
 
     INFO("Light " << label << " added to scene " << name);
@@ -81,10 +81,10 @@ void Scene::removeCamera(std::string label){
     INFO("Object " << label << " removed!");
 }
 
-void Scene::removeCamera(Camera * camera){
+void Scene::removeCamera(CameraPtr camera){
     INFO("Removing camera from scene...");
 
-    for(std::map<std::string, Camera *>::iterator it = cameras.begin();
+    for(std::map<std::string, CameraPtr>::iterator it = cameras.begin();
         it != cameras.end(); it++){
 
         if(it->second == camera){
@@ -107,10 +107,10 @@ void Scene::removeGameObject(std::string label){
     INFO("Object " << label << " removed!");
 }
 
-void Scene::removeGameObject(GameObject * gameObject){
+void Scene::removeGameObject(GameObjectPtr gameObject){
     INFO("Removing game object from scene...");
 
-    for(std::map<std::string, GameObject *>::iterator it = gameObjects.begin();
+    for(std::map<std::string, GameObjectPtr>::iterator it = gameObjects.begin();
         it != gameObjects.end(); it++){
 
         if(it->second == gameObject){
@@ -133,10 +133,10 @@ void Scene::removeLight(std::string label){
     INFO("Light " << label << " removed!");
 }
 
-void Scene::removeLight(Light * light){
+void Scene::removeLight(LightPtr light){
     INFO("Removing light from scene...");
 
-    for(std::map<std::string, Light *>::iterator it = lights.begin();
+    for(std::map<std::string, LightPtr>::iterator it = lights.begin();
         it != lights.end(); it++){
 
         if(it->second == light){
@@ -149,35 +149,35 @@ void Scene::removeLight(Light * light){
     DEBUG("Light does not exist in this scene!");
 }
 
-Camera * Scene::getCamera(std::string label){
+CameraPtr Scene::getCamera(std::string label){
     ASSERT(cameras.find(label) != cameras.end(),
            "Camera " << label << " does not exist in this scene!");
     return cameras[label];
 }
 
-Camera * Scene::getCamera(){
+CameraPtr Scene::getCamera(){
     ASSERT(currentCamera != NO_CAMERA_AVAILABLE,
            "There is not a main camera setted for this scene");
     return getCamera(currentCamera);
 }
 
-Camera * Scene::getCullingCamera() {
+CameraPtr Scene::getCullingCamera() {
     return getCamera(cullingCamera);
 }
 
-GameObject * Scene::getGameObject(std::string label){
+GameObjectPtr Scene::getGameObject(std::string label){
     ASSERT(gameObjects.find(label) != gameObjects.end(),
            "Object " << label << " does not exist in this scene!");
     return gameObjects[label];
 }
 
-Light * Scene::getLight(std::string label){
+LightPtr Scene::getLight(std::string label){
     ASSERT(lights.find(label) != lights.end(),
            "Light " << label << " does not exist in this scene!");
     return lights[label];
 }
 
-std::map<std::string, Light *> Scene::getLights(){
+std::map<std::string, LightPtr> Scene::getLights(){
     return lights;
 }
 

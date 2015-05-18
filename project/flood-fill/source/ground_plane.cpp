@@ -17,9 +17,9 @@ GroundPlane::GroundPlane() : GameObject(){}
 void GroundPlane::setup(){
     INFO("Creating the ground plane...");
 
-    plane = new Object(
+    plane = ObjectPtr(new Object(
                     LoadManager::getMesh("plane.obj"),
-                    MaterialManager::getMaterial("FlatGrey"));
+                    MaterialManager::getMaterial("FlatGrey")));
     
 
 	plane->translate(glm::vec3(0, 0, 0));

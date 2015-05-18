@@ -14,7 +14,7 @@
 #include "level_template.hpp"
 #include "fluid_box.hpp"
 
-PlayerHand::PlayerHand(glm::vec3 _position, Object * _gun)
+PlayerHand::PlayerHand(glm::vec3 _position, ObjectPtr _gun)
   : GameObject(), CollisionObject(_position),
 	position(_position), gun(_gun),
     numColors(1), clrndx(0) {}
@@ -41,7 +41,7 @@ void PlayerHand::setPosition(glm::vec3 _position) {
   getBoundingBox()->setPosition(position);
 }
 
-void PlayerHand::collided(CollisionObject * collidedWith){
+void PlayerHand::collided(CollisionObjectPtr collidedWith){
   
   switch (collidedWith->getCollisionID()){
   default:

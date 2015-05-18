@@ -27,8 +27,8 @@ Switch::Switch(glm::vec3 _scale,glm::vec3 _position, glm::vec3 _rotation, float 
 void Switch::setup() {  
   INFO("Creating a switch ...");
   
-  handle = new Object(LoadManager::getMesh("cube.obj"), MaterialManager::getMaterial("Red"));
-  shaft = new Object(LoadManager::getMesh("cube.obj"), MaterialManager::getMaterial("FlatGrey"));
+  handle = ObjectPtr(new Object(LoadManager::getMesh("cube.obj"), MaterialManager::getMaterial("Red")));
+  shaft = ObjectPtr(new Object(LoadManager::getMesh("cube.obj"), MaterialManager::getMaterial("FlatGrey")));
   
   shaft->loadIdentity();
   shaft->scale(scale);
@@ -77,7 +77,7 @@ void Switch::update(){
   handle->translate(position);
 }
 
-void Switch::collided(CollisionObject * collidedWith){
+void Switch::collided(CollisionObjectPtr collidedWith){
 
     switch (collidedWith->getCollisionID()){
     case 2: //Player

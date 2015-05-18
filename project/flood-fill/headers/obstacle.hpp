@@ -20,10 +20,10 @@ public:
     void setup();
     void update();
 
-    void collided(CollisionObject * collidedWith);
+    void collided(CollisionObjectPtr collidedWith);
 
 private:
-    Object * box;
+    ObjectPtr box;
     glm::vec3 position, movementDirection, size;
     float speed;
 

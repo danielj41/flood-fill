@@ -16,12 +16,12 @@ class PlayerHand : public GameObject, public CollisionObject {
     
 public:
     
-    PlayerHand(glm::vec3 _position, Object * _gun);  
+    PlayerHand(glm::vec3 _position, ObjectPtr _gun);  
     void setup();
     void update();
     void setPosition(glm::vec3 _position);
     
-    void collided(CollisionObject * collidedWith);
+    void collided(CollisionObjectPtr collidedWith);
     void setColorMask(int color);
     int getColorMask();
     void changeColorMask();
@@ -31,7 +31,7 @@ private:
     
     glm::vec3 position;
     
-    Object * gun;
+    ObjectPtr gun;
 
     int colors[2];
     int numColors;

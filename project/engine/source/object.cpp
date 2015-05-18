@@ -17,7 +17,7 @@ Object::Object() : _hasTexture(false), textureEnabled(false), water(false), alph
     gridScale = glm::vec2(1.0f, 1.0f);
 }
 
-Object::Object(Mesh * _mesh, Material * _material)
+Object::Object(MeshPtr _mesh, MaterialPtr _material)
     : mesh(_mesh), material(_material), _hasTexture(false), textureEnabled(false), water(false), alpha(1.0f){
 
     loadIdentity();
@@ -30,7 +30,7 @@ Object::Object(Mesh * _mesh, Material * _material)
     gridScale = glm::vec2(1.0f, 1.0f);
 }
 
-void Object::draw(Shader * shader){
+void Object::draw(ShaderPtr shader){
 
     glUniformMatrix4fv(shader->getHandle("uNormalMatrix"), 1, GL_FALSE,
         glm::value_ptr(
@@ -59,10 +59,6 @@ void Object::draw(Shader * shader){
                 material->getEmissionColor().z);
     glUniform1f(shader->getHandle("uShininess"), material->getShininess());
 
-    if(alpha < 0.99f) {
-        glDepthMask(GL_FALSE);
-    }
-
     if(hasTexture() && isTextureEnabled()){
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture->getTexture());
@@ -83,10 +79,6 @@ void Object::draw(Shader * shader){
     }
 
     drawElements();
-
-    if(alpha < 0.99f) {
-        glDepthMask(GL_TRUE);
-    }
 }
 
 void Object::drawElements(){
@@ -94,11 +86,11 @@ void Object::drawElements(){
                    GL_UNSIGNED_INT, 0);
 }
 
-Mesh * Object::getMesh(){
+MeshPtr Object::getMesh(){
     return mesh;
 }
 
-Material * Object::getMaterial(){
+MaterialPtr Object::getMaterial(){
     return material;
 }
 
@@ -106,7 +98,7 @@ glm::mat4 Object::getModelMatrix(){
     return modelMatrix;
 }
 
-Texture * Object::getTexture(){
+TexturePtr Object::getTexture(){
     ASSERT(hasTexture(), "This object does not have texture!");
     return texture;
 }
@@ -127,7 +119,7 @@ GLuint Object::getWaterBlock(){
     return waterBlock;
 }
 
-Texture * Object::getNormalMap(){
+TexturePtr Object::getNormalMap(){
     ASSERT(hasNormalMap(), "This Object does not have normal map!");
     return normalMap;
 }
@@ -144,12 +136,12 @@ void Object::setAlpha(float _alpha) {
     alpha = _alpha;
 }
 
-void Object::applyTexture(Texture * _texture){
+void Object::applyTexture(TexturePtr _texture){
     texture = _texture;
     _hasTexture = true;
 }
 
-void Object::applyNormalMap(Texture * _texture){
+void Object::applyNormalMap(TexturePtr _texture){
     normalMap = _texture;
     _hasNormalMap = true;
 }
@@ -242,6 +234,6 @@ void Object::setMatrix(glm::mat4 matrix){
     modelMatrix = matrix;
 }
 
-void Object::setMaterial(Material * _material) {
+void Object::setMaterial(MaterialPtr _material) {
     material = _material;
 }

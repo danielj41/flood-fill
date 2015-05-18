@@ -16,9 +16,9 @@ SolidCube::SolidCube(glm::vec3 _position) : GameObject(), CollisionObject(_posit
 void SolidCube::setup() {
     INFO("Creating a Solid Cube ...");
 
-    cube = new Object(
+    cube = ObjectPtr(new Object(
                LoadManager::getMesh("cube.obj"),
-               MaterialManager::getMaterial("FlatGrey"));
+               MaterialManager::getMaterial("FlatGrey")));
 
     cube->applyTexture(LoadManager::getTexture("VoxelTexture"));
     cube->enableTexture();
@@ -36,13 +36,13 @@ void SolidCube::setup() {
     setBoundingBox(BoundingBox(glm::vec3(1.0f,1.0f,1.0f), glm::vec3(-1.0f,-1.0f,-1.0f)));
     getBoundingBox()->setPosition(position);
 
-    ((DebugRender *) RenderEngine::getRenderElement("debug"))->addBoundingBox(getBoundingBox());
+    PTR_CAST(DebugRender, RenderEngine::getRenderElement("debug"))->addBoundingBox(getBoundingBox());
 }
 
 void SolidCube::update(){
 }
 
-void SolidCube::collided(CollisionObject *){
+void SolidCube::collided(CollisionObjectPtr){
 }
 
 void SolidCube::animateFrom(glm::vec3 from, float amount) {
@@ -51,6 +51,6 @@ void SolidCube::animateFrom(glm::vec3 from, float amount) {
     cube->translate(position - from * (1.0f - amount) * (1.0f - amount));
 }
 
-Object * SolidCube::getObject(){
+ObjectPtr SolidCube::getObject(){
     return cube;
 }

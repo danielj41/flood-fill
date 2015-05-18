@@ -24,14 +24,14 @@ public:
   void setup();
   void update();
 
-  void collided(CollisionObject * collidedWith);
+  void collided(CollisionObjectPtr collidedWith);
 
 private:
 
   void createWaterSurfaceAt(Uniform3DGrid<int> *grid, std::set<int>* fillTypes, glm::vec3 newPos);
 
-  Object * fluidProjectile;
-  Object * fluidParticles;
+  ObjectPtr fluidProjectile;
+  ObjectPtr fluidParticles;
   glm::vec3 position;
   glm::vec3 oldPosition;
   glm::vec3 origPosition;

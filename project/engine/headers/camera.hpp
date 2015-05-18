@@ -55,7 +55,7 @@ public:
     void fix();
     void unfix();
 
-    bool insideViewFrustum(Object * object);
+    bool insideViewFrustum(ObjectPtr object);
 
 private:
     static unsigned int FIXED_AXIS;

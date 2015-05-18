@@ -10,22 +10,22 @@ RenderElement::RenderElement(bool viewFrustumCullingEnable) : cull(viewFrustumCu
 
 void RenderElement::setup() {}
 
-void RenderElement::addObject(Object * object){
+void RenderElement::addObject(ObjectPtr object){
     INFO("Adding object to the Rendering Element...");
 
-    objects[object->getMesh()].push_front(object);
+    objects[object->getMesh().get()].push_front(object);
 }
 
-void RenderElement::removeObject(Object * object){
+void RenderElement::removeObject(ObjectPtr object){
     INFO("Removing object from Rendering Element...");
 
-    Mesh * mesh = object->getMesh();
+    MeshPtr mesh = object->getMesh();
 
-    ASSERT(objects.find(mesh) != objects.end(), "Mesh does not exist!");
+    ASSERT(objects.find(mesh.get()) != objects.end(), "Mesh does not exist!");
 
-    for(auto it = objects[mesh].begin() ; it != objects[mesh].end(); it++){
+    for(auto it = objects[mesh.get()].begin() ; it != objects[mesh.get()].end(); it++){
         if(*it == object){
-            objects[mesh].remove(*it);
+            objects[mesh.get()].remove(*it);
             INFO("Object Removed!");
             return;
         }
@@ -40,8 +40,8 @@ void RenderElement::tearDownEnviroment() {}
 void RenderElement::renderPass(){
     INFO("Render Pass: render all objects");
 
-    Camera * camera = Director::getScene()->getCamera();
-    Camera * cullingCamera = Director::getScene()->getCullingCamera();
+    CameraPtr camera = Director::getScene()->getCamera();
+    CameraPtr cullingCamera = Director::getScene()->getCullingCamera();
 
     if(objects.size() == 0) return;
 
@@ -49,7 +49,7 @@ void RenderElement::renderPass(){
     setupShader();
 
     for(auto it = objects.begin(); it != objects.end(); it++){
-        Mesh * mesh = it->first;
+        MeshPtr mesh = it->first;
 
         if(it->second.size() == 0) continue;
 

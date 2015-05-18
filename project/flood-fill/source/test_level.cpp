@@ -40,8 +40,8 @@ void TestLevel::setup(){
     createLevel();
 
     INFO("Setting up the cameras for the Test Level...");
-    Camera * cam1 = new Camera(glm::vec3(25, 30, -5), glm::vec3(0, 0, -5),
-                             glm::vec3(0, 1, 0));
+    CameraPtr cam1(new Camera(glm::vec3(25, 30, -5), glm::vec3(0, 0, -5),
+                             glm::vec3(0, 1, 0)));
     cam1->setProjectionMatrix(
         glm::perspective(glm::radians(90.0f),
                         (float) Global::ScreenWidth/Global::ScreenHeight,
@@ -51,14 +51,14 @@ void TestLevel::setup(){
     setMainCamera("Camera1");
     setCullingCamera("Camera1");
 
-    Camera * cam2 = new Camera(glm::vec3(0, 1, 0), glm::vec3(-6, -3, 6),
-                             glm::vec3(0, 1, 0));
+    CameraPtr cam2(new Camera(glm::vec3(0, 1, 0), glm::vec3(-6, -3, 6),
+                             glm::vec3(0, 1, 0)));
     cam2->setProjectionMatrix(
         glm::perspective(glm::radians(90.0f),
                         (float) Global::ScreenWidth/Global::ScreenHeight,
                         0.1f, 100.f));
 
-    Light * l1 = new Light(glm::vec3(1), 30.0f, glm::vec3(0, 30, 0));
+    LightPtr l1(new Light(glm::vec3(1), 30.0f, glm::vec3(0, 30, 0)));
     l1->setPosition(l1->getDirection()*1.0f);
 
     Uniform3DGrid<int>* typeGrid = getTypeGrid();
@@ -74,25 +74,25 @@ void TestLevel::setup(){
     addLight("Sun", l1);
 
     INFO("Setting up the player for the Test Level...");
-    player = new Player(cam1);
+    player = PlayerPtr(new Player(cam1));
     player->setup();
     addGameObject("player" , player);
     CollisionManager::addCollisionObjectToList(player);
 
-    debugPlayer = new DebugPlayer(cam2);
+    debugPlayer = DebugPlayerPtr(new DebugPlayer(cam2));
     debugPlayer->setup();
     addGameObject("debugPlayer" , debugPlayer);
 
     addCamera("DebugCamera", cam2);
     INFO("Creating Switch for the Test Level...");
-    Switch * s1 = new Switch(glm::vec3(0.9f, 0.1f, 0.1f), glm::vec3(29.7, 23, -45), 
-                             glm::vec3(0,0,1), -20.0f, 1);
+    SwitchPtr s1(new Switch(glm::vec3(0.9f, 0.1f, 0.1f), glm::vec3(29.7, 23, -45), 
+                             glm::vec3(0,0,1), -20.0f, 1));
     s1->setup();
     addGameObject("s1", s1);
     CollisionManager::addCollisionObjectToGrid(s1);
 
     INFO("Creating Active Terrain for the Test Level...");
-    ActiveTerrain * a1 = new ActiveTerrain(s1, glm::vec3(), glm::vec3(), 50.0f);
+    ActiveTerrainPtr a1(new ActiveTerrain(s1, glm::vec3(), glm::vec3(), 50.0f));
     a1->setup();
     addGameObject("a1", a1);
 
@@ -117,20 +117,19 @@ void TestLevel::update(){
 void TestLevel::createRenders(){
     INFO("Creating Renders...");
 
-    RenderEngine::addRenderElement("camera", new CameraPolygonsRender(), 1);
+    RenderEngine::addRenderElement("camera", RenderElementPtr(new CameraPolygonsRender(), 1));
 
-    RenderEngine::addRenderElement("regular", new RegularPolygonsRender(), 1);
-    RenderEngine::addRenderElement("debug", new DebugRender(), -5);
-    RenderEngine::addRenderElement("normalmap", new NormalMapRender(), 1);
-    RenderEngine::addRenderElement("textured", new TexturedPolygonsRender(), 1);
-    RenderEngine::addRenderElement("water", new WaterRender(), 4);
-    RenderEngine::addRenderElement("water-particle", new WaterParticleRender(),4);
-    RenderEngine::addRenderElement("water-stream", new WaterStreamRender(), 4);
+    RenderEngine::addRenderElement("regular", RenderElementPtr(new RegularPolygonsRender(), 1));
+    RenderEngine::addRenderElement("debug", RenderElementPtr(new DebugRender(), -5));
+    RenderEngine::addRenderElement("normalmap", RenderElementPtr(new NormalMapRender(), 1));
+    RenderEngine::addRenderElement("textured", RenderElementPtr(new TexturedPolygonsRender(), 1));
+    RenderEngine::addRenderElement("water", RenderElementPtr(new WaterRender(), 4));
+    RenderEngine::addRenderElement("water-particle", RenderElementPtr(new WaterParticleRender(), 4));
+    RenderEngine::addRenderElement("water-stream", RenderElementPtr(new WaterStreamRender(), 4));
+    RenderEngine::addRenderElement("shadow", RenderElementPtr(new ShadowOccluderRender(), 0));
 
-    RenderEngine::addRenderElement("shadow", new ShadowOccluderRender(), 0);
-
-    RenderEngine::setRenderGrid(new RenderGrid(typeGrid.getSizeX(), typeGrid.getSizeY(), typeGrid.getSizeZ(),
+    RenderEngine::setRenderGrid(RenderGridPtr(new RenderGrid(typeGrid.getSizeX(), typeGrid.getSizeY(), typeGrid.getSizeZ(),
                                                typeGrid.getMinX(), typeGrid.getMaxX(),
                                                typeGrid.getMinY(), typeGrid.getMaxY(),
-                                               typeGrid.getMinZ(), typeGrid.getMaxZ()));
+                                               typeGrid.getMinZ(), typeGrid.getMaxZ())));
 }

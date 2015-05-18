@@ -19,26 +19,28 @@ class WaterSurface : public GameObject, public CollisionObject{
 
 public:
 
+  static void loadShaders();
+
   WaterSurface(glm::vec3 _position, int _colorMask);
 
   void setup();
   void update();
 
-  void collided(CollisionObject * collidedWith);
+  void collided(CollisionObjectPtr collidedWith);
 
 private:
 
   Uniform3DGrid<int> *typeGrid;
   Uniform3DGrid<int> grid;
-  Object * waterSurface;
+  ObjectPtr waterSurface;
   glm::vec3 position;
   glm::vec3 movementDirection; 
   glm::vec3 size;
   glm::vec3 startPosition;
-  RenderTexture * waterDataTexture;
-  RenderTexture * waterColorTexture;
-  RenderTexture * waterBlockTexture;
-  LevelTemplate * level;
+  RenderTexturePtr waterDataTexture;
+  RenderTexturePtr waterColorTexture;
+  RenderTexturePtr waterBlockTexture;
+  LevelTemplatePtr level;
 
   std::string color;
   int colorMask;

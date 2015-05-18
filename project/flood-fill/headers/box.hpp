@@ -21,11 +21,11 @@ public:
   void setup();
   void update();
 
-  void collided(CollisionObject * collidedWith);
+  void collided(CollisionObjectPtr collidedWith);
 
 private:
 
-  Object * box;
+  ObjectPtr box;
   glm::vec3 position;
   glm::vec3 movementDirection; 
   glm::vec3 size;

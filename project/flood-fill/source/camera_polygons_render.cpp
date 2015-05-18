@@ -53,7 +53,7 @@ void CameraPolygonsRender::tearDownEnviroment(){
 void CameraPolygonsRender::setupShader(){
     glUseProgram(shader->getID());
 
-    Camera * camera = Director::getScene()->getCamera();
+    CameraPtr camera = Director::getScene()->getCamera();
 
     //Common information to all Objects
     glUniformMatrix4fv(shader->getHandle("uProjection"), 1, GL_FALSE,
@@ -65,12 +65,12 @@ void CameraPolygonsRender::setupShader(){
                 camera->getEye().y,
                 camera->getEye().z);
 
-    std::map<std::string, Light *> lights = Director::getScene()->getLights();
+    std::map<std::string, LightPtr> lights = Director::getScene()->getLights();
 
     //Load the Lights
-    for(std::map<std::string, Light *>::iterator it = lights.begin();
+    for(std::map<std::string, LightPtr>::iterator it = lights.begin();
             it != lights.end(); it++ ){
-        Light * light = it->second;
+        LightPtr light = it->second;
 
         glUniform3f(shader->getHandle("uLightColor"),
                     light->getColor().x,
@@ -84,7 +84,7 @@ void CameraPolygonsRender::setupShader(){
     }
 }
 
-void CameraPolygonsRender::setupMesh(Mesh * mesh){
+void CameraPolygonsRender::setupMesh(MeshPtr mesh){
         glEnableVertexAttribArray(shader->getHandle("aPosition"));
         glBindBuffer(GL_ARRAY_BUFFER, mesh->getVertexBuffer());
         glVertexAttribPointer(shader->getHandle("aPosition"), 3,
@@ -98,8 +98,8 @@ void CameraPolygonsRender::setupMesh(Mesh * mesh){
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->getIndexBuffer());
 }
 
-void CameraPolygonsRender::renderObject(Object * object){
-    Mesh * mesh = object->getMesh();
+void CameraPolygonsRender::renderObject(ObjectPtr object){
+    MeshPtr mesh = object->getMesh();
 
     glUniformMatrix4fv(shader->getHandle("uNormalMatrix"), 1, GL_FALSE,
         glm::value_ptr(glm::transpose(Director::getScene()->getCamera()->getViewMatrix())));

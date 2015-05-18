@@ -7,20 +7,20 @@
 #include "glm/glm.hpp"
 
 
-std::list<CollisionObject *> CollisionManager::collisionObjects;
-Uniform3DGrid<CollisionObject *> CollisionManager::grid;
+std::list<CollisionObjectPtr> CollisionManager::collisionObjects;
+Uniform3DGrid<CollisionObjectPtr> CollisionManager::grid;
 
 void CollisionManager::detectCollisions(){
     INFO("Detecting Collisions...");
 		  
-    std::list<CollisionObject *> tempList = collisionObjects;
+    std::list<CollisionObjectPtr> tempList = collisionObjects;
 
-    for(std::list<CollisionObject *>::iterator a = tempList.begin(); a != tempList.end(); a++){
+    for(std::list<CollisionObjectPtr>::iterator a = tempList.begin(); a != tempList.end(); a++){
 	  checkCollision(*a);
     }
 }
 
-void CollisionManager::addCollisionObjectToList(CollisionObject * object){
+void CollisionManager::addCollisionObjectToList(CollisionObjectPtr object){
   if (object->canCollide()) {
 	INFO("Adding collision object to collision list");
 	collisionObjects.push_back(object);
@@ -29,7 +29,7 @@ void CollisionManager::addCollisionObjectToList(CollisionObject * object){
   }
 }
 
-void CollisionManager::addCollisionObjectToGrid(CollisionObject * object){
+void CollisionManager::addCollisionObjectToGrid(CollisionObjectPtr object){
   if (object->canCollide()){
         INFO("Adding collision object to the grid");
 	   
@@ -43,13 +43,13 @@ void CollisionManager::addCollisionObjectToGrid(CollisionObject * object){
   }
 }
 
-void CollisionManager::removeCollisionObjectFromGrid(CollisionObject * object){
+void CollisionManager::removeCollisionObjectFromGrid(CollisionObjectPtr object){
   glm::vec3 pos = object->getPosition();
   grid.setValue(pos.x, pos.y, pos.z, NULL);
 }
 
 
-void CollisionManager::removeCollisionObject(CollisionObject * object){
+void CollisionManager::removeCollisionObject(CollisionObjectPtr object){
     INFO("Removing object from the collision list...");
     for(std::list<CollisionObject *>::iterator it = collisionObjects.begin();
             it != collisionObjects.end(); it++){
@@ -62,7 +62,7 @@ void CollisionManager::removeCollisionObject(CollisionObject * object){
     DEBUG("Could not find the object in the collision list");
 }
 
-void CollisionManager::checkCollision(CollisionObject * aObject){
+void CollisionManager::checkCollision(CollisionObjectPtr aObject){
 // This function checks if a has any conflicts with other collision objects in the grid    
 
   // fix this later to include all nearby cubes, or calculate it with the bounding box
@@ -85,7 +85,7 @@ void CollisionManager::checkCollision(CollisionObject * aObject){
   checkCollisionWithOffset(aObject, xDir, yDir, zDir);
 }
 
-void CollisionManager::checkCollisionWithOffset(CollisionObject * aObject, int x, int y, int z) {
+void CollisionManager::checkCollisionWithOffset(CollisionObjectPtr aObject, int x, int y, int z) {
   glm::vec3 pos = aObject->getBoundingBox()->getPosition();
 
   if(grid.inGrid(pos.x + x * grid.getEdgeSizeX(), pos.y + y * grid.getEdgeSizeY(), pos.z + z * grid.getEdgeSizeZ())) {
@@ -100,11 +100,11 @@ void CollisionManager::checkCollisionWithOffset(CollisionObject * aObject, int x
 
 void CollisionManager::initGrid(int x, int y, int z, glm::vec3 min, glm::vec3 max){
   INFO("Initializing the Grid");
-  grid = Uniform3DGrid<CollisionObject *>(x, y, z, min.x, max.x, min.y, max.y, min.z, max.z); 
-  CollisionObject * obj = NULL;
+  grid = Uniform3DGrid<CollisionObjectPtr>(x, y, z, min.x, max.x, min.y, max.y, min.z, max.z); 
+  CollisionObjectPtr obj(NULL);
   grid.initialize(obj);
 }
 
-Uniform3DGrid<CollisionObject *>* CollisionManager::getGrid() {
+Uniform3DGrid<CollisionObjectPtr>* CollisionManager::getGrid() {
   return &grid;
 }

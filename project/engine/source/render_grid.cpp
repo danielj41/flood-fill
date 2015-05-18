@@ -155,10 +155,10 @@ void RenderGrid::createPlane(int x, int y, int z, int dir) {
     front--;
   }
 
-  Plane *plane = new Plane(left, right, bottom, top, back, front, dir, x, y, z,
+  PlanePtr plane(new Plane(left, right, bottom, top, back, front, dir, x, y, z,
                            grid.getMinX(), grid.getMaxY(), grid.getMinZ(),
                            grid.getEdgeSizeX(), grid.getEdgeSizeY(), grid.getEdgeSizeZ(),
-                           center.object);
+                           center.object));
   plane->setup();
 
   for(i = left; i <= right; i++) {
@@ -172,7 +172,7 @@ void RenderGrid::createPlane(int x, int y, int z, int dir) {
   center.renderElement->addObject(plane->getObject());
 }
 
-void RenderGrid::addObject(Object *object, RenderElement *renderElement) {
+void RenderGrid::addObject(ObjectPtr object, RenderElementPtr renderElement) {
   glm::vec4 pos = object->getModelMatrix() * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
   RenderGridItem item;
   item.object = object;
@@ -188,7 +188,7 @@ void RenderGrid::addObject(Object *object, RenderElement *renderElement) {
   dirtyAdjacent(pos);
 }
 
-void RenderGrid::removeObject(Object *object) {
+void RenderGrid::removeObject(ObjectPtr object) {
   glm::vec4 pos = object->getModelMatrix() * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
   dirtyAdjacent(pos);
   RenderGridItem item = grid.getValue(pos.x, pos.y, pos.z);
@@ -253,7 +253,7 @@ void RenderGrid::clean() {
   }
 }
 
-void RenderGrid::removePlane(Plane *plane) {
+void RenderGrid::removePlane(PlanePtr plane) {
   if(plane == NULL) {
     return;
   }

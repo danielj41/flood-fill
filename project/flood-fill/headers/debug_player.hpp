@@ -10,7 +10,7 @@ DEF_PTR(DebugPlayer, DebugPlayerPtr);
 class DebugPlayer: public GameObject{
 
 public:
-    DebugPlayer(Camera * _camera);
+    DebugPlayer(CameraPtr _camera);
 
     void setup();
     void update();
@@ -18,7 +18,7 @@ public:
     bool isActive();
 
 private:
-    Camera * camera;
+    CameraPtr camera;
     bool active;
 };
 

@@ -16,8 +16,8 @@ class RenderElement {
 public:
     RenderElement(bool viewFrustumCullingEnable = true);
 
-    virtual void addObject(Object * object);
-    virtual void removeObject(Object * object);
+    virtual void addObject(ObjectPtr object);
+    virtual void removeObject(ObjectPtr object);
 
     // Functions Called when you add the Render Element to the Render Engine
     // These function are called in this order:
@@ -41,11 +41,11 @@ public:
     // Second to be executed in the Rendering Engine
     // Sets the Enviorment for each Mesh, sends to the GPU the common information
     // of all objects that uses this mesh
-    virtual void setupMesh(Mesh * mesh) = 0;
+    virtual void setupMesh(MeshPtr mesh) = 0;
 
     // Third to be excuted
     // Draw each object with their specific data
-    virtual void renderObject(Object * object) = 0;
+    virtual void renderObject(ObjectPtr object) = 0;
 
     // Organize the render order for all objects and renders them
     virtual void renderPass();
@@ -53,8 +53,8 @@ public:
 protected:
     bool cull;
 
-    Shader * shader;
-    std::map< Mesh *, std::list<Object *> > objects;
+    ShaderPtr shader;
+    std::map<Mesh*, std::list<ObjectPtr>> objects;
 };
 
 #endif

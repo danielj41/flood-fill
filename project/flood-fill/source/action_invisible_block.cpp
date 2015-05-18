@@ -22,13 +22,13 @@ void ActionInvisibleBlock::setup() {
     setBoundingBox(BoundingBox(glm::vec3(1.0f,1.0f,1.0f), glm::vec3(-1.0f,-1.0f,-1.0f)));
     getBoundingBox()->setPosition(position);
 
-    ((DebugRender *) RenderEngine::getRenderElement("debug"))->addBoundingBox(getBoundingBox());
+    PTR_CAST(DebugRender, RenderEngine::getRenderElement("debug"))->addBoundingBox(getBoundingBox());
 }
 
 void ActionInvisibleBlock::update(){
 }
 
-void ActionInvisibleBlock::collided(CollisionObject * collidedWith){
+void ActionInvisibleBlock::collided(CollisionObjectPtr collidedWith){
   switch (collidedWith->getCollisionID()) {
   case 2:
     doAction();

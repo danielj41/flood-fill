@@ -7,52 +7,7 @@
 #include <iostream>
 #include "debug_macros.h"
 
-
-
 RenderTexture::RenderTexture() : loaded(false){}
-
-void RenderTexture::loadShaders() {
-    LoadManager::loadShader("render-texture-vertex-data-initial.glsl", "render-texture-fragment-data-initial.glsl");
-    Shader *shader = LoadManager::getShader("render-texture-vertex-data-initial.glsl", "render-texture-fragment-data-initial.glsl");
-    shader->loadHandle("aPosition", 'a');
-    shader->loadHandle("uPrevTexture", 'u');
-    shader->loadHandle("uDataTexture", 'u');
-    shader->loadHandle("uSize", 'u');
-    shader->loadHandle("uDTime", 'u');
-    shader->loadHandle("uStartPosition", 'u');
-
-    LoadManager::loadShader("render-texture-vertex-color-initial.glsl", "render-texture-fragment-color-initial.glsl");
-    shader = LoadManager::getShader("render-texture-vertex-color-initial.glsl", "render-texture-fragment-color-initial.glsl");
-    shader->loadHandle("aPosition", 'a');
-    shader->loadHandle("uPrevTexture", 'u');
-    shader->loadHandle("uDataTexture", 'u');
-    shader->loadHandle("uSize", 'u');
-    shader->loadHandle("uDTime", 'u');
-    shader->loadHandle("uStartPosition", 'u');
-
-    LoadManager::loadShader("render-texture-vertex-data-update.glsl", "render-texture-fragment-data-update.glsl");
-    shader = LoadManager::getShader("render-texture-vertex-data-update.glsl", "render-texture-fragment-data-update.glsl");
-    shader->loadHandle("aPosition", 'a');
-    shader->loadHandle("uPrevTexture", 'u');
-    shader->loadHandle("uDataTexture", 'u');
-    shader->loadHandle("uSize", 'u');
-    shader->loadHandle("uDTime", 'u');
-    shader->loadHandle("uStartPosition", 'u');
-
-    LoadManager::loadShader("render-texture-vertex-color-update.glsl", "render-texture-fragment-color-update.glsl");
-    shader = LoadManager::getShader("render-texture-vertex-color-update.glsl", "render-texture-fragment-color-update.glsl");
-    shader->loadHandle("aPosition", 'a');
-    shader->loadHandle("uPrevTexture", 'u');
-    shader->loadHandle("uDataTexture", 'u');
-    shader->loadHandle("uSize", 'u');
-    shader->loadHandle("uDTime", 'u');
-    shader->loadHandle("uStartPosition", 'u');
-
-    LoadManager::loadShader("render-texture-vertex-block.glsl", "render-texture-fragment-block.glsl");
-    shader = LoadManager::getShader("render-texture-vertex-block.glsl", "render-texture-fragment-block.glsl");
-    shader->loadHandle("aPosition", 'a');
-    shader->loadHandle("uModelMatrix", 'u');
-}
 
 void RenderTexture::load(){
 
@@ -102,7 +57,7 @@ void RenderTexture::clear() {
     inUse = true;
 }
 
-void RenderTexture::render(Shader *shader, GLuint dataTexture,
+void RenderTexture::render(ShaderPtr shader, GLuint dataTexture,
  glm::vec2 dTime, glm::vec3 startPosition, glm::vec3 size) {
     ASSERT(loaded, "You didn't load the Texture");
 
@@ -118,7 +73,7 @@ void RenderTexture::render(Shader *shader, GLuint dataTexture,
 
     glUseProgram(shader->getID());
 
-    Mesh *mesh = LoadManager::getMesh("plane.obj");
+    MeshPtr mesh = LoadManager::getMesh("plane.obj");
 
     glEnableVertexAttribArray(shader->getHandle("aPosition"));
     glBindBuffer(GL_ARRAY_BUFFER, mesh->getVertexBuffer());
@@ -179,11 +134,11 @@ void RenderTexture::renderBlock(Uniform3DGrid<int> *grid,
     glEnable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
 
-    Shader *shader = LoadManager::getShader("render-texture-vertex-block.glsl", "render-texture-fragment-block.glsl");
+    ShaderPtr shader = LoadManager::getShader("render-texture-vertex-block.glsl", "render-texture-fragment-block.glsl");
 
     glUseProgram(shader->getID());
 
-    Mesh *mesh = LoadManager::getMesh("interpcube.obj");
+    MeshPtr mesh = LoadManager::getMesh("interpcube.obj");
 
     glEnableVertexAttribArray(shader->getHandle("aPosition"));
     glBindBuffer(GL_ARRAY_BUFFER, mesh->getVertexBuffer());

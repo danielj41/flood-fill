@@ -31,7 +31,7 @@
 #define RED     4
 #define GREY    8
 
-Player::Player(Camera * _camera)
+Player::Player(CameraPtr _camera)
   : GameObject(), CollisionObject(), camera(_camera),
     jumping(true), velocity(0), gravity(-2), strafeVelocity(0), forwardVelocity(0) {
     removeFluidShootRange = 3;
@@ -58,9 +58,9 @@ void Player::setup() {
 
     LoadManager::loadSound("jump_land.wav");
 
-    sky = new Object(
+    sky = ObjectPtr(new Object(
         LoadManager::getMesh("sphere.obj"),
-        MaterialManager::getMaterial("None"));
+        MaterialManager::getMaterial("None")));
 
     sky->applyTexture(LoadManager::getTexture("Sky"));
     sky->enableTexture();
@@ -70,9 +70,9 @@ void Player::setup() {
 
     RenderEngine::getRenderElement("textured")->addObject(sky);
 
-    gun = new Object(
+    gun = ObjectPtr(new Object(
         LoadManager::getMesh("gun.obj"),
-        MaterialManager::getMaterial("FlatBlue"));
+        MaterialManager::getMaterial("FlatBlue")));
     gun->loadIdentity();
     //gun->scale(glm::vec3(0.07f, 0.07f, 0.3f));
     gun->rotate(15.0f, glm::vec3(1.0f, 1.0f, 0.0f));
@@ -82,7 +82,7 @@ void Player::setup() {
     RenderEngine::getRenderElement("camera")->addObject(gun);
 
 
-    hand = new PlayerHand(getPosition(), gun);
+    hand = PlayerHandPtr(new PlayerHand(getPosition(), gun));
     hand->setup();
     Director::getScene()->addGameObject(hand);
     CollisionManager::addCollisionObjectToList(hand);
@@ -150,10 +150,10 @@ void Player::update() {
     sky->translate(getPosition());
 
     if(glfwGetMouseButton(Global::window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS && !shootPressed && shootTimer < 0.0f){
-        FluidProjectile *fluidProjectile = new FluidProjectile(
+        FluidProjectilePtr fluidProjectile(new FluidProjectile(
             camera->getEye() - (0.35f * camera->getStrafeVector()) + glm::vec3(0.0f, 0.5f, 0.0f),
             -glm::normalize(camera->getViewVector()),
-            hand->getColorMask());
+            hand->getColorMask()));
         fluidProjectile->setup();
         Director::getScene()->addGameObject(fluidProjectile);
         CollisionManager::addCollisionObjectToList(fluidProjectile);
@@ -180,7 +180,7 @@ void Player::update() {
     hand->setPosition(getBoundingBox()->getPosition() - 1.2f * camera->getViewVector());
 }
 
-void Player::collided(CollisionObject * collidedWith) {
+void Player::collided(CollisionObjectPtr collidedWith) {
   glm::vec3 normal;
   float dist;
   switch (collidedWith->getCollisionID()) {
@@ -188,7 +188,7 @@ void Player::collided(CollisionObject * collidedWith) {
       INFO("DETECTING COLLISION WITH SWITCH!");
       break;
   case 128:
-      ((WinningBlock *)collidedWith)->doAction();      
+      PTR_CAST(WinningBlock, collidedWith)->doAction();      
   case 1:
   case 64:
 	INFO("DETECTING COLLISION WITH BLOCK!");
@@ -226,8 +226,8 @@ bool Player::isKeyPressed(unsigned int key){
 void Player::pickOneFluidBoxToRemove(glm::vec3 pos){
     int currentColor = hand->getColorMask();
 
-    if(((LevelTemplate *) Director::getScene())->isFilledWithPaint(pos)){
-        FluidBox * box = (FluidBox *) ((LevelTemplate *) Director::getScene())->getGridValue(pos);
+    if(PTR_CAST(LevelTemplate, Director::getScene())->isFilledWithPaint(pos)){
+        FluidBoxPtr box = PTR_CAST(FluidBox, PTR_CAST(LevelTemplate, Director::getScene())->getGridValue(pos));
 
         //Checks if the player is holding the same color that is being removed
         if(box->getColorMask() & currentColor){
@@ -255,7 +255,7 @@ void Player::pickFluidBoxesToRemove(){
 
         INFO("Casting Ray to remove box: (" << rayPos.x << ", " << rayPos.y << ", " << rayPos.z << ")");
 
-        if(!((LevelTemplate *) Director::getScene())->isEmpty(rayPos)){
+        if(!(PTR_CAST(LevelTemplate, Director::getScene()))->isEmpty(rayPos)){
             pickOneFluidBoxToRemove(rayPos);
 
             if(boxesToRemove.size() != 0){

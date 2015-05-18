@@ -18,9 +18,9 @@ Box::Box(glm::vec3 _position, glm::vec3 _movementDirection, float _speed)
 
 void Box::setup() {  
   INFO("Creating a box ...");
-  box = new Object(
+  box = ObjectPtr(new Object(
 				   LoadManager::getMesh("cube.obj"),
-				   MaterialManager::getMaterial("FlatGrey"));
+				   MaterialManager::getMaterial("FlatGrey")));
 
   box->applyTexture(LoadManager::getTexture("VoxelTexture"));
   box->enableTexture();
@@ -46,7 +46,7 @@ void Box::update(){
   box->translate(position);  
 }
 
-void Box::collided(CollisionObject * collidedWith){
+void Box::collided(CollisionObjectPtr collidedWith){
   
   switch (collidedWith->getCollisionID()){
   default:

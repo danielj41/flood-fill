@@ -12,7 +12,7 @@ void Border::createBorder(){
   INFO("Creating Border ...");
 
   glm::vec3 pos;
-  Box * obj;
+  BoxPtr obj;
 
   // Back & Front Wall
   for (int i = 0; i < NUMBLKX; i++) {
@@ -20,7 +20,7 @@ void Border::createBorder(){
 	  pos = glm::vec3(MINX + E_LEN/2 + i * E_LEN, 
 					  MINY + E_LEN/2 + j * E_LEN, 
 					  MAXZ - E_LEN/2);
-	  obj = new Box(pos, glm::vec3(0), 0);
+	  obj = BoxPtr(new Box(pos, glm::vec3(0), 0));
 	  obj->setup();
 	  obj->setCollisionID(1);
 	  CollisionManager::addCollisionObjectToGrid(obj);	 	  
@@ -28,7 +28,7 @@ void Border::createBorder(){
 	  pos = glm::vec3(MINX + E_LEN/2 + i * E_LEN, 
 					  MINY + E_LEN/2 + j * E_LEN, 
 					  MINZ + E_LEN/2);
-	  obj = new Box(pos, glm::vec3(0), 0);
+	  obj = BoxPtr(new Box(pos, glm::vec3(0), 0));
 	  obj->setup(); 
 	  obj->setCollisionID(1);
 	  CollisionManager::addCollisionObjectToGrid(obj);	  
@@ -41,7 +41,7 @@ void Border::createBorder(){
 	  pos = glm::vec3(MINX + E_LEN/2, 
 					  MINY + E_LEN/2 + j * E_LEN, 
 					  MINZ + E_LEN/2 + i*E_LEN);
-	  obj = new Box(pos, glm::vec3(0), 0);
+	  obj = BoxPtr(new Box(pos, glm::vec3(0), 0));
 	  obj->setup(); 
 	  obj->setCollisionID(1);
 	  CollisionManager::addCollisionObjectToGrid(obj);
@@ -49,7 +49,7 @@ void Border::createBorder(){
 	  pos = glm::vec3(MAXX - E_LEN/2, 
 					  MINY + E_LEN/2 + j * E_LEN, 
 					  MINZ + E_LEN/2 + i*E_LEN);
-	  obj = new Box(pos, glm::vec3(0), 0);
+	  obj = BoxPtr(new Box(pos, glm::vec3(0), 0));
 	  obj->setup(); 
 	  obj->setCollisionID(1);
 	  CollisionManager::addCollisionObjectToGrid(obj);

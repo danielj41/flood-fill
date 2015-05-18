@@ -68,7 +68,7 @@ void NormalMapRender::tearDownEnviroment(){
 void NormalMapRender::setupShader(){
     glUseProgram(shader->getID());
 
-    Camera * camera = Director::getScene()->getCamera();
+    CameraPtr camera = Director::getScene()->getCamera();
 
     glUniform2f(shader->getHandle("uScreenSize"), Global::ScreenWidth, Global::ScreenHeight);
 
@@ -84,12 +84,12 @@ void NormalMapRender::setupShader(){
                 camera->getEye().y,
                 camera->getEye().z);
 
-    std::map<std::string, Light *> lights = Director::getScene()->getLights();
+    std::map<std::string, LightPtr> lights = Director::getScene()->getLights();
 
     //Load the Lights
-    for(std::map<std::string, Light *>::iterator it = lights.begin();
+    for(std::map<std::string, LightPtr>::iterator it = lights.begin();
             it != lights.end(); it++ ){
-        Light * light = it->second;
+        LightPtr light = it->second;
 
         glUniform3f(shader->getHandle("uLightDirection"),
                     light->getDirection().x,
@@ -101,12 +101,12 @@ void NormalMapRender::setupShader(){
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D,
-            ((ShadowOccluderRender *) (RenderEngine::getRenderElement("shadow")))->getFBO()->getDepthTexture()->getTexture());
+            PTR_CAST(ShadowOccluderRender, RenderEngine::getRenderElement("shadow"))->getFBO()->getDepthTexture()->getTexture());
         glUniform1i(shader->getHandle("uShadowTexID"), 0);
     }
 }
 
-void NormalMapRender::setupMesh(Mesh * mesh){
+void NormalMapRender::setupMesh(MeshPtr mesh){
     glEnableVertexAttribArray(shader->getHandle("aPosition"));
     glBindBuffer(GL_ARRAY_BUFFER, mesh->getVertexBuffer());
     glVertexAttribPointer(shader->getHandle("aPosition"), 3,
@@ -130,8 +130,8 @@ void NormalMapRender::setupMesh(Mesh * mesh){
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->getIndexBuffer());
 }
 
-void NormalMapRender::renderObject(Object * object){
-    Mesh * mesh = object->getMesh();
+void NormalMapRender::renderObject(ObjectPtr object){
+    MeshPtr mesh = object->getMesh();
 
     glUniformMatrix4fv(shader->getHandle("uNormalMatrix"), 1, GL_FALSE,
         glm::value_ptr(glm::transpose(glm::inverse(object->getModelMatrix()))));
@@ -166,12 +166,12 @@ void NormalMapRender::renderObject(Object * object){
     glDrawElements(GL_TRIANGLES, (int) mesh->getIndices().size(), GL_UNSIGNED_INT, 0);
 }
 
-void NormalMapRender::addObject(Object *object) {
+void NormalMapRender::addObject(ObjectPtr object) {
     RenderElement::addObject(object);
     RenderEngine::getRenderElement("shadow")->addObject(object);
 }
 
-void NormalMapRender::removeObject(Object *object) {
+void NormalMapRender::removeObject(ObjectPtr object) {
     RenderElement::removeObject(object);
     RenderEngine::getRenderElement("shadow")->removeObject(object);
 }

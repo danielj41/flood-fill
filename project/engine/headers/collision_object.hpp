@@ -30,11 +30,11 @@ public:
     void setApplyPhysics(bool applyPhysics);
 
     // virtual void updatePhysics();
-    virtual void collided(CollisionObject * collidedWith) = 0;
+    virtual void collided(CollisionObjectPtr collidedWith) = 0;
 
-    bool checkCollision(CollisionObject *other);
-    glm::vec3 getCollisionNormal(CollisionObject *other);
-    float getCollisionDistance(CollisionObject *other);
+    bool checkCollision(CollisionObjectPtr other);
+    glm::vec3 getCollisionNormal(CollisionObjectPtr other);
+    float getCollisionDistance(CollisionObjectPtr other);
     void setBoundingBox(BoundingBox _boundingBox);
     BoundingBox* getBoundingBox();
 

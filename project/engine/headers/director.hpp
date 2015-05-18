@@ -19,14 +19,14 @@ DEF_PTR(Director, DirectorPtr);
 class Director{
 
 public:
-    static void addScene(Scene * scene);
+    static void addScene(ScenePtr scene);
     static void removeScene(std::string label);
 
     //Returns a specific scene
-    static Scene * getScene(std::string label);
+    static ScenePtr getScene(std::string label);
 
     //Returns the current scene
-    static Scene * getScene();
+    static ScenePtr getScene();
 
     static void setScene(std::string label);
 
@@ -37,7 +37,7 @@ private:
     static const std::string NO_VALID_SCENE;
 
     static std::string currentScene;
-    static std::map<std::string, Scene *> scenes;
+    static std::map<std::string, ScenePtr> scenes;
 
 };
 

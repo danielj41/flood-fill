@@ -30,8 +30,8 @@ public:
 
     Uniform3DGrid<int>* getTypeGrid();
     std::set<int>* getFillTypes();
-    GameObject * getGridValue(glm::vec3 pos);
-    void setGridValue(glm::vec3 pos, GameObject * obj);
+    GameObjectPtr getGridValue(glm::vec3 pos);
+    void setGridValue(glm::vec3 pos, GameObjectPtr obj);
     void setTypeCell(glm::vec3 pos, int type);
 
     bool isFilledWithPaint(glm::vec3 pos);
@@ -59,20 +59,20 @@ protected:
     int numVoxelsInX, numVoxelsInY, numVoxelsInZ;
 
     // The grid holds every game object in the map
-    Uniform3DGrid<GameObject *> grid;
+    Uniform3DGrid<GameObjectPtr> grid;
     // The type grid hold the types of every game object in the map
     Uniform3DGrid<int> typeGrid;
     std::set<int> fillTypes;
 
-    DebugPlayer * debugPlayer;
-    Player * player;
+    DebugPlayerPtr debugPlayer;
+    PlayerPtr player;
 
 private:
     void interpLines(std::vector<std::string> lines);
-    GameObject * createVoxel(int id, int i, int j, int k);
+    GameObjectPtr createVoxel(int id, int i, int j, int k);
 
     //Special Game Object to initialize the grid
-    static VoidVoxel * voidVoxel;
+    static VoidVoxelPtr voidVoxel;
     static const std::string templatesFolder;
     std::vector<std::string> lines;
     bool mapDefined;

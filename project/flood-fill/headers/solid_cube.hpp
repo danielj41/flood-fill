@@ -20,14 +20,14 @@ public:
     void setup();
     void update();
     
-    void collided(CollisionObject * collidedWith);
+    void collided(CollisionObjectPtr collidedWith);
     
-    Object * getObject();
+    ObjectPtr getObject();
 
     void animateFrom(glm::vec3 from, float amount);
 
 private:
-  Object * cube;
+  ObjectPtr cube;
   glm::vec3 position;
 
 };

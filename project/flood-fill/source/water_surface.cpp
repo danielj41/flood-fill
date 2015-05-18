@@ -33,7 +33,7 @@ void WaterSurface::setup() {
   else if(colorMask & GREY)
     color = "FlatGrey";
 
-  level = (LevelTemplate *)Director::getScene();
+  level = PTR_CAST(LevelTemplate, Director::getScene());
   typeGrid = level->getTypeGrid();
 
   // these are intentionally backwards - similar to setting "currentMax" to MIN_INT
@@ -56,9 +56,9 @@ void WaterSurface::setup() {
   }*/
 
   startPosition = position;
-  waterSurface = new Object(
+  waterSurface = ObjectPtr(new Object(
                    LoadManager::getMesh("grid.obj"),
-                   MaterialManager::getMaterial(color));
+                   MaterialManager::getMaterial(color)));
 
   waterDataTexture = LoadManager::getRenderTexture("waterData");
   waterColorTexture = LoadManager::getRenderTexture("waterColor");
@@ -139,7 +139,7 @@ void WaterSurface::createFluidBox(glm::vec3 newPos) {
           typeGrid->setValue(newPos.x, newPos.y, newPos.z, LevelTemplate::FLUID_RED);
       else
           ASSERT(false, "There is no fluid type avaible");
-      FluidBox *fluidBox = new FluidBox(newPos, colorMask);
+      FluidBoxPtr fluidBox(new FluidBox(newPos, colorMask));
       fluidBox->setup();
       level->setGridValue(fluidBox->getPosition(), fluidBox);
       Director::getScene()->addGameObject(fluidBox);
@@ -195,10 +195,54 @@ bool WaterSurface::checkAdjacent(glm::vec3 newPos) {
   return false;
 }
 
-void WaterSurface::collided(CollisionObject * collidedWith){
+void WaterSurface::collided(CollisionObjectPtr collidedWith){
   
   switch (collidedWith->getCollisionID()){
   default:
     break;
   } 
+}
+
+
+void WaterSurface::loadShaders() {
+    LoadManager::loadShader("render-texture-vertex-data-initial.glsl", "render-texture-fragment-data-initial.glsl");
+    ShaderPtr shader = LoadManager::getShader("render-texture-vertex-data-initial.glsl", "render-texture-fragment-data-initial.glsl");
+    shader->loadHandle("aPosition", 'a');
+    shader->loadHandle("uPrevTexture", 'u');
+    shader->loadHandle("uDataTexture", 'u');
+    shader->loadHandle("uSize", 'u');
+    shader->loadHandle("uDTime", 'u');
+    shader->loadHandle("uStartPosition", 'u');
+
+    LoadManager::loadShader("render-texture-vertex-color-initial.glsl", "render-texture-fragment-color-initial.glsl");
+    shader = LoadManager::getShader("render-texture-vertex-color-initial.glsl", "render-texture-fragment-color-initial.glsl");
+    shader->loadHandle("aPosition", 'a');
+    shader->loadHandle("uPrevTexture", 'u');
+    shader->loadHandle("uDataTexture", 'u');
+    shader->loadHandle("uSize", 'u');
+    shader->loadHandle("uDTime", 'u');
+    shader->loadHandle("uStartPosition", 'u');
+
+    LoadManager::loadShader("render-texture-vertex-data-update.glsl", "render-texture-fragment-data-update.glsl");
+    shader = LoadManager::getShader("render-texture-vertex-data-update.glsl", "render-texture-fragment-data-update.glsl");
+    shader->loadHandle("aPosition", 'a');
+    shader->loadHandle("uPrevTexture", 'u');
+    shader->loadHandle("uDataTexture", 'u');
+    shader->loadHandle("uSize", 'u');
+    shader->loadHandle("uDTime", 'u');
+    shader->loadHandle("uStartPosition", 'u');
+
+    LoadManager::loadShader("render-texture-vertex-color-update.glsl", "render-texture-fragment-color-update.glsl");
+    shader = LoadManager::getShader("render-texture-vertex-color-update.glsl", "render-texture-fragment-color-update.glsl");
+    shader->loadHandle("aPosition", 'a');
+    shader->loadHandle("uPrevTexture", 'u');
+    shader->loadHandle("uDataTexture", 'u');
+    shader->loadHandle("uSize", 'u');
+    shader->loadHandle("uDTime", 'u');
+    shader->loadHandle("uStartPosition", 'u');
+
+    LoadManager::loadShader("render-texture-vertex-block.glsl", "render-texture-fragment-block.glsl");
+    shader = LoadManager::getShader("render-texture-vertex-block.glsl", "render-texture-fragment-block.glsl");
+    shader->loadHandle("aPosition", 'a');
+    shader->loadHandle("uModelMatrix", 'u');
 }

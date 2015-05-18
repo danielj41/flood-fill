@@ -101,7 +101,7 @@ int main()
 void createScenes(){
     INFO("Creating Scenes...");
 
-    TestLevel * level = new TestLevel();
+    TestLevelPtr level(new TestLevel());
     Director::addScene(level);
     Director::setScene("testLevel3.txt");
 }
@@ -113,7 +113,7 @@ void createScenes(){
 void loadMeshes(){
     INFO("Loading all meshes...");
 
-    Mesh * mesh;
+    MeshPtr mesh;
 
     LoadManager::loadMesh("cube.obj");
     mesh = LoadManager::getMesh("cube.obj");
@@ -225,7 +225,7 @@ void loadTextures(){
     LoadManager::loadImage("gun_texture.png");
     LoadManager::loadTexture("GunTexture", LoadManager::getImage("gun_texture.png"));
 
-    RenderTexture::loadShaders();
+    WaterSurface::loadShaders();
     LoadManager::loadRenderTexture("waterData");
     LoadManager::loadRenderTexture("waterColor");
     LoadManager::loadRenderTexture("waterBlock");
@@ -236,46 +236,40 @@ void createMaterials(){
 
     /*More Materials: http://devernay.free.fr/cours/opengl/materials.html */
 
-    Material * material;
-    material = new Material(glm::vec3(0.4, 0.4, 0.4),
+    MaterialPtr material(new Material(glm::vec3(0.4, 0.4, 0.4),
                             glm::vec3(0.3, 0.3, 0.4),
                             glm::vec3(0.1, 0.1, 0.1),
-                            100.0f);
+                            100.0f));
     MaterialManager::addMaterial("FlatGrey", material);
 
-    Material * material2;
-    material2 = new Material(glm::vec3(0.3, 0.3, 0.8),
+    MaterialPtr material2(new Material(glm::vec3(0.3, 0.3, 0.8),
                             glm::vec3(0.0, 0.3, 0.9),
                              glm::vec3(0.3, 0.3, 0.8),
-                            4.0f);
+                            4.0f));
     MaterialManager::addMaterial("FlatBlue", material2);
 
-    Material * material3;
-    material3 = new Material(glm::vec3(0.3, 0.8, 0.3),
+    MaterialPtr material3(new Material(glm::vec3(0.3, 0.8, 0.3),
                             glm::vec3(0.0, 0.9, 0.3),
                              glm::vec3(0.3, 0.8, 0.3),
-                            4.0f);
+                            4.0f));
     MaterialManager::addMaterial("FlatRed", material3);
     
-    Material * material4;
-    material4 = new Material(glm::vec3(0.8, 0.3, 0.3),
+    MaterialPtr material4(new Material(glm::vec3(0.8, 0.3, 0.3),
                             glm::vec3(0.0, 0.3, 0.3),
                              glm::vec3(0.8, 0.3, 0.3),
-                            4.0f);
+                            4.0f));
     MaterialManager::addMaterial("FlatGreen", material4);
 
-    Material * material5;
-    material5 = new Material(glm::vec3(1.0, 1.0, 1.0),
+    MaterialPtr material5(new Material(glm::vec3(1.0, 1.0, 1.0),
                             glm::vec3(0.0, 0.0, 0.0),
                              glm::vec3(0.0, 0.0, 0.0),
-                            4.0f);
+                            4.0f));
     MaterialManager::addMaterial("None", material5);
 
-    Material * material6;
-    material6 = new Material(glm::vec3(0.8, 0.3, 0.3),
+    MaterialPtr material6(new Material(glm::vec3(0.8, 0.3, 0.3),
                             glm::vec3(0.9, 0.3, 0.1),
                             glm::vec3(0.8, 0.3, 0.1),
-                            4.0f);
+                            4.0f));
     MaterialManager::addMaterial("Red", material6);
 }
 
@@ -293,7 +287,7 @@ double lastX = Global::ScreenWidth/2.0f, lastY = Global::ScreenHeight/2.0f;
 double mouse_sensitivity = 1.0f;
 void mouse_movement_callback(GLFWwindow *, double xpos, double ypos){
     if(Director::getScene()->hasMainCamera()){
-        Camera * cam = Director::getScene()->getCamera();
+        CameraPtr cam = Director::getScene()->getCamera();
 
         double xoffset = (xpos - lastX)*mouse_sensitivity;
         double yoffset = (ypos - lastY)*mouse_sensitivity;

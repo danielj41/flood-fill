@@ -12,12 +12,12 @@ DEF_PTR(MaterialManager, MaterialManagerPtr);
 class MaterialManager{
 
 public:
-    static void addMaterial(std::string name, Material * material);
-    static Material * getMaterial(std::string name);
+    static void addMaterial(std::string name, MaterialPtr material);
+    static MaterialPtr getMaterial(std::string name);
     static void removeMaterial(std::string name);
 
 private:
-    static std::map<std::string, Material *> materials;
+    static std::map<std::string, MaterialPtr> materials;
 };
 
 #endif

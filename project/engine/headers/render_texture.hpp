@@ -19,9 +19,8 @@ class RenderTexture {
 public:
     RenderTexture();
 
-    static void loadShaders();
     void load();
-    void render(Shader *shader, GLuint dataTexture,
+    void render(ShaderPtr shader, GLuint dataTexture,
      glm::vec2 dTime, glm::vec3 startPosition, glm::vec3 size);
     void swapTextures();
     void clear();
