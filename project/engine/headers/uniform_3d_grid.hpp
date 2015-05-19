@@ -154,7 +154,7 @@ Uniform3DGrid<T>::Uniform3DGrid(const Uniform3DGrid<T>& uGrid){
 
 template<typename T>
 Uniform3DGrid<T>::~Uniform3DGrid(){
-    delete grid;
+    delete[] grid;
 }
 
 template<typename T>
