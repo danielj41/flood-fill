@@ -5,6 +5,10 @@
 #include "debug_macros.h"
 #include "load_manager.hpp"
 
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtx/transform2.hpp"
+
 #define XP 0
 #define YP 1
 #define ZP 2
@@ -42,7 +46,6 @@ void Plane::setup() {
   }
 
   object->loadIdentity();
-
   object->translate(glm::vec3(0.0f, 0.0f, 1.0f));
 
   if(direction == XP) {
@@ -55,12 +58,15 @@ void Plane::setup() {
     object->rotate(90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
     object->setGridScale(glm::vec2(right - left + 1, front - back + 1));
   } else if(direction == YN) {
+    object->loadIdentity();
+    object->setMatrix(glm::shearZ3D(glm::mat4(1.0f), 1.0f * (float)refObject->getShearX(), 1.0f * (float)refObject->getShearY()));
+    object->translate(glm::vec3(0.0f, 0.0f, 1.0f + 1.0f * fmax(fabs((float)refObject->getShearX()), fabs((float)refObject->getShearY()))));
     object->rotate(-90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
     object->setGridScale(glm::vec2(right - left + 1, front - back + 1));
   } else if(direction == ZP) {
     object->setGridScale(glm::vec2(right - left + 1, top - bottom + 1));
   } else if(direction == ZN) {
-    object->rotate(180.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+    object->rotate(180.0f, glm::vec3(0.0f, 1.0f, 0.0f));
     object->setGridScale(glm::vec2(right - left + 1, top - bottom + 1));
   }
   

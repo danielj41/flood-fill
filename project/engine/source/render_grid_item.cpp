@@ -5,5 +5,8 @@
 #include "debug_macros.h"
 
 bool RenderGridItem::isEqual(RenderGridItem *other) {
-  return object != NULL_PTR && renderElement == other->renderElement && object->getMaterial() == other->object->getMaterial();
+  return object != NULL_PTR &&
+         renderElement == other->renderElement &&
+         object->getMaterial() == other->object->getMaterial() &&
+         object->getShearX() == other->object->getShearX() && object->getShearY() == other->object->getShearY();
 }

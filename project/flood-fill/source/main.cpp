@@ -131,7 +131,7 @@ void loadMeshes(){
     LoadManager::loadMesh("plane.obj");
     mesh = LoadManager::getMesh("plane.obj");
     mesh->resize();
-    mesh->calculateNormals();
+    mesh->loadObjNormals();
     mesh->generateVertexBuffer();
     mesh->generateIndexBuffer();
     mesh->generateNormalBuffer();

@@ -35,6 +35,8 @@ public:
     glm::vec2 getDTime();
     glm::vec3 getVelocity();
     glm::vec2 getGridScale();
+    int getShearX();
+    int getShearY();
 
     void applyTexture(TexturePtr _texture);
     void enableTexture();
@@ -53,6 +55,7 @@ public:
     void setDTime(glm::vec2 _dTime);
     void setVelocity(glm::vec3 _velocity);
     void setGridScale(glm::vec2 _gridScale);
+    void setShear(int x, int y);
 
     void setAlpha(float _alpha);
     void scale(glm::vec3 scalingVector);
@@ -82,6 +85,7 @@ protected:
     glm::vec2 dTime;
     glm::vec3 velocity;
     glm::vec2 gridScale;
+    int shearX, shearY;
 
     void drawElements();
 };

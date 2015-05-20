@@ -291,3 +291,14 @@ void LevelTemplate::setGridValue(glm::vec3 pos, GameObjectPtr obj){
 void LevelTemplate::setTypeCell(glm::vec3 pos, int type){
     typeGrid->setValue(pos.x, pos.y, pos.z, type);
 }
+
+void LevelTemplate::shearRegion(int x1, int x2, int y1, int y2, int z1, int z2, int shearX, int shearY) {
+    for(int x = x1; x <= x2; x++) {
+        for(int y = y1; y <= y2; y++) {
+            for(int z = z1; z <= z2; z++) {
+                PTR_CAST(SolidCube, (*grid)(x, y, z))->getObject()->setShear(shearX, shearY);
+            }
+        }   
+    }
+}
+
