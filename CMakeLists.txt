@@ -24,6 +24,9 @@ add_subdirectory (external)
 
 # On Visual 2005 and above, this module can set the debug working directory
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/external/rpavlik-cmake-modules-1c73e35")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/external/sfml-cmake-modules")
+include(FindSFML)
+find_package(SFML COMPONENTS audio system)
 include(CreateLaunchers)
 include(MSVCMultipleProcessCompile) # /MP
 
@@ -58,12 +61,14 @@ include_directories(
 	external/glew-1.9.0/include/
 	project/engine/headers/
 	project/flood-fill/headers/
+    ${SFML_INCLUDE_DIR}
 )
 
 set(ALL_LIBS
 	${OPENGL_LIBRARY}
 	GLFW_303
 	GLEW_190
+    ${SFML_LIBRARIES}
 )
 
 add_definitions(

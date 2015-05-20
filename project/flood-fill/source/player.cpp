@@ -199,11 +199,13 @@ void Player::collided(CollisionObjectPtr collidedWith) {
     getBoundingBox()->setPosition(camera->getEye() - glm::vec3(0,1.0f,0));
 
     //If on flat ground, jumping is done. 
-    if(normal.y > 0.5) {
+    if(normal.y > 0.5f) {
         if(jumping)
             LoadManager::getSound("jump_land.wav")->playSound();
         velocity = 0;
         jumping = false;
+    } else if (normal.y < -0.5f) {
+        velocity = 0;
     }
 	
     break;

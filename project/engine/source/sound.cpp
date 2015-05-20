@@ -7,12 +7,12 @@
 const std::string Sound::INVALID_EXT = "INVALID_EXT";
 const std::string Sound::INVALID_PATH = "INVALID_PATH";
 
-Sound::Sound()/* : path(INVALID_PATH), loaded(false) */{}
+Sound::Sound() : path(INVALID_PATH), loaded(false) {}
 
-Sound::Sound(std::string _path)/*: path(_path), loaded(false)*/ {}
+Sound::Sound(std::string _path): path(_path), loaded(false) {}
 
 void Sound::load(){
-    /*ASSERT(path != INVALID_PATH, "You didn't provide a path for the Sound");
+    ASSERT(path != INVALID_PATH, "You didn't provide a path for the Sound");
 
     INFO("Loading Sound " << path << "...");
 
@@ -22,18 +22,18 @@ void Sound::load(){
 
     loaded = true;
 
-    INFO("Sound " << path << " loaded!");*/
+    INFO("Sound " << path << " loaded!");
 }
 
 void Sound::playSound() {
-    /*sf::Sound::Status status = audio.getStatus();
+    sf::Sound::Status status = audio.getStatus();
     if (status == sf::Sound::Stopped) 
-        audio.play();*/
+        audio.play();
 // Stopped
 // Paused
 // Playing  
 }  
 
 void Sound::stopSound() {
-    /*audio.stop();*/
+    audio.stop();
 }
