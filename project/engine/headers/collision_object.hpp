@@ -38,12 +38,15 @@ public:
     void setBoundingBox(BoundingBox _boundingBox);
     BoundingBox* getBoundingBox();
 
+    void setShear(float x1, float x2, float z1, float z2);
+
 private:
     
     glm::vec3 position;
     bool _canCollide, _applyPhysics;
     int collisionID, collideWithID, velocity;
     BoundingBox boundingBox;
+    float shearX1, shearX2, shearZ1, shearZ2;
 
 };
 

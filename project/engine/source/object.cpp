@@ -16,7 +16,7 @@ Object::Object() : _hasTexture(false), textureEnabled(false), water(false), alph
     normalMapBias = 0.0f;
     gridScale = glm::vec2(1.0f, 1.0f);
     shearX = 0;
-    shearY = 0;
+    shearZ = 0;
 }
 
 Object::Object(MeshPtr _mesh, MaterialPtr _material)
@@ -31,7 +31,7 @@ Object::Object(MeshPtr _mesh, MaterialPtr _material)
     normalMapBias = 0.0f;
     gridScale = glm::vec2(1.0f, 1.0f);
     shearX = 0;
-    shearY = 0;
+    shearZ = 0;
 }
 
 void Object::draw(ShaderPtr shader){
@@ -186,17 +186,17 @@ glm::vec2 Object::getGridScale() {
     return gridScale;
 }
 
-void Object::setShear(int x, int y) {
+void Object::setShear(int x, int z) {
     shearX = x;
-    shearY = y;
+    shearZ = z;
 }
 
 int Object::getShearX() {
     return shearX;
 }
 
-int Object::getShearY() {
-    return shearY;
+int Object::getShearZ() {
+    return shearZ;
 }
 
 void Object::enableTexture(){

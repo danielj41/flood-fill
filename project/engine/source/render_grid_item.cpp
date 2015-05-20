@@ -8,5 +8,5 @@ bool RenderGridItem::isEqual(RenderGridItem *other) {
   return object != NULL_PTR &&
          renderElement == other->renderElement &&
          object->getMaterial() == other->object->getMaterial() &&
-         object->getShearX() == other->object->getShearX() && object->getShearY() == other->object->getShearY();
+         object->getShearX() == other->object->getShearX() && object->getShearZ() == other->object->getShearZ();
 }

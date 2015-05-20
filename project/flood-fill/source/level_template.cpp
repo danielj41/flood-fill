@@ -171,6 +171,7 @@ GameObjectPtr LevelTemplate::createVoxel(int id, int i, int j, int k){
                                                 miny + j * 2 + 1,
                                                 minz + (k * 2 + 1))));
         c->setup();
+
         CollisionManager::addCollisionObjectToGrid(c);
         return c;
         break;
@@ -292,11 +293,17 @@ void LevelTemplate::setTypeCell(glm::vec3 pos, int type){
     typeGrid->setValue(pos.x, pos.y, pos.z, type);
 }
 
-void LevelTemplate::shearRegion(int x1, int x2, int y1, int y2, int z1, int z2, int shearX, int shearY) {
+void LevelTemplate::shearRegion(int x1, int x2, int y1, int y2, int z1, int z2, int shearX, int shearZ) {
     for(int x = x1; x <= x2; x++) {
         for(int y = y1; y <= y2; y++) {
             for(int z = z1; z <= z2; z++) {
-                PTR_CAST(SolidCube, (*grid)(x, y, z))->getObject()->setShear(shearX, shearY);
+                PTR_CAST(SolidCube, (*grid)(x, y, z))->getObject()->setShear(shearX, shearZ);
+                (*CollisionManager::getGrid())(x, y, z)->setShear(
+                    grid->getEdgeSizeY() * (abs(shearX) * 0.5f - shearX/2.0f + shearX * (float)(x - x1) / (x2 + 1 - x1)),
+                    grid->getEdgeSizeY() * (abs(shearX) * 0.5f - shearX/2.0f + shearX * (float)(x + 1 - x1) / (x2 + 1 - x1)),
+                    grid->getEdgeSizeY() * (abs(shearZ) * 0.5f - shearZ/2.0f + shearZ * (float)(z - z1) / (z2 + 1 - z1)),
+                    grid->getEdgeSizeY() * (abs(shearZ) * 0.5f - shearZ/2.0f + shearZ * (float)(z + 1 - z1) / (z2 + 1 - z1))
+                );
             }
         }   
     }

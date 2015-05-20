@@ -94,6 +94,8 @@ void CollisionManager::checkCollision(CollisionObjectPtr aObject){
   zDir = pos.z > roundPos.z ? 1 : -1;
 
   checkCollisionWithOffset(aObject, 0, 0, 0);
+  checkCollisionWithOffset(aObject, 0, -1, 0);
+  checkCollisionWithOffset(aObject, 0, -2, 0);
   checkCollisionWithOffset(aObject, 0, yDir, 0);
   checkCollisionWithOffset(aObject, xDir, 0, 0);
   checkCollisionWithOffset(aObject, 0, 0, zDir);
