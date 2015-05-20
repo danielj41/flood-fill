@@ -20,9 +20,9 @@ void main(){
 
     vec3 pos = vec3(0, -1.00 + ((1.0 - amount) * texture2D(uWaterData, coord).r * texture2D(uWaterColor, coord).a + amount * 1.0/uModel[1][1]) * 2.0, 0);
 
-    vec3 pos2 = vec3(1.0, -1.00 + ((1.0 - amount) * texture2D(uWaterData, coord + vec2(1.0/32.0, 0.0)).r * texture2D(uWaterColor, coord + vec2(1.0/32.0, 0.0)).a + amount * 1.0/uModel[1][1]) * 2.0, 0.0);
+    vec3 pos2 = vec3(0.25, -1.00 + ((1.0 - amount) * texture2D(uWaterData, coord + vec2(1.0/32.0, 0.0)).r * texture2D(uWaterColor, coord + vec2(1.0/32.0, 0.0)).a + amount * 1.0/uModel[1][1]) * 2.0, 0.0);
 
-    vec3 pos3 = vec3(0.0, -1.00 + ((1.0 - amount) * texture2D(uWaterData, coord + vec2(0.0, 1.0/32.0)).r * texture2D(uWaterColor, coord + vec2(0.0, 1.0/32.0)).a + amount * 1.0/uModel[1][1]) * 2.0, 1.0);
+    vec3 pos3 = vec3(0.0, -1.00 + ((1.0 - amount) * texture2D(uWaterData, coord + vec2(0.0, 1.0/32.0)).r * texture2D(uWaterColor, coord + vec2(0.0, 1.0/32.0)).a + amount * 1.0/uModel[1][1]) * 2.0, 0.25);
 
     vNormal = -cross(pos2 - pos, pos3 - pos);
 
