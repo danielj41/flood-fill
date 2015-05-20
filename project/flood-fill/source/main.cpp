@@ -95,6 +95,8 @@ int main()
 
     // Close OpenGL window and terminate GLFW
     glfwTerminate();
+
+    LoadManager::clearSounds();
     return 0;
 }
 
