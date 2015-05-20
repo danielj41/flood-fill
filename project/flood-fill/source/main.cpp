@@ -214,14 +214,14 @@ void loadMeshes(){
 void loadTextures(){
     INFO("Loading all textures...");
 
-    LoadManager::loadImage("default_voxel.png");
-    LoadManager::loadTexture("VoxelTexture", LoadManager::getImage("default_voxel.png"));
+    LoadManager::loadImage("blank_voxel.png");
+    LoadManager::loadTexture("VoxelTexture", LoadManager::getImage("blank_voxel.png"));
 
     LoadManager::loadImage("sky.bmp");
     LoadManager::loadTexture("Sky", LoadManager::getImage("sky.bmp"));
 
-    LoadManager::loadImage("chesterfield_normal_map.png");
-    LoadManager::loadTexture("PaddedNormalMap", LoadManager::getImage("chesterfield_normal_map.png"));
+    LoadManager::loadImage("normal-map-2.png");
+    LoadManager::loadTexture("PaddedNormalMap", LoadManager::getImage("normal-map-2.png"));
 
     LoadManager::loadImage("gun_texture.png");
     LoadManager::loadTexture("GunTexture", LoadManager::getImage("gun_texture.png"));
@@ -237,8 +237,8 @@ void createMaterials(){
 
     /*More Materials: http://devernay.free.fr/cours/opengl/materials.html */
 
-    MaterialPtr material(new Material(glm::vec3(0.4, 0.4, 0.4),
-                            glm::vec3(0.3, 0.3, 0.4),
+    MaterialPtr material(new Material(glm::vec3(0.5, 0.5, 0.5),
+                            glm::vec3(0.5, 0.5, 0.6),
                             glm::vec3(0.1, 0.1, 0.1),
                             100.0f));
     MaterialManager::addMaterial("FlatGrey", material);

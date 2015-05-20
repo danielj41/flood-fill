@@ -16,6 +16,9 @@ public:
 
 private:
     void createRenders();
+    LightPtr l1;
+    float timer;
+    glm::vec3 gridCenter;
 };
 
 #endif

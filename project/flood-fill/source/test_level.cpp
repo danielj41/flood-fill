@@ -28,8 +28,9 @@
 #include "active_terrain.hpp"
 #include "render_grid.hpp"
 #include "shadow_occluder_render.hpp"
+#include "time_manager.hpp"
 
-TestLevel::TestLevel() : LevelTemplate("testLevel3.txt"){}
+TestLevel::TestLevel() : LevelTemplate("testLevel3.txt"), timer(0.0f) {}
 
 void TestLevel::setup(){
     INFO("Generating Test Level...");
@@ -58,11 +59,11 @@ void TestLevel::setup(){
                         (float) Global::ScreenWidth/Global::ScreenHeight,
                         0.1f, 100.f));
 
-    LightPtr l1(new Light(glm::vec3(1), 30.0f, glm::vec3(0, 30, 0)));
+    l1 = LightPtr(new Light(glm::vec3(1), 30.0f, glm::vec3(0, 30, 0)));
     l1->setPosition(l1->getDirection()*1.0f);
 
     Uniform3DGridPtr<int> typeGrid = getTypeGrid();
-    glm::vec3 gridCenter((typeGrid->getMaxX() - typeGrid->getMinX())/2.0f,
+    gridCenter = glm::vec3((typeGrid->getMaxX() - typeGrid->getMinX())/2.0f,
                          (typeGrid->getMaxY() - typeGrid->getMinY())/2.0f,
                          (typeGrid->getMinZ() - typeGrid->getMaxZ())/2.0f);
 
@@ -111,6 +112,12 @@ void TestLevel::update(){
         setMainCamera("Camera1");
         getCamera("Camera1")->fix(false, true, false);
     }
+    timer += TimeManager::getDeltaTime() / 15.0;
+    l1->setDirection(glm::vec3(20.0 * sin(timer * 3.1), 5.0 * sin(timer * 3.4 + 5.0) + 30.0, 20.0 * sin(timer * 3.8 + 2.0)));
+    l1->setPosition(gridCenter + l1->getDirection()*1.0f);
+    l1->setViewMatrix(glm::lookAt(
+        gridCenter + l1->getDirection(),
+        gridCenter, glm::vec3(0, 1, 0)));
     //INFO("yay");
 }
 
