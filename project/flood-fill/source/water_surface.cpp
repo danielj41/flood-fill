@@ -45,7 +45,9 @@ void WaterSurface::setup() {
   maxZ = typeGrid->getMinZ();
 
   grid = Uniform3DGridPtr<int>(new Uniform3DGrid<int>(*typeGrid));
+  targetGrid = Uniform3DGridPtr<int>(new Uniform3DGrid<int>(*typeGrid));
   grid->initialize(0);
+  targetGrid->initialize(0);
 
   hitDrain = false;
 
@@ -72,7 +74,7 @@ void WaterSurface::setup() {
   waterColorTexture->clear();
   waterBlockTexture->clear();
 
-  waterBlockTexture->renderBlock(grid, minX, maxX, minY, maxY, minZ, maxZ, 1.05f); 
+  waterBlockTexture->renderBlock(grid, minX, maxX, minY, maxY, minZ, maxZ, true, glm::vec3(1.0f, 1.0f, 1.0f)); 
   waterSurface->applyWaterBlock(waterBlockTexture->getTexture());
 
   size = glm::vec3((maxX - minX + 2.0f) / 2.0f, (maxY - minY + 2.0f) / 2.0f, (maxZ - minZ + 2.0f) / 2.0f);
@@ -259,4 +261,6 @@ void WaterSurface::loadShaders() {
     shader = LoadManager::getShader("render-texture-vertex-block.glsl", "render-texture-fragment-block.glsl");
     shader->loadHandle("aPosition", 'a');
     shader->loadHandle("uModelMatrix", 'u');
+    shader->loadHandle("uPrevTexture", 'u');
+    shader->loadHandle("uColor", 'u');
 }

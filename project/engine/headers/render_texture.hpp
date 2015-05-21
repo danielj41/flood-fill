@@ -28,7 +28,7 @@ public:
                      float minX, float maxX,
                      float minY, float maxY,
                      float minZ, float maxZ,
-                     float extended);
+                     bool extended, glm::vec3 colorDot);
 
     GLuint getTexture();
     void release();

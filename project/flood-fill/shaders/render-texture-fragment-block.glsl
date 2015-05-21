@@ -1,6 +1,9 @@
 varying float vHeight;
 varying float vZ;
+uniform vec3 uColor;
+uniform sampler2D uPrevTexture;
 
 void main(){
-    gl_FragColor = vec4((vHeight + 1.0) / 2.0, (vHeight + 1.0) / 2.0, (vHeight + 1.0) / 2.0, 1);
+    float value = (vHeight + 1.0) / 2.0;
+    gl_FragColor = texture2D(uPrevTexture, gl_FragCoord.xy/256.0) + vec4(uColor * value, 1.0);
 }

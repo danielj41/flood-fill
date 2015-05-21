@@ -123,7 +123,7 @@ void RenderTexture::renderBlock(Uniform3DGridPtr<int> grid,
                                 float minX, float maxX,
                                 float minY, float maxY,
                                 float minZ, float maxZ,
-                                float extended) {
+                                bool extended, glm::vec3 colorDot) {
 
     ASSERT(loaded, "You didn't load the Texture");
 
@@ -138,20 +138,27 @@ void RenderTexture::renderBlock(Uniform3DGridPtr<int> grid,
 
     glUseProgram(shader->getID());
 
-    MeshPtr mesh = LoadManager::getMesh("interpcube.obj");
+    MeshPtr mesh = LoadManager::getMesh(extended ? "interpcube.obj" : "cube.obj");
 
     glEnableVertexAttribArray(shader->getHandle("aPosition"));
     glBindBuffer(GL_ARRAY_BUFFER, mesh->getVertexBuffer());
     glVertexAttribPointer(shader->getHandle("aPosition"), 3,
                           GL_FLOAT, GL_FALSE, 0, 0);
 
+    float extendAmount = extended ? 1.05f : 1.0f;
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->getIndexBuffer());
 
+    glUniform3f(shader->getHandle("uColor"), colorDot.r, colorDot.g, colorDot.b);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture[(currentTexture + 1) % 2]);
+    glUniform1i(shader->getHandle("uPrevTexture"), 0);
+
     // y and z are intentionally flipped, to map the XZ grid into an XY projection to draw on the texture
     glm::mat4 scale = glm::scale(glm::mat4(1.0f),
-        glm::vec3(grid->getEdgeSizeX() * extended / (maxX - minX + grid->getEdgeSizeX()),
-                  grid->getEdgeSizeZ() * extended / (maxZ - minZ + grid->getEdgeSizeZ()),
+        glm::vec3(grid->getEdgeSizeX() * extendAmount / (maxX - minX + grid->getEdgeSizeX()),
+                  grid->getEdgeSizeZ() * extendAmount / (maxZ - minZ + grid->getEdgeSizeZ()),
                   grid->getEdgeSizeY() / (maxY - minY + grid->getEdgeSizeY())));
 
     float x, y, z;
