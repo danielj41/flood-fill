@@ -124,7 +124,10 @@ void FluidProjectile::collided(CollisionObjectPtr collidedWith){
     std::set<int>* fillTypes = PTR_CAST(LevelTemplate, Director::getScene())->getFillTypes();
     Uniform3DGridPtr<int> grid = PTR_CAST(LevelTemplate, Director::getScene())->getTypeGrid();
     glm::vec3 newPos(grid->getRoundX(oldPosition.x), grid->getRoundY(oldPosition.y), grid->getRoundZ(oldPosition.z));
-     createWaterSurfaceAt(grid, fillTypes, newPos + glm::vec3(0.0f, grid->getEdgeSizeY(), 0.0f));
+    // create higher if possible, but not too far above the player.
+    if(newPos.y < origPosition.y - grid->getEdgeSizeY()) {
+      createWaterSurfaceAt(grid, fillTypes, newPos + glm::vec3(0.0f, grid->getEdgeSizeY(), 0.0f));
+    } 
     createWaterSurfaceAt(grid, fillTypes, newPos);
     // if you can't create a water surface there, look at a few adjacent cells, but not too far.
     createWaterSurfaceAt(grid, fillTypes, newPos + glm::vec3(0.0f, -grid->getEdgeSizeY(), 0.0f));

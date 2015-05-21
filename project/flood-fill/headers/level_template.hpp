@@ -54,6 +54,7 @@ public:
     static const int FLUID_BLUE;
     static const int FLUID_RED;
     static const int FLUID_GREEN;
+    static const int FLUID_DRAIN;
 
 protected:
     std::string fileName;

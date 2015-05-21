@@ -47,9 +47,16 @@ void WaterSurface::setup() {
   grid = Uniform3DGridPtr<int>(new Uniform3DGrid<int>(*typeGrid));
   grid->initialize(0);
 
+  hitDrain = false;
+
   timer = 0.0f;
   if(!checkAdjacent(position)) {
     timer = 2.0f; // remove next frame
+  }
+
+  if(hitDrain) {
+    //minY -= 1.0f * grid->getEdgeSizeY();
+    //lowestPosition.y -= 1.0f * grid->getEdgeSizeY();
   }
 
   startPosition = position;
@@ -156,39 +163,48 @@ bool WaterSurface::checkAdjacent(glm::vec3 newPos) {
     std::set<int>* fillTypes = level->getFillTypes();
 
     if(grid->inGrid(newPos.x, newPos.y, newPos.z) &&
-       grid->getValue(newPos.x, newPos.y, newPos.z) == 0 &&
-       fillTypes->find(typeGrid->getValue(newPos.x, newPos.y, newPos.z)) != fillTypes->end()) { 
+       grid->getValue(newPos.x, newPos.y, newPos.z) == 0) {
+        if(fillTypes->find(typeGrid->getValue(newPos.x, newPos.y, newPos.z)) != fillTypes->end()) { 
+          
+          grid->setValue(newPos.x, newPos.y, newPos.z, 1);
         
-        grid->setValue(newPos.x, newPos.y, newPos.z, 1);
-      
-   
-        if(newPos.x > maxX) {
-            maxX = newPos.x;
-        }
-        if(newPos.x < minX) {
-            minX = newPos.x;
-        }
-        if(newPos.y > maxY) {
-            maxY = newPos.y;
-        }
-        if(newPos.y < minY) {
+          if(newPos.x > maxX) {
+              maxX = newPos.x;
+          }
+          if(newPos.x < minX) {
+              minX = newPos.x;
+          }
+          if(newPos.y > maxY) {
+              maxY = newPos.y;
+          }
+          if(newPos.y < minY + 0.5f * grid->getEdgeSizeY()) {
+              minY = newPos.y;
+              lowestPosition = newPos;
+              hitDrain = false;
+          }
+          if(newPos.z > maxZ) {
+              maxZ = newPos.z;
+          }
+          if(newPos.z < minZ) {
+              minZ = newPos.z;
+          }
+
+          checkAdjacent(newPos + glm::vec3(grid->getEdgeSizeX(), 0, 0));
+          checkAdjacent(newPos - glm::vec3(grid->getEdgeSizeX(), 0, 0));
+          checkAdjacent(newPos - glm::vec3(0, grid->getEdgeSizeY(), 0));
+          checkAdjacent(newPos + glm::vec3(0, 0, grid->getEdgeSizeZ()));
+          checkAdjacent(newPos - glm::vec3(0, 0, grid->getEdgeSizeZ()));
+
+          return true;
+      } else if(typeGrid->getValue(newPos.x, newPos.y, newPos.z) == LevelTemplate::FLUID_DRAIN) {
+          grid->setValue(newPos.x, newPos.y, newPos.z, 1);
+          if(newPos.y < minY - 0.5f * grid->getEdgeSizeY()) {
             minY = newPos.y;
             lowestPosition = newPos;
-        }
-        if(newPos.z > maxZ) {
-            maxZ = newPos.z;
-        }
-        if(newPos.z < minZ) {
-            minZ = newPos.z;
-        }
-
-    checkAdjacent(newPos + glm::vec3(grid->getEdgeSizeX(), 0, 0));
-    checkAdjacent(newPos - glm::vec3(grid->getEdgeSizeX(), 0, 0));
-    checkAdjacent(newPos - glm::vec3(0, grid->getEdgeSizeY(), 0));
-    checkAdjacent(newPos + glm::vec3(0, 0, grid->getEdgeSizeZ()));
-    checkAdjacent(newPos - glm::vec3(0, 0, grid->getEdgeSizeZ()));
-
-    return true;
+            hitDrain = true;
+          }
+          return true;
+      }
   }
   return false;
 }

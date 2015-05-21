@@ -40,6 +40,7 @@ const int LevelTemplate::FLUID_GREEN           =  7;
 const int LevelTemplate::WINNING_BLOCK         =  8;
 const int LevelTemplate::FLUID_RED             =  9;
 const int LevelTemplate::FLUID_BLUE             =  10;
+const int LevelTemplate::FLUID_DRAIN            = 11;
 
 LevelTemplate::LevelTemplate(std::string levelFileName)
     : Scene(levelFileName) {
@@ -244,6 +245,10 @@ GameObjectPtr LevelTemplate::createVoxel(int id, int i, int j, int k){
     {
         break;
     }    
+    case FLUID_DRAIN:
+    {
+        break;
+    }
     default:
         ASSERT(false, "Invalid type of Voxel. ID: " << id);
     }

@@ -38,7 +38,7 @@ void WaterRender::loadShader(){
 
 void WaterRender::setupEnviroment(){
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    glEnable(GL_CULL_FACE);
+    glDisable(GL_CULL_FACE);
 }
 
 void WaterRender::tearDownEnviroment(){

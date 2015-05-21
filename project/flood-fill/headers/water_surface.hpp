@@ -48,6 +48,7 @@ private:
   float minX, maxX, minY, maxY, minZ, maxZ;
   glm::vec3 lowestPosition;
   float timer;
+  bool hitDrain;
 
   bool checkAdjacent(glm::vec3 newPos);
   void createFluidBox(glm::vec3 newPos);

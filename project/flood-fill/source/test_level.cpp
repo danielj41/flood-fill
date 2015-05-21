@@ -101,7 +101,8 @@ void TestLevel::setup(){
 
     // Adding AVAILABLE_FILL_SPACE to fillTypes
     fillTypes.insert(LevelTemplate::AVAILABLE_FILL_SPACE);
-    //fillTypes.insert(LevelTemplate::TOGGLE_FILL);
+    //fillTypes.insert(0);
+    fillTypes.insert(LevelTemplate::TOGGLE_FILL);
 }
 
 void TestLevel::update(){
