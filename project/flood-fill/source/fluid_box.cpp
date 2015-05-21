@@ -118,7 +118,21 @@ int FluidBox::getColorMask(){
 }
 
 void FluidBox::highlightForRemotion(){
+    if(deleting) return;
+
+    fluidBox->setMaterial(MaterialManager::getMaterial("removeBlock"));
+    fluidBox->setAlpha(0.3);
+
+    RenderEngine::getRenderGrid()->removeObject(fluidBox);
+    RenderEngine::getRenderGrid()->addObject(fluidBox, RenderEngine::getRenderElement("regular"));
 }
 
 void FluidBox::deselect(){
+    if(deleting) return;
+
+    fluidBox->setMaterial(MaterialManager::getMaterial(color));
+    fluidBox->setAlpha(1);
+
+    RenderEngine::getRenderGrid()->removeObject(fluidBox);
+    RenderEngine::getRenderGrid()->addObject(fluidBox, RenderEngine::getRenderElement("regular"));
 }

@@ -274,6 +274,12 @@ void createMaterials(){
                             glm::vec3(0.8, 0.3, 0.1),
                             4.0f));
     MaterialManager::addMaterial("Red", material6);
+
+    MaterialPtr removeBlockMat(new Material(glm::vec3(0.0, 0.0, 0.0),
+                                            glm::vec3(0.9, 0.3, 0.1),
+                                            glm::vec3(0.8, 0.3, 0.1),
+                                            4.0f));
+    MaterialManager::addMaterial("removeBlock", removeBlockMat);
 }
 
 void loadContent(){

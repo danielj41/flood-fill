@@ -127,15 +127,15 @@ void RegularPolygonsRender::renderObject(ObjectPtr object){
                 object->getMaterial()->getEmissionColor().z);
     glUniform1f(shader->getHandle("uShininess"), object->getMaterial()->getShininess());
 
-    if(object->getAlpha() < 0.99f) {
+    /*if(object->getAlpha() < 0.99f) {
         glDepthMask(GL_FALSE);
-    }
+    }*/
 
     glUniform1f(shader->getHandle("alpha"), object->getAlpha());
 
     glDrawElements(GL_TRIANGLES, (int) mesh->getIndices().size(), GL_UNSIGNED_INT, 0);
 
-    if(object->getAlpha() < 0.99f) {
+    /*if(object->getAlpha() < 0.99f) {
         glDepthMask(GL_TRUE);
-    }
+    }*/
 }
