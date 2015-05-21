@@ -53,7 +53,7 @@ void FluidBox::setup() {
   visible = false;
   deleting = false;
 
-  setCollisionID(64);
+  setCollisionID(256);
   setCanCollide(true);
 
   setBoundingBox(BoundingBox(glm::vec3(1.0f,1.0f,1.0f), glm::vec3(-1.0f,-1.0f,-1.0f)));
