@@ -70,8 +70,8 @@ bool CollisionObject::checkCollision(CollisionObjectPtr other) {
     glm::vec3 max = boundingBox.getMax();
     glm::vec3 oMax = other->boundingBox.getMax();
 
-    oMax.y += (position.x - oMin.x) / (oMax.x - oMin.x) * (other->shearX2 - other->shearX1) + other->shearX1;
-    oMax.y += (position.z - oMin.z) / (oMax.z - oMin.z) * (other->shearZ2 - other->shearZ1) + other->shearZ1;
+    oMax.y += fmin(fmax((position.x - oMin.x) / (oMax.x - oMin.x) * (other->shearX2 - other->shearX1) + other->shearX1, 0.0f), oMax.y - oMin.y);
+    oMax.y += fmin(fmax((position.z - oMin.z) / (oMax.z - oMin.z) * (other->shearZ2 - other->shearZ1) + other->shearZ1, 0.0f), oMax.y - oMin.y);
 
     return (max.x >= oMin.x && min.x <= oMax.x)
      && (max.y >= oMin.y && min.y <= oMax.y)
@@ -84,8 +84,8 @@ glm::vec3 CollisionObject::getCollisionNormal(CollisionObjectPtr other) {
     glm::vec3 max = boundingBox.getMax();
     glm::vec3 oMax = other->boundingBox.getMax();
 
-    oMax.y += (position.x - oMin.x) / (oMax.x - oMin.x) * (other->shearX2 - other->shearX1) + other->shearX1;
-    oMax.y += (position.z - oMin.z) / (oMax.z - oMin.z) * (other->shearZ2 - other->shearZ1) + other->shearZ1;
+    oMax.y += fmin(fmax((position.x - oMin.x) / (oMax.x - oMin.x) * (other->shearX2 - other->shearX1) + other->shearX1, 0.0f), oMax.y - oMin.y);
+    oMax.y += fmin(fmax((position.z - oMin.z) / (oMax.z - oMin.z) * (other->shearZ2 - other->shearZ1) + other->shearZ1, 0.0f), oMax.y - oMin.y);
 
     glm::vec3 best = glm::vec3(0,0,0);
     float bestDist = 10.0f; //max float? do something with this.
@@ -124,8 +124,8 @@ float CollisionObject::getCollisionDistance(CollisionObjectPtr other) {
     glm::vec3 max = boundingBox.getMax();
     glm::vec3 oMax = other->boundingBox.getMax();
 
-    oMax.y += (position.x - oMin.x) / (oMax.x - oMin.x) * (other->shearX2 - other->shearX1) + other->shearX1;
-    oMax.y += (position.z - oMin.z) / (oMax.z - oMin.z) * (other->shearZ2 - other->shearZ1) + other->shearZ1;
+    oMax.y += fmin(fmax((position.x - oMin.x) / (oMax.x - oMin.x) * (other->shearX2 - other->shearX1) + other->shearX1, 0.0f), oMax.y - oMin.y);
+    oMax.y += fmin(fmax((position.z - oMin.z) / (oMax.z - oMin.z) * (other->shearZ2 - other->shearZ1) + other->shearZ1, 0.0f), oMax.y - oMin.y);
 
     float bestDist = 10.0f; //max float? do something with this.
 

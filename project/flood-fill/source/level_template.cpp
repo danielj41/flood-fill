@@ -294,15 +294,16 @@ void LevelTemplate::setTypeCell(glm::vec3 pos, int type){
 }
 
 void LevelTemplate::shearRegion(int x1, int x2, int y1, int y2, int z1, int z2, int shearX, int shearZ) {
+    float x1f = x1 + 0.5f, x2f = x2 - 0.5f, z1f = z1 + 0.5f, z2f = z2 - 0.5f;
     for(int x = x1; x <= x2; x++) {
         for(int y = y1; y <= y2; y++) {
             for(int z = z1; z <= z2; z++) {
                 PTR_CAST(SolidCube, (*grid)(x, y, z))->getObject()->setShear(shearX, shearZ);
                 (*CollisionManager::getGrid())(x, y, z)->setShear(
-                    grid->getEdgeSizeY() * (abs(shearX) * 0.5f - shearX/2.0f + shearX * (float)(x - x1) / (x2 + 1 - x1)),
-                    grid->getEdgeSizeY() * (abs(shearX) * 0.5f - shearX/2.0f + shearX * (float)(x + 1 - x1) / (x2 + 1 - x1)),
-                    grid->getEdgeSizeY() * (abs(shearZ) * 0.5f - shearZ/2.0f + shearZ * (float)(z - z1) / (z2 + 1 - z1)),
-                    grid->getEdgeSizeY() * (abs(shearZ) * 0.5f - shearZ/2.0f + shearZ * (float)(z + 1 - z1) / (z2 + 1 - z1))
+                    grid->getEdgeSizeY() * (abs(shearX) * 0.5f - shearX/2.0f + shearX * (float)(x - x1f) / (x2f + 1 - x1f)),
+                    grid->getEdgeSizeY() * (abs(shearX) * 0.5f - shearX/2.0f + shearX * (float)(x + 1 - x1f) / (x2f + 1 - x1f)),
+                    grid->getEdgeSizeY() * (abs(shearZ) * 0.5f - shearZ/2.0f + shearZ * (float)(z - z1f) / (z2f + 1 - z1f)),
+                    grid->getEdgeSizeY() * (abs(shearZ) * 0.5f - shearZ/2.0f + shearZ * (float)(z + 1 - z1f) / (z2f + 1 - z1f))
                 );
             }
         }   

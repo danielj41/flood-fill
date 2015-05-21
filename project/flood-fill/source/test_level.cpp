@@ -97,7 +97,7 @@ void TestLevel::setup(){
     a1->setup();
     addGameObject("a1", a1);
 
-    shearRegion(1, 4, 9, 9, 23, 24, 1, 0);
+    shearRegion(1, 4, 10, 10, 22, 23, 1, 0);
 
     // Adding AVAILABLE_FILL_SPACE to fillTypes
     fillTypes.insert(LevelTemplate::AVAILABLE_FILL_SPACE);
