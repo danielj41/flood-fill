@@ -41,9 +41,5 @@ void main(){
 
     vec3 I = Ic*(Id + Is) + Ia + Ie;
 
-    I.r = floor(I.r * 12.0) / 12.0;
-    I.g = floor(I.g * 12.0) / 12.0;
-    I.b = floor(I.b * 12.0) / 12.0;
-
     gl_FragColor = vec4(I, alpha);
 }

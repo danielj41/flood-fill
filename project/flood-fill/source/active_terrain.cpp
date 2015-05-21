@@ -65,6 +65,7 @@ void ActiveTerrain::update(){
                 RenderElementPtr re = RenderEngine::getRenderElement("normalmap");
                 re->removeObject((*it)->getObject());
                 RenderEngine::getRenderGrid()->addObject((*it)->getObject(), re);
+                PTR_CAST(LevelTemplate, Director::getScene())->setTypeCell((*it)->getPosition(), LevelTemplate::SOLID_CUBE);
             }
         }
     }
@@ -110,6 +111,7 @@ void ActiveTerrain::update(){
                 RenderEngine::getRenderGrid()->removeObject((*it)->getObject());
                 //RenderEngine::getRenderElement("shadow")->removeObject((*it)->getObject());
                 CollisionManager::removeCollisionObjectFromGrid(*it);
+                PTR_CAST(LevelTemplate, Director::getScene())->setTypeCell((*it)->getPosition(), LevelTemplate::AVAILABLE_FILL_SPACE);
             }
             
             fillTypes->erase(LevelTemplate::TOGGLE_FILL);

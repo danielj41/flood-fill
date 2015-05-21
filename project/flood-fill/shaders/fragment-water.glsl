@@ -59,9 +59,5 @@ void main(){
     float blockHeight = (1.0 - amountLin) * block.r + amountLin * blockCenter.r;
     float diff = 2.75 * uModel[1][1] * (max(((1.0 - amount) * info.r * color.a + amount * 1.0/uModel[1][1]), blockHeight) - blockHeight - 0.05/uModel[1][1]);
 
-    I.r = floor(I.r * 12.0) / 12.0;
-    I.g = floor(I.g * 12.0) / 12.0;
-    I.b = floor(I.b * 12.0) / 12.0;
-
     gl_FragColor = vec4(I, color.a * clamp(pow(max(diff, 0.0), 0.35), 0.0, 1.0));
 }
