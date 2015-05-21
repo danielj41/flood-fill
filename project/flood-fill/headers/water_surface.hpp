@@ -51,8 +51,8 @@ private:
   float timer;
   bool hitDrain;
 
-  bool checkAdjacent(glm::vec3 newPos);
-  void createFluidBox(glm::vec3 newPos);
+  float checkAdjacent(glm::vec3 newPos, float lowestY);
+  //void createFluidBox(glm::vec3 newPos);
 };
 
 #endif
