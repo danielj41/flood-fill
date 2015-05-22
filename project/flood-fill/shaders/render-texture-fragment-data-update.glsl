@@ -33,7 +33,7 @@ void main(){
 
     float vel = info.g * 2.0 - 1.0;
 
-    if(info.r > 1.0/uSize.y) {
+    if(info.r > block.g) {
         vel -= uDTime.x/2.5;
     }
 

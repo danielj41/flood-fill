@@ -145,7 +145,7 @@ void RenderTexture::renderBlock(Uniform3DGridPtr<int> grid,
     glVertexAttribPointer(shader->getHandle("aPosition"), 3,
                           GL_FLOAT, GL_FALSE, 0, 0);
 
-    float extendAmount = extended ? 1.05f : 1.0f;
+    float extendAmount = extended ? 1.05f : 2.0f; // 2.0 to cover surrounding blocks, 1.05 to interpolate a little bit
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->getIndexBuffer());
 

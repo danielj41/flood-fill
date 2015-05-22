@@ -47,7 +47,7 @@ void WaterSurface::setup() {
   grid = Uniform3DGridPtr<int>(new Uniform3DGrid<int>(*typeGrid));
   targetGrid = Uniform3DGridPtr<int>(new Uniform3DGrid<int>(*typeGrid));
   grid->initialize(0);
-  targetGrid->initialize(0);
+  targetGrid->initialize(1);
 
   hitDrain = false;
 
@@ -73,7 +73,8 @@ void WaterSurface::setup() {
   waterBlockTexture->clear();
 
   waterBlockTexture->renderBlock(grid, minX, maxX, minY, maxY, minZ, maxZ, true, glm::vec3(1.0f, 0.0f, 0.0f)); 
-  //waterBlockTexture->renderBlock(targetGrid, minX, maxX, minY, maxY, minZ, maxZ, true, glm::vec3(0.0f, 1.0f, 0.0f)); 
+  waterBlockTexture->swapTextures();
+  waterBlockTexture->renderBlock(targetGrid, minX, maxX, minY, maxY, minZ, maxZ, false, glm::vec3(0.0f, 1.0f, 0.0f)); 
   waterSurface->applyWaterBlock(waterBlockTexture->getTexture());
 
   size = glm::vec3((maxX - minX + 2.0f) / 2.0f, (maxY - minY + 2.0f) / 2.0f, (maxZ - minZ + 2.0f) / 2.0f);
@@ -198,7 +199,7 @@ float WaterSurface::checkAdjacent(glm::vec3 newPos, float lowestY) {
 
           if(newPos.y < lowestY + grid->getEdgeSizeY() * 0.5f &&
              typeGrid->getValue(newPos.x, newPos.y, newPos.z) != LevelTemplate::FLUID_DRAIN) {
-              targetGrid->setValue(newPos.x, newPos.y, newPos.z, 1);
+              targetGrid->setValue(newPos.x, newPos.y, newPos.z, 0);
               if(colorMask & BLUE)
                   typeGrid->setValue(newPos.x, newPos.y, newPos.z, LevelTemplate::FLUID_BLUE);
               else if(colorMask & GREEN)
