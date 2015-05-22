@@ -228,6 +228,15 @@ void loadTextures(){
     LoadManager::loadImage("gun_texture.png");
     LoadManager::loadTexture("GunTexture", LoadManager::getImage("gun_texture.png"));
 
+    LoadManager::loadImage("regular_normal.png");
+    LoadManager::loadTexture("RegularNormalMap", LoadManager::getImage("regular_normal.png"));
+
+    LoadManager::loadImage("water_normal_map.png");
+    LoadManager::loadTexture("WaterNormalMap", LoadManager::getImage("water_normal_map.png"));
+
+    LoadManager::loadImage("pure_white.png");
+    LoadManager::loadTexture("PureWhiteTexture", LoadManager::getImage("pure_white.png"));
+
     WaterSurface::loadShaders();
     LoadManager::loadRenderTexture("waterData");
     LoadManager::loadRenderTexture("waterColor");
@@ -275,9 +284,9 @@ void createMaterials(){
                             4.0f));
     MaterialManager::addMaterial("Red", material6);
 
-    MaterialPtr removeBlockMat(new Material(glm::vec3(0.0, 0.0, 0.0),
-                                            glm::vec3(0.9, 0.3, 0.1),
-                                            glm::vec3(0.8, 0.3, 0.1),
+    MaterialPtr removeBlockMat(new Material(glm::vec3(0.5, 0.5, 0.5),
+                                            glm::vec3(0.0, 0.0, 0.0),
+                                            glm::vec3(0.1, 0.1, 0.1),
                                             4.0f));
     MaterialManager::addMaterial("removeBlock", removeBlockMat);
 }
