@@ -240,6 +240,9 @@ void loadTextures(){
     LoadManager::loadImage("pure_white.png");
     LoadManager::loadTexture("PureWhiteTexture", LoadManager::getImage("pure_white.png"));
 
+    LoadManager::loadImage("drain_voxel.png");
+    LoadManager::loadTexture("DrainTexture", LoadManager::getImage("drain_voxel.png"));
+
     WaterSurface::loadShaders();
     LoadManager::loadRenderTexture("waterData");
     LoadManager::loadRenderTexture("waterColor");

@@ -98,8 +98,19 @@ void TestLevel::setup(){
     a1->setup();
     addGameObject("a1", a1);
 
+    PTR_CAST(SolidCube, (*grid)(0, 10, 22))->getObject()->applyTexture(LoadManager::getTexture("DrainTexture"));
+    PTR_CAST(SolidCube, (*grid)(0, 10, 23))->getObject()->applyTexture(LoadManager::getTexture("DrainTexture"));
+    PTR_CAST(SolidCube, (*grid)(0, 10, 22))->getObject()->applyNormalMap(LoadManager::getTexture("RegularNormalMap"));
+    PTR_CAST(SolidCube, (*grid)(0, 10, 23))->getObject()->applyNormalMap(LoadManager::getTexture("RegularNormalMap"));
     shearRegion(1, 4, 11, 11, 22, 23, 1, 0, 0.0f);
     shearRegion(5, 8, 10, 10, 22, 23, 1, 0, 0.5f);
+
+    PTR_CAST(SolidCube, (*grid)(0, 10, 4))->getObject()->applyTexture(LoadManager::getTexture("DrainTexture"));
+    PTR_CAST(SolidCube, (*grid)(0, 10, 5))->getObject()->applyTexture(LoadManager::getTexture("DrainTexture"));
+    PTR_CAST(SolidCube, (*grid)(0, 10, 4))->getObject()->applyNormalMap(LoadManager::getTexture("RegularNormalMap"));
+    PTR_CAST(SolidCube, (*grid)(0, 10, 5))->getObject()->applyNormalMap(LoadManager::getTexture("RegularNormalMap"));
+    shearRegion(1, 4, 11, 11, 4, 5, 1, 0, 0.0f);
+    shearRegion(5, 8, 10, 10, 4, 5, 1, 0, 0.5f);
 }
 
 void TestLevel::update(){

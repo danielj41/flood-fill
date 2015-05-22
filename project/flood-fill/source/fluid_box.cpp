@@ -55,6 +55,7 @@ void FluidBox::setup() {
   timer = 0.0f;
   visible = false;
   deleting = false;
+  removeLater = false;
 
   setCollisionID(256);
   setCanCollide(true);
@@ -73,6 +74,9 @@ void FluidBox::update(){
             visible = true;
             RenderEngine::getRenderGrid()->addObject(fluidBox, RenderEngine::getRenderElement("normalmap"));
             getBoundingBox()->setPosition(position);
+            if(removeLater) {
+              remove();
+            }
         }
     }
 
@@ -92,14 +96,20 @@ void FluidBox::remove(){
     RenderEngine::getRenderElement("normalmap")->addObject(fluidBox);
 }
 
+void FluidBox::removeAtAdd() {
+  removeLater = true;
+}
+
 void FluidBox::remotionAnimation(){
     float dTime = ((float) TimeManager::getDeltaTime());
 
     timer += dTime;
+    float timerP = timer * 2.0f;
+    timerP *= timerP;
     fluidBox->loadIdentity();
-    fluidBox->scale(glm::vec3(1.0 - timer, 1.0 - timer, 1.0 - timer));
-    fluidBox->translate(position - glm::vec3(0, timer * 4.0f, 0));
-    getBoundingBox()->setPosition(position - glm::vec3(0, timer * 4.0f, 0));
+    //fluidBox->scale(glm::vec3(1.0 - timerP, 1.0 - timerP, 1.0 - timerP));
+    fluidBox->translate(position - glm::vec3(0, timerP * 2.0f, 0));
+    getBoundingBox()->setPosition(position - glm::vec3(0, timerP * 2.0f, 0));
     if(timer > 0.5f) {
         // Moving to the original position, to remove it from the uniform grid
         fluidBox->loadIdentity();
@@ -107,7 +117,11 @@ void FluidBox::remotionAnimation(){
 
         // Removing it from the grid
         Director::getScene()->removeGameObject(this);
-        PTR_CAST(LevelTemplate, Director::getScene())->setTypeCell(position, LevelTemplate::AVAILABLE_FILL_SPACE);
+
+        if(PTR_CAST(LevelTemplate, Director::getScene())->getTypeGrid()->getValue(position.x, position.y, position.z) != LevelTemplate::FLUID_DRAIN) {
+          PTR_CAST(LevelTemplate, Director::getScene())->setTypeCell(position, LevelTemplate::AVAILABLE_FILL_SPACE);
+        }
+        
         RenderEngine::getRenderElement("normalmap")->removeObject(fluidBox);
         CollisionManager::removeCollisionObjectFromGrid(this);
     }

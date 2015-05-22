@@ -26,6 +26,7 @@ public:
 
   //Remotion related methods
   void remove();
+  void removeAtAdd();
   void highlightForRemotion();
   void deselect();
 
@@ -41,6 +42,7 @@ private:
 
   //Remotion related private fields and methods
   bool deleting;
+  bool removeLater;
 
   void remotionAnimation();
 };

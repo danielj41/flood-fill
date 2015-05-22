@@ -187,17 +187,14 @@ float WaterSurface::floodFillTarget(glm::vec3 newPos, float lowestY) {
     lowestY = fmin(lowestY, lowestGrid->getValue(newPos.x, newPos.y, newPos.z));
 
     if(newPos.y < lowestY + lowestGrid->getEdgeSizeY() * 0.5f) {
-      
-      if(typeGrid->getValue(newPos.x, newPos.y, newPos.z) == LevelTemplate::FLUID_DRAIN) {
-        targetGrid->setValue(newPos.x, newPos.y, newPos.z, 0);
-      } else {
-        targetGrid->setValue(newPos.x, newPos.y, newPos.z, 0);
+      targetGrid->setValue(newPos.x, newPos.y, newPos.z, 0);
+      FluidBoxPtr fluidBox(new FluidBox(newPos, colorMask));
+      fluidBox->setup();
+      level->setGridValue(fluidBox->getPosition(), fluidBox);
+      Director::getScene()->addGameObject(fluidBox);
+      CollisionManager::addCollisionObjectToGrid(fluidBox);
 
-        FluidBoxPtr fluidBox(new FluidBox(newPos, colorMask));
-        fluidBox->setup();
-        level->setGridValue(fluidBox->getPosition(), fluidBox);
-        Director::getScene()->addGameObject(fluidBox);
-        CollisionManager::addCollisionObjectToGrid(fluidBox);
+      if(typeGrid->getValue(newPos.x, newPos.y, newPos.z) != LevelTemplate::FLUID_DRAIN) {
         if(colorMask & BLUE)
             typeGrid->setValue(newPos.x, newPos.y, newPos.z, LevelTemplate::FLUID_BLUE);
         else if(colorMask & GREEN)
@@ -206,6 +203,8 @@ float WaterSurface::floodFillTarget(glm::vec3 newPos, float lowestY) {
             typeGrid->setValue(newPos.x, newPos.y, newPos.z, LevelTemplate::FLUID_RED);
         else
             ASSERT(false, "There is no fluid type avaible");
+      } else {
+        fluidBox->removeAtAdd();
       }
     }
     

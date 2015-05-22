@@ -30,6 +30,7 @@ mat3 tangentToObjectSpaceMatrix(vec3 tangent, vec3 bitangent, vec3 normal){
 }
 
 void main(){
+    aTangent;
     float amount = uDTime.y / 1.5;
     amount = amount * amount;
 
