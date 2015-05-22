@@ -8,6 +8,8 @@
 
 #include "load_manager.hpp"
 #include "director.hpp"
+#include "shadow_occluder_render.hpp"
+#include "render_engine.hpp"
 
 const std::string WaterRender::VERTEX_SHADER_FILE = "vertex-water.glsl";
 const std::string WaterRender::FRAGMENT_SHADER_FILE = "fragment-water.glsl";
@@ -19,9 +21,14 @@ void WaterRender::loadShader(){
     shader = LoadManager::getShader(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);
 
     shader->loadHandle("aPosition", 'a');
+    shader->loadHandle("aTexCoord", 'a');
+    shader->loadHandle("aTangent", 'a');
+
     shader->loadHandle("uModel", 'u');
     shader->loadHandle("uView", 'u');
     shader->loadHandle("uProjection", 'u');
+    shader->loadHandle("uShadowMatrix", 'u');
+
     shader->loadHandle("uDiffuseColor", 'u');
     shader->loadHandle("uSpecularColor", 'u');
     shader->loadHandle("uAmbientColor", 'u');
@@ -30,10 +37,17 @@ void WaterRender::loadShader(){
     shader->loadHandle("uEyePosition", 'u');
     shader->loadHandle("uLightDirection", 'u');
     shader->loadHandle("uLightColor", 'u');
+
     shader->loadHandle("uWaterData", 'u');
     shader->loadHandle("uWaterColor", 'u');
     shader->loadHandle("uWaterBlock", 'u');
     shader->loadHandle("uDTime", 'u');
+
+    shader->loadHandle("uTextureID", 'u');
+    shader->loadHandle("uNormalTexID", 'u');
+    shader->loadHandle("uGridScale", 'u');
+    shader->loadHandle("uShadowTexID", 'u');
+    shader->loadHandle("uScreenSize", 'u');
 }
 
 void WaterRender::setupEnviroment(){
@@ -43,6 +57,8 @@ void WaterRender::setupEnviroment(){
 
 void WaterRender::tearDownEnviroment(){
     glDisableVertexAttribArray(shader->getHandle("aPosition"));
+    glDisableVertexAttribArray(shader->getHandle("aTangent"));
+    glDisableVertexAttribArray(shader->getHandle("aTexCoord"));
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     glUseProgram(0);
@@ -83,6 +99,14 @@ void WaterRender::setupShader(){
                     light->getDirection().x,
                     light->getDirection().y,
                     light->getDirection().z);
+
+        glUniformMatrix4fv(shader->getHandle("uShadowMatrix"), 1, GL_FALSE,
+          glm::value_ptr(light->getProjectionMatrix()*light->getViewMatrix()));
+
+        glActiveTexture(GL_TEXTURE3);
+        glBindTexture(GL_TEXTURE_2D,
+            PTR_CAST(ShadowOccluderRender, RenderEngine::getRenderElement("shadow"))->getFBO()->getDepthTexture()->getTexture());
+        glUniform1i(shader->getHandle("uShadowTexID"), 3);
     }
 }
 
@@ -90,6 +114,16 @@ void WaterRender::setupMesh(Mesh* mesh){
     glEnableVertexAttribArray(shader->getHandle("aPosition"));
     glBindBuffer(GL_ARRAY_BUFFER, mesh->getVertexBuffer());
     glVertexAttribPointer(shader->getHandle("aPosition"), 3,
+                          GL_FLOAT, GL_FALSE, 0, 0);
+
+    glEnableVertexAttribArray(shader->getHandle("aTexCoord"));
+    glBindBuffer(GL_ARRAY_BUFFER, mesh->getTextureCoordinateBuffer());
+    glVertexAttribPointer(shader->getHandle("aTexCoord"), 2,
+                          GL_FLOAT, GL_FALSE, 0, 0);
+
+    glEnableVertexAttribArray(shader->getHandle("aTangent"));
+    glBindBuffer(GL_ARRAY_BUFFER, mesh->getTangentBuffer());
+    glVertexAttribPointer(shader->getHandle("aTangent"), 4,
                           GL_FLOAT, GL_FALSE, 0, 0);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->getIndexBuffer());
@@ -130,6 +164,16 @@ void WaterRender::renderObject(ObjectPtr object){
     glActiveTexture(GL_TEXTURE2);
     glBindTexture(GL_TEXTURE_2D, object->getWaterBlock());
     glUniform1i(shader->getHandle("uWaterBlock"), 2);
+
+    glUniform2f(shader->getHandle("uGridScale"), object->getGridScale().x, object->getGridScale().y);
+
+    glActiveTexture(GL_TEXTURE4);
+    glBindTexture(GL_TEXTURE_2D, object->getTexture()->getTexture());
+    glUniform1i(shader->getHandle("uTextureID"), 4);
+
+    glActiveTexture(GL_TEXTURE5);
+    glBindTexture(GL_TEXTURE_2D, object->getNormalMap()->getTexture());
+    glUniform1i(shader->getHandle("uNormalTexID"), 5);
 
     glUniform2f(shader->getHandle("uDTime"), object->getDTime().x, object->getDTime().y);
 

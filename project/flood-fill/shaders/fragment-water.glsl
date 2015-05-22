@@ -1,5 +1,4 @@
 
-
 uniform vec3 uDiffuseColor;
 uniform vec3 uSpecularColor;
 uniform vec3 uAmbientColor;
@@ -8,7 +7,6 @@ uniform float uShininess;
 
 uniform vec3 uEyePosition;
 
-//uniform vec3 uLightPosition;
 uniform vec3 uLightDirection;
 uniform vec3 uLightColor;
 
@@ -18,12 +16,35 @@ uniform sampler2D uWaterColor;
 uniform sampler2D uWaterBlock;
 uniform vec2 uDTime;
 
+uniform sampler2D uTextureID;
+uniform sampler2D uNormalTexID;
+uniform sampler2D uShadowTexID;
+
+uniform vec2 uGridScale;
+uniform vec2 uScreenSize;
+
 varying vec3 vVertex;
 varying vec3 vPosition;
 varying vec3 vNormal;
 
+varying vec2 vTexCoord;
+varying vec3 vView;
+varying mat3 vTBN;
+varying vec3 vShadowCoord;
+
 
 void main(){
+    uEyePosition;
+    uTextureID;
+    uNormalTexID;
+    uShadowTexID;
+    uGridScale;
+    uScreenSize;
+    vTexCoord;
+    vView;
+    vTBN;
+    vShadowCoord;
+
     vec2 coord = vPosition.xz*0.5 + vec2(0.5,0.5);
     vec4 info = texture2D(uWaterData, coord);
     vec4 color = texture2D(uWaterColor, coord);

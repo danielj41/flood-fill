@@ -70,7 +70,7 @@ void NormalMapRender::setupShader(){
 
     CameraPtr camera = Director::getScene()->getCamera();
 
-    glUniform2f(shader->getHandle("uScreenSize"), Global::ScreenWidth, Global::ScreenHeight);
+    glUniform2f(shader->getHandle("uScreenSize"), Global::FbWidth, Global::FbHeight);
 
     //Common information to all Objects
     glUniformMatrix4fv(shader->getHandle("uView"), 1, GL_FALSE,

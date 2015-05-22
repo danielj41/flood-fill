@@ -104,6 +104,10 @@ void WaterSurface::setup() {
   position = glm::vec3((maxX + minX) / 2.0f, (maxY + minY) / 2.0f, (maxZ + minZ) / 2.0f);
   waterSurface->translate(position);
   
+  waterSurface->setGridScale(glm::vec2(size.x, size.z));
+  waterSurface->applyTexture(LoadManager::getTexture("PureWhiteTexture"));
+  waterSurface->enableTexture();
+  waterSurface->applyNormalMap(LoadManager::getTexture("RegularNormalMap"));
   RenderEngine::getRenderElement("water")->addObject(waterSurface);
 }
 

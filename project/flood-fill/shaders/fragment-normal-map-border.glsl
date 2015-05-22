@@ -104,5 +104,11 @@ void main(){
 
     vec3 I = pcfShadow()*(Id + Is) + Ia;
 
-    gl_FragColor = vec4(vec3(I), 1)*texel;
+    if(vTexCoord.x < 0.05 / uGridScale.x || vTexCoord.x > 1.0 - 0.05 / uGridScale.x ||
+       vTexCoord.y < 0.05 / uGridScale.y || vTexCoord.y > 1.0 - 0.05 / uGridScale.y) {
+       gl_FragColor = vec4(vec3(I) * 0.5, 1)*texel;
+    } else {
+       gl_FragColor = vec4(vec3(I), 1)*texel;
+    }
+    
 }

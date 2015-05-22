@@ -169,7 +169,10 @@ void loadMeshes(){
     mesh->generateVertexBuffer();
     mesh->generateIndexBuffer();
     mesh->generateNormalBuffer();
+    mesh->generateTextureCoordinateBuffer();
     mesh->calculateLimits();
+    mesh->calculateTangents();
+    mesh->generateTangentBuffer();
 
     LoadManager::loadMesh("stream.obj");
     mesh = LoadManager::getMesh("stream.obj");

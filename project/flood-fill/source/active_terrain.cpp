@@ -62,7 +62,7 @@ void ActiveTerrain::update(){
         if(timer > 1.0f) {
             doneAnimating = true;
             for(std::list<SolidCubePtr>:: iterator it = solidCubes.begin(); it != solidCubes.end(); it++) {
-                RenderElementPtr re = RenderEngine::getRenderElement("normalmap");
+                RenderElementPtr re = RenderEngine::getRenderElement("normalmap-border");
                 re->removeObject((*it)->getObject());
                 RenderEngine::getRenderGrid()->addObject((*it)->getObject(), re);
                 PTR_CAST(LevelTemplate, Director::getScene())->setTypeCell((*it)->getPosition(), LevelTemplate::SOLID_CUBE);
@@ -73,7 +73,7 @@ void ActiveTerrain::update(){
         if (!active){
             
             active = true;
-            RenderElementPtr re = RenderEngine::getRenderElement("normalmap");
+            RenderElementPtr re = RenderEngine::getRenderElement("normalmap-border");
 
             timer = 0.0f;
             doneAnimating = false;

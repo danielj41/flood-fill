@@ -28,6 +28,7 @@
 #include "active_terrain.hpp"
 #include "render_grid.hpp"
 #include "shadow_occluder_render.hpp"
+#include "normal_map_border_render.hpp"
 #include "time_manager.hpp"
 
 TestLevel::TestLevel() : LevelTemplate("testLevel3.txt"), timer(0.0f) {}
@@ -127,6 +128,7 @@ void TestLevel::createRenders(){
     RenderEngine::addRenderElement("regular", RenderElementPtr(new RegularPolygonsRender()), 1);
     RenderEngine::addRenderElement("debug", RenderElementPtr(new DebugRender()), -5);
     RenderEngine::addRenderElement("normalmap", RenderElementPtr(new NormalMapRender()), 1);
+    RenderEngine::addRenderElement("normalmap-border", RenderElementPtr(new NormalMapBorderRender()), 1);
     RenderEngine::addRenderElement("textured", RenderElementPtr(new TexturedPolygonsRender()), 1);
     RenderEngine::addRenderElement("water", RenderElementPtr(new WaterRender()), 4);
     RenderEngine::addRenderElement("water-particle", RenderElementPtr(new WaterParticleRender()), 4);

@@ -1,8 +1,19 @@
 attribute vec3 aPosition;
+attribute vec2 aTexCoord;
+attribute vec4 aTangent;
 
 uniform mat4 uModel;
 uniform mat4 uView;
 uniform mat4 uProjection;
+uniform mat4 uNormalMatrix;
+uniform mat4 uShadowMatrix;
+
+uniform vec3 uEyePosition;
+
+varying vec2 vTexCoord;
+varying vec3 vShadowCoord;
+varying vec3 vView;
+varying mat3 vTBN;
 
 uniform sampler2D uWaterData;
 uniform sampler2D uWaterColor;
@@ -14,6 +25,17 @@ varying vec3 vPosition;
 varying vec3 vNormal;
 
 void main(){
+    aTexCoord;
+    aTangent;
+    uNormalMatrix;
+    uShadowMatrix;
+    uEyePosition;
+    vTexCoord = vec2(0,0);
+    vShadowCoord = vec3(0,0,0);
+    vView = vec3(0,0,0);
+    vTBN = mat3(1.0);
+
+
     float amount = uDTime.y / 1.5;
     amount = amount * amount;
 
