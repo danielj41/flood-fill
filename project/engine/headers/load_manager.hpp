@@ -23,6 +23,7 @@ public:
     static void loadTexture(std::string name, ImagePtr image);
     static void loadRenderTexture(std::string name);
     static void loadSound(std::string name);
+    static void clearSounds();
 
     static ShaderPtr getShader(std::string vertex, std::string fragment);
     static MeshPtr getMesh(std::string name);

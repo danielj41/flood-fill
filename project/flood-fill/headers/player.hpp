@@ -31,9 +31,11 @@ private:
     bool jumping;
     float velocity;
     float gravity;
+    float jumpMultiplier;
 
     float strafeVelocity;
     float forwardVelocity;
+    float moveMultiplier;
 
     ObjectPtr sky;
     ObjectPtr gun;

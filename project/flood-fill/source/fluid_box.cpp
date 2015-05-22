@@ -44,8 +44,11 @@ void FluidBox::setup() {
                         LoadManager::getMesh("cube.obj"),
                         MaterialManager::getMaterial(color)));
 
-  //fluidBox->applyTexture(LoadManager::getTexture("VoxelTexture"));
-  //fluidBox->enableTexture();
+
+  fluidBox->applyTexture(LoadManager::getTexture("PureWhiteTexture"));
+  fluidBox->enableTexture();
+
+  fluidBox->applyNormalMap(LoadManager::getTexture("RegularNormalMap"));
 
   fluidBox->loadIdentity();
   fluidBox->translate(position);
@@ -53,7 +56,7 @@ void FluidBox::setup() {
   visible = false;
   deleting = false;
 
-  setCollisionID(64);
+  setCollisionID(256);
   setCanCollide(true);
 
   setBoundingBox(BoundingBox(glm::vec3(1.0f,1.0f,1.0f), glm::vec3(-1.0f,-1.0f,-1.0f)));
@@ -68,7 +71,7 @@ void FluidBox::update(){
         getBoundingBox()->setPosition(position - (1.0f - timer/1.55f) * glm::vec3(0, 2.0f, 0));
         if(timer > 1.55f) {
             visible = true;
-            RenderEngine::getRenderGrid()->addObject(fluidBox, RenderEngine::getRenderElement("regular"));
+            RenderEngine::getRenderGrid()->addObject(fluidBox, RenderEngine::getRenderElement("normalmap"));
             getBoundingBox()->setPosition(position);
         }
     }
@@ -86,7 +89,7 @@ void FluidBox::remove(){
     deleting = true;
     timer = 0.0f;
     RenderEngine::getRenderGrid()->removeObject(fluidBox);
-    RenderEngine::getRenderElement("regular")->addObject(fluidBox);
+    RenderEngine::getRenderElement("normalmap")->addObject(fluidBox);
 }
 
 void FluidBox::remotionAnimation(){
@@ -105,7 +108,7 @@ void FluidBox::remotionAnimation(){
         // Removing it from the grid
         Director::getScene()->removeGameObject(this);
         PTR_CAST(LevelTemplate, Director::getScene())->setTypeCell(position, LevelTemplate::AVAILABLE_FILL_SPACE);
-        RenderEngine::getRenderElement("regular")->removeObject(fluidBox);
+        RenderEngine::getRenderElement("normalmap")->removeObject(fluidBox);
         CollisionManager::removeCollisionObjectFromGrid(this);
     }
 }
@@ -118,7 +121,25 @@ int FluidBox::getColorMask(){
 }
 
 void FluidBox::highlightForRemotion(){
+    if(deleting) return;
+
+    fluidBox->applyNormalMap(LoadManager::getTexture("WaterNormalMap"));
+
+    fluidBox->setMaterial(MaterialManager::getMaterial("removeBlock"));
+    fluidBox->setAlpha(0.3);
+
+    RenderEngine::getRenderGrid()->removeObject(fluidBox);
+    RenderEngine::getRenderGrid()->addObject(fluidBox, RenderEngine::getRenderElement("normalmap"));
 }
 
 void FluidBox::deselect(){
+    if(deleting) return;
+
+    fluidBox->applyNormalMap(LoadManager::getTexture("RegularNormalMap"));
+
+    fluidBox->setMaterial(MaterialManager::getMaterial(color));
+    fluidBox->setAlpha(1);
+
+    RenderEngine::getRenderGrid()->removeObject(fluidBox);
+    RenderEngine::getRenderGrid()->addObject(fluidBox, RenderEngine::getRenderElement("normalmap"));
 }

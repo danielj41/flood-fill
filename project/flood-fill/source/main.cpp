@@ -95,6 +95,8 @@ int main()
 
     // Close OpenGL window and terminate GLFW
     glfwTerminate();
+
+    LoadManager::clearSounds();
     return 0;
 }
 
@@ -223,8 +225,17 @@ void loadTextures(){
     LoadManager::loadImage("normal-map-2.png");
     LoadManager::loadTexture("PaddedNormalMap", LoadManager::getImage("normal-map-2.png"));
 
-    LoadManager::loadImage("gun_texture.png");
-    LoadManager::loadTexture("GunTexture", LoadManager::getImage("gun_texture.png"));
+    LoadManager::loadImage("colorkey_gun_texture.png");
+    LoadManager::loadTexture("GunTexture", LoadManager::getImage("colorkey_gun_texture.png"));
+
+    LoadManager::loadImage("regular_normal.png");
+    LoadManager::loadTexture("RegularNormalMap", LoadManager::getImage("regular_normal.png"));
+
+    LoadManager::loadImage("water_normal_map.png");
+    LoadManager::loadTexture("WaterNormalMap", LoadManager::getImage("water_normal_map.png"));
+
+    LoadManager::loadImage("pure_white.png");
+    LoadManager::loadTexture("PureWhiteTexture", LoadManager::getImage("pure_white.png"));
 
     WaterSurface::loadShaders();
     LoadManager::loadRenderTexture("waterData");
@@ -272,6 +283,12 @@ void createMaterials(){
                             glm::vec3(0.8, 0.3, 0.1),
                             4.0f));
     MaterialManager::addMaterial("Red", material6);
+
+    MaterialPtr removeBlockMat(new Material(glm::vec3(0.5, 0.5, 0.5),
+                                            glm::vec3(0.0, 0.0, 0.0),
+                                            glm::vec3(0.1, 0.1, 0.1),
+                                            4.0f));
+    MaterialManager::addMaterial("removeBlock", removeBlockMat);
 }
 
 void loadContent(){

@@ -33,7 +33,8 @@
 
 Player::Player(CameraPtr _camera)
   : GameObject(), CollisionObject(), camera(_camera),
-    jumping(true), velocity(0), gravity(-2), strafeVelocity(0), forwardVelocity(0) {
+    jumping(true), velocity(0), gravity(-2), strafeVelocity(0), forwardVelocity(0),
+    jumpMultiplier(1), moveMultiplier(1) {
     removeFluidShootRange = 3;
     removeFluidNumberBlocks = 3;
 }
@@ -44,7 +45,7 @@ void Player::setup() {
 	lastPosition = camera->getEye();
 	
     setCollisionID(2);
-    setCollideWithID(1 | 16 | 32 | 64 | 128);
+    setCollideWithID(1 | 16 | 32 | 64 | 128 | 256);
 
 	setCanCollide(true);
 	
@@ -74,8 +75,8 @@ void Player::setup() {
         LoadManager::getMesh("gun.obj"),
         MaterialManager::getMaterial("FlatBlue")));
     gun->loadIdentity();
-    //gun->scale(glm::vec3(0.07f, 0.07f, 0.3f));
-    gun->rotate(15.0f, glm::vec3(1.0f, 1.0f, 0.0f));
+    gun->scale(glm::vec3(0.5f));
+    gun->rotate(180.0f, glm::vec3(0.0f, 1.0f, 0.0f));
     gun->translate(glm::vec3(0.27f, -0.26f, -0.4f));
     gun->applyTexture(LoadManager::getTexture("GunTexture"));
     gun->enableTexture();
@@ -99,37 +100,37 @@ void Player::update() {
     lastPosition = camera->getEye();
 
     if(isKeyPressed(GLFW_KEY_SPACE) && !jumping) {
-        velocity = .6;
+        velocity = .6 * jumpMultiplier;
         camera->jump(velocity * 25.0 * dt);
     }
     
     jumping = true;
   
     if(isKeyPressed(GLFW_KEY_W)){
-        forwardVelocity = fmin(forwardVelocity + 1.5 * dt, 0.25f - 0.07f * fabs(strafeVelocity));
+        forwardVelocity = fmin(forwardVelocity + 1.5 * dt , 0.25f - 0.07f * fabs(strafeVelocity));
     } else if(forwardVelocity > 0.0f) {
-        forwardVelocity = fmax(forwardVelocity - 1.5 * dt, 0.0f);
+        forwardVelocity = fmax(forwardVelocity - 1.5 * dt , 0.0f);
     }
     if(isKeyPressed(GLFW_KEY_S)){
-        forwardVelocity = fmax(forwardVelocity - 1.5 * dt, -0.25f + 0.07f * fabs(strafeVelocity));
+        forwardVelocity = fmax(forwardVelocity - 1.5 * dt , -0.25f + 0.07f * fabs(strafeVelocity));
     } else if(forwardVelocity < 0.0f) {
-        forwardVelocity = fmin(forwardVelocity + 1.5 * dt, 0.0f);
+        forwardVelocity = fmin(forwardVelocity + 1.5 * dt , 0.0f);
     }
     if(isKeyPressed(GLFW_KEY_D)){
-        strafeVelocity = fmin(strafeVelocity + 1.5 * dt, 0.25f - 0.07f * fabs(forwardVelocity));
+        strafeVelocity = fmin(strafeVelocity + 1.5 * dt , 0.25f - 0.07f * fabs(forwardVelocity));
     } else if(strafeVelocity > 0.0f) {
-        strafeVelocity = fmax(strafeVelocity - 1.5 * dt, 0.0f);
+        strafeVelocity = fmax(strafeVelocity - 1.5 * dt , 0.0f);
     }
     else if(isKeyPressed(GLFW_KEY_A)){
-        strafeVelocity = fmax(strafeVelocity - 1.5 * dt, -0.25f + 0.07f * fabs(forwardVelocity));
+        strafeVelocity = fmax(strafeVelocity - 1.5 * dt , -0.25f + 0.07f * fabs(forwardVelocity));
     } else if(strafeVelocity < 0.0f) {
-        strafeVelocity = fmax(strafeVelocity - 1.5 * dt, 0.0f);
+        strafeVelocity = fmax(strafeVelocity - 1.5 * dt , 0.0f);
     }
 
-    camera->zoom(Camera::FORWARD_DIRECTION, forwardVelocity * dt * 15.0f);
-    camera->strafe(Camera::RIGHT_DIRECTION, strafeVelocity * dt * 15.0f);
+    camera->zoom(Camera::FORWARD_DIRECTION, moveMultiplier * forwardVelocity * dt * 15.0f);
+    camera->strafe(Camera::RIGHT_DIRECTION, moveMultiplier * strafeVelocity * dt * 15.0f);
 
-    if(isKeyPressed(GLFW_KEY_P)){
+    if(isKeyPressed(GLFW_KEY_Q)){
         if ( TimeManager::getTimeStamp() - hand->getToggleTime() > .2){
             hand->changeColorMask();
         }
@@ -198,12 +199,18 @@ void Player::collided(CollisionObjectPtr collidedWith) {
     setPosition(camera->getEye());
     getBoundingBox()->setPosition(camera->getEye() - glm::vec3(0,1.0f,0));
 
+    //Reseting multipliers from colored blocks
+    moveMultiplier = 1;
+    jumpMultiplier = 1;
+
     //If on flat ground, jumping is done. 
-    if(normal.y > 0.5) {
+    if(normal.y > 0.5f) {
         if(jumping)
-            LoadManager::getSound("jump_land.wav")->playSound();
+            // LoadManager::getSound("jump_land.wav")->playSound();
         velocity = 0;
         jumping = false;
+    } else if (normal.y < -0.5f) {
+        velocity = 0;
     }
 	
     break;
@@ -211,6 +218,34 @@ void Player::collided(CollisionObjectPtr collidedWith) {
     INFO("DETECTING COLOR CHANGE!");
     hand->setColorMask((PTR_CAST(ColorChange, collidedWith)->getColor()));
     
+    break;
+  case 256:
+    if(PTR_CAST(FluidBox, collidedWith)->getColorMask() & BLUE) { //Blue filled
+        jumpMultiplier = 1.5;
+    } 
+    else if(PTR_CAST(FluidBox, collidedWith)->getColorMask() & RED) { //Green filled ... idk why
+        moveMultiplier = 2;
+        jumpMultiplier = 1.5;
+    }
+    else if(PTR_CAST(FluidBox, collidedWith)->getColorMask() & GREEN) {//Red filled ... trying to fix
+        moveMultiplier = 2;
+    }
+
+    normal = getCollisionNormal(collidedWith);
+    dist = getCollisionDistance(collidedWith);
+    camera->setEye(getPosition() + normal * dist);
+    setPosition(camera->getEye());
+    getBoundingBox()->setPosition(camera->getEye() - glm::vec3(0,1.0f,0));
+
+    //If on flat ground, jumping is done. 
+    if(normal.y > 0.5f) {
+        if(jumping)
+            // LoadManager::getSound("jump_land.wav")->playSound();
+        velocity = 0;
+        jumping = false;
+    } else if (normal.y < -0.5f) {
+        velocity = 0;
+    }
     break;
   default:
 	break;

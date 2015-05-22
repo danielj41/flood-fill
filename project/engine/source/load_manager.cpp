@@ -127,6 +127,10 @@ SoundPtr LoadManager::getSound(std::string name){
     return sounds[name];
 }
 
+void LoadManager::clearSounds() {
+    sounds = std::map<std::string, SoundPtr>();
+}
+
 /** Private Methods **/
 
 std::string LoadManager::buildPath(std::string folder, std::string filename){

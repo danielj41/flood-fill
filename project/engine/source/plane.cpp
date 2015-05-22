@@ -45,6 +45,8 @@ void Plane::setup() {
     object->applyNormalMap(refObject->getNormalMap());
   }
 
+  object->setAlpha(refObject->getAlpha());
+
   object->loadIdentity();
   object->translate(glm::vec3(0.0f, 0.0f, 1.0f));
 
