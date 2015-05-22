@@ -31,8 +31,9 @@ public:
 private:
 
   Uniform3DGridPtr<int> typeGrid;
-  Uniform3DGridPtr<int> grid;
+  Uniform3DGridPtr<int> visitedGrid;
   Uniform3DGridPtr<int> targetGrid;
+  Uniform3DGridPtr<float> lowestGrid;
   ObjectPtr waterSurface;
   glm::vec3 position;
   glm::vec3 movementDirection; 
@@ -49,10 +50,9 @@ private:
   float minX, maxX, minY, maxY, minZ, maxZ;
   glm::vec3 lowestPosition;
   float timer;
-  bool hitDrain;
 
-  float checkAdjacent(glm::vec3 newPos, float lowestY);
-  //void createFluidBox(glm::vec3 newPos);
+  float floodFillVisit(glm::vec3 newPos);
+  float floodFillTarget(glm::vec3 newPos, float lowestY);
 };
 
 #endif

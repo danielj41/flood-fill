@@ -28,7 +28,7 @@ public:
 
 private:
 
-  void createWaterSurfaceAt(Uniform3DGridPtr<int> grid, std::set<int>* fillTypes, glm::vec3 newPos);
+  void createWaterSurfaceAt(Uniform3DGridPtr<int> grid, glm::vec3 newPos);
 
   ObjectPtr fluidProjectile;
   ObjectPtr fluidParticles;

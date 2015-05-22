@@ -165,7 +165,7 @@ void RenderTexture::renderBlock(Uniform3DGridPtr<int> grid,
     for(x = minX; x < maxX + grid->getEdgeSizeX()/2.0f; x += grid->getEdgeSizeX()) {
         for(z = minZ; z < maxZ + grid->getEdgeSizeZ()/2.0f; z += grid->getEdgeSizeZ()) {
             for(y = maxY + grid->getEdgeSizeY(); y > minY + grid->getEdgeSizeY()/2.0f && // stop early, so we can query one block down
-                          grid->getValue(x, y - grid->getEdgeSizeY(), z) == 1;
+                          grid->getValue(x, y - grid->getEdgeSizeY(), z) > 0;
                 y -= grid->getEdgeSizeY());
 
             glm::mat4 model = glm::translate(glm::mat4(1.0f),

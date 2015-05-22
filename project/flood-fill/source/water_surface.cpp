@@ -44,20 +44,29 @@ void WaterSurface::setup() {
   minZ = typeGrid->getMaxZ();
   maxZ = typeGrid->getMinZ();
 
-  grid = Uniform3DGridPtr<int>(new Uniform3DGrid<int>(*typeGrid));
-  targetGrid = Uniform3DGridPtr<int>(new Uniform3DGrid<int>(*typeGrid));
-  grid->initialize(0);
+  visitedGrid = Uniform3DGridPtr<int>(new Uniform3DGrid<int>(
+    typeGrid->getSizeX(), typeGrid->getSizeY(), typeGrid->getSizeZ(),
+    typeGrid->getMinX(), typeGrid->getMaxX(),
+    typeGrid->getMinY(), typeGrid->getMaxY(),
+    typeGrid->getMinZ(), typeGrid->getMaxZ()));
+  targetGrid = Uniform3DGridPtr<int>(new Uniform3DGrid<int>(
+    typeGrid->getSizeX(), typeGrid->getSizeY(), typeGrid->getSizeZ(),
+    typeGrid->getMinX(), typeGrid->getMaxX(),
+    typeGrid->getMinY(), typeGrid->getMaxY(),
+    typeGrid->getMinZ(), typeGrid->getMaxZ()));
+  lowestGrid = Uniform3DGridPtr<float>(new Uniform3DGrid<float>(
+    typeGrid->getSizeX(), typeGrid->getSizeY(), typeGrid->getSizeZ(),
+    typeGrid->getMinX(), typeGrid->getMaxX(),
+    typeGrid->getMinY(), typeGrid->getMaxY(),
+    typeGrid->getMinZ(), typeGrid->getMaxZ()));
+  visitedGrid->initialize(0);
   targetGrid->initialize(1);
+  lowestGrid->initialize(typeGrid->getMaxY());
 
-  hitDrain = false;
+  floodFillVisit(position);
+  floodFillTarget(position, typeGrid->getMaxY());
 
   timer = 0.0f;
-  checkAdjacent(position, grid->getMaxY());
-
-  if(hitDrain) {
-    //minY -= 1.0f * grid->getEdgeSizeY();
-    //lowestPosition.y -= 1.0f * grid->getEdgeSizeY();
-  }
 
   startPosition = position;
   waterSurface = ObjectPtr(new Object(
@@ -72,7 +81,7 @@ void WaterSurface::setup() {
   waterColorTexture->clear();
   waterBlockTexture->clear();
 
-  waterBlockTexture->renderBlock(grid, minX, maxX, minY, maxY, minZ, maxZ, true, glm::vec3(1.0f, 0.0f, 0.0f)); 
+  waterBlockTexture->renderBlock(visitedGrid, minX, maxX, minY, maxY, minZ, maxZ, true, glm::vec3(1.0f, 0.0f, 0.0f)); 
   waterBlockTexture->swapTextures();
   waterBlockTexture->renderBlock(targetGrid, minX, maxX, minY, maxY, minZ, maxZ, false, glm::vec3(0.0f, 1.0f, 0.0f)); 
   waterSurface->applyWaterBlock(waterBlockTexture->getTexture());
@@ -96,9 +105,6 @@ void WaterSurface::setup() {
   waterSurface->translate(position);
   
   RenderEngine::getRenderElement("water")->addObject(waterSurface);
-
-  grid->initialize(0);
-  //createFluidBox(startPosition);
 }
 
 void WaterSurface::update(){
@@ -126,99 +132,89 @@ void WaterSurface::update(){
   }
 }
 
-/*void WaterSurface::createFluidBox(glm::vec3 newPos) {
-  
-    std::set<int>* fillTypes = level->getFillTypes();
-
-    if(grid->inGrid(newPos.x, newPos.y, newPos.z) &&
-     grid->getValue(newPos.x, newPos.y, newPos.z) == 0 &&
-       fillTypes->find(typeGrid->getValue(newPos.x, newPos.y, newPos.z)) != fillTypes->end()) {
-        
-      grid->setValue(newPos.x, newPos.y, newPos.z, 1);
+float WaterSurface::floodFillVisit(glm::vec3 newPos) {
+  if(visitedGrid->inGrid(newPos.x, newPos.y, newPos.z) &&
+     visitedGrid->getValue(newPos.x, newPos.y, newPos.z) == 0 &&
+     (typeGrid->getValue(newPos.x, newPos.y, newPos.z) == LevelTemplate::AVAILABLE_FILL_SPACE ||
+      typeGrid->getValue(newPos.x, newPos.y, newPos.z) == LevelTemplate::FLUID_DRAIN)) { 
     
-    if(newPos.y < lowestPosition.y + grid->getEdgeSizeY() / 2.0f) {
-      if(colorMask & BLUE)
+    visitedGrid->setValue(newPos.x, newPos.y, newPos.z, 1);
+    
+    if(newPos.x > maxX) {
+        maxX = newPos.x;
+    }
+    if(newPos.x < minX) {
+        minX = newPos.x;
+    }
+    if(newPos.y > maxY) {
+        maxY = newPos.y;
+    }
+    if(newPos.y < minY) {
+        minY = newPos.y;
+    }
+    if(newPos.z > maxZ) {
+        maxZ = newPos.z;
+    }
+    if(newPos.z < minZ) {
+        minZ = newPos.z;
+    }
+
+    float lowestY = newPos.y;
+    lowestY = fmin(lowestY, floodFillVisit(newPos + glm::vec3(typeGrid->getEdgeSizeX(), 0, 0)));
+    lowestY = fmin(lowestY, floodFillVisit(newPos - glm::vec3(typeGrid->getEdgeSizeX(), 0, 0)));
+    lowestY = fmin(lowestY, floodFillVisit(newPos - glm::vec3(0, typeGrid->getEdgeSizeY(), 0)));
+    lowestY = fmin(lowestY, floodFillVisit(newPos + glm::vec3(0, 0, typeGrid->getEdgeSizeZ())));
+    lowestY = fmin(lowestY, floodFillVisit(newPos - glm::vec3(0, 0, typeGrid->getEdgeSizeZ())));
+    lowestGrid->setValue(newPos.x, newPos.y, newPos.z, lowestY);
+    // store height information for second pass on finding the lowest pockets.
+    return lowestY;
+  }
+
+  return visitedGrid->getMaxY();
+}
+
+float WaterSurface::floodFillTarget(glm::vec3 newPos, float lowestY) {
+  if(visitedGrid->inGrid(newPos.x, newPos.y, newPos.z) &&
+     visitedGrid->getValue(newPos.x, newPos.y, newPos.z) == 1) { 
+    
+    // Increment so we don't visit again
+    visitedGrid->setValue(newPos.x, newPos.y, newPos.z, 2);
+    
+    lowestY = fmin(lowestY, lowestGrid->getValue(newPos.x, newPos.y, newPos.z));
+
+    if(newPos.y < lowestY + lowestGrid->getEdgeSizeY() * 0.5f) {
+      
+      if(typeGrid->getValue(newPos.x, newPos.y, newPos.z) == LevelTemplate::FLUID_DRAIN) {
+        targetGrid->setValue(newPos.x, newPos.y, newPos.z, 0);
+      } else {
+        targetGrid->setValue(newPos.x, newPos.y, newPos.z, 0);
+
+        FluidBoxPtr fluidBox(new FluidBox(newPos, colorMask));
+        fluidBox->setup();
+        level->setGridValue(fluidBox->getPosition(), fluidBox);
+        Director::getScene()->addGameObject(fluidBox);
+        CollisionManager::addCollisionObjectToGrid(fluidBox);
+        if(colorMask & BLUE)
           typeGrid->setValue(newPos.x, newPos.y, newPos.z, LevelTemplate::FLUID_BLUE);
-      else if(colorMask & GREEN)
-          typeGrid->setValue(newPos.x, newPos.y, newPos.z, LevelTemplate::FLUID_GREEN);
-      else if(colorMask & RED)
-          typeGrid->setValue(newPos.x, newPos.y, newPos.z, LevelTemplate::FLUID_RED);
-      else
-          ASSERT(false, "There is no fluid type avaible");
-      FluidBoxPtr fluidBox(new FluidBox(newPos, colorMask));
-      fluidBox->setup();
-      level->setGridValue(fluidBox->getPosition(), fluidBox);
-      Director::getScene()->addGameObject(fluidBox);
-      CollisionManager::addCollisionObjectToGrid(fluidBox);
+        else if(colorMask & GREEN)
+            typeGrid->setValue(newPos.x, newPos.y, newPos.z, LevelTemplate::FLUID_GREEN);
+        else if(colorMask & RED)
+            typeGrid->setValue(newPos.x, newPos.y, newPos.z, LevelTemplate::FLUID_RED);
+        else
+            ASSERT(false, "There is no fluid type avaible");
+      }
     }
     
-    createFluidBox(newPos + glm::vec3(grid->getEdgeSizeX(), 0, 0));
-    createFluidBox(newPos - glm::vec3(grid->getEdgeSizeX(), 0, 0));
-    createFluidBox(newPos - glm::vec3(0, grid->getEdgeSizeY(), 0));
-    createFluidBox(newPos + glm::vec3(0, 0, grid->getEdgeSizeZ()));
-    createFluidBox(newPos - glm::vec3(0, 0, grid->getEdgeSizeZ()));
+    lowestY = fmin(lowestY, floodFillTarget(newPos + glm::vec3(typeGrid->getEdgeSizeX(), 0, 0), lowestY));
+    lowestY = fmin(lowestY, floodFillTarget(newPos - glm::vec3(typeGrid->getEdgeSizeX(), 0, 0), lowestY));
+    lowestY = fmin(lowestY, floodFillTarget(newPos - glm::vec3(0, typeGrid->getEdgeSizeY(), 0), lowestGrid->getMaxY()));
+    // don't pass height info down, each level needs to determine whether it's the lowest level or not
+    lowestY = fmin(lowestY, floodFillTarget(newPos + glm::vec3(0, 0, typeGrid->getEdgeSizeZ()), lowestY));
+    lowestY = fmin(lowestY, floodFillTarget(newPos - glm::vec3(0, 0, typeGrid->getEdgeSizeZ()), lowestY));
+    return lowestY;
+
   }
-}*/
-
-float WaterSurface::checkAdjacent(glm::vec3 newPos, float lowestY) {
-  
-    std::set<int>* fillTypes = level->getFillTypes();
-
-    if(grid->inGrid(newPos.x, newPos.y, newPos.z) &&
-       grid->getValue(newPos.x, newPos.y, newPos.z) == 0) {
-        if(fillTypes->find(typeGrid->getValue(newPos.x, newPos.y, newPos.z)) != fillTypes->end()) { 
-          
-          grid->setValue(newPos.x, newPos.y, newPos.z, 1);
-        
-          if(newPos.x > maxX) {
-              maxX = newPos.x;
-          }
-          if(newPos.x < minX) {
-              minX = newPos.x;
-          }
-          if(newPos.y > maxY) {
-              maxY = newPos.y;
-          }
-          if(newPos.y < minY) {
-              minY = newPos.y;
-          }
-          if(newPos.z > maxZ) {
-              maxZ = newPos.z;
-          }
-          if(newPos.z < minZ) {
-              minZ = newPos.z;
-          }
-
-          lowestY = fmin(newPos.y, lowestY);
-          lowestY = fmin(lowestY, checkAdjacent(newPos + glm::vec3(grid->getEdgeSizeX(), 0, 0), lowestY));
-          lowestY = fmin(lowestY, checkAdjacent(newPos - glm::vec3(grid->getEdgeSizeX(), 0, 0), lowestY));
-          // don't pass height information downward
-          lowestY = fmin(lowestY, checkAdjacent(newPos - glm::vec3(0, grid->getEdgeSizeY(), 0), newPos.y));
-          lowestY = fmin(lowestY, checkAdjacent(newPos + glm::vec3(0, 0, grid->getEdgeSizeZ()), lowestY));
-          lowestY = fmin(lowestY, checkAdjacent(newPos - glm::vec3(0, 0, grid->getEdgeSizeZ()), lowestY));
-
-          if(newPos.y < lowestY + grid->getEdgeSizeY() * 0.5f &&
-             typeGrid->getValue(newPos.x, newPos.y, newPos.z) != LevelTemplate::FLUID_DRAIN) {
-              targetGrid->setValue(newPos.x, newPos.y, newPos.z, 0);
-              if(colorMask & BLUE)
-                  typeGrid->setValue(newPos.x, newPos.y, newPos.z, LevelTemplate::FLUID_BLUE);
-              else if(colorMask & GREEN)
-                  typeGrid->setValue(newPos.x, newPos.y, newPos.z, LevelTemplate::FLUID_GREEN);
-              else if(colorMask & RED)
-                  typeGrid->setValue(newPos.x, newPos.y, newPos.z, LevelTemplate::FLUID_RED);
-              else
-                  ASSERT(false, "There is no fluid type avaible");
-              FluidBoxPtr fluidBox(new FluidBox(newPos, colorMask));
-              fluidBox->setup();
-              level->setGridValue(fluidBox->getPosition(), fluidBox);
-              Director::getScene()->addGameObject(fluidBox);
-              CollisionManager::addCollisionObjectToGrid(fluidBox);
-          }
-
-          return lowestY;
-      }
-  }
-  return grid->getMaxY();
+  return lowestGrid->getMaxY();
 }
 
 void WaterSurface::collided(CollisionObjectPtr collidedWith){
@@ -228,7 +224,6 @@ void WaterSurface::collided(CollisionObjectPtr collidedWith){
     break;
   } 
 }
-
 
 void WaterSurface::loadShaders() {
     LoadManager::loadShader("render-texture-vertex-data-initial.glsl", "render-texture-fragment-data-initial.glsl");
@@ -267,6 +262,7 @@ void WaterSurface::loadShaders() {
     shader->loadHandle("uDTime", 'u');
     shader->loadHandle("uStartPosition", 'u');
 
+    // TODO - move this to engine with render_texture
     LoadManager::loadShader("render-texture-vertex-block.glsl", "render-texture-fragment-block.glsl");
     shader = LoadManager::getShader("render-texture-vertex-block.glsl", "render-texture-fragment-block.glsl");
     shader->loadHandle("aPosition", 'a');
