@@ -98,7 +98,8 @@ void TestLevel::setup(){
     a1->setup();
     addGameObject("a1", a1);
 
-    shearRegion(1, 4, 10, 10, 22, 23, 1, 0);
+    shearRegion(1, 4, 11, 11, 22, 23, 1, 0, 0.0f);
+    shearRegion(5, 8, 10, 10, 22, 23, 1, 0, 0.5f);
 }
 
 void TestLevel::update(){

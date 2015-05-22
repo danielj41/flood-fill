@@ -37,7 +37,7 @@ public:
     bool isFilledWithPaint(glm::vec3 pos);
     bool isEmpty(glm::vec3 pos);
 
-    void shearRegion(int x1, int x2,  int y1, int y2, int z1, int z2, int shearX, int shearY);
+    void shearRegion(int x1, int x2,  int y1, int y2, int z1, int z2, int shearX, int shearY, float endEarly);
 
     // Level blocks identifiers
     static const char COMMENT;

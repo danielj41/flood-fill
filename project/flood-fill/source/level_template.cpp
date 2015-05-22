@@ -298,8 +298,11 @@ void LevelTemplate::setTypeCell(glm::vec3 pos, int type){
     typeGrid->setValue(pos.x, pos.y, pos.z, type);
 }
 
-void LevelTemplate::shearRegion(int x1, int x2, int y1, int y2, int z1, int z2, int shearX, int shearZ) {
-    float x1f = x1 + 0.5f, x2f = x2 - 0.5f, z1f = z1 + 0.5f, z2f = z2 - 0.5f;
+void LevelTemplate::shearRegion(int x1, int x2, int y1, int y2, int z1, int z2, int shearX, int shearZ, float endEarly) {
+    float x1f = x1 + ((shearX == -1)?endEarly:0.0f),
+          x2f = x2 - ((shearX == 1)?endEarly:0.0f),
+          z1f = z1 + ((shearZ == -1)?endEarly:0.0f),
+          z2f = z2 - ((shearZ == 1)?endEarly:0.0f);
     for(int x = x1; x <= x2; x++) {
         for(int y = y1; y <= y2; y++) {
             for(int z = z1; z <= z2; z++) {
