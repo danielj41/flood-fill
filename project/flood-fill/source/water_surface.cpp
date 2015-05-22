@@ -174,6 +174,9 @@ float WaterSurface::floodFillVisit(glm::vec3 newPos) {
     return lowestY;
   }
 
+  if(lowestGrid->inGrid(newPos.x, newPos.y, newPos.z)) {
+    return lowestGrid->getValue(newPos.x, newPos.y, newPos.z);
+  }
   return visitedGrid->getMaxY();
 }
 
@@ -186,13 +189,6 @@ float WaterSurface::floodFillTarget(glm::vec3 newPos, float lowestY) {
     
     lowestY = fmin(lowestY, lowestGrid->getValue(newPos.x, newPos.y, newPos.z));
     
-    lowestY = fmin(lowestY, floodFillTarget(newPos + glm::vec3(typeGrid->getEdgeSizeX(), 0, 0), lowestY));
-    lowestY = fmin(lowestY, floodFillTarget(newPos - glm::vec3(typeGrid->getEdgeSizeX(), 0, 0), lowestY));
-    lowestY = fmin(lowestY, floodFillTarget(newPos + glm::vec3(0, 0, typeGrid->getEdgeSizeZ()), lowestY));
-    lowestY = fmin(lowestY, floodFillTarget(newPos - glm::vec3(0, 0, typeGrid->getEdgeSizeZ()), lowestY));
-    // don't pass height information downward, so it will fill different height pockets that are separated.
-    lowestY = fmin(lowestY, floodFillTarget(newPos - glm::vec3(0, typeGrid->getEdgeSizeY(), 0), lowestGrid->getMaxY()));
-
     if(newPos.y < lowestY + lowestGrid->getEdgeSizeY() * 0.5f) {
       targetGrid->setValue(newPos.x, newPos.y, newPos.z, 0);
       FluidBoxPtr fluidBox(new FluidBox(newPos, colorMask));
@@ -214,6 +210,13 @@ float WaterSurface::floodFillTarget(glm::vec3 newPos, float lowestY) {
         fluidBox->removeAtAdd();
       }
     }
+
+    floodFillTarget(newPos + glm::vec3(typeGrid->getEdgeSizeX(), 0, 0), lowestY);
+    floodFillTarget(newPos - glm::vec3(typeGrid->getEdgeSizeX(), 0, 0), lowestY);
+    floodFillTarget(newPos + glm::vec3(0, 0, typeGrid->getEdgeSizeZ()), lowestY);
+    floodFillTarget(newPos - glm::vec3(0, 0, typeGrid->getEdgeSizeZ()), lowestY);
+    // don't pass height information downward, so it will fill different height pockets that are separated.
+    floodFillTarget(newPos - glm::vec3(0, typeGrid->getEdgeSizeY(), 0), lowestGrid->getMaxY());
 
     return lowestY;
   }
