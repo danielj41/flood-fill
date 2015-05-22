@@ -225,8 +225,8 @@ void loadTextures(){
     LoadManager::loadImage("chesterfield_normal_map.png");
     LoadManager::loadTexture("PaddedNormalMap", LoadManager::getImage("chesterfield_normal_map.png"));
 
-    LoadManager::loadImage("gun_texture.png");
-    LoadManager::loadTexture("GunTexture", LoadManager::getImage("gun_texture.png"));
+    LoadManager::loadImage("colorkey_gun_texture.png");
+    LoadManager::loadTexture("GunTexture", LoadManager::getImage("colorkey_gun_texture.png"));
 
     LoadManager::loadImage("regular_normal.png");
     LoadManager::loadTexture("RegularNormalMap", LoadManager::getImage("regular_normal.png"));

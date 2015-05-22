@@ -12,7 +12,7 @@
 const std::string TexturedPolygonsRender::VERTEX_SHADER_FILE = "vertex-texture.glsl";
 const std::string TexturedPolygonsRender::FRAGMENT_SHADER_FILE = "fragment-texture.glsl";
 
-TexturedPolygonsRender::TexturedPolygonsRender() : RenderElement() {}
+TexturedPolygonsRender::TexturedPolygonsRender() : RenderElement(false) {}
 
 void TexturedPolygonsRender::loadShader(){
     LoadManager::loadShader(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);

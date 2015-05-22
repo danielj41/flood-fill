@@ -12,7 +12,7 @@
 const std::string CameraPolygonsRender::VERTEX_SHADER_FILE = "vertex-camera.glsl";
 const std::string CameraPolygonsRender::FRAGMENT_SHADER_FILE = "fragment-camera.glsl";
 
-CameraPolygonsRender::CameraPolygonsRender() : RenderElement() {}
+CameraPolygonsRender::CameraPolygonsRender() : RenderElement(false) {}
 
 void CameraPolygonsRender::loadShader(){
     LoadManager::loadShader(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);
@@ -20,19 +20,18 @@ void CameraPolygonsRender::loadShader(){
 
     shader->loadHandle("aNormal", 'a');
     shader->loadHandle("aPosition", 'a');
+    shader->loadHandle("aTexCoord", 'a');
+
     shader->loadHandle("uModel", 'u');
     shader->loadHandle("uProjection", 'u');
     shader->loadHandle("uNormalMatrix", 'u');
     shader->loadHandle("uDiffuseColor", 'u');
     shader->loadHandle("uSpecularColor", 'u');
     shader->loadHandle("uAmbientColor", 'u');
-    shader->loadHandle("uEmissionColor", 'u');
     shader->loadHandle("uShininess", 'u');
     shader->loadHandle("uEyePosition", 'u');
     shader->loadHandle("uLightDirection", 'u');
-    shader->loadHandle("uLightColor", 'u');
-
-    cull = false;
+    shader->loadHandle("uTexID", 'u');
 }
 
 void CameraPolygonsRender::setupEnviroment(){
@@ -43,6 +42,7 @@ void CameraPolygonsRender::setupEnviroment(){
 void CameraPolygonsRender::tearDownEnviroment(){
     glDisableVertexAttribArray(shader->getHandle("aPosition"));
     glDisableVertexAttribArray(shader->getHandle("aNormal"));
+    glDisableVertexAttribArray(shader->getHandle("aTexCoord"));
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     glUseProgram(0);
@@ -72,11 +72,6 @@ void CameraPolygonsRender::setupShader(){
             it != lights.end(); it++ ){
         LightPtr light = it->second;
 
-        glUniform3f(shader->getHandle("uLightColor"),
-                    light->getColor().x,
-                    light->getColor().y,
-                    light->getColor().z);
-
         glUniform3f(shader->getHandle("uLightDirection"),
                     light->getDirection().x,
                     light->getDirection().y,
@@ -93,6 +88,11 @@ void CameraPolygonsRender::setupMesh(Mesh* mesh){
         glEnableVertexAttribArray(shader->getHandle("aNormal"));
         glBindBuffer(GL_ARRAY_BUFFER, mesh->getNormalBuffer());
         glVertexAttribPointer(shader->getHandle("aNormal"), 3,
+                              GL_FLOAT, GL_FALSE, 0, 0);
+
+        glEnableVertexAttribArray(shader->getHandle("aTexCoord"));
+        glBindBuffer(GL_ARRAY_BUFFER, mesh->getTextureCoordinateBuffer());
+        glVertexAttribPointer(shader->getHandle("aTexCoord"), 2,
                               GL_FLOAT, GL_FALSE, 0, 0);
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->getIndexBuffer());
@@ -119,11 +119,11 @@ void CameraPolygonsRender::renderObject(ObjectPtr object){
                 object->getMaterial()->getAmbientColor().x,
                 object->getMaterial()->getAmbientColor().y,
                 object->getMaterial()->getAmbientColor().z);
-    glUniform3f(shader->getHandle("uEmissionColor"),
-                object->getMaterial()->getEmissionColor().x,
-                object->getMaterial()->getEmissionColor().y,
-                object->getMaterial()->getEmissionColor().z);
     glUniform1f(shader->getHandle("uShininess"), object->getMaterial()->getShininess());
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, object->getTexture()->getTexture());
+    glUniform1i(shader->getHandle("uTexID"), 0);
 
     glDrawElements(GL_TRIANGLES, (int) mesh->getIndices().size(), GL_UNSIGNED_INT, 0);
 }
