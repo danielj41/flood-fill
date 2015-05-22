@@ -166,9 +166,9 @@ float WaterSurface::floodFillVisit(glm::vec3 newPos) {
     float lowestY = newPos.y;
     lowestY = fmin(lowestY, floodFillVisit(newPos + glm::vec3(typeGrid->getEdgeSizeX(), 0, 0)));
     lowestY = fmin(lowestY, floodFillVisit(newPos - glm::vec3(typeGrid->getEdgeSizeX(), 0, 0)));
-    lowestY = fmin(lowestY, floodFillVisit(newPos - glm::vec3(0, typeGrid->getEdgeSizeY(), 0)));
     lowestY = fmin(lowestY, floodFillVisit(newPos + glm::vec3(0, 0, typeGrid->getEdgeSizeZ())));
     lowestY = fmin(lowestY, floodFillVisit(newPos - glm::vec3(0, 0, typeGrid->getEdgeSizeZ())));
+    lowestY = fmin(lowestY, floodFillVisit(newPos - glm::vec3(0, typeGrid->getEdgeSizeY(), 0)));
     lowestGrid->setValue(newPos.x, newPos.y, newPos.z, lowestY);
     // store height information for second pass on finding the lowest pockets.
     return lowestY;
@@ -185,6 +185,13 @@ float WaterSurface::floodFillTarget(glm::vec3 newPos, float lowestY) {
     visitedGrid->setValue(newPos.x, newPos.y, newPos.z, 2);
     
     lowestY = fmin(lowestY, lowestGrid->getValue(newPos.x, newPos.y, newPos.z));
+    
+    lowestY = fmin(lowestY, floodFillTarget(newPos + glm::vec3(typeGrid->getEdgeSizeX(), 0, 0), lowestY));
+    lowestY = fmin(lowestY, floodFillTarget(newPos - glm::vec3(typeGrid->getEdgeSizeX(), 0, 0), lowestY));
+    lowestY = fmin(lowestY, floodFillTarget(newPos + glm::vec3(0, 0, typeGrid->getEdgeSizeZ()), lowestY));
+    lowestY = fmin(lowestY, floodFillTarget(newPos - glm::vec3(0, 0, typeGrid->getEdgeSizeZ()), lowestY));
+    // don't pass height information downward, so it will fill different height pockets that are separated.
+    lowestY = fmin(lowestY, floodFillTarget(newPos - glm::vec3(0, typeGrid->getEdgeSizeY(), 0), lowestGrid->getMaxY()));
 
     if(newPos.y < lowestY + lowestGrid->getEdgeSizeY() * 0.5f) {
       targetGrid->setValue(newPos.x, newPos.y, newPos.z, 0);
@@ -207,16 +214,10 @@ float WaterSurface::floodFillTarget(glm::vec3 newPos, float lowestY) {
         fluidBox->removeAtAdd();
       }
     }
-    
-    lowestY = fmin(lowestY, floodFillTarget(newPos + glm::vec3(typeGrid->getEdgeSizeX(), 0, 0), lowestY));
-    lowestY = fmin(lowestY, floodFillTarget(newPos - glm::vec3(typeGrid->getEdgeSizeX(), 0, 0), lowestY));
-    lowestY = fmin(lowestY, floodFillTarget(newPos - glm::vec3(0, typeGrid->getEdgeSizeY(), 0), lowestGrid->getMaxY()));
-    // don't pass height info down, each level needs to determine whether it's the lowest level or not
-    lowestY = fmin(lowestY, floodFillTarget(newPos + glm::vec3(0, 0, typeGrid->getEdgeSizeZ()), lowestY));
-    lowestY = fmin(lowestY, floodFillTarget(newPos - glm::vec3(0, 0, typeGrid->getEdgeSizeZ()), lowestY));
-    return lowestY;
 
+    return lowestY;
   }
+
   return lowestGrid->getMaxY();
 }
 
