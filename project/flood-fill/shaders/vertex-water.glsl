@@ -1,3 +1,5 @@
+#version 120
+
 attribute vec3 aPosition;
 attribute vec2 aTexCoord;
 attribute vec4 aTangent;
@@ -5,7 +7,6 @@ attribute vec4 aTangent;
 uniform mat4 uModel;
 uniform mat4 uView;
 uniform mat4 uProjection;
-uniform mat4 uNormalMatrix;
 uniform mat4 uShadowMatrix;
 
 uniform vec3 uEyePosition;
@@ -24,18 +25,11 @@ varying vec3 vVertex;
 varying vec3 vPosition;
 varying vec3 vNormal;
 
+mat3 tangentToObjectSpaceMatrix(vec3 tangent, vec3 bitangent, vec3 normal){
+    return mat3(tangent, bitangent, normal);
+}
+
 void main(){
-    aTexCoord;
-    aTangent;
-    uNormalMatrix;
-    uShadowMatrix;
-    uEyePosition;
-    vTexCoord = vec2(0,0);
-    vShadowCoord = vec3(0,0,0);
-    vView = vec3(0,0,0);
-    vTBN = mat3(1.0);
-
-
     float amount = uDTime.y / 1.5;
     amount = amount * amount;
 
@@ -52,4 +46,16 @@ void main(){
     gl_Position = uProjection*uView*uModel*vec4(aPosition + pos, 1);
     vVertex = vec3(gl_Position);
     vPosition = aPosition;
+
+    // from vertex-normal-map
+    vec3 wPos = vec3(uView*uModel*vec4(aPosition + pos, 1));
+    vec3 wNormal  = normalize(vNormal);
+    vec3 wTangent = normalize(pos2 - pos);
+    vec3 wBitangent = cross(wNormal, wTangent);
+
+    vTexCoord = aTexCoord;
+    vView = uEyePosition - wPos;
+    vTBN = tangentToObjectSpaceMatrix(wTangent, wBitangent, wNormal);
+    vec4 shadowCoord = uShadowMatrix*uModel*vec4(aPosition + pos, 1);
+    vShadowCoord = shadowCoord.xyz/shadowCoord.w;
 }

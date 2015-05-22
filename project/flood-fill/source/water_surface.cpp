@@ -199,7 +199,7 @@ float WaterSurface::floodFillTarget(glm::vec3 newPos, float lowestY) {
         Director::getScene()->addGameObject(fluidBox);
         CollisionManager::addCollisionObjectToGrid(fluidBox);
         if(colorMask & BLUE)
-          typeGrid->setValue(newPos.x, newPos.y, newPos.z, LevelTemplate::FLUID_BLUE);
+            typeGrid->setValue(newPos.x, newPos.y, newPos.z, LevelTemplate::FLUID_BLUE);
         else if(colorMask & GREEN)
             typeGrid->setValue(newPos.x, newPos.y, newPos.z, LevelTemplate::FLUID_GREEN);
         else if(colorMask & RED)

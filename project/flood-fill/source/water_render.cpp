@@ -10,6 +10,7 @@
 #include "director.hpp"
 #include "shadow_occluder_render.hpp"
 #include "render_engine.hpp"
+#include "global_variables.hpp"
 
 const std::string WaterRender::VERTEX_SHADER_FILE = "vertex-water.glsl";
 const std::string WaterRender::FRAGMENT_SHADER_FILE = "fragment-water.glsl";
@@ -70,6 +71,8 @@ void WaterRender::setupShader(){
     glUseProgram(shader->getID());
 
     CameraPtr camera = Director::getScene()->getCamera();
+
+    glUniform2f(shader->getHandle("uScreenSize"), Global::FbWidth, Global::FbHeight);
 
     //Common information to all Objects
     glUniformMatrix4fv(shader->getHandle("uView"), 1, GL_FALSE,

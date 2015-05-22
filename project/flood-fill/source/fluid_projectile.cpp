@@ -47,13 +47,15 @@ void FluidProjectile::setup() {
                               MaterialManager::getMaterial(color)));
 
   RenderEngine::getRenderElement("water-stream")->addObject(fluidProjectile);
+  RenderEngine::getRenderElement("shadow")->addObject(fluidProjectile);
   RenderEngine::getRenderElement("water-particle")->addObject(fluidParticles);
   
   setCollisionID(0);
-  setCollideWithID(1 + 64);
+  setCollideWithID(1 | 64 | 256);
   setCanCollide(true);
 
   origPosition = position;
+  oldPosition = position;
 
   angle = 90.0 - glm::degrees(atan2(movementDirection.z, movementDirection.x));
 
@@ -83,7 +85,7 @@ void FluidProjectile::update(){
   totalTime += dTime;
 
   position += movementDirection * dTime * 15.0f;
-  oldPosition = position - 0.5f * movementDirection;
+  oldPosition = position;
   setPosition(position);
   movementDirection.y -= 1.5f * dTime;
 
@@ -99,6 +101,7 @@ void FluidProjectile::update(){
       CollisionManager::removeCollisionObject(this);
       RenderEngine::getRenderElement("water-stream")->removeObject(fluidProjectile);
       RenderEngine::getRenderElement("water-particle")->removeObject(fluidParticles);
+      RenderEngine::getRenderElement("shadow")->removeObject(fluidProjectile);
     }
   }
 }
@@ -120,11 +123,10 @@ void FluidProjectile::createWaterSurfaceAt(Uniform3DGridPtr<int> grid, glm::vec3
 }
 
 void FluidProjectile::collided(CollisionObjectPtr collidedWith){
-  if((collidedWith->getCollisionID() == 1 || collidedWith->getCollisionID() == 64) && !hasCollided) {
+  if((collidedWith->getCollisionID() == 1 || collidedWith->getCollisionID() == 64 || collidedWith->getCollisionID() == 256) && !hasCollided) {
     hasCollided = true;
     Uniform3DGridPtr<int> grid = PTR_CAST(LevelTemplate, Director::getScene())->getTypeGrid();
     glm::vec3 newPos(grid->getRoundX(oldPosition.x), grid->getRoundY(oldPosition.y), grid->getRoundZ(oldPosition.z));
-
     createWaterSurfaceAt(grid, newPos);
     // if you can't create a water surface there, look at a few adjacent cells, but not too far.
     createWaterSurfaceAt(grid, newPos + glm::vec3(0.0f, -grid->getEdgeSizeY(), 0.0f));
