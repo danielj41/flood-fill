@@ -45,6 +45,9 @@ private:
     bool shootPressed;
     float shootTimer;
 
+    float walkAmount;
+    float eyeOffset;
+
     //Fluid Box Remotion Control Variables and Methods
     unsigned int removeFluidShootRange; // How far you can remove the fluid
     unsigned int removeFluidNumberBlocks; // How many boxes you can remove at once
