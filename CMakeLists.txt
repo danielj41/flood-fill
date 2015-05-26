@@ -25,8 +25,8 @@ add_subdirectory (external)
 # On Visual 2005 and above, this module can set the debug working directory
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/external/rpavlik-cmake-modules-1c73e35")
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/external/sfml-cmake-modules")
-include(FindSFML)
-find_package(SFML COMPONENTS audio system)
+#include(FindSFML)
+#find_package(SFML COMPONENTS audio system)
 include(CreateLaunchers)
 include(MSVCMultipleProcessCompile) # /MP
 
@@ -59,16 +59,19 @@ include_directories(
 	external/glfw-3.0.3/include/
 	external/glm/
 	external/glew-1.9.0/include/
+    external/freetype2/
 	project/engine/headers/
 	project/flood-fill/headers/
-    ${SFML_INCLUDE_DIR}
+
+    #${SFML_INCLUDE_DIR}
 )
 
 set(ALL_LIBS
 	${OPENGL_LIBRARY}
 	GLFW_303
 	GLEW_190
-    ${SFML_LIBRARIES}
+    freetype
+   # ${SFML_LIBRARIES}
 )
 
 add_definitions(
@@ -116,6 +119,8 @@ add_executable(
         project/flood-fill/source/color_change.cpp
         project/flood-fill/source/shadow_occluder_render.cpp
         project/flood-fill/source/normal_map_border_render.cpp
+        project/flood-fill/source/menu.cpp
+       #project/flood-fill/source/invisible_block.cpp
 
         #Header Files
         #project/flood-fill/headers/main_level.hpp
@@ -150,6 +155,8 @@ add_executable(
         project/flood-fill/headers/color_change.hpp
         project/flood-fill/headers/shadow_occluder_render.hpp
         project/flood-fill/headers/normal_map_border_render.hpp
+        project/flood-fill/headers/menu.hpp
+       #project/flood-fill/headers/invisible_block.hpp
 
         ### Engine Files ###
         #Source Files
@@ -180,6 +187,11 @@ add_executable(
         project/engine/source/render_grid.cpp
         project/engine/source/render_texture.cpp
         project/engine/source/fbo.cpp
+        project/engine/source/text_shader_utils.cpp
+        project/engine/source/FontAtlas.cpp
+        project/engine/source/FontEngine.cpp
+
+
 
         #Header Files
         project/engine/headers/GLIncludes.h
@@ -212,6 +224,9 @@ add_executable(
         project/engine/headers/render_grid.hpp
         project/engine/headers/render_texture.hpp
         project/engine/headers/fbo.hpp
+        project/engine/headers/text_shader_utils.h
+        project/engine/headers/FontAtlas.h
+        project/engine/headers/FontEngine.h
 )
 
 target_link_libraries(main

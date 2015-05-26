@@ -31,7 +31,7 @@
 #include "normal_map_border_render.hpp"
 #include "time_manager.hpp"
 
-TestLevel::TestLevel() : LevelTemplate("testLevel3.txt"), timer(0.0f) {}
+TestLevel::TestLevel() : LevelTemplate("testLevel4.txt"), timer(0.0f) {}
 
 void TestLevel::setup(){
     INFO("Generating Test Level...");
@@ -40,9 +40,9 @@ void TestLevel::setup(){
     createRenders();
 
     createLevel();
-
+    INFO("Removal String so less of make");
     INFO("Setting up the cameras for the Test Level...");
-    CameraPtr cam1(new Camera(glm::vec3(25, 30, -5), glm::vec3(0, 0, -5),
+    CameraPtr cam1(new Camera(glm::vec3(4, 10, -5), glm::vec3(4, 4, -10),
                              glm::vec3(0, 1, 0)));
     cam1->setProjectionMatrix(
         glm::perspective(glm::radians(90.0f),
@@ -62,6 +62,7 @@ void TestLevel::setup(){
 
     l1 = LightPtr(new Light(glm::vec3(1), 30.0f, glm::vec3(0, 30, 0)));
     l1->setPosition(l1->getDirection()*1.0f);
+    
 
     Uniform3DGridPtr<int> typeGrid = getTypeGrid();
     gridCenter = glm::vec3((typeGrid->getMaxX() - typeGrid->getMinX())/2.0f,
@@ -93,7 +94,7 @@ void TestLevel::setup(){
     addGameObject("s1", s1);
     CollisionManager::addCollisionObjectToGrid(s1);
 
-    INFO("Creating Active Terrain for the Test Level...");
+    /*INFO("Creating Active Terrain for the Test Level...");
     ActiveTerrainPtr a1(new ActiveTerrain(s1, glm::vec3(), glm::vec3(), 50.0f));
     a1->setup();
     addGameObject("a1", a1);
@@ -111,6 +112,7 @@ void TestLevel::setup(){
     PTR_CAST(SolidCube, (*grid)(0, 10, 5))->getObject()->applyNormalMap(LoadManager::getTexture("RegularNormalMap"));
     shearRegion(1, 4, 11, 11, 4, 5, 1, 0, 0.0f);
     shearRegion(5, 8, 10, 10, 4, 5, 1, 0, 0.5f);
+    */
 }
 
 void TestLevel::update(){
@@ -129,23 +131,22 @@ void TestLevel::update(){
     l1->setViewMatrix(glm::lookAt(
         gridCenter + l1->getDirection(),
         gridCenter, glm::vec3(0, 1, 0)));
-    //INFO("yay");
 }
 
 void TestLevel::createRenders(){
     INFO("Creating Renders...");
 
-    RenderEngine::addRenderElement("camera", RenderElementPtr(new CameraPolygonsRender()), 1);
+    RenderEngine::addRenderElement("camera", RenderElementPtr(new CameraPolygonsRender()), -1);
 
-    RenderEngine::addRenderElement("regular", RenderElementPtr(new RegularPolygonsRender()), 1);
+    RenderEngine::addRenderElement("regular", RenderElementPtr(new RegularPolygonsRender()), -1);
     RenderEngine::addRenderElement("debug", RenderElementPtr(new DebugRender()), -5);
-    RenderEngine::addRenderElement("normalmap", RenderElementPtr(new NormalMapRender()), 1);
-    RenderEngine::addRenderElement("normalmap-border", RenderElementPtr(new NormalMapBorderRender()), 1);
-    RenderEngine::addRenderElement("textured", RenderElementPtr(new TexturedPolygonsRender()), 1);
-    RenderEngine::addRenderElement("water", RenderElementPtr(new WaterRender()), 4);
-    RenderEngine::addRenderElement("water-particle", RenderElementPtr(new WaterParticleRender()), 4);
-    RenderEngine::addRenderElement("water-stream", RenderElementPtr(new WaterStreamRender()), 4);
-    RenderEngine::addRenderElement("shadow", RenderElementPtr(new ShadowOccluderRender()), 0);
+    RenderEngine::addRenderElement("normalmap", RenderElementPtr(new NormalMapRender()), -1);
+    RenderEngine::addRenderElement("normalmap-border", RenderElementPtr(new NormalMapBorderRender()), -1);
+    RenderEngine::addRenderElement("textured", RenderElementPtr(new TexturedPolygonsRender()), -1);
+    RenderEngine::addRenderElement("water", RenderElementPtr(new WaterRender()), -4);
+    RenderEngine::addRenderElement("water-particle", RenderElementPtr(new WaterParticleRender()), -4);
+    RenderEngine::addRenderElement("water-stream", RenderElementPtr(new WaterStreamRender()), -4);
+    RenderEngine::addRenderElement("shadow", RenderElementPtr(new ShadowOccluderRender()), -1);
 
     RenderEngine::setRenderGrid(RenderGridPtr(new RenderGrid(typeGrid->getSizeX(), typeGrid->getSizeY(), typeGrid->getSizeZ(),
                                                typeGrid->getMinX(), typeGrid->getMaxX(),

@@ -45,7 +45,7 @@ void Player::setup() {
 	lastPosition = camera->getEye();
 	
     setCollisionID(2);
-    setCollideWithID(1 | 16 | 32 | 64 | 128 | 256);
+    setCollideWithID(1 | 16 | 32 | 64 | 128 | 256 | 512);
 
 	setCanCollide(true);
 	
@@ -190,6 +190,7 @@ void Player::collided(CollisionObjectPtr collidedWith) {
       break;
   case 128:
       PTR_CAST(WinningBlock, collidedWith)->doAction();      
+  case 512: // Invisible Block 
   case 1:
   case 64:
 	INFO("DETECTING COLLISION WITH BLOCK!");
@@ -215,17 +216,17 @@ void Player::collided(CollisionObjectPtr collidedWith) {
 	
     break;
   case 16:
-    INFO("DETECTING COLOR CHANGE!");
-    hand->setColorMask((PTR_CAST(ColorChange, collidedWith)->getColor()));
+      INFO("DETECTING COLOR CHANGE!");
+      hand->setColorMask((PTR_CAST(ColorChange, collidedWith)->getColor()));
     
     break;
   case 256:
     if(PTR_CAST(FluidBox, collidedWith)->getColorMask() & BLUE) { //Blue filled
-        jumpMultiplier = 1.5;
+        jumpMultiplier = 2;
     } 
     else if(PTR_CAST(FluidBox, collidedWith)->getColorMask() & RED) { //Green filled ... idk why
         moveMultiplier = 2;
-        jumpMultiplier = 1.5;
+        jumpMultiplier = 2;
     }
     else if(PTR_CAST(FluidBox, collidedWith)->getColorMask() & GREEN) {//Red filled ... trying to fix
         moveMultiplier = 2;

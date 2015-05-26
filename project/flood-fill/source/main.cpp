@@ -23,6 +23,7 @@
 #include "texture.hpp"
 #include "render_texture.hpp"
 #include "water_surface.hpp"
+#include "menu.hpp"
 
 using namespace std;
 //
@@ -64,10 +65,15 @@ int main()
     int FPS = 0;
     double timeStamp = TimeManager::getTimeStamp();
 
-    LoadManager::loadSound("rain.wav");
-    LoadManager::getSound("rain.wav")->playSound();
+    //LoadManager::loadSound("rain.wav");
+    //LoadManager::getSound("rain.wav")->playSound();
+
+    Menu menu;
+    
+    if (!menu.setup()) return 0;
 
     do{
+        
         Director::updateScene();
         glViewport(windowViewport[0], windowViewport[1], windowViewport[2], windowViewport[3]);
         Director::renderScene();
@@ -82,8 +88,10 @@ int main()
         TimeManager::setDeltaTime();
         TimeManager::setTimeStamp();
         FPS++;
-
+        
         // Swap buffers
+
+        menu.display();
         glfwSwapBuffers(Global::window);
         glfwPollEvents();
     }
@@ -93,7 +101,7 @@ int main()
     /* OpenGL 3.3 VAO
     glDeleteVertexArrays(1, &vao);*/
 
-    // Close OpenGL window and terminate GLFW
+        // Close OpenGL window and terminate GLFW
     glfwTerminate();
 
     LoadManager::clearSounds();
@@ -106,7 +114,7 @@ void createScenes(){
 
     TestLevelPtr level(new TestLevel());
     Director::addScene(level);
-    Director::setScene("testLevel3.txt");
+    Director::setScene("testLevel4.txt");
 }
 
 /**
