@@ -311,7 +311,7 @@ void Player::pickFluidBoxesToRemove(){
     float gridCellSize = 2.0f;
     int nBlocks = removeFluidNumberBlocks;
 
-    for(unsigned int i = 1; i <= removeFluidShootRange; i++){
+    for(float i = 1.0f; i <= removeFluidShootRange; i+=0.2){
         glm::vec3 rayPos = p0 + direction*((float) i);
 
         INFO("Casting Ray to remove box: (" << rayPos.x << ", " << rayPos.y << ", " << rayPos.z << ")");
