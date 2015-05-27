@@ -21,7 +21,12 @@ void RenderElement::removeObject(ObjectPtr object){
 
     MeshPtr mesh = object->getMesh();
 
-    ASSERT(objects.find(mesh.get()) != objects.end(), "Mesh does not exist!");
+    // temporary to avoid errors, change back to assert once we fix it
+    //ASSERT(objects.find(mesh.get()) != objects.end(), "Mesh does not exist!");
+    if(objects.find(mesh.get()) == objects.end()) {
+        DEBUG("Mesh does not exist, cannot remove object");
+        return;
+    }
 
     for(auto it = objects[mesh.get()].begin() ; it != objects[mesh.get()].end(); it++){
         if(*it == object){
