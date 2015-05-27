@@ -225,8 +225,13 @@ void loadTextures(){
     LoadManager::loadImage("sky.bmp");
     LoadManager::loadTexture("Sky", LoadManager::getImage("sky.bmp"));
 
-    LoadManager::loadImage("normal-map-2.png");
-    LoadManager::loadTexture("PaddedNormalMap", LoadManager::getImage("normal-map-2.png"));
+    //string normalMapPath("normal-map-2.png");
+    //string normalMapPath("chesterfield_normal_map.png");
+    //string normalMapPath("n3.png");
+    //string normalMapPath("n4.png");
+    string normalMapPath("n5.png");
+    LoadManager::loadImage(normalMapPath);
+    LoadManager::loadTexture("PaddedNormalMap", LoadManager::getImage(normalMapPath));
 
     LoadManager::loadImage("colorkey_gun_texture.png");
     LoadManager::loadTexture("GunTexture", LoadManager::getImage("colorkey_gun_texture.png"));
@@ -271,7 +276,7 @@ void createMaterials(){
                              glm::vec3(0.3, 0.8, 0.3),
                             4.0f));
     MaterialManager::addMaterial("FlatRed", material3);
-    
+
     MaterialPtr material4(new Material(glm::vec3(0.8, 0.3, 0.3),
                             glm::vec3(0.0, 0.3, 0.3),
                              glm::vec3(0.8, 0.3, 0.3),
