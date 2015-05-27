@@ -23,6 +23,7 @@ public:
 
   void collided(CollisionObjectPtr collidedWith);
   int getColorMask();
+  void setSpeed(float speed);
 
   //Remotion related methods
   void remove();
@@ -39,6 +40,7 @@ private:
   ObjectPtr fluidBox;
   std::string color;
   float timer;
+  float speed;
   bool visible;
 
   //Remotion related private fields and methods

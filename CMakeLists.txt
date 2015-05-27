@@ -96,6 +96,7 @@ add_executable(
         project/flood-fill/source/fluid_projectile.cpp
         project/flood-fill/source/fluid_box.cpp
         project/flood-fill/source/water_surface.cpp
+        project/flood-fill/source/water_surface_manager.cpp
         project/flood-fill/source/level_template.cpp
         project/flood-fill/source/test_level.cpp
         project/flood-fill/source/void_voxel.cpp
@@ -130,6 +131,7 @@ add_executable(
         project/flood-fill/headers/fluid_projectile.hpp
         project/flood-fill/headers/fluid_box.hpp
         project/flood-fill/headers/water_surface.hpp
+        project/flood-fill/headers/water_surface_manager.hpp
         project/flood-fill/headers/level_template.hpp
         project/flood-fill/headers/test_level.hpp
         project/flood-fill/headers/void_voxel.hpp

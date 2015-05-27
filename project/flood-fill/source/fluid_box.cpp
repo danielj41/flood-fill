@@ -22,11 +22,11 @@
 
 FluidBox::FluidBox(glm::vec3 _position)
   : GameObject(), CollisionObject(_position),
-  position(_position), colorMask(1), size(glm::vec3(1)) {}
+  position(_position), colorMask(1), size(glm::vec3(1)), speed(1.0f) {}
 
 FluidBox::FluidBox(glm::vec3 _position, int _colorMask)
   : GameObject(), CollisionObject(_position),
-    position(_position), colorMask(_colorMask), size(glm::vec3(1)) {}
+    position(_position), colorMask(_colorMask), size(glm::vec3(1)), speed(1.0f) {}
 
 void FluidBox::setup() {
   INFO("Creating a box ...");
@@ -68,7 +68,7 @@ void FluidBox::update(){
     float dTime = ((float) TimeManager::getDeltaTime());
 
     if(!visible) {
-        timer += dTime;
+        timer += dTime * speed;
         getBoundingBox()->setPosition(position - (1.0f - timer/1.55f) * glm::vec3(0, 2.0f, 0));
         if(timer > 1.55f) {
             visible = true;
@@ -83,6 +83,10 @@ void FluidBox::update(){
     if(deleting) {
         remotionAnimation();
     }
+}
+
+void FluidBox::setSpeed(float speed) {
+  this->speed = speed;
 }
 
 void FluidBox::remove(){
@@ -100,7 +104,7 @@ void FluidBox::removeNow() {
   // Moving to the original position, to remove it from the uniform grid
   fluidBox->loadIdentity();
   fluidBox->translate(position);
-  
+
   // Removing it from the grid
 
   Director::getScene()->removeGameObject(this);
@@ -109,7 +113,9 @@ void FluidBox::removeNow() {
     PTR_CAST(LevelTemplate, Director::getScene())->setTypeCell(position, LevelTemplate::AVAILABLE_FILL_SPACE);
   }
   
-  RenderEngine::getRenderElement("normalmap")->removeObject(fluidBox);
+  if(deleting) {
+    RenderEngine::getRenderElement("normalmap")->removeObject(fluidBox);
+  }
   CollisionManager::removeCollisionObjectFromGrid(this);
 }
 

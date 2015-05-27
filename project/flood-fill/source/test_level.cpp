@@ -41,6 +41,9 @@ void TestLevel::setup(){
 
     createLevel();
 
+    waterSurfaceManager = WaterSurfaceManagerPtr(new WaterSurfaceManager());
+    addGameObject(waterSurfaceManager);
+
     INFO("Setting up the cameras for the Test Level...");
     CameraPtr cam1(new Camera(glm::vec3(25, 30, -5), glm::vec3(0, 0, -5),
                              glm::vec3(0, 1, 0)));

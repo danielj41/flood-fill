@@ -5,12 +5,14 @@
 #define GLM_FORCE_PURE
 #include "glm/glm.hpp"
 
+#include <list>
+
 #include "game_object.hpp"
 #include "collision_object.hpp"
 #include "object.hpp"
 #include "render_texture.hpp"
-#include "level_template.hpp"
 #include "director.hpp"
+#include "fluid_box.hpp"
 
 #include "pointer_macros.h"
 DEF_PTR(WaterSurface, WaterSurfacePtr);
@@ -24,9 +26,14 @@ public:
   WaterSurface(glm::vec3 _position, int _colorMask);
 
   void setup();
+  bool manualUpdate();
   void update();
+  void end();
 
   void collided(CollisionObjectPtr collidedWith);
+
+  float getSpeed();
+  void setSpeed(float speed);
 
 private:
 
@@ -34,6 +41,7 @@ private:
   Uniform3DGridPtr<int> visitedGrid;
   Uniform3DGridPtr<int> targetGrid;
   Uniform3DGridPtr<float> lowestGrid;
+  std::list<FluidBoxPtr> fluidBoxes;
   ObjectPtr waterSurface;
   glm::vec3 position;
   glm::vec3 movementDirection; 
@@ -42,7 +50,6 @@ private:
   RenderTexturePtr waterDataTexture;
   RenderTexturePtr waterColorTexture;
   RenderTexturePtr waterBlockTexture;
-  LevelTemplatePtr level;
 
   std::string color;
   int colorMask;
@@ -50,6 +57,7 @@ private:
   float minX, maxX, minY, maxY, minZ, maxZ;
   glm::vec3 lowestPosition;
   float timer;
+  float speed;
 
   float floodFillVisit(glm::vec3 newPos);
   float floodFillTarget(glm::vec3 newPos, float lowestY);

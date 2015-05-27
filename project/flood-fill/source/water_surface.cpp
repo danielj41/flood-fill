@@ -12,18 +12,21 @@
 #include "material_manager.hpp"
 #include "render_engine.hpp"
 #include "fluid_box.hpp"
+#include "level_template.hpp"
+
 
 #define BLUE    1
 #define GREEN   2
 #define RED     4
 #define GREY    8
 
+
+
 WaterSurface::WaterSurface(glm::vec3 _position, int _colorMask)
   : GameObject(), CollisionObject(_position), position(_position),
-    colorMask(_colorMask){}
+    colorMask(_colorMask), speed(1.0f) {}
 
 void WaterSurface::setup() {
-  
   if(colorMask & BLUE)
     color = "FlatBlue";
   else if(colorMask & GREEN)
@@ -33,7 +36,7 @@ void WaterSurface::setup() {
   else if(colorMask & GREY)
     color = "FlatGrey";
 
-  level = PTR_CAST(LevelTemplate, Director::getScene());
+  LevelTemplatePtr level = PTR_CAST(LevelTemplate, Director::getScene());
   typeGrid = level->getTypeGrid();
 
   // these are intentionally backwards - similar to setting "currentMax" to MIN_INT
@@ -111,8 +114,12 @@ void WaterSurface::setup() {
   RenderEngine::getRenderElement("water")->addObject(waterSurface);
 }
 
-void WaterSurface::update(){
+void WaterSurface::update() {}
+
+bool WaterSurface::manualUpdate(){
   float dTime = ((float) TimeManager::getDeltaTime());
+
+  timer += dTime * speed;
 
   waterSurface->applyWaterData(waterDataTexture->getTexture());
   waterDataTexture->render(LoadManager::getShader("render-texture-vertex-data-update.glsl", "render-texture-fragment-data-update.glsl"),
@@ -126,13 +133,30 @@ void WaterSurface::update(){
 
   waterSurface->setDTime(glm::vec2(dTime, timer));
 
-  timer += dTime;
   if(timer > 1.55f) {
-    Director::getScene()->removeGameObject(this);
-    RenderEngine::getRenderElement("water")->removeObject(waterSurface);
-    waterDataTexture->release();
-    waterColorTexture->release();
-    waterBlockTexture->release();
+    end();
+    return false;
+  }
+
+  return true;
+}
+
+void WaterSurface::end() {
+  Director::getScene()->removeGameObject(this);
+  RenderEngine::getRenderElement("water")->removeObject(waterSurface);
+  waterDataTexture->release();
+  waterColorTexture->release();
+  waterBlockTexture->release();
+}
+
+float WaterSurface::getSpeed() {
+  return speed;
+}
+
+void WaterSurface::setSpeed(float speed) {
+  this->speed = speed;
+  for(std::list<FluidBoxPtr>::iterator it = fluidBoxes.begin(); it != fluidBoxes.end(); it++){
+    (*it)->setSpeed(speed);
   }
 }
 
@@ -193,7 +217,8 @@ float WaterSurface::floodFillTarget(glm::vec3 newPos, float lowestY) {
       targetGrid->setValue(newPos.x, newPos.y, newPos.z, 0);
       FluidBoxPtr fluidBox(new FluidBox(newPos, colorMask));
       fluidBox->setup();
-      level->setGridValue(fluidBox->getPosition(), fluidBox);
+      fluidBoxes.push_back(fluidBox);
+      PTR_CAST(LevelTemplate, Director::getScene())->setGridValue(fluidBox->getPosition(), fluidBox);
       Director::getScene()->addGameObject(fluidBox);
       CollisionManager::addCollisionObjectToGrid(fluidBox);
 
