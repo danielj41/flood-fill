@@ -1,4 +1,4 @@
-#include "test_level.hpp"
+#include "tutorial_level.hpp"
 
 #include <cstdlib>
 #include <iostream>
@@ -31,10 +31,10 @@
 #include "normal_map_border_render.hpp"
 #include "time_manager.hpp"
 
-TestLevel::TestLevel() : LevelTemplate("testLevel4.txt"), timer(0.0f) {}
+TutorialLevel::TutorialLevel() : LevelTemplate("testLevel4.txt"), timer(0.0f) {}
 
-void TestLevel::setup(){
-    INFO("Generating Test Level...");
+void TutorialLevel::setup(){
+    INFO("Generating Tutorial Level...");
     readFile();
     initalizeGrid();
     createRenders();
@@ -77,7 +77,7 @@ void TestLevel::setup(){
     addLight("Sun", l1);
 
     INFO("Setting up the player for the Test Level...");
-    player = PlayerPtr(new Player(cam1, 1));
+    player = PlayerPtr(new Player(cam1, 2));
     player->setup();
     addGameObject("player" , player);
     CollisionManager::addCollisionObjectToList(player);
@@ -87,35 +87,10 @@ void TestLevel::setup(){
     addGameObject("debugPlayer" , debugPlayer);
 
     addCamera("DebugCamera", cam2);
-    INFO("Creating Switch for the Test Level...");
-    SwitchPtr s1(new Switch(glm::vec3(0.9f, 0.1f, 0.1f), glm::vec3(29.7, 23, -45), 
-                             glm::vec3(0,0,1), -20.0f, 1));
-    s1->setup();
-    addGameObject("s1", s1);
-    CollisionManager::addCollisionObjectToGrid(s1);
-
-    INFO("Creating Active Terrain for the Test Level...");
-    ActiveTerrainPtr a1(new ActiveTerrain(s1, glm::vec3(), glm::vec3(), 50.0f));
-    a1->setup();
-    addGameObject("a1", a1);
-
-    PTR_CAST(SolidCube, (*grid)(0, 10, 22))->getObject()->applyTexture(LoadManager::getTexture("DrainTexture"));
-    PTR_CAST(SolidCube, (*grid)(0, 10, 23))->getObject()->applyTexture(LoadManager::getTexture("DrainTexture"));
-    PTR_CAST(SolidCube, (*grid)(0, 10, 22))->getObject()->applyNormalMap(LoadManager::getTexture("RegularNormalMap"));
-    PTR_CAST(SolidCube, (*grid)(0, 10, 23))->getObject()->applyNormalMap(LoadManager::getTexture("RegularNormalMap"));
-    shearRegion(1, 4, 11, 11, 22, 23, 1, 0, 0.0f);
-    shearRegion(5, 8, 10, 10, 22, 23, 1, 0, 0.5f);
-
-    PTR_CAST(SolidCube, (*grid)(0, 10, 4))->getObject()->applyTexture(LoadManager::getTexture("DrainTexture"));
-    PTR_CAST(SolidCube, (*grid)(0, 10, 5))->getObject()->applyTexture(LoadManager::getTexture("DrainTexture"));
-    PTR_CAST(SolidCube, (*grid)(0, 10, 4))->getObject()->applyNormalMap(LoadManager::getTexture("RegularNormalMap"));
-    PTR_CAST(SolidCube, (*grid)(0, 10, 5))->getObject()->applyNormalMap(LoadManager::getTexture("RegularNormalMap"));
-    shearRegion(1, 4, 11, 11, 4, 5, 1, 0, 0.0f);
-    shearRegion(5, 8, 10, 10, 4, 5, 1, 0, 0.5f);
     
 }
 
-void TestLevel::update(){
+void TutorialLevel::update(){
     if(debugPlayer->isActive()){
         ASSERT(getCamera("Camera1") != getCamera("DebugCamera"), "Equal camera");
         setMainCamera("DebugCamera");
@@ -133,11 +108,10 @@ void TestLevel::update(){
         gridCenter, glm::vec3(0, 1, 0)));
 }
 
-void TestLevel::createRenders(){
+void TutorialLevel::createRenders(){
     INFO("Creating Renders...");
 
     RenderEngine::addRenderElement("camera", RenderElementPtr(new CameraPolygonsRender()), 1);
-
     RenderEngine::addRenderElement("regular", RenderElementPtr(new RegularPolygonsRender()), 1);
     RenderEngine::addRenderElement("debug", RenderElementPtr(new DebugRender()), -5);
     RenderEngine::addRenderElement("normalmap", RenderElementPtr(new NormalMapRender()), 1);

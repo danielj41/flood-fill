@@ -31,10 +31,10 @@
 #define RED     4
 #define GREY    8
 
-Player::Player(CameraPtr _camera)
+Player::Player(CameraPtr _camera, int _initialColor)
   : GameObject(), CollisionObject(), camera(_camera),
     jumping(true), velocity(0), gravity(-2), strafeVelocity(0), forwardVelocity(0),
-    jumpMultiplier(1), moveMultiplier(1) {
+    jumpMultiplier(1), moveMultiplier(1), initialColor(_initialColor) {
     removeFluidShootRange = 3;
     removeFluidNumberBlocks = 3;
 }
@@ -45,7 +45,7 @@ void Player::setup() {
 	lastPosition = camera->getEye();
 	
     setCollisionID(2);
-    setCollideWithID(1 | 16 | 32 | 64 | 128 | 256 | 512);
+    setCollideWithID(1 | 16 | 32 | 64 | 128 | 256);
 
 	setCanCollide(true);
 	
@@ -83,7 +83,7 @@ void Player::setup() {
     RenderEngine::getRenderElement("camera")->addObject(gun);
 
 
-    hand = PlayerHandPtr(new PlayerHand(getPosition(), gun));
+    hand = PlayerHandPtr(new PlayerHand(getPosition(), gun, initialColor));
     hand->setup();
     Director::getScene()->addGameObject(hand);
     CollisionManager::addCollisionObjectToList(hand);
@@ -190,7 +190,6 @@ void Player::collided(CollisionObjectPtr collidedWith) {
       break;
   case 128:
       PTR_CAST(WinningBlock, collidedWith)->doAction();      
-  case 512: // Invisible Block 
   case 1:
   case 64:
 	INFO("DETECTING COLLISION WITH BLOCK!");
@@ -201,7 +200,9 @@ void Player::collided(CollisionObjectPtr collidedWith) {
     getBoundingBox()->setPosition(camera->getEye() - glm::vec3(0,1.0f,0));
 
     //Reseting multipliers from colored blocks
-    moveMultiplier = 1;
+    if (moveMultiplier > 1.0) {
+        moveMultiplier -= .01;
+    }
     jumpMultiplier = 1;
 
     //If on flat ground, jumping is done. 
@@ -216,7 +217,7 @@ void Player::collided(CollisionObjectPtr collidedWith) {
 	
     break;
   case 16:
-      INFO("DETECTING COLOR CHANGE!");
+      //INFO("DETECTING COLOR CHANGE!");
       hand->setColorMask((PTR_CAST(ColorChange, collidedWith)->getColor()));
     
     break;

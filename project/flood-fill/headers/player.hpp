@@ -15,7 +15,7 @@ DEF_PTR(Player, PlayerPtr);
 class Player: public GameObject, public CollisionObject{
 
 public:
-    Player(CameraPtr _camera);
+    Player(CameraPtr _camera, int _initialColor);
 
     void setup();
     void update();
@@ -36,6 +36,8 @@ private:
     float strafeVelocity;
     float forwardVelocity;
     float moveMultiplier;
+    
+    int initialColor;
 
     ObjectPtr sky;
     ObjectPtr gun;

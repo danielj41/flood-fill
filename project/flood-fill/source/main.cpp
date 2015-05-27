@@ -24,6 +24,7 @@
 #include "render_texture.hpp"
 #include "water_surface.hpp"
 #include "menu.hpp"
+#include "tutorial_level.hpp"
 
 using namespace std;
 //
@@ -65,12 +66,13 @@ int main()
     int FPS = 0;
     double timeStamp = TimeManager::getTimeStamp();
 
+    
     //LoadManager::loadSound("rain.wav");
     //LoadManager::getSound("rain.wav")->playSound();
 
-    Menu menu;
+    //Menu menu;
     
-    if (!menu.setup()) return 0;
+    //if (!menu.setup()) return 0;
 
     do{
         
@@ -91,7 +93,7 @@ int main()
         
         // Swap buffers
 
-        menu.display();
+        // menu.display();
         glfwSwapBuffers(Global::window);
         glfwPollEvents();
     }
@@ -113,7 +115,9 @@ void createScenes(){
     INFO("Creating Scenes...");
 
     TestLevelPtr level(new TestLevel());
-    Director::addScene(level);
+    TutorialLevelPtr tutorialLevel(new TutorialLevel());
+    //Director::addScene(level);
+    Director::addScene(tutorialLevel);
     Director::setScene("testLevel4.txt");
 }
 
@@ -278,13 +282,13 @@ void createMaterials(){
                             glm::vec3(0.0, 0.9, 0.3),
                              glm::vec3(0.3, 0.8, 0.3),
                             4.0f));
-    MaterialManager::addMaterial("FlatRed", material3);
+    MaterialManager::addMaterial("FlatGreen", material3);
     
     MaterialPtr material4(new Material(glm::vec3(0.8, 0.3, 0.3),
                             glm::vec3(0.0, 0.3, 0.3),
                              glm::vec3(0.8, 0.3, 0.3),
                             4.0f));
-    MaterialManager::addMaterial("FlatGreen", material4);
+    MaterialManager::addMaterial("FlatRed", material4);
 
     MaterialPtr material5(new Material(glm::vec3(1.0, 1.0, 1.0),
                             glm::vec3(0.0, 0.0, 0.0),

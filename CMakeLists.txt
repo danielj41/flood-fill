@@ -92,7 +92,7 @@ add_executable(
         project/flood-fill/source/player.cpp
         project/flood-fill/source/ground_plane.cpp
         project/flood-fill/source/debug_player.cpp
-        project/flood-fill/source/demo_level.cpp
+        #project/flood-fill/source/demo_level.cpp
         project/flood-fill/source/box.cpp
         project/flood-fill/source/level_design.cpp
         project/flood-fill/source/border.cpp
@@ -120,7 +120,7 @@ add_executable(
         project/flood-fill/source/shadow_occluder_render.cpp
         project/flood-fill/source/normal_map_border_render.cpp
         project/flood-fill/source/menu.cpp
-       #project/flood-fill/source/invisible_block.cpp
+        project/flood-fill/source/tutorial_level.cpp
 
         #Header Files
         #project/flood-fill/headers/main_level.hpp
@@ -128,7 +128,7 @@ add_executable(
         project/flood-fill/headers/player.hpp
         project/flood-fill/headers/ground_plane.hpp
         project/flood-fill/headers/debug_player.hpp
-        project/flood-fill/headers/demo_level.hpp
+        #project/flood-fill/headers/demo_level.hpp
         project/flood-fill/headers/box.hpp
         project/flood-fill/headers/level_design.hpp
         project/flood-fill/headers/border.hpp
@@ -156,7 +156,7 @@ add_executable(
         project/flood-fill/headers/shadow_occluder_render.hpp
         project/flood-fill/headers/normal_map_border_render.hpp
         project/flood-fill/headers/menu.hpp
-       #project/flood-fill/headers/invisible_block.hpp
+        project/flood-fill/headers/tutorial_level.hpp
 
         ### Engine Files ###
         #Source Files

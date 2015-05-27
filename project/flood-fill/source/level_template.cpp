@@ -19,7 +19,7 @@
 #include "collision_manager.hpp"
 #include "director.hpp"
 #include "fluid_box.hpp"
-#include "invisible_block.hpp"
+
 
 
 VoidVoxelPtr LevelTemplate::voidVoxel;
@@ -194,6 +194,7 @@ GameObjectPtr LevelTemplate::createVoxel(int id, int i, int j, int k){
         ColorChangePtr c(new ColorChange(glm::vec3(minx + i * 2 + 1, miny + j * 2 + 1, minz + (k * 2 + 1)), 1));
         c->setup();
         CollisionManager::addCollisionObjectToGrid(c);
+        Director::getScene()->addGameObject(c);
         return c;
         break;
     }
@@ -240,15 +241,6 @@ GameObjectPtr LevelTemplate::createVoxel(int id, int i, int j, int k){
     }    
     case FLUID_DRAIN:
     {
-        break;
-    }
-    case INVISIBLE_BLOCK:
-    {
-        //InvisibleBoxPtr c(new InvisibleBox(glm::vec3(minx + i * 2 + 1, miny + j * 2 + 1, minz + (k * 2 + 1))));
-        //c->setup();
-        //CollisionManager::addCollisionObjectToGrid(c);
-        //Director::getScene()->addGameObject(c);
-        //return c;
         break;
     }
     default:
