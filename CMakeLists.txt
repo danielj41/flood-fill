@@ -60,6 +60,8 @@ include_directories(
 	external/glm/
 	external/glew-1.9.0/include/
     external/freetype2/
+        /usr/include/freetype2
+        /usr/local/include/freetype2
 	project/engine/headers/
 	project/flood-fill/headers/
 
@@ -74,6 +76,9 @@ set(ALL_LIBS
    # ${SFML_LIBRARIES}
 )
 
+link_directories(
+        /usr/local/lib/
+)
 add_definitions(
 	-DTW_STATIC
 	-DTW_NO_LIB_PRAGMA
