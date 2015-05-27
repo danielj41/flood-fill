@@ -25,7 +25,7 @@ void ActiveTerrain::setup(){
                             
     fillTypes = PTR_CAST(LevelTemplate, Director::getScene())->getFillTypes();
 
-    for(int i = 0; i < 16; i++) {
+    for(int i = 1; i < 15; i++) {
         for(int j = 6; j < 11; j++) {
                  
             
@@ -37,6 +37,27 @@ void ActiveTerrain::setup(){
             solidCubes.push_back(at1);
 
             SolidCubePtr at2(new SolidCube(glm::vec3(i*2 + 1, j*2 + 1, -21)));
+            at2->setup();
+            RenderEngine::getRenderGrid()->removeObject(at2->getObject());
+            //RenderEngine::getRenderElement("shadow")->removeObject(at2->getObject());
+
+            solidCubes.push_back(at2);
+            
+        }
+    }    
+
+    for(int j = -19; j < -10; j++) {
+        for(int i = 7; i < 13; i++) {
+                 
+            
+            SolidCubePtr at1(new SolidCube(glm::vec3(1, i*2 + 1, j*2 + 1)));
+            at1->setup();
+            RenderEngine::getRenderGrid()->removeObject(at1->getObject());
+            //RenderEngine::getRenderElement("shadow")->removeObject(at1->getObject());
+
+            solidCubes.push_back(at1);
+
+            SolidCubePtr at2(new SolidCube(glm::vec3(15 * 2 + 1, i*2 + 1, j*2 + 1)));
             at2->setup();
             RenderEngine::getRenderGrid()->removeObject(at2->getObject());
             //RenderEngine::getRenderElement("shadow")->removeObject(at2->getObject());
