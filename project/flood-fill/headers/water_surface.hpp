@@ -58,6 +58,7 @@ private:
   glm::vec3 lowestPosition;
   float timer;
   float speed;
+  float maxSpeed;
 
   float floodFillVisit(glm::vec3 newPos);
   float floodFillTarget(glm::vec3 newPos, float lowestY);

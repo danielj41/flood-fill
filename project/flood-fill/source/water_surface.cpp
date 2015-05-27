@@ -24,7 +24,7 @@
 
 WaterSurface::WaterSurface(glm::vec3 _position, int _colorMask)
   : GameObject(), CollisionObject(_position), position(_position),
-    colorMask(_colorMask), speed(1.0f) {}
+    colorMask(_colorMask), speed(1.0f), maxSpeed(4.0f) {}
 
 void WaterSurface::setup() {
   if(colorMask & BLUE)
@@ -79,6 +79,11 @@ void WaterSurface::setup() {
     }
   }
 
+  if((maxX - minX) * (maxZ - minZ) > 100.0f * visitedGrid->getEdgeSizeX() * visitedGrid->getEdgeSizeZ()) {
+    setSpeed(0.5f + sqrt(7.07f) / sqrt((maxX - minX) * (maxZ - minZ)));
+    maxSpeed = speed * 3.0f;
+  }
+
   timer = 0.0f;
 
   startPosition = position;
@@ -127,9 +132,9 @@ void WaterSurface::setup() {
 void WaterSurface::update() {}
 
 bool WaterSurface::manualUpdate(){
-  float dTime = ((float) TimeManager::getDeltaTime());
+  float dTime = ((float) TimeManager::getDeltaTime()) * speed;
 
-  timer += dTime * speed;
+  timer += dTime;
 
   waterSurface->applyWaterData(waterDataTexture->getTexture());
   waterDataTexture->render(LoadManager::getShader("render-texture-vertex-data-update.glsl", "render-texture-fragment-data-update.glsl"),
@@ -164,6 +169,9 @@ float WaterSurface::getSpeed() {
 }
 
 void WaterSurface::setSpeed(float speed) {
+  if(speed > maxSpeed) {
+    speed = maxSpeed;
+  }
   this->speed = speed;
   for(std::list<FluidBoxPtr>::iterator it = fluidBoxes.begin(); it != fluidBoxes.end(); it++){
     (*it)->setSpeed(speed);
