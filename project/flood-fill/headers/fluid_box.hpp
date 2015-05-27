@@ -26,6 +26,7 @@ public:
 
   //Remotion related methods
   void remove();
+  void removeNow();
   void removeAtAdd();
   void highlightForRemotion();
   void deselect();

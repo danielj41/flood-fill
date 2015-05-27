@@ -34,7 +34,7 @@
 Player::Player(CameraPtr _camera)
   : GameObject(), CollisionObject(), camera(_camera),
     jumping(true), velocity(0), gravity(-2), strafeVelocity(0), forwardVelocity(0),
-    jumpMultiplier(1), moveMultiplier(1) {
+    jumpMultiplier(1), moveMultiplier(1), ceilingFrame(0) {
     removeFluidShootRange = 3;
     removeFluidNumberBlocks = 3;
 }
@@ -190,6 +190,10 @@ void Player::update() {
     gun->scale(glm::vec3(0.5f));
     gun->rotate(180.0f + eyeOffset/4.0f, glm::vec3(0.0f, 1.0f, 0.0f));
     gun->translate(glm::vec3(0.27f, -0.4f + eyeOffset/12.0f, -0.4f));
+
+    if(ceilingFrame > 0) {
+        ceilingFrame--;
+    }
 }
 
 void Player::collided(CollisionObjectPtr collidedWith) {
@@ -222,6 +226,10 @@ void Player::collided(CollisionObjectPtr collidedWith) {
         jumping = false;
     } else if (normal.y < -0.5f) {
         velocity = 0;
+        // store that we touched a ceiling for 3 frames, that way all collisions
+        // will have a second pass knowing that we collided with a ceiling, for
+        // removing fluid boxes that will trap us into the ceiling
+        ceilingFrame = 3;
     }
 	
     break;
@@ -254,8 +262,15 @@ void Player::collided(CollisionObjectPtr collidedWith) {
             // LoadManager::getSound("jump_land.wav")->playSound();
         velocity = 0;
         jumping = false;
+        if(ceilingFrame > 0) {
+            PTR_CAST(FluidBox, collidedWith)->removeNow();
+        }
     } else if (normal.y < -0.5f) {
         velocity = 0;
+        ceilingFrame = 3;
+        // store that we touched a ceiling for 3 frames, that way all collisions
+        // will have a second pass knowing that we collided with a ceiling, for
+        // removing fluid boxes that will trap us into the ceiling
     }
     break;
   default:

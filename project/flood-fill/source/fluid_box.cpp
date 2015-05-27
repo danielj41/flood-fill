@@ -96,6 +96,23 @@ void FluidBox::remove(){
     RenderEngine::getRenderElement("normalmap")->addObject(fluidBox);
 }
 
+void FluidBox::removeNow() {
+  // Moving to the original position, to remove it from the uniform grid
+  fluidBox->loadIdentity();
+  fluidBox->translate(position);
+  
+  // Removing it from the grid
+
+  Director::getScene()->removeGameObject(this);
+
+  if(PTR_CAST(LevelTemplate, Director::getScene())->getTypeGrid()->getValue(position.x, position.y, position.z) != LevelTemplate::FLUID_DRAIN) {
+    PTR_CAST(LevelTemplate, Director::getScene())->setTypeCell(position, LevelTemplate::AVAILABLE_FILL_SPACE);
+  }
+  
+  RenderEngine::getRenderElement("normalmap")->removeObject(fluidBox);
+  CollisionManager::removeCollisionObjectFromGrid(this);
+}
+
 void FluidBox::removeAtAdd() {
   removeLater = true;
 }
@@ -111,19 +128,7 @@ void FluidBox::remotionAnimation(){
     fluidBox->translate(position - glm::vec3(0, timerP * 2.0f, 0));
     getBoundingBox()->setPosition(position - glm::vec3(0, timerP * 2.0f, 0));
     if(timer > 0.5f) {
-        // Moving to the original position, to remove it from the uniform grid
-        fluidBox->loadIdentity();
-        fluidBox->translate(position);
-
-        // Removing it from the grid
-        Director::getScene()->removeGameObject(this);
-
-        if(PTR_CAST(LevelTemplate, Director::getScene())->getTypeGrid()->getValue(position.x, position.y, position.z) != LevelTemplate::FLUID_DRAIN) {
-          PTR_CAST(LevelTemplate, Director::getScene())->setTypeCell(position, LevelTemplate::AVAILABLE_FILL_SPACE);
-        }
-        
-        RenderEngine::getRenderElement("normalmap")->removeObject(fluidBox);
-        CollisionManager::removeCollisionObjectFromGrid(this);
+        removeNow();
     }
 }
 

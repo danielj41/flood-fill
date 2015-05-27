@@ -29,6 +29,7 @@ private:
     glm::vec3 lastPosition;
 
     bool jumping;
+    int ceilingFrame;
     float velocity;
     float gravity;
     float jumpMultiplier;

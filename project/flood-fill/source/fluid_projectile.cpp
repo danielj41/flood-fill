@@ -47,7 +47,7 @@ void FluidProjectile::setup() {
                               MaterialManager::getMaterial(color)));
 
   RenderEngine::getRenderElement("water-stream")->addObject(fluidProjectile);
-  RenderEngine::getRenderElement("shadow")->addObject(fluidProjectile);
+  //RenderEngine::getRenderElement("shadow")->addObject(fluidProjectile);
   RenderEngine::getRenderElement("water-particle")->addObject(fluidParticles);
   
   setCollisionID(0);
@@ -101,7 +101,7 @@ void FluidProjectile::update(){
       CollisionManager::removeCollisionObject(this);
       RenderEngine::getRenderElement("water-stream")->removeObject(fluidProjectile);
       RenderEngine::getRenderElement("water-particle")->removeObject(fluidParticles);
-      RenderEngine::getRenderElement("shadow")->removeObject(fluidProjectile);
+      //RenderEngine::getRenderElement("shadow")->removeObject(fluidProjectile);
     }
   }
 }
