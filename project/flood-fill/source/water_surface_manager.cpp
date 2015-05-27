@@ -29,7 +29,7 @@ void WaterSurfaceManager::update() {
             current = NULL_PTR;
             if(hasNextTimer > 0.0f) {
                 addWaterSurface(nextPos, nextColorMask);
-                current->setSpeed(fmin(fmax(oldSpeed / 1.4f, 1.0), 2.5f));
+                current->setSpeed(fmin(fmax(oldSpeed, 1.0), 2.5f));
             }
         }
     }

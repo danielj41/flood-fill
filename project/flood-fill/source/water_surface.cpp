@@ -69,6 +69,16 @@ void WaterSurface::setup() {
   floodFillVisit(position);
   floodFillTarget(position, typeGrid->getMaxY());
 
+  //special case - if it's only one cell tall, make it another cell tall if possible
+  if(minY + 1.5f * typeGrid->getEdgeSizeY() > maxY && maxY + typeGrid->getEdgeSizeY() < typeGrid->getMaxY()) {
+    maxY += typeGrid->getEdgeSizeY();
+    for(float x = minX; x < maxX + visitedGrid->getEdgeSizeX() * 0.5f; x += visitedGrid->getEdgeSizeX()) {
+      for(float z = minZ; z < maxZ + visitedGrid->getEdgeSizeZ() * 0.5f; z += visitedGrid->getEdgeSizeX()) {
+        visitedGrid->setValue(x, maxY, z, 1);
+      }
+    }
+  }
+
   timer = 0.0f;
 
   startPosition = position;
