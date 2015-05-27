@@ -34,7 +34,7 @@
 Player::Player(CameraPtr _camera, int _initialColor)
   : GameObject(), CollisionObject(), camera(_camera),
     jumping(true), velocity(0), gravity(-2), strafeVelocity(0), forwardVelocity(0),
-    jumpMultiplier(1), moveMultiplier(1), initialColor(_initialColor) {
+    jumpMultiplier(1), moveMultiplier(1), ceilingFrame(0), initialColor(_initialColor) {
     removeFluidShootRange = 3;
     removeFluidNumberBlocks = 3;
 }
@@ -54,8 +54,11 @@ void Player::setup() {
 
     shootPressed = false;
 
+    walkAmount = 0.0f;
+    eyeOffset = 0.7f;
+
     setBoundingBox(BoundingBox(glm::vec3(0.8f,0.8f,0.8f), glm::vec3(-0.8f,-0.8f,-0.8f)));
-    getBoundingBox()->setPosition(camera->getEye() - glm::vec3(0,1.0f,0));
+    getBoundingBox()->setPosition(camera->getEye() - glm::vec3(0,eyeOffset,0));
 
     LoadManager::loadSound("jump_land.wav");
 
@@ -130,6 +133,9 @@ void Player::update() {
     camera->zoom(Camera::FORWARD_DIRECTION, moveMultiplier * forwardVelocity * dt * 15.0f);
     camera->strafe(Camera::RIGHT_DIRECTION, moveMultiplier * strafeVelocity * dt * 15.0f);
 
+    walkAmount += forwardVelocity * forwardVelocity + strafeVelocity * strafeVelocity;
+    eyeOffset = 0.7 + 0.05f * sin(walkAmount * 2.0f);
+
     if(isKeyPressed(GLFW_KEY_Q)){
         if ( TimeManager::getTimeStamp() - hand->getToggleTime() > .2){
             hand->changeColorMask();
@@ -144,13 +150,13 @@ void Player::update() {
         camera->jump(velocity * 25.0 * dt);
     }
 
-    getBoundingBox()->setPosition(camera->getEye() - glm::vec3(0,1.0f,0));
+    getBoundingBox()->setPosition(camera->getEye() - glm::vec3(0,eyeOffset,0));
 	setPosition(camera->getEye());
     sky->loadIdentity();
     sky->scale(glm::vec3(-50.0f,-50.0f,-50.0f));
     sky->translate(getPosition());
 
-    if(glfwGetMouseButton(Global::window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS && !shootPressed && shootTimer < 0.0f){
+    if(glfwGetMouseButton(Global::window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS /*&& !shootPressed*/ && shootTimer < 0.0f){
         FluidProjectilePtr fluidProjectile(new FluidProjectile(
             camera->getEye() - (0.35f * camera->getStrafeVector()) + glm::vec3(0.0f, 0.5f, 0.0f),
             -glm::normalize(camera->getViewVector()),
@@ -159,7 +165,7 @@ void Player::update() {
         Director::getScene()->addGameObject(fluidProjectile);
         CollisionManager::addCollisionObjectToList(fluidProjectile);
         shootPressed = true;
-        shootTimer = 2.0f;
+        shootTimer = 0.15f;
     }
     if(glfwGetMouseButton(Global::window, GLFW_MOUSE_BUTTON_1) == GLFW_RELEASE) {
         shootPressed = false;
@@ -179,6 +185,15 @@ void Player::update() {
     }
 
     hand->setPosition(getBoundingBox()->getPosition() - 1.2f * camera->getViewVector());
+
+    gun->loadIdentity();
+    gun->scale(glm::vec3(0.5f));
+    gun->rotate(180.0f + eyeOffset/4.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    gun->translate(glm::vec3(0.27f, -0.4f + eyeOffset/12.0f, -0.4f));
+
+    if(ceilingFrame > 0) {
+        ceilingFrame--;
+    }
 }
 
 void Player::collided(CollisionObjectPtr collidedWith) {
@@ -197,7 +212,7 @@ void Player::collided(CollisionObjectPtr collidedWith) {
     dist = getCollisionDistance(collidedWith);
     camera->setEye(getPosition() + normal * dist);
     setPosition(camera->getEye());
-    getBoundingBox()->setPosition(camera->getEye() - glm::vec3(0,1.0f,0));
+    getBoundingBox()->setPosition(camera->getEye() - glm::vec3(0,eyeOffset,0));
 
     //Reseting multipliers from colored blocks
     if (moveMultiplier > 1.0) {
@@ -213,6 +228,10 @@ void Player::collided(CollisionObjectPtr collidedWith) {
         jumping = false;
     } else if (normal.y < -0.5f) {
         velocity = 0;
+        // store that we touched a ceiling for 3 frames, that way all collisions
+        // will have a second pass knowing that we collided with a ceiling, for
+        // removing fluid boxes that will trap us into the ceiling
+        ceilingFrame = 3;
     }
 	
     break;
@@ -237,7 +256,7 @@ void Player::collided(CollisionObjectPtr collidedWith) {
     dist = getCollisionDistance(collidedWith);
     camera->setEye(getPosition() + normal * dist);
     setPosition(camera->getEye());
-    getBoundingBox()->setPosition(camera->getEye() - glm::vec3(0,1.0f,0));
+    getBoundingBox()->setPosition(camera->getEye() - glm::vec3(0,eyeOffset,0));
 
     //If on flat ground, jumping is done. 
     if(normal.y > 0.5f) {
@@ -245,8 +264,15 @@ void Player::collided(CollisionObjectPtr collidedWith) {
             // LoadManager::getSound("jump_land.wav")->playSound();
         velocity = 0;
         jumping = false;
+        if(ceilingFrame > 0) {
+            PTR_CAST(FluidBox, collidedWith)->removeNow();
+        }
     } else if (normal.y < -0.5f) {
         velocity = 0;
+        ceilingFrame = 3;
+        // store that we touched a ceiling for 3 frames, that way all collisions
+        // will have a second pass knowing that we collided with a ceiling, for
+        // removing fluid boxes that will trap us into the ceiling
     }
     break;
   default:

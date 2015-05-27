@@ -116,9 +116,10 @@ void createScenes(){
 
     TestLevelPtr level(new TestLevel());
     TutorialLevelPtr tutorialLevel(new TutorialLevel());
-    //Director::addScene(level);
-    Director::addScene(tutorialLevel);
-    Director::setScene("testLevel4.txt");
+    Director::addScene(level);
+    Director::setScene("testLevel3.txt");
+    //Director::addScene(tutorialLevel);
+    //Director::setScene("testLevel4.txt");
 }
 
 /**
@@ -368,7 +369,7 @@ void setupGLFW(){
 
     // Open a window and create its OpenGL context
     Global::window = glfwCreateWindow(Global::ScreenWidth, Global::ScreenHeight,
-                "Lab Project",  NULL, NULL);
+                "Lab Project", glfwGetPrimaryMonitor(), NULL);
     if (Global::window == NULL){
         DEBUG("Failed to open GLFW window.");
         glfwTerminate();

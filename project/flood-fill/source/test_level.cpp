@@ -31,7 +31,7 @@
 #include "normal_map_border_render.hpp"
 #include "time_manager.hpp"
 
-TestLevel::TestLevel() : LevelTemplate("testLevel4.txt"), timer(0.0f) {}
+TestLevel::TestLevel() : LevelTemplate("testLevel3.txt"), timer(0.0f) {}
 
 void TestLevel::setup(){
     INFO("Generating Test Level...");
@@ -41,6 +41,10 @@ void TestLevel::setup(){
 
     createLevel();
     INFO("Removal String so less of make");
+
+    waterSurfaceManager = WaterSurfaceManagerPtr(new WaterSurfaceManager());
+    addGameObject(waterSurfaceManager);
+
     INFO("Setting up the cameras for the Test Level...");
     CameraPtr cam1(new Camera(glm::vec3(4, 10, -5), glm::vec3(4, 4, -10),
                              glm::vec3(0, 1, 0)));

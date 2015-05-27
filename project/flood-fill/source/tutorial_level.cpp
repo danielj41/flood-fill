@@ -40,6 +40,10 @@ void TutorialLevel::setup(){
     createRenders();
 
     createLevel();
+
+    waterSurfaceManager = WaterSurfaceManagerPtr(new WaterSurfaceManager());
+    addGameObject(waterSurfaceManager);
+    
     INFO("Removal String so less of make");
     INFO("Setting up the cameras for the Test Level...");
     CameraPtr cam1(new Camera(glm::vec3(4, 10, -5), glm::vec3(4, 4, -10),

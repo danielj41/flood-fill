@@ -29,6 +29,7 @@ private:
     glm::vec3 lastPosition;
 
     bool jumping;
+    int ceilingFrame;
     float velocity;
     float gravity;
     float jumpMultiplier;
@@ -46,6 +47,9 @@ private:
 
     bool shootPressed;
     float shootTimer;
+
+    float walkAmount;
+    float eyeOffset;
 
     //Fluid Box Remotion Control Variables and Methods
     unsigned int removeFluidShootRange; // How far you can remove the fluid
