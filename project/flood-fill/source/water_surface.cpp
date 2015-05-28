@@ -132,9 +132,9 @@ void WaterSurface::setup() {
 void WaterSurface::update() {}
 
 bool WaterSurface::manualUpdate(){
-  float dTime = ((float) TimeManager::getDeltaTime()) * speed;
+  float dTime = ((float) TimeManager::getDeltaTime());
 
-  timer += dTime;
+  timer += dTime * speed;
 
   waterSurface->applyWaterData(waterDataTexture->getTexture());
   waterDataTexture->render(LoadManager::getShader("render-texture-vertex-data-update.glsl", "render-texture-fragment-data-update.glsl"),
