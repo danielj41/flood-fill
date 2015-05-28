@@ -30,6 +30,8 @@
 #include "shadow_occluder_render.hpp"
 #include "normal_map_border_render.hpp"
 #include "time_manager.hpp"
+#include "text.hpp"
+#include "text_render.hpp"
 
 TutorialLevel::TutorialLevel() : LevelTemplate("testLevel4.txt"), timer(0.0f) {}
 
@@ -86,6 +88,11 @@ void TutorialLevel::setup(){
     debugPlayer->setup();
     addGameObject("debugPlayer" , debugPlayer);
 
+
+    //Text
+    TextPtr randomText(new Text("OMG! I am a random text!", glm::vec4(1, 1, 0, 1), glm::vec2(-1, -1), "Courier", 24));
+    PTR_CAST(TextRender, RenderEngine::getRenderElement("text"))->addText(randomText);
+
     addCamera("DebugCamera", cam2);
     
 }
@@ -121,6 +128,7 @@ void TutorialLevel::createRenders(){
     RenderEngine::addRenderElement("water-particle", RenderElementPtr(new WaterParticleRender()), 4);
     RenderEngine::addRenderElement("water-stream", RenderElementPtr(new WaterStreamRender()), 4);
     RenderEngine::addRenderElement("shadow", RenderElementPtr(new ShadowOccluderRender()), 1);
+    RenderEngine::addRenderElement("text", RenderElementPtr(new TextRender()), 10);
 
     RenderEngine::setRenderGrid(RenderGridPtr(new RenderGrid(typeGrid->getSizeX(), typeGrid->getSizeY(), typeGrid->getSizeZ(),
                                                typeGrid->getMinX(), typeGrid->getMaxX(),

@@ -23,7 +23,6 @@
 #include "texture.hpp"
 #include "render_texture.hpp"
 #include "water_surface.hpp"
-#include "menu.hpp"
 #include "tutorial_level.hpp"
 
 using namespace std;
@@ -70,10 +69,6 @@ int main()
     //LoadManager::loadSound("rain.wav");
     //LoadManager::getSound("rain.wav")->playSound();
 
-    Menu menu;
-    
-    if (!menu.setup()) return 0;
-
     do{
         
         Director::updateScene();
@@ -93,7 +88,6 @@ int main()
         
         // Swap buffers
 
-        menu.display();
         glfwSwapBuffers(Global::window);
         glfwPollEvents();
     }
