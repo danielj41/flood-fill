@@ -90,8 +90,8 @@ void TutorialLevel::setup(){
 
 
     //Text
-    TextPtr randomText(new Text("OMG! I am a random text!", glm::vec4(1, 1, 0, 1), glm::vec2(-1, -1), "Courier", 24));
-    PTR_CAST(TextRender, RenderEngine::getRenderElement("text"))->addText(randomText);
+    levelTitle = TextPtr(new Text(">> Tutorial Level <<", glm::vec4(0, 0, 0, 1), glm::vec2(-0.5, 0), "Courier", 32));
+    PTR_CAST(TextRender, RenderEngine::getRenderElement("text"))->addText(levelTitle);
 
     addCamera("DebugCamera", cam2);
     
@@ -113,6 +113,12 @@ void TutorialLevel::update(){
     l1->setViewMatrix(glm::lookAt(
         gridCenter + l1->getDirection(),
         gridCenter, glm::vec3(0, 1, 0)));
+
+    glm::vec4 titleColor = levelTitle->getColor();
+    if(titleColor.w > 0){
+        titleColor.w -= TimeManager::getDeltaTime()*0.3;
+        levelTitle->setColor(titleColor);
+    }
 }
 
 void TutorialLevel::createRenders(){

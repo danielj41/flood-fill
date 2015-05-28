@@ -77,8 +77,9 @@ bool FontEngine::addFont(std::string handle, std::string fontFile) {
             // the handle that exists is not coupled with the requested fontFile
             fprintf(stderr, "Font engine warning: addFont: existing handle %s not \
                     bound to requested font %s", handle.c_str(), fontFile.c_str());
+            return 0;   // don't add anything or change existing handle
         }
-        return 0;   // don't add anything or change existing handle
+        return 1;
     }
 
     Font *newFont = new Font;
