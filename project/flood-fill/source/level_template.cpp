@@ -21,26 +21,27 @@
 #include "fluid_box.hpp"
 
 
+
 VoidVoxelPtr LevelTemplate::voidVoxel;
 
 const std::string LevelTemplate::templatesFolder = "flood-fill/config-files/";
 
 const char LevelTemplate::COMMENT = '#';
 
-const int LevelTemplate::VOID_SPACE            = -1;
+const int LevelTemplate::VOID_SPACE            =  -1;
 const int LevelTemplate::AIR                   =  0;
 const int LevelTemplate::SOLID_CUBE            =  1;
 const int LevelTemplate::AVAILABLE_FILL_SPACE  =  2;
 const int LevelTemplate::CHANGE_COLOR_BLUE     =  3;
 const int LevelTemplate::CHANGE_COLOR_GREEN    =  4;
 const int LevelTemplate::CHANGE_COLOR_RED      =  5;
-//const int LevelTemplate::CHANGE_COLOR_GREY     =  6;
 const int LevelTemplate::TOGGLE_FILL           =  6;
 const int LevelTemplate::FLUID_GREEN           =  7;
 const int LevelTemplate::WINNING_BLOCK         =  8;
 const int LevelTemplate::FLUID_RED             =  9;
-const int LevelTemplate::FLUID_BLUE             =  10;
-const int LevelTemplate::FLUID_DRAIN            = 11;
+const int LevelTemplate::FLUID_BLUE            =  10;
+const int LevelTemplate::FLUID_DRAIN           =  11;
+const int LevelTemplate::INVISIBLE_BLOCK       =  12;
 
 LevelTemplate::LevelTemplate(std::string levelFileName)
     : Scene(levelFileName) {
@@ -193,6 +194,7 @@ GameObjectPtr LevelTemplate::createVoxel(int id, int i, int j, int k){
         ColorChangePtr c(new ColorChange(glm::vec3(minx + i * 2 + 1, miny + j * 2 + 1, minz + (k * 2 + 1)), 1));
         c->setup();
         CollisionManager::addCollisionObjectToGrid(c);
+        Director::getScene()->addGameObject(c);
         return c;
         break;
     }
@@ -220,9 +222,10 @@ GameObjectPtr LevelTemplate::createVoxel(int id, int i, int j, int k){
         c->setup();
         CollisionManager::addCollisionObjectToGrid(c);
         Director::getScene()->addGameObject(c);
+        
         return c;
         break;
-    }
+        }
     case FLUID_RED:
     {
         FluidBoxPtr c(new FluidBox(glm::vec3(minx + i * 2 + 1, miny + j * 2 + 1, minz + (k * 2 + 1)), 4));
@@ -232,15 +235,6 @@ GameObjectPtr LevelTemplate::createVoxel(int id, int i, int j, int k){
         return c;
         break;
     }
-    /*case CHANGE_COLOR_GREY:
-    {
-        ColorChange * c = new ColorChange(glm::vec3(minx + i * 2 + 1, miny + j * 2 + 1, minz + (k * 2 + 1)), 8);
-        c->setup();
-        CollisionManager::addCollisionObjectToGrid(c);
-        Director::getScene()->addGameObject(c);
-        return c;
-        break;
-        }*/
     case TOGGLE_FILL:
     {
         break;
@@ -318,3 +312,6 @@ void LevelTemplate::shearRegion(int x1, int x2, int y1, int y2, int z1, int z2, 
     }
 }
 
+WaterSurfaceManagerPtr LevelTemplate::getWaterSurfaceManager() {
+    return waterSurfaceManager;
+}

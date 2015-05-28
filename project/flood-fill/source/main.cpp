@@ -25,6 +25,8 @@
 #include "water_surface.hpp"
 #include "collision_manager.hpp"
 #include "level_manager.hpp"
+#include "menu.hpp"
+#include "tutorial_level.hpp"
 
 using namespace std;
 //
@@ -66,9 +68,16 @@ int main()
     int FPS = 0;
     double timeStamp = TimeManager::getTimeStamp();
 
-    LoadManager::loadSound("rain.wav");
-    LoadManager::getSound("rain.wav")->playSound();
+    
+    //LoadManager::loadSound("rain.wav");
+    //LoadManager::getSound("rain.wav")->playSound();
+
+    //Menu menu;
+    
+    //if (!menu.setup()) return 0;
+
     do{
+
         if(glfwGetKey(Global::window, GLFW_KEY_R) == GLFW_PRESS) {
             LevelManager::resetLevel();
         }
@@ -91,8 +100,10 @@ int main()
         TimeManager::setDeltaTime();
         TimeManager::setTimeStamp();
         FPS++;
-
+        
         // Swap buffers
+
+        // menu.display();
         glfwSwapBuffers(Global::window);
         glfwPollEvents();
     }
@@ -102,7 +113,7 @@ int main()
     /* OpenGL 3.3 VAO
     glDeleteVertexArrays(1, &vao);*/
 
-    // Close OpenGL window and terminate GLFW
+        // Close OpenGL window and terminate GLFW
     glfwTerminate();
 
     LoadManager::clearSounds();
@@ -276,13 +287,13 @@ void createMaterials(){
                             glm::vec3(0.0, 0.9, 0.3),
                              glm::vec3(0.3, 0.8, 0.3),
                             4.0f));
-    MaterialManager::addMaterial("FlatRed", material3);
+    MaterialManager::addMaterial("FlatGreen", material3);
     
     MaterialPtr material4(new Material(glm::vec3(0.8, 0.3, 0.3),
                             glm::vec3(0.0, 0.3, 0.3),
                              glm::vec3(0.8, 0.3, 0.3),
                             4.0f));
-    MaterialManager::addMaterial("FlatGreen", material4);
+    MaterialManager::addMaterial("FlatRed", material4);
 
     MaterialPtr material5(new Material(glm::vec3(1.0, 1.0, 1.0),
                             glm::vec3(0.0, 0.0, 0.0),
@@ -362,7 +373,7 @@ void setupGLFW(){
 
     // Open a window and create its OpenGL context
     Global::window = glfwCreateWindow(Global::ScreenWidth, Global::ScreenHeight,
-                "Lab Project",  NULL, NULL);
+                "Lab Project", glfwGetPrimaryMonitor(), NULL);
     if (Global::window == NULL){
         DEBUG("Failed to open GLFW window.");
         glfwTerminate();

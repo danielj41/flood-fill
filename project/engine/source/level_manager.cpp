@@ -2,9 +2,10 @@
 #include "director.hpp"
 #include "collision_manager.hpp"
 #include "render_engine.hpp"
-#include "test_level.hpp"
-#include "temp_level.hpp"
 #include "time_manager.hpp"
+
+#include "tutorial_level.hpp"
+#include "test_level.hpp"
 
 #define MAX_LEVEL 2
 
@@ -49,15 +50,15 @@ void LevelManager::resetLevel() {
 
 //private:
 void LevelManager::setupFirstLevel() {
-    TempLevelPtr level1(new TempLevel());
+    TutorialLevelPtr level1(new TutorialLevel());
     Director::addScene(level1);
-    Director::setScene("testLevel.txt");
+    Director::setScene("testLevel4.txt");
 }
 
 void LevelManager::removeFirstLevel() {
     CollisionManager::removeAllCollisionObjects();
     RenderEngine::resetRenderEngine();
-    Director::removeScene("testLevel.txt");
+    Director::removeScene("testLevel4.txt");
 }
 
 void LevelManager::setupSecondLevel() {

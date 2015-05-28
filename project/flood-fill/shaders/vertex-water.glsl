@@ -42,6 +42,9 @@ void main(){
 
     vec3 pos3 = vec3(0.0, -1.00 + ((1.0 - amount) * texture2D(uWaterData, coord + vec2(0.0, 1.0/32.0)).r * texture2D(uWaterColor, coord + vec2(0.0, 1.0/32.0)).a + amount * texture2D(uWaterBlock, coord + vec2(0.0, 1.0/32.0)).g) * 2.0, 0.25);
 
+    pos2.y = (1.0 - amount) * pos2.y + amount * pos.y;
+    pos3.y = (1.0 - amount) * pos3.y + amount * pos.y;
+
     vNormal = -cross(pos2 - pos, pos3 - pos);
 
     gl_Position = uProjection*uView*uModel*vec4(aPosition + pos, 1);

@@ -14,17 +14,19 @@
 #include "level_template.hpp"
 #include "fluid_box.hpp"
 
-PlayerHand::PlayerHand(glm::vec3 _position, ObjectPtr _gun)
+PlayerHand::PlayerHand(glm::vec3 _position, ObjectPtr _gun, int _initialColor)
   : GameObject(), CollisionObject(_position),
 	position(_position), gun(_gun),
-    numColors(1), clrndx(0) {}
+    numColors(1), clrndx(0) {
+    colors[clrndx] = _initialColor;
+}
 
 void PlayerHand::setup() {    
   setCollisionID(4);
   setCanCollide(true);
   setCollideWithID(64);
 
-  colors[clrndx] = 1;
+  setColorMask(colors[clrndx]);
 
   setBoundingBox(BoundingBox(glm::vec3(0.1f,0.1f,0.1f), glm::vec3(-0.1f,-0.1f,-0.1f)));
   getBoundingBox()->setPosition(position);

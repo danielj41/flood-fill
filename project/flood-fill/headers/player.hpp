@@ -15,7 +15,7 @@ DEF_PTR(Player, PlayerPtr);
 class Player: public GameObject, public CollisionObject{
 
 public:
-    Player(CameraPtr _camera);
+    Player(CameraPtr _camera, int _initialColor);
 
     void setup();
     void update();
@@ -29,6 +29,7 @@ private:
     glm::vec3 lastPosition;
 
     bool jumping;
+    int ceilingFrame;
     float velocity;
     float gravity;
     float jumpMultiplier;
@@ -36,6 +37,8 @@ private:
     float strafeVelocity;
     float forwardVelocity;
     float moveMultiplier;
+    
+    int initialColor;
 
     ObjectPtr sky;
     ObjectPtr gun;
@@ -44,6 +47,9 @@ private:
 
     bool shootPressed;
     float shootTimer;
+
+    float walkAmount;
+    float eyeOffset;
 
     //Fluid Box Remotion Control Variables and Methods
     unsigned int removeFluidShootRange; // How far you can remove the fluid

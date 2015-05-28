@@ -47,7 +47,7 @@ void FluidProjectile::setup() {
                               MaterialManager::getMaterial(color)));
 
   RenderEngine::getRenderElement("water-stream")->addObject(fluidProjectile);
-  RenderEngine::getRenderElement("shadow")->addObject(fluidProjectile);
+  //RenderEngine::getRenderElement("shadow")->addObject(fluidProjectile);
   RenderEngine::getRenderElement("water-particle")->addObject(fluidParticles);
   
   setCollisionID(0);
@@ -101,7 +101,7 @@ void FluidProjectile::update(){
       CollisionManager::removeCollisionObject(this);
       RenderEngine::getRenderElement("water-stream")->removeObject(fluidProjectile);
       RenderEngine::getRenderElement("water-particle")->removeObject(fluidParticles);
-      RenderEngine::getRenderElement("shadow")->removeObject(fluidProjectile);
+      //RenderEngine::getRenderElement("shadow")->removeObject(fluidProjectile);
     }
   }
 }
@@ -113,12 +113,10 @@ void FluidProjectile::createWaterSurfaceAt(Uniform3DGridPtr<int> grid, glm::vec3
   if(grid->inGrid(newPos.x, newPos.y, newPos.z) &&
     (grid->getValue(newPos.x, newPos.y, newPos.z) == LevelTemplate::AVAILABLE_FILL_SPACE ||
      grid->getValue(newPos.x, newPos.y, newPos.z) == LevelTemplate::FLUID_DRAIN)) {
-    if(!LoadManager::getRenderTexture("waterData")->isInUse()) {
+    //if(!LoadManager::getRenderTexture("waterData")->isInUse()) {
       createdSurface = true;
-      WaterSurfacePtr surface(new WaterSurface(newPos, colorMask));
-      surface->setup();
-      Director::getScene()->addGameObject(surface);
-    }
+      PTR_CAST(LevelTemplate, Director::getScene())->getWaterSurfaceManager()->addWaterSurface(newPos, colorMask);
+    //}
   }
 }
 
@@ -128,7 +126,9 @@ void FluidProjectile::collided(CollisionObjectPtr collidedWith){
     Uniform3DGridPtr<int> grid = PTR_CAST(LevelTemplate, Director::getScene())->getTypeGrid();
     glm::vec3 newPos(grid->getRoundX(oldPosition.x), grid->getRoundY(oldPosition.y), grid->getRoundZ(oldPosition.z));
     createWaterSurfaceAt(grid, newPos);
+
     // if you can't create a water surface there, look at a few adjacent cells, but not too far.
+    createWaterSurfaceAt(grid, newPos + glm::vec3(0.0f, grid->getEdgeSizeY(), 0.0f));
     createWaterSurfaceAt(grid, newPos + glm::vec3(0.0f, -grid->getEdgeSizeY(), 0.0f));
     createWaterSurfaceAt(grid, newPos + glm::vec3(grid->getEdgeSizeX(), -grid->getEdgeSizeY(), 0.0f));
     createWaterSurfaceAt(grid, newPos + glm::vec3(-grid->getEdgeSizeX(), -grid->getEdgeSizeY(), 0.0f));
@@ -138,5 +138,6 @@ void FluidProjectile::collided(CollisionObjectPtr collidedWith){
     createWaterSurfaceAt(grid, newPos + glm::vec3(-grid->getEdgeSizeX(), -grid->getEdgeSizeY(), grid->getEdgeSizeZ()));
     createWaterSurfaceAt(grid, newPos + glm::vec3(grid->getEdgeSizeX(), -grid->getEdgeSizeY(), -grid->getEdgeSizeZ()));
     createWaterSurfaceAt(grid, newPos + glm::vec3(-grid->getEdgeSizeX(), -grid->getEdgeSizeY(), -grid->getEdgeSizeZ()));
+    
   } 
 }

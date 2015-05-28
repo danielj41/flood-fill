@@ -11,6 +11,7 @@
 #include "debug_player.hpp"
 #include "player.hpp"
 #include "void_voxel.hpp"
+#include "water_surface_manager.hpp"
 
 #include "pointer_macros.h"
 DEF_PTR(LevelTemplate, LevelTemplatePtr);
@@ -27,7 +28,6 @@ public:
 
     virtual void setup() = 0;
     virtual void update() = 0;
-    virtual void reset() = 0;
 
     Uniform3DGridPtr<int> getTypeGrid();
     std::set<int>* getFillTypes();
@@ -39,6 +39,7 @@ public:
     bool isEmpty(glm::vec3 pos);
 
     void shearRegion(int x1, int x2,  int y1, int y2, int z1, int z2, int shearX, int shearY, float endEarly);
+    WaterSurfaceManagerPtr getWaterSurfaceManager();
 
     // Level blocks identifiers
     static const char COMMENT;
@@ -56,6 +57,7 @@ public:
     static const int FLUID_RED;
     static const int FLUID_GREEN;
     static const int FLUID_DRAIN;
+    static const int INVISIBLE_BLOCK;
 
 protected:
     std::string fileName;
@@ -70,6 +72,7 @@ protected:
 
     DebugPlayerPtr debugPlayer;
     PlayerPtr player;
+    WaterSurfaceManagerPtr waterSurfaceManager;
 
 private:
     void interpLines(std::vector<std::string> lines);
