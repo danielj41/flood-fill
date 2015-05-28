@@ -77,8 +77,9 @@ bool FontEngine::addFont(std::string handle, std::string fontFile) {
             // the handle that exists is not coupled with the requested fontFile
             fprintf(stderr, "Font engine warning: addFont: existing handle %s not \
                     bound to requested font %s", handle.c_str(), fontFile.c_str());
+            return 0;   // don't add anything or change existing handle
         }
-        return 0;   // don't add anything or change existing handle
+        return 1;
     }
 
     Font *newFont = new Font;
@@ -146,18 +147,18 @@ void FontEngine::renderText(std::string text, float x, float y) {
         fprintf(stderr, "Font engine error: renderText: no current atlas");
         return;
     }
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    glUseProgram(program);
     float sx = 1.0, sy = 1.0;
     adjustScaling(sx, sy);
 
 
-    glBindTexture(GL_TEXTURE_2D, curAtlas->getAtlasTexture());
     glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, curAtlas->getAtlasTexture());
     glUniform1i(uniform_tex, 0);
     glUniform4fv(uniform_color, 1, color);
-
-    glUseProgram(program);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
     // rendering characters on 2 triangles

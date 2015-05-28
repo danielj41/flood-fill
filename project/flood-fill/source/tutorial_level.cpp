@@ -30,6 +30,8 @@
 #include "shadow_occluder_render.hpp"
 #include "normal_map_border_render.hpp"
 #include "time_manager.hpp"
+#include "text.hpp"
+#include "text_render.hpp"
 
 TutorialLevel::TutorialLevel() : LevelTemplate("testLevel4.txt"), timer(0.0f) {}
 
@@ -76,7 +78,7 @@ void TutorialLevel::setup(){
     l1->setViewMatrix(glm::lookAt(
         l1->getDirection(),
         gridCenter, glm::vec3(0, 1, 0)));
-    l1->setProjectionMatrix(glm::ortho<float>(-30,30,-30,30,-100,100));
+    l1->setProjectionMatrix(glm::ortho<float>(-100,100,-100,100,-100,100));
 
     addLight("Sun", l1);
 
@@ -89,6 +91,11 @@ void TutorialLevel::setup(){
     debugPlayer = DebugPlayerPtr(new DebugPlayer(cam2));
     debugPlayer->setup();
     addGameObject("debugPlayer" , debugPlayer);
+
+
+    //Text
+    levelTitle = TextPtr(new Text(">> Tutorial Level <<", glm::vec4(0, 0, 0, 1), glm::vec2(-0.5, 0), "Courier", 32));
+    PTR_CAST(TextRender, RenderEngine::getRenderElement("text"))->addText(levelTitle);
 
     addCamera("DebugCamera", cam2);
     
@@ -110,6 +117,12 @@ void TutorialLevel::update(){
     l1->setViewMatrix(glm::lookAt(
         gridCenter + l1->getDirection(),
         gridCenter, glm::vec3(0, 1, 0)));
+
+    glm::vec4 titleColor = levelTitle->getColor();
+    if(titleColor.w > 0){
+        titleColor.w -= TimeManager::getDeltaTime()*0.3;
+        levelTitle->setColor(titleColor);
+    }
 }
 
 void TutorialLevel::createRenders(){
@@ -125,6 +138,7 @@ void TutorialLevel::createRenders(){
     RenderEngine::addRenderElement("water-particle", RenderElementPtr(new WaterParticleRender()), 4);
     RenderEngine::addRenderElement("water-stream", RenderElementPtr(new WaterStreamRender()), 4);
     RenderEngine::addRenderElement("shadow", RenderElementPtr(new ShadowOccluderRender()), 1);
+    RenderEngine::addRenderElement("text", RenderElementPtr(new TextRender()), 10);
 
     RenderEngine::setRenderGrid(RenderGridPtr(new RenderGrid(typeGrid->getSizeX(), typeGrid->getSizeY(), typeGrid->getSizeZ(),
                                                typeGrid->getMinX(), typeGrid->getMaxX(),

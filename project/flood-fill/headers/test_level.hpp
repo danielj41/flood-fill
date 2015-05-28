@@ -2,6 +2,8 @@
 #define TEST_LEVEL_HPP
 
 #include "level_template.hpp"
+#include "text.hpp"
+#include "text_render.hpp"
 
 #include "pointer_macros.h"
 DEF_PTR(TestLevel, TestLevelPtr);
@@ -20,6 +22,7 @@ private:
     LightPtr l1;
     float timer;
     glm::vec3 gridCenter;
+    TextPtr levelTitle;
 };
 
 #endif

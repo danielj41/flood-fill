@@ -25,7 +25,6 @@
 #include "water_surface.hpp"
 #include "collision_manager.hpp"
 #include "level_manager.hpp"
-#include "menu.hpp"
 #include "tutorial_level.hpp"
 
 using namespace std;
@@ -72,10 +71,6 @@ int main()
     //LoadManager::loadSound("rain.wav");
     //LoadManager::getSound("rain.wav")->playSound();
 
-    //Menu menu;
-    
-    //if (!menu.setup()) return 0;
-
     do{
 
         if(glfwGetKey(Global::window, GLFW_KEY_R) == GLFW_PRESS) {
@@ -103,7 +98,6 @@ int main()
         
         // Swap buffers
 
-        // menu.display();
         glfwSwapBuffers(Global::window);
         glfwPollEvents();
     }

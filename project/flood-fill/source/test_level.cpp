@@ -116,6 +116,9 @@ void TestLevel::setup(){
     PTR_CAST(SolidCube, (*grid)(0, 10, 5))->getObject()->applyNormalMap(LoadManager::getTexture("RegularNormalMap"));
     shearRegion(1, 4, 11, 11, 4, 5, 1, 0, 0.0f);
     shearRegion(5, 8, 10, 10, 4, 5, 1, 0, 0.5f);
+
+    levelTitle = TextPtr(new Text(">> Level 1 <<", glm::vec4(0, 0, 0, 1), glm::vec2(-0.5, 0), "Courier", 32));
+    PTR_CAST(TextRender, RenderEngine::getRenderElement("text"))->addText(levelTitle);
     
 }
 
@@ -135,6 +138,12 @@ void TestLevel::update(){
     l1->setViewMatrix(glm::lookAt(
         gridCenter + l1->getDirection(),
         gridCenter, glm::vec3(0, 1, 0)));
+
+    glm::vec4 titleColor = levelTitle->getColor();
+    if(titleColor.w > 0){
+        titleColor.w -= TimeManager::getDeltaTime()*0.3;
+        levelTitle->setColor(titleColor);
+    }
 }
 
 void TestLevel::createRenders(){
@@ -151,6 +160,7 @@ void TestLevel::createRenders(){
     RenderEngine::addRenderElement("water-particle", RenderElementPtr(new WaterParticleRender()), 4);
     RenderEngine::addRenderElement("water-stream", RenderElementPtr(new WaterStreamRender()), 4);
     RenderEngine::addRenderElement("shadow", RenderElementPtr(new ShadowOccluderRender()), 1);
+    RenderEngine::addRenderElement("text", RenderElementPtr(new TextRender()), 10);
 
     RenderEngine::setRenderGrid(RenderGridPtr(new RenderGrid(typeGrid->getSizeX(), typeGrid->getSizeY(), typeGrid->getSizeZ(),
                                                typeGrid->getMinX(), typeGrid->getMaxX(),

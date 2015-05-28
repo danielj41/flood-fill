@@ -126,8 +126,8 @@ add_executable(
         project/flood-fill/source/color_change.cpp
         project/flood-fill/source/shadow_occluder_render.cpp
         project/flood-fill/source/normal_map_border_render.cpp
-        project/flood-fill/source/menu.cpp
         project/flood-fill/source/tutorial_level.cpp
+        project/flood-fill/source/text_render.cpp
 
         #Header Files
         #project/flood-fill/headers/main_level.hpp
@@ -164,8 +164,8 @@ add_executable(
         project/flood-fill/headers/color_change.hpp
         project/flood-fill/headers/shadow_occluder_render.hpp
         project/flood-fill/headers/normal_map_border_render.hpp
-        project/flood-fill/headers/menu.hpp
         project/flood-fill/headers/tutorial_level.hpp
+        project/flood-fill/headers/text_render.hpp
 
         ### Engine Files ###
         #Source Files
@@ -200,6 +200,7 @@ add_executable(
         project/engine/source/text_shader_utils.cpp
         project/engine/source/FontAtlas.cpp
         project/engine/source/FontEngine.cpp
+        project/engine/source/text.cpp
 
 
 
@@ -238,6 +239,7 @@ add_executable(
         project/engine/headers/text_shader_utils.h
         project/engine/headers/FontAtlas.h
         project/engine/headers/FontEngine.h
+        project/engine/headers/text.hpp
 )
 
 target_link_libraries(main
@@ -267,6 +269,10 @@ add_custom_command(
 add_custom_command(
    TARGET main POST_BUILD
    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/project/flood-fill/textures" "${CMAKE_CURRENT_BINARY_DIR}/flood-fill/textures"
+)
+add_custom_command(
+   TARGET main POST_BUILD
+   COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/project/flood-fill/fonts" "${CMAKE_CURRENT_BINARY_DIR}/flood-fill/fonts"
 )
 add_custom_command(
    TARGET main POST_BUILD
