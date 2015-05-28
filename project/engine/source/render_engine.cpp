@@ -53,7 +53,6 @@ void RenderEngine::render(){
     for(unsigned int i = 0; i < elements.size(); i++){
         if(elements[i].second < 0) continue;
 
-        DEBUG("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << elements[i].second);
         RenderElementPtr element = renderElements[elements[i].first];
 
         INFO("Rendering Objects from Render Element " << elements[i].first << "...");

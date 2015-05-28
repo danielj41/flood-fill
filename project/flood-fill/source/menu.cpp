@@ -26,27 +26,17 @@ bool Menu::setup() {
 }
 
 void Menu::display() {
+    glClear(GL_DEPTH_BUFFER_BIT);
 
-    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    /*glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    glDisable(GL_CULL_FACE);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glDepthMask(GL_TRUE);
-    */
-    
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glCullFace(GL_NONE);
+    glDisable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_TEXTURE_2D);
 
     if (fontEngine.useFont(courierHandle, 24)) {
-        fontEngine.setColor(0, 0, 0, 1.0);
+        fontEngine.setColor(1, 0, 0, 1.0);
         fontEngine.renderText("The Quick Brown Fox Jumps Over The Lazy Dog", -1, .5);
     }
-    
-    //glDepthMask(GL_FALSE);
-    //glEnable(GL_CULL_FACE); 
 }
-    
-

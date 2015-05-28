@@ -72,7 +72,7 @@ void TutorialLevel::setup(){
     l1->setViewMatrix(glm::lookAt(
         l1->getDirection(),
         gridCenter, glm::vec3(0, 1, 0)));
-    l1->setProjectionMatrix(glm::ortho<float>(-30,30,-30,30,-100,100));
+    l1->setProjectionMatrix(glm::ortho<float>(-100,100,-100,100,-100,100));
 
     addLight("Sun", l1);
 

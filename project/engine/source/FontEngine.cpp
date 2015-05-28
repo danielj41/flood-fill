@@ -146,18 +146,18 @@ void FontEngine::renderText(std::string text, float x, float y) {
         fprintf(stderr, "Font engine error: renderText: no current atlas");
         return;
     }
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    glUseProgram(program);
     float sx = 1.0, sy = 1.0;
     adjustScaling(sx, sy);
 
 
-    glBindTexture(GL_TEXTURE_2D, curAtlas->getAtlasTexture());
     glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, curAtlas->getAtlasTexture());
     glUniform1i(uniform_tex, 0);
     glUniform4fv(uniform_color, 1, color);
-
-    glUseProgram(program);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
     // rendering characters on 2 triangles

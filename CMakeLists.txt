@@ -264,6 +264,10 @@ add_custom_command(
 )
 add_custom_command(
    TARGET main POST_BUILD
+   COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/project/flood-fill/fonts" "${CMAKE_CURRENT_BINARY_DIR}/flood-fill/fonts"
+)
+add_custom_command(
+   TARGET main POST_BUILD
    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/project/flood-fill/config-files" "${CMAKE_CURRENT_BINARY_DIR}/flood-fill/config-files"
 )
 add_custom_command(

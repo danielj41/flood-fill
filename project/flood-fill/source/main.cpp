@@ -70,9 +70,9 @@ int main()
     //LoadManager::loadSound("rain.wav");
     //LoadManager::getSound("rain.wav")->playSound();
 
-    //Menu menu;
+    Menu menu;
     
-    //if (!menu.setup()) return 0;
+    if (!menu.setup()) return 0;
 
     do{
         
@@ -93,7 +93,7 @@ int main()
         
         // Swap buffers
 
-        // menu.display();
+        menu.display();
         glfwSwapBuffers(Global::window);
         glfwPollEvents();
     }
