@@ -228,8 +228,8 @@ void loadTextures(){
     //string normalMapPath("normal-map-2.png");
     //string normalMapPath("chesterfield_normal_map.png");
     //string normalMapPath("n3.png");
-    //string normalMapPath("n4.png");
-    string normalMapPath("n5.png");
+    string normalMapPath("n4.png");
+    //string normalMapPath("n5.png");
     LoadManager::loadImage(normalMapPath);
     LoadManager::loadTexture("PaddedNormalMap", LoadManager::getImage(normalMapPath));
 
