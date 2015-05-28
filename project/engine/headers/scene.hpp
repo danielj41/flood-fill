@@ -28,6 +28,7 @@ public:
 
     virtual void setup() = 0;
     virtual void update() = 0;
+    virtual void reset() = 0;
 
     //Updates all objects in the scene
     void updateObjects();
@@ -62,6 +63,8 @@ public:
     //Sets the camera that will look to scene
     void setMainCamera(std::string label);
     void setCullingCamera(std::string label);
+
+    void resetMaps();
 
     bool hasMainCamera();
 

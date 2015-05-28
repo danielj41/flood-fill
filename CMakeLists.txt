@@ -97,6 +97,7 @@ add_executable(
         project/flood-fill/source/fluid_box.cpp
         project/flood-fill/source/water_surface.cpp
         project/flood-fill/source/level_template.cpp
+        project/flood-fill/source/temp_level.cpp
         project/flood-fill/source/test_level.cpp
         project/flood-fill/source/void_voxel.cpp
         project/flood-fill/source/solid_cube.cpp
@@ -131,6 +132,7 @@ add_executable(
         project/flood-fill/headers/fluid_box.hpp
         project/flood-fill/headers/water_surface.hpp
         project/flood-fill/headers/level_template.hpp
+        project/flood-fill/headers/temp_level.hpp
         project/flood-fill/headers/test_level.hpp
         project/flood-fill/headers/void_voxel.hpp
         project/flood-fill/headers/solid_cube.hpp
@@ -160,6 +162,7 @@ add_executable(
         project/engine/source/camera.cpp
         project/engine/source/scene.cpp
         project/engine/source/load_manager.cpp
+        project/engine/source/level_manager.cpp
         project/engine/source/director.cpp
         project/engine/source/game_object.cpp
         project/engine/source/time_manager.cpp
@@ -191,6 +194,7 @@ add_executable(
         project/engine/headers/camera.hpp
         project/engine/headers/scene.hpp
         project/engine/headers/load_manager.hpp
+        project/engine/headers/level_manager.hpp
         project/engine/headers/director.hpp
         project/engine/headers/game_object.hpp
         project/engine/headers/time_manager.hpp

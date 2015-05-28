@@ -1,15 +1,15 @@
-#ifndef TEST_LEVEL_HPP
-#define TEST_LEVEL_HPP
+#ifndef TEMP_LEVEL_HPP
+#define TEMP_LEVEL_HPP
 
 #include "level_template.hpp"
 
 #include "pointer_macros.h"
-DEF_PTR(TestLevel, TestLevelPtr);
+DEF_PTR(TempLevel, TempLevelPtr);
 
-class TestLevel : public LevelTemplate{
+class TempLevel : public LevelTemplate{
 
 public:
-    TestLevel();
+    TempLevel();
 
     void setup();
     void update();

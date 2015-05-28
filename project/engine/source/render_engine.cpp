@@ -117,6 +117,11 @@ RenderGridPtr RenderEngine::getRenderGrid() {
     return renderGrid;
 }
 
+void RenderEngine::resetRenderEngine() {
+    renderElements.clear();
+    renderElementsPriority.clear();
+    renderGrid = NULL_PTR;
+}
 /* Private Methods */
 
 void RenderEngine::setupOpenGL(){

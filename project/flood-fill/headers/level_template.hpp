@@ -27,6 +27,7 @@ public:
 
     virtual void setup() = 0;
     virtual void update() = 0;
+    virtual void reset() = 0;
 
     Uniform3DGridPtr<int> getTypeGrid();
     std::set<int>* getFillTypes();

@@ -210,3 +210,9 @@ void Scene::setMainCamera(std::string label){
 bool Scene::hasMainCamera(){
     return currentCamera != NO_CAMERA_AVAILABLE;
 }
+
+void Scene::resetMaps() {
+    cameras.clear();
+    lights.clear();
+    gameObjects.clear();
+}

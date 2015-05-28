@@ -11,26 +11,19 @@ std::map<std::string, ScenePtr> Director::scenes;
 
 
 void Director::addScene(ScenePtr scene){
-    INFO("Adding scene " << scene->getName() << "...");
+    DEBUG("Adding scene " << scene->getName() << "...");
 
     if(scenes.find(scene->getName()) == scenes.end()){
         scenes[scene->getName()] = scene;
     }
 
-    INFO("Scene " << scene->getName() << " added!");
+    DEBUG("Scene " << scene->getName() << " added!");
 }
 
 void Director::removeScene(std::string label){
-    INFO("Removing scene " << label << "...");
+    DEBUG("Removing scene " << label << "...");
 
-    if(scenes.find(label) != scenes.end()){
-        scenes.erase(label);
-        INFO("Scene " << label << " removed!");
-    }
-    else{
-        DEBUG("Scene " << label << " does not exist!");
-    }
-
+    scenes.clear();
 }
 
 ScenePtr Director::getScene(std::string label){
@@ -45,8 +38,8 @@ ScenePtr Director::getScene(){
 }
 
 void Director::setScene(std::string label){
-    ASSERT(scenes.find(label) != scenes.end(),
-            "Scene " << label << " does not exist!");
+    // ASSERT(scenes.find(label) != scenes.end(),
+            // "Scene " << label << " does not exist!");
     currentScene = label;
     getScene()->setup();
 }

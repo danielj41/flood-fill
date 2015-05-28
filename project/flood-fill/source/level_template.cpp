@@ -122,7 +122,7 @@ void LevelTemplate::interpLines(std::vector<std::string> lines){
 
     //Counts the line of the grid that is being read. Correspond to the Y component
     int j = 0;
-    //Counts the slice of the grid that is being rea. Correspond to the Z componentd
+    //Counts the slice of the grid that is being read. Correspond to the Z componentd
     int k = 0;
 
     for(unsigned int linesIndex = 0; linesIndex < lines.size(); linesIndex++){

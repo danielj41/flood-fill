@@ -25,6 +25,7 @@
 #include "level_template.hpp"
 #include "fluid_box.hpp"
 #include "solid_cube.hpp"
+#include "level_manager.hpp"
 
 #define BLUE    1
 #define GREEN   2
@@ -135,6 +136,7 @@ void Player::update() {
             hand->changeColorMask();
         }
     }
+
     
     if(jumping) {
         velocity += gravity * dt;
@@ -189,7 +191,9 @@ void Player::collided(CollisionObjectPtr collidedWith) {
       INFO("DETECTING COLLISION WITH SWITCH!");
       break;
   case 128:
-      PTR_CAST(WinningBlock, collidedWith)->doAction();      
+      PTR_CAST(WinningBlock, collidedWith)->doAction();
+      LevelManager::levelFinished = true;
+      break;      
   case 1:
   case 64:
 	INFO("DETECTING COLLISION WITH BLOCK!");

@@ -12,8 +12,8 @@
 #include "load_manager.hpp"
 #include "director.hpp"
 #include "global_variables.hpp"
-#include "test_level.hpp"
 #include "demo_level.hpp"
+#include "test_level.hpp"
 #include "time_manager.hpp"
 #include "render_engine.hpp"
 #include "material_manager.hpp"
@@ -23,6 +23,8 @@
 #include "texture.hpp"
 #include "render_texture.hpp"
 #include "water_surface.hpp"
+#include "collision_manager.hpp"
+#include "level_manager.hpp"
 
 using namespace std;
 //
@@ -66,8 +68,15 @@ int main()
 
     LoadManager::loadSound("rain.wav");
     LoadManager::getSound("rain.wav")->playSound();
-
     do{
+        if(glfwGetKey(Global::window, GLFW_KEY_R) == GLFW_PRESS) {
+            LevelManager::resetLevel();
+        }
+
+        if(LevelManager::levelFinished || glfwGetKey(Global::window, GLFW_KEY_N) == GLFW_PRESS) {
+            LevelManager::nextLevel();
+        }
+
         Director::updateScene();
         glViewport(windowViewport[0], windowViewport[1], windowViewport[2], windowViewport[3]);
         Director::renderScene();
@@ -103,10 +112,7 @@ int main()
 
 void createScenes(){
     INFO("Creating Scenes...");
-
-    TestLevelPtr level(new TestLevel());
-    Director::addScene(level);
-    Director::setScene("testLevel3.txt");
+    LevelManager::nextLevel();
 }
 
 /**
