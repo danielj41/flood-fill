@@ -66,9 +66,14 @@ void RenderGrid::createPlane(int x, int y, int z, int dir) {
   if(dir == ZN) {
     zN--;
   }
-  checkN = x + xN >= 0 && x + xN < grid->getSizeX() &&
-           y + yN >= 0 && y + yN < grid->getSizeY() &&
-           z + zN >= 0 && z + zN < grid->getSizeZ();
+
+  int gridSizeX = grid->getSizeX();
+  int gridSizeY = grid->getSizeY();
+  int gridSizeZ = grid->getSizeZ();
+
+  checkN = x + xN >= 0 && x + xN < gridSizeX &&
+           y + yN >= 0 && y + yN < gridSizeY &&
+           z + zN >= 0 && z + zN < gridSizeZ;
 
   if(checkN && (*grid)(x + xN, y + yN, z + zN).object != NULL_PTR) {
     return;
@@ -89,7 +94,7 @@ void RenderGrid::createPlane(int x, int y, int z, int dir) {
     left++;
 
     done = false;
-    for(right = x + 1; right < grid->getSizeX() && !done; right++) {
+    for(right = x + 1; right < gridSizeX && !done; right++) {
       for(j = bottom; j <= top; j++) {
         for(k = back; k <= front; k++) {
           if(!(*grid)(right, j, k).isEqual(&center) || (*grid)(right, j, k).object == NULL_PTR || (*grid)(right, j, k).planes[dir] != NULL_PTR || (checkN && (*grid)(right + xN, j + yN, k + zN).object != NULL_PTR)) {
@@ -117,7 +122,7 @@ void RenderGrid::createPlane(int x, int y, int z, int dir) {
     bottom++;
 
     done = false;
-    for(top = y + 1; top < grid->getSizeY() && !done; top++) {
+    for(top = y + 1; top < gridSizeY && !done; top++) {
       for(i = left; i <= right; i++) {
         for(k = back; k <= front; k++) {
           if(!(*grid)(i, top, k).isEqual(&center) || (*grid)(i, top, k).object == NULL_PTR || (*grid)(i, top, k).planes[dir] != NULL_PTR || (checkN && (*grid)(i + xN, top + yN, k + zN).object != NULL_PTR)) {
@@ -145,7 +150,7 @@ void RenderGrid::createPlane(int x, int y, int z, int dir) {
     back++;
 
     done = false;
-    for(front = z + 1; front < grid->getSizeZ() && !done; front++) {
+    for(front = z + 1; front < gridSizeZ && !done; front++) {
       for(i = left; i <= right; i++) {
         for(j = bottom; j <= top; j++) {
           if(!(*grid)(i, j, front).isEqual(&center) || (*grid)(i, j, front).object == NULL_PTR || (*grid)(i, j, front).planes[dir] != NULL_PTR || (checkN && (*grid)(i + xN, j + yN, front + zN).object != NULL_PTR)) {
@@ -233,7 +238,7 @@ void RenderGrid::dirtyCell(glm::vec4 pos) {
 
 void RenderGrid::clean() {
   if(dirty) {
-    int i, j, k;
+    unsigned int i, j, k;
     dirty = false;
 
     for(i = 0; i < grid->getSizeX(); i++) {
