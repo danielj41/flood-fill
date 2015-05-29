@@ -18,12 +18,13 @@ varying vec2 vTexCoord;
 void main(){
     vec4 texel = texture2D(uTexID, vTexCoord);
 
-    vec3 colorkey = vec3(1, 0, 1);
+    vec3 colorkey = vec3(0.8, 0, 0.8);
     vec3 ks = uSpecularColor;
     vec3 Ia = uAmbientColor;
     vec3 kd;
 
-    if(texel.xyz == colorkey){
+    // Color key test
+    if(texel.x > colorkey.x && texel.z > colorkey.z){
         kd = uDiffuseColor;
     }
     else{
@@ -43,7 +44,8 @@ void main(){
 
     vec3 I;
 
-    if(texel.xyz == colorkey){
+    // Color key test
+    if(texel.x > colorkey.x && texel.z > colorkey.z){
         I = (Id + Is) + Ia;
         gl_FragColor = vec4(I, 1.0);
     }
