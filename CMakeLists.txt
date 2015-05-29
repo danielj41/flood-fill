@@ -25,8 +25,8 @@ add_subdirectory (external)
 # On Visual 2005 and above, this module can set the debug working directory
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/external/rpavlik-cmake-modules-1c73e35")
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/external/sfml-cmake-modules")
-include(FindSFML)
-find_package(SFML COMPONENTS audio system)
+#include(FindSFML)
+#find_package(SFML COMPONENTS audio system)
 include(CreateLaunchers)
 include(MSVCMultipleProcessCompile) # /MP
 
@@ -59,18 +59,26 @@ include_directories(
 	external/glfw-3.0.3/include/
 	external/glm/
 	external/glew-1.9.0/include/
+    external/freetype2/
+        /usr/include/freetype2
+        /usr/local/include/freetype2
 	project/engine/headers/
 	project/flood-fill/headers/
-    ${SFML_INCLUDE_DIR}
+
+    #${SFML_INCLUDE_DIR}
 )
 
 set(ALL_LIBS
 	${OPENGL_LIBRARY}
 	GLFW_303
 	GLEW_190
-    ${SFML_LIBRARIES}
+    freetype
+   # ${SFML_LIBRARIES}
 )
 
+link_directories(
+        /usr/local/lib/
+)
 add_definitions(
 	-DTW_STATIC
 	-DTW_NO_LIB_PRAGMA
@@ -89,7 +97,7 @@ add_executable(
         project/flood-fill/source/player.cpp
         project/flood-fill/source/ground_plane.cpp
         project/flood-fill/source/debug_player.cpp
-        project/flood-fill/source/demo_level.cpp
+        #project/flood-fill/source/demo_level.cpp
         project/flood-fill/source/box.cpp
         project/flood-fill/source/level_design.cpp
         project/flood-fill/source/border.cpp
@@ -98,6 +106,7 @@ add_executable(
         project/flood-fill/source/water_surface.cpp
         project/flood-fill/source/water_surface_manager.cpp
         project/flood-fill/source/level_template.cpp
+        #project/flood-fill/source/temp_level.cpp
         project/flood-fill/source/test_level.cpp
         project/flood-fill/source/void_voxel.cpp
         project/flood-fill/source/solid_cube.cpp
@@ -117,6 +126,8 @@ add_executable(
         project/flood-fill/source/color_change.cpp
         project/flood-fill/source/shadow_occluder_render.cpp
         project/flood-fill/source/normal_map_border_render.cpp
+        project/flood-fill/source/tutorial_level.cpp
+        project/flood-fill/source/text_render.cpp
 
         #Header Files
         #project/flood-fill/headers/main_level.hpp
@@ -124,7 +135,7 @@ add_executable(
         project/flood-fill/headers/player.hpp
         project/flood-fill/headers/ground_plane.hpp
         project/flood-fill/headers/debug_player.hpp
-        project/flood-fill/headers/demo_level.hpp
+        #project/flood-fill/headers/demo_level.hpp
         project/flood-fill/headers/box.hpp
         project/flood-fill/headers/level_design.hpp
         project/flood-fill/headers/border.hpp
@@ -133,6 +144,7 @@ add_executable(
         project/flood-fill/headers/water_surface.hpp
         project/flood-fill/headers/water_surface_manager.hpp
         project/flood-fill/headers/level_template.hpp
+        #project/flood-fill/headers/temp_level.hpp
         project/flood-fill/headers/test_level.hpp
         project/flood-fill/headers/void_voxel.hpp
         project/flood-fill/headers/solid_cube.hpp
@@ -152,6 +164,8 @@ add_executable(
         project/flood-fill/headers/color_change.hpp
         project/flood-fill/headers/shadow_occluder_render.hpp
         project/flood-fill/headers/normal_map_border_render.hpp
+        project/flood-fill/headers/tutorial_level.hpp
+        project/flood-fill/headers/text_render.hpp
 
         ### Engine Files ###
         #Source Files
@@ -162,6 +176,7 @@ add_executable(
         project/engine/source/camera.cpp
         project/engine/source/scene.cpp
         project/engine/source/load_manager.cpp
+        project/engine/source/level_manager.cpp
         project/engine/source/director.cpp
         project/engine/source/game_object.cpp
         project/engine/source/time_manager.cpp
@@ -182,6 +197,12 @@ add_executable(
         project/engine/source/render_grid.cpp
         project/engine/source/render_texture.cpp
         project/engine/source/fbo.cpp
+        project/engine/source/text_shader_utils.cpp
+        project/engine/source/FontAtlas.cpp
+        project/engine/source/FontEngine.cpp
+        project/engine/source/text.cpp
+
+
 
         #Header Files
         project/engine/headers/GLIncludes.h
@@ -193,6 +214,7 @@ add_executable(
         project/engine/headers/camera.hpp
         project/engine/headers/scene.hpp
         project/engine/headers/load_manager.hpp
+        project/engine/headers/level_manager.hpp
         project/engine/headers/director.hpp
         project/engine/headers/game_object.hpp
         project/engine/headers/time_manager.hpp
@@ -214,6 +236,10 @@ add_executable(
         project/engine/headers/render_grid.hpp
         project/engine/headers/render_texture.hpp
         project/engine/headers/fbo.hpp
+        project/engine/headers/text_shader_utils.h
+        project/engine/headers/FontAtlas.h
+        project/engine/headers/FontEngine.h
+        project/engine/headers/text.hpp
 )
 
 target_link_libraries(main
@@ -243,6 +269,10 @@ add_custom_command(
 add_custom_command(
    TARGET main POST_BUILD
    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/project/flood-fill/textures" "${CMAKE_CURRENT_BINARY_DIR}/flood-fill/textures"
+)
+add_custom_command(
+   TARGET main POST_BUILD
+   COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/project/flood-fill/fonts" "${CMAKE_CURRENT_BINARY_DIR}/flood-fill/fonts"
 )
 add_custom_command(
    TARGET main POST_BUILD

@@ -118,6 +118,10 @@ void CollisionManager::checkCollisionWithOffset(CollisionObjectPtr aObject, int 
   }
 }
 
+void CollisionManager::removeAllCollisionObjects() {
+  collisionObjects.clear();
+}
+
 void CollisionManager::initGrid(int x, int y, int z, glm::vec3 min, glm::vec3 max){
   INFO("Initializing the Grid");
   grid = Uniform3DGridPtr<CollisionObjectPtr>(new Uniform3DGrid<CollisionObjectPtr>(x, y, z, min.x, max.x, min.y, max.y, min.z, max.z)); 

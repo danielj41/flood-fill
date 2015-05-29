@@ -63,6 +63,8 @@ public:
     void setMainCamera(std::string label);
     void setCullingCamera(std::string label);
 
+    void resetMaps();
+
     bool hasMainCamera();
 
 protected:

@@ -24,6 +24,7 @@ public:
     static void removeRenderElement(std::string name);
     static void setRenderGrid(RenderGridPtr _renderGrid);
     static RenderGridPtr getRenderGrid();
+    static void resetRenderEngine();
 
 private:
     static bool loaded;

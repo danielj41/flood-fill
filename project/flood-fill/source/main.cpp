@@ -12,8 +12,8 @@
 #include "load_manager.hpp"
 #include "director.hpp"
 #include "global_variables.hpp"
-#include "test_level.hpp"
 #include "demo_level.hpp"
+#include "test_level.hpp"
 #include "time_manager.hpp"
 #include "render_engine.hpp"
 #include "material_manager.hpp"
@@ -23,6 +23,9 @@
 #include "texture.hpp"
 #include "render_texture.hpp"
 #include "water_surface.hpp"
+#include "collision_manager.hpp"
+#include "level_manager.hpp"
+#include "tutorial_level.hpp"
 
 using namespace std;
 //
@@ -64,10 +67,20 @@ int main()
     int FPS = 0;
     double timeStamp = TimeManager::getTimeStamp();
 
-    LoadManager::loadSound("rain.wav");
-    LoadManager::getSound("rain.wav")->playSound();
+    
+    //LoadManager::loadSound("rain.wav");
+    //LoadManager::getSound("rain.wav")->playSound();
 
     do{
+
+        if(glfwGetKey(Global::window, GLFW_KEY_R) == GLFW_PRESS) {
+            LevelManager::resetLevel();
+        }
+
+        if(LevelManager::levelFinished || glfwGetKey(Global::window, GLFW_KEY_N) == GLFW_PRESS) {
+            LevelManager::nextLevel();
+        }
+
         Director::updateScene();
         glViewport(windowViewport[0], windowViewport[1], windowViewport[2], windowViewport[3]);
         Director::renderScene();
@@ -82,8 +95,9 @@ int main()
         TimeManager::setDeltaTime();
         TimeManager::setTimeStamp();
         FPS++;
-
+        
         // Swap buffers
+
         glfwSwapBuffers(Global::window);
         glfwPollEvents();
     }
@@ -93,7 +107,7 @@ int main()
     /* OpenGL 3.3 VAO
     glDeleteVertexArrays(1, &vao);*/
 
-    // Close OpenGL window and terminate GLFW
+        // Close OpenGL window and terminate GLFW
     glfwTerminate();
 
     LoadManager::clearSounds();
@@ -103,10 +117,7 @@ int main()
 
 void createScenes(){
     INFO("Creating Scenes...");
-
-    TestLevelPtr level(new TestLevel());
-    Director::addScene(level);
-    Director::setScene("testLevel3.txt");
+    LevelManager::nextLevel();
 }
 
 /**
@@ -275,13 +286,13 @@ void createMaterials(){
                             glm::vec3(0.0, 0.9, 0.3),
                              glm::vec3(0.3, 0.8, 0.3),
                             4.0f));
-    MaterialManager::addMaterial("FlatRed", material3);
+    MaterialManager::addMaterial("FlatGreen", material3);
 
     MaterialPtr material4(new Material(glm::vec3(0.8, 0.3, 0.3),
                             glm::vec3(0.0, 0.3, 0.3),
                              glm::vec3(0.8, 0.3, 0.3),
                             4.0f));
-    MaterialManager::addMaterial("FlatGreen", material4);
+    MaterialManager::addMaterial("FlatRed", material4);
 
     MaterialPtr material5(new Material(glm::vec3(1.0, 1.0, 1.0),
                             glm::vec3(0.0, 0.0, 0.0),
@@ -361,7 +372,7 @@ void setupGLFW(){
 
     // Open a window and create its OpenGL context
     Global::window = glfwCreateWindow(Global::ScreenWidth, Global::ScreenHeight,
-                "Lab Project",  NULL, NULL);
+                "Flood Fill", NULL, NULL);
     if (Global::window == NULL){
         DEBUG("Failed to open GLFW window.");
         glfwTerminate();

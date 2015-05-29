@@ -16,7 +16,7 @@ class PlayerHand : public GameObject, public CollisionObject {
     
 public:
     
-    PlayerHand(glm::vec3 _position, ObjectPtr _gun);  
+    PlayerHand(glm::vec3 _position, ObjectPtr _gun, int _initialColor);  
     void setup();
     void update();
     void setPosition(glm::vec3 _position);

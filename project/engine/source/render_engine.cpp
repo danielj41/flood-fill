@@ -63,7 +63,7 @@ void RenderEngine::render(){
         element->renderPass();
         INFO("Tear Down Enviroment...")
         element->tearDownEnviroment();
-    }
+        }
 }
 
 void RenderEngine::addRenderElement(std::string name, RenderElementPtr renderElement, int priority){
@@ -117,6 +117,11 @@ RenderGridPtr RenderEngine::getRenderGrid() {
     return renderGrid;
 }
 
+void RenderEngine::resetRenderEngine() {
+    renderElements.clear();
+    renderElementsPriority.clear();
+    renderGrid = NULL_PTR;
+}
 /* Private Methods */
 
 void RenderEngine::setupOpenGL(){

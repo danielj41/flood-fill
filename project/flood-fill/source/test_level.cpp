@@ -40,12 +40,13 @@ void TestLevel::setup(){
     createRenders();
 
     createLevel();
+    INFO("Removal String so less of make");
 
     waterSurfaceManager = WaterSurfaceManagerPtr(new WaterSurfaceManager());
     addGameObject(waterSurfaceManager);
 
     INFO("Setting up the cameras for the Test Level...");
-    CameraPtr cam1(new Camera(glm::vec3(25, 30, -5), glm::vec3(0, 0, -5),
+    CameraPtr cam1(new Camera(glm::vec3(4, 10, -5), glm::vec3(4, 4, -10),
                              glm::vec3(0, 1, 0)));
     cam1->setProjectionMatrix(
         glm::perspective(glm::radians(90.0f),
@@ -65,6 +66,7 @@ void TestLevel::setup(){
 
     l1 = LightPtr(new Light(glm::vec3(1), 30.0f, glm::vec3(0, 30, 0)));
     l1->setPosition(l1->getDirection()*1.0f);
+    
 
     Uniform3DGridPtr<int> typeGrid = getTypeGrid();
     gridCenter = glm::vec3((typeGrid->getMaxX() - typeGrid->getMinX())/2.0f,
@@ -79,7 +81,7 @@ void TestLevel::setup(){
     addLight("Sun", l1);
 
     INFO("Setting up the player for the Test Level...");
-    player = PlayerPtr(new Player(cam1));
+    player = PlayerPtr(new Player(cam1, 1));
     player->setup();
     addGameObject("player" , player);
     CollisionManager::addCollisionObjectToList(player);
@@ -96,7 +98,7 @@ void TestLevel::setup(){
     addGameObject("s1", s1);
     CollisionManager::addCollisionObjectToGrid(s1);
 
-    INFO("Creating Active Terrain for the Test Level...");
+    // INFO("Creating Active Terrain for the Test Level...");
     ActiveTerrainPtr a1(new ActiveTerrain(s1, glm::vec3(), glm::vec3(), 50.0f));
     a1->setup();
     addGameObject("a1", a1);
@@ -114,6 +116,10 @@ void TestLevel::setup(){
     PTR_CAST(SolidCube, (*grid)(0, 10, 5))->getObject()->applyNormalMap(LoadManager::getTexture("RegularNormalMap"));
     shearRegion(1, 4, 11, 11, 4, 5, 1, 0, 0.0f);
     shearRegion(5, 8, 10, 10, 4, 5, 1, 0, 0.5f);
+
+    levelTitle = TextPtr(new Text(">> Level 1 <<", glm::vec4(0, 0, 0, 1), glm::vec2(-0.5, 0), "Courier", 32));
+    PTR_CAST(TextRender, RenderEngine::getRenderElement("text"))->addText(levelTitle);
+    
 }
 
 void TestLevel::update(){
@@ -132,7 +138,12 @@ void TestLevel::update(){
     l1->setViewMatrix(glm::lookAt(
         gridCenter + l1->getDirection(),
         gridCenter, glm::vec3(0, 1, 0)));
-    //INFO("yay");
+
+    glm::vec4 titleColor = levelTitle->getColor();
+    if(titleColor.w > 0){
+        titleColor.w -= TimeManager::getDeltaTime()*0.3;
+        levelTitle->setColor(titleColor);
+    }
 }
 
 void TestLevel::createRenders(){
@@ -148,7 +159,8 @@ void TestLevel::createRenders(){
     RenderEngine::addRenderElement("water", RenderElementPtr(new WaterRender()), 4);
     RenderEngine::addRenderElement("water-particle", RenderElementPtr(new WaterParticleRender()), 4);
     RenderEngine::addRenderElement("water-stream", RenderElementPtr(new WaterStreamRender()), 4);
-    RenderEngine::addRenderElement("shadow", RenderElementPtr(new ShadowOccluderRender()), 0);
+    RenderEngine::addRenderElement("shadow", RenderElementPtr(new ShadowOccluderRender()), 1);
+    RenderEngine::addRenderElement("text", RenderElementPtr(new TextRender()), 10);
 
     RenderEngine::setRenderGrid(RenderGridPtr(new RenderGrid(typeGrid->getSizeX(), typeGrid->getSizeY(), typeGrid->getSizeZ(),
                                                typeGrid->getMinX(), typeGrid->getMaxX(),
