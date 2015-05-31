@@ -1,6 +1,8 @@
 #ifndef RENDER_GRID_ITEM_HPP
 #define RENDER_GRID_ITEM_HPP
 
+#include <set>
+
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_PURE
 #include "glm/glm.hpp"
@@ -18,6 +20,7 @@ class RenderGridItem {
         ObjectPtr object;
         RenderElementPtr renderElement;
         bool dirty;
+        std::set<int> facingFillSpaces;
 
         bool isEqual(RenderGridItem *other);
 };

@@ -13,6 +13,10 @@
 SolidCube::SolidCube(glm::vec3 _position) : GameObject(), CollisionObject(_position),
     position(_position) {}
 
+SolidCube::SolidCube(glm::vec3 _position, std::set<int> _facingFillSpaces)
+    : GameObject(), CollisionObject(_position), position(_position),
+        facingFillSpaces(_facingFillSpaces) {}
+
 void SolidCube::setup() {
     INFO("Creating a Solid Cube ...");
 
@@ -21,13 +25,15 @@ void SolidCube::setup() {
                MaterialManager::getMaterial("FlatGrey")));
 
     cube->applyTexture(LoadManager::getTexture("VoxelTexture"));
+    cube->applyTexture(LoadManager::getTexture("GreyTexture"));
     cube->enableTexture();
 
     cube->applyNormalMap(LoadManager::getTexture("PaddedNormalMap"));
+    cube->applyNormalMap(LoadManager::getTexture("OldPaintNormalMap"));
 
     cube->translate(position);
 
-    RenderEngine::getRenderGrid()->addObject(cube, RenderEngine::getRenderElement("normalmap"));
+    RenderEngine::getRenderGrid()->addObject(cube, RenderEngine::getRenderElement("normalmap"), facingFillSpaces);
     //RenderEngine::getRenderElement("shadow")->addObject(cube);
 
     setCollisionID(1);

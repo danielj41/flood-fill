@@ -143,7 +143,6 @@ void LevelTemplate::interpLines(std::vector<std::string> lines){
             for(int i = 0; i < numVoxelsInX; i++){
                 ss >> voxelId;
                 (*typeGrid)(i, j, k) = voxelId;
-                (*grid)(i, j, k)     = createVoxel(voxelId, i, (numVoxelsInY - j - 1), k);
             }
 
             j++;
@@ -158,6 +157,14 @@ void LevelTemplate::interpLines(std::vector<std::string> lines){
 
     }
 
+    for(int i = 0; i < numVoxelsInX; i++){
+        for(int j = 0; j < numVoxelsInY; j++){
+            for(int k = 0; k < numVoxelsInZ; k++){
+                (*grid)(i, j, k) = createVoxel((*typeGrid)(i, j, k), i, (numVoxelsInY - j - 1), k);
+            }
+        }
+    }
+
     ASSERT(mapDefined, "Could not find a map definition inside file " <<
                         fileName);
 }
@@ -169,9 +176,17 @@ GameObjectPtr LevelTemplate::createVoxel(int id, int i, int j, int k){
         break;
     case SOLID_CUBE:
     {
+        std::set<int> facing;
+        if(i + 1  < numVoxelsInX && (*typeGrid)(i + 1, j, k) == AVAILABLE_FILL_SPACE) facing.insert(0); // Right
+        if(i      > 0            && (*typeGrid)(i - 1, j, k) == AVAILABLE_FILL_SPACE) facing.insert(3); // Left
+        if(j  + 1 < numVoxelsInY && (*typeGrid)(i, j + 1, k) == AVAILABLE_FILL_SPACE) facing.insert(1); // top
+        if(j      > 0            && (*typeGrid)(i, j - 1, k) == AVAILABLE_FILL_SPACE) facing.insert(4); // bottom
+        if(k + 1  < numVoxelsInZ && (*typeGrid)(i, j, k + 1) == AVAILABLE_FILL_SPACE) facing.insert(2); // Front
+        if(k      > 0            && (*typeGrid)(i, j, k - 1) == AVAILABLE_FILL_SPACE) facing.insert(5); // Back
+
         SolidCubePtr c(new SolidCube(glm::vec3(minx + i * 2 + 1,
                                                 miny + j * 2 + 1,
-                                                minz + (k * 2 + 1))));
+                                                minz + (k * 2 + 1)), facing));
         c->setup();
 
         CollisionManager::addCollisionObjectToGrid(c);

@@ -1,6 +1,8 @@
 #ifndef RENDER_GRID_HPP
 #define RENDER_GRID_HPP
 
+#include <set>
+
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_PURE
 #include "glm/glm.hpp"
@@ -25,7 +27,7 @@ public:
 
   void initialize();
 
-  void addObject(ObjectPtr object, RenderElementPtr renderElement);
+  void addObject(ObjectPtr object, RenderElementPtr renderElement, std::set<int> facingFillSpaces = std::set<int>());
   void removeObject(ObjectPtr object);
 
   void clean();  

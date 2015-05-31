@@ -1,6 +1,8 @@
 #ifndef SOLID_CUBE_HPP
 #define SOLID_CUBE_HPP
 
+#include <set>
+
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_PURE
 #include "glm/glm.hpp"
@@ -16,6 +18,7 @@ class SolidCube : public GameObject, public CollisionObject{
 
 public:
     SolidCube(glm::vec3 _position);
+    SolidCube(glm::vec3 _position, std::set<int> _facingFillSpaces);
     
     void setup();
     void update();
@@ -30,6 +33,7 @@ private:
   ObjectPtr cube;
   glm::vec3 position;
 
+  std::set<int> facingFillSpaces;
 };
 
 #endif
