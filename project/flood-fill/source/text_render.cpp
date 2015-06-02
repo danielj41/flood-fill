@@ -48,7 +48,7 @@ void TextRender::setup() {
         ASSERT(false, "Could not initalize the font engine!");
     }
 
-    fontEngine.updateWindowSize(Global::ScreenWidth, Global::ScreenHeight);
+    fontEngine.updateWindowSize(Global::FbWidth, Global::FbHeight);
 }
 
 void TextRender::loadShader() {}
