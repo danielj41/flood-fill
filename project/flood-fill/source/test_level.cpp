@@ -65,7 +65,7 @@ void TestLevel::setup(){
                         0.1f, 100.f));
 
     l1 = LightPtr(new Light(glm::vec3(1), 30.0f, glm::vec3(0, 30, 0)));
-    l1->setPosition(l1->getDirection()*1.0f);
+    l1->setPosition(l1->getDirection());
     
 
     Uniform3DGridPtr<int> typeGrid = getTypeGrid();
@@ -74,9 +74,9 @@ void TestLevel::setup(){
                          (typeGrid->getMinZ() - typeGrid->getMaxZ())/2.0f);
 
     l1->setViewMatrix(glm::lookAt(
-        l1->getDirection(),
+        l1->getPosition(),
         gridCenter, glm::vec3(0, 1, 0)));
-    l1->setProjectionMatrix(glm::ortho<float>(-30,30,-30,30,-100,100));
+    l1->setProjectionMatrix(glm::ortho<float>(-30,30,-30,30,-70,70));
 
     addLight("Sun", l1);
 
@@ -133,11 +133,11 @@ void TestLevel::update(){
         getCamera("Camera1")->fix(false, true, false);
     }
     timer += TimeManager::getDeltaTime() / 15.0;
-    l1->setDirection(glm::vec3(20.0 * sin(timer * 3.1), 5.0 * sin(timer * 3.4 + 5.0) + 30.0, 20.0 * sin(timer * 3.8 + 2.0)));
-    l1->setPosition(gridCenter + l1->getDirection()*1.0f);
-    l1->setViewMatrix(glm::lookAt(
-        gridCenter + l1->getDirection(),
-        gridCenter, glm::vec3(0, 1, 0)));
+    //l1->setDirection(glm::vec3(20.0 * sin(timer * 3.1), 5.0 * sin(timer * 3.4 + 5.0) + 30.0, 20.0 * sin(timer * 3.8 + 2.0)));
+    //l1->setPosition(gridCenter + l1->getDirection()*1.0f);
+    //l1->setViewMatrix(glm::lookAt(
+    //    gridCenter + l1->getDirection(),
+    //    gridCenter, glm::vec3(0, 1, 0)));
 
     glm::vec4 titleColor = levelTitle->getColor();
     if(titleColor.w > 0){
