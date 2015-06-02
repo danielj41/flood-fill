@@ -109,6 +109,7 @@ void Player::update() {
     }
     
     jumping = true;
+    addMultiplier = false; 
   
     if(isKeyPressed(GLFW_KEY_W)){
         forwardVelocity = fmin(forwardVelocity + 1.5 * dt , 0.25f - 0.07f * fabs(strafeVelocity));
@@ -219,10 +220,12 @@ void Player::collided(CollisionObjectPtr collidedWith) {
     getBoundingBox()->setPosition(camera->getEye() - glm::vec3(0,eyeOffset,0));
 
     //Reseting multipliers from colored blocks
-    if (moveMultiplier > 1.0) {
-        moveMultiplier -= .01;
+    if(!addMultiplier) {
+        if (moveMultiplier > 1.0) {
+            moveMultiplier -= .01;
+        }
+        jumpMultiplier = 1;
     }
-    jumpMultiplier = 1;
 
     //If on flat ground, jumping is done. 
     if(normal.y > 0.5f) {
@@ -255,6 +258,7 @@ void Player::collided(CollisionObjectPtr collidedWith) {
     else if(PTR_CAST(FluidBox, collidedWith)->getColorMask() & GREEN) {//Red filled ... trying to fix
         moveMultiplier = 2;
     }
+    addMultiplier = true;
 
     normal = getCollisionNormal(collidedWith);
     dist = getCollisionDistance(collidedWith);
