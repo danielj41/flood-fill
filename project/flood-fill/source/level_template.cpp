@@ -177,12 +177,12 @@ GameObjectPtr LevelTemplate::createVoxel(int id, int i, int j, int k){
     case SOLID_CUBE:
     {
         std::set<int> facing;
-        if(i + 1  < numVoxelsInX && (*typeGrid)(i + 1, j, k) == AVAILABLE_FILL_SPACE) facing.insert(0); // Right
-        if(i      > 0            && (*typeGrid)(i - 1, j, k) == AVAILABLE_FILL_SPACE) facing.insert(3); // Left
-        if(j  + 1 < numVoxelsInY && (*typeGrid)(i, j + 1, k) == AVAILABLE_FILL_SPACE) facing.insert(1); // top
-        if(j      > 0            && (*typeGrid)(i, j - 1, k) == AVAILABLE_FILL_SPACE) facing.insert(4); // bottom
-        if(k + 1  < numVoxelsInZ && (*typeGrid)(i, j, k + 1) == AVAILABLE_FILL_SPACE) facing.insert(2); // Front
-        if(k      > 0            && (*typeGrid)(i, j, k - 1) == AVAILABLE_FILL_SPACE) facing.insert(5); // Back
+        if(i + 1  < numVoxelsInX && (*typeGrid)(i + 1, numVoxelsInY - j - 1, k) == AVAILABLE_FILL_SPACE) facing.insert(0); // Right
+        if(i      > 0            && (*typeGrid)(i - 1, numVoxelsInY - j - 1, k) == AVAILABLE_FILL_SPACE) facing.insert(3); // Left
+        if(numVoxelsInY - j - 1 + 1  < numVoxelsInY && (*typeGrid)(i, numVoxelsInY - j - 1 + 1, k) == AVAILABLE_FILL_SPACE) facing.insert(1); // top
+        if(numVoxelsInY - j - 1 > 0                 && (*typeGrid)(i, numVoxelsInY - j - 1 - 1, k) == AVAILABLE_FILL_SPACE) facing.insert(4); // bottom
+        if(k + 1  < numVoxelsInZ && (*typeGrid)(i, numVoxelsInY - j - 1, k + 1) == AVAILABLE_FILL_SPACE) facing.insert(2); // Front
+        if(k      > 0            && (*typeGrid)(i, numVoxelsInY - j - 1, k - 1) == AVAILABLE_FILL_SPACE) facing.insert(5); // Back
 
         SolidCubePtr c(new SolidCube(glm::vec3(minx + i * 2 + 1,
                                                 miny + j * 2 + 1,
