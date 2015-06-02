@@ -30,8 +30,11 @@
 #include "shadow_occluder_render.hpp"
 #include "normal_map_border_render.hpp"
 #include "time_manager.hpp"
+#include "level_manager.hpp"
 
-TestLevel::TestLevel() : LevelTemplate("testLevel3.txt"), timer(0.0f) {}
+TestLevel::TestLevel() : LevelTemplate("testLevel3.txt"), timer(0.0f) {
+    resetHeight = -20.0f;
+}
 
 void TestLevel::setup(){
     INFO("Generating Test Level...");
@@ -143,6 +146,10 @@ void TestLevel::update(){
     if(titleColor.w > 0){
         titleColor.w -= TimeManager::getDeltaTime()*0.3;
         levelTitle->setColor(titleColor);
+    }
+
+    if(player->getPosition().y <= resetHeight){
+            LevelManager::resetLevel();
     }
 }
 

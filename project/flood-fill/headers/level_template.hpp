@@ -41,6 +41,8 @@ public:
     void shearRegion(int x1, int x2,  int y1, int y2, int z1, int z2, int shearX, int shearY, float endEarly);
     WaterSurfaceManagerPtr getWaterSurfaceManager();
 
+    float resetHeight;
+
     // Level blocks identifiers
     static const char COMMENT;
     static const int TOGGLE_FILL;

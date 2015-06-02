@@ -32,8 +32,11 @@
 #include "time_manager.hpp"
 #include "text.hpp"
 #include "text_render.hpp"
+#include "level_manager.hpp"
 
-TutorialLevel::TutorialLevel() : LevelTemplate("testLevel4.txt"), timer(0.0f) {}
+TutorialLevel::TutorialLevel() : LevelTemplate("testLevel4.txt"), timer(0.0f) {
+    resetHeight = -20.0f;
+}
 
 void TutorialLevel::setup(){
     INFO("Generating Tutorial Level...");
@@ -122,6 +125,10 @@ void TutorialLevel::update(){
     if(titleColor.w > 0){
         titleColor.w -= TimeManager::getDeltaTime()*0.3;
         levelTitle->setColor(titleColor);
+    }
+
+    if(player->getPosition().y <= resetHeight){
+            LevelManager::resetLevel();
     }
 }
 
