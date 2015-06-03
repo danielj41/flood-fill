@@ -36,7 +36,7 @@ float getShadow(vec3 shadowCoord){
 
     float shadowmap =  texture2D(uShadowTexID, shadowCoord.xy).x;
 
-    if(shadowmap + 0.001 < shadowCoord.z){
+    if(shadowmap + 0.0001 < shadowCoord.z){
         return 0.2f;
     }
     return 1.0f;

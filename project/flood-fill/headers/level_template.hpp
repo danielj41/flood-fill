@@ -60,6 +60,7 @@ public:
     static const int FLUID_GREEN;
     static const int FLUID_DRAIN;
     static const int INVISIBLE_BLOCK;
+    static const int NEAR_FILL_SPACE_BLOCK;
 
 protected:
     std::string fileName;

@@ -42,6 +42,7 @@ const int LevelTemplate::FLUID_RED             =  9;
 const int LevelTemplate::FLUID_BLUE            =  10;
 const int LevelTemplate::FLUID_DRAIN           =  11;
 const int LevelTemplate::INVISIBLE_BLOCK       =  12;
+const int LevelTemplate::NEAR_FILL_SPACE_BLOCK =  13;
 
 LevelTemplate::LevelTemplate(std::string levelFileName)
     : Scene(levelFileName) {
@@ -175,6 +176,17 @@ GameObjectPtr LevelTemplate::createVoxel(int id, int i, int j, int k){
         return voidVoxel;
         break;
     case SOLID_CUBE:
+    {
+        SolidCubePtr c(new SolidCube(glm::vec3(minx + i * 2 + 1,
+                                                miny + j * 2 + 1,
+                                                minz + (k * 2 + 1))));
+        c->setup();
+
+        CollisionManager::addCollisionObjectToGrid(c);
+        return c;
+        break;
+    }
+    case NEAR_FILL_SPACE_BLOCK:
     {
         std::set<int> facing;
         if(i + 1  < numVoxelsInX && (*typeGrid)(i + 1, numVoxelsInY - j - 1, k) == AVAILABLE_FILL_SPACE) facing.insert(0); // Right
