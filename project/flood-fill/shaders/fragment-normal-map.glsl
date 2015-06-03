@@ -23,8 +23,8 @@ uniform float uShininess;
 uniform vec3 uLightDirection;
 
 vec2 getTexCoordOffset(vec2 texCoord){
-    texCoord.x = (texCoord.x * uGridScale.x) - floor(texCoord.x * uGridScale.x);
-    texCoord.y = (texCoord.y * uGridScale.y) - floor(texCoord.y * uGridScale.y);
+    texCoord.x = (texCoord.x * uGridScale.x);
+    texCoord.y = (texCoord.y * uGridScale.y);
     return texCoord;
 }
 
@@ -36,7 +36,7 @@ float getShadow(vec3 shadowCoord){
 
     float shadowmap =  texture2D(uShadowTexID, shadowCoord.xy).x;
 
-    if(shadowmap + 0.00001 < shadowCoord.z){
+    if(shadowmap + 0.0001 < shadowCoord.z){
         return 0.2f;
     }
     return 1.0f;

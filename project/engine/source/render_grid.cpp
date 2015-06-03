@@ -34,6 +34,7 @@ void RenderGrid::initialize() {
   item.planes[4] = NULL_PTR;
   item.planes[5] = NULL_PTR;
   item.renderElement = NULL_PTR;
+  item.facingFillSpaces = std::set<int>();
   item.dirty = true;
   grid->initialize(item);
 }
@@ -206,6 +207,7 @@ void RenderGrid::removeObject(ObjectPtr object) {
   RenderGridItem item = grid->getValue(pos.x, pos.y, pos.z);
   item.object = NULL_PTR;
   item.renderElement = NULL_PTR;
+  item.facingFillSpaces = std::set<int>();
   item.dirty = true;
   grid->setValue(pos.x, pos.y, pos.z, item);
 }

@@ -46,9 +46,11 @@ void FluidBox::setup() {
 
 
   fluidBox->applyTexture(LoadManager::getTexture("PureWhiteTexture"));
+  fluidBox->applyTexture(LoadManager::getTexture("PureWhiteTexture"));
   fluidBox->enableTexture();
 
   fluidBox->applyNormalMap(LoadManager::getTexture("RegularNormalMap"));
+  fluidBox->applyNormalMap(LoadManager::getTexture("WaterNormalMap"));
 
   fluidBox->loadIdentity();
   fluidBox->translate(position);
@@ -148,7 +150,7 @@ int FluidBox::getColorMask(){
 void FluidBox::highlightForRemotion(){
     if(deleting) return;
 
-    fluidBox->applyNormalMap(LoadManager::getTexture("WaterNormalMap"));
+    fluidBox->setTextureAndNormalMapPack(1);
 
     fluidBox->setMaterial(MaterialManager::getMaterial("removeBlock"));
     fluidBox->setAlpha(0.3);
@@ -160,7 +162,7 @@ void FluidBox::highlightForRemotion(){
 void FluidBox::deselect(){
     if(deleting) return;
 
-    fluidBox->applyNormalMap(LoadManager::getTexture("RegularNormalMap"));
+    fluidBox->setTextureAndNormalMapPack(0);
 
     fluidBox->setMaterial(MaterialManager::getMaterial(color));
     fluidBox->setAlpha(1);
