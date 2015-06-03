@@ -17,6 +17,7 @@ Object::Object() : _hasTexture(false), textureEnabled(false), water(false), alph
     gridScale = glm::vec2(1.0f, 1.0f);
     shearX = 0;
     shearZ = 0;
+    texturePack = 0;
 }
 
 Object::Object(MeshPtr _mesh, MaterialPtr _material)
@@ -32,62 +33,7 @@ Object::Object(MeshPtr _mesh, MaterialPtr _material)
     gridScale = glm::vec2(1.0f, 1.0f);
     shearX = 0;
     shearZ = 0;
-}
-
-void Object::draw(ShaderPtr shader){
-
-    glUniformMatrix4fv(shader->getHandle("uNormalMatrix"), 1, GL_FALSE,
-        glm::value_ptr(
-        glm::transpose(
-        glm::inverse(
-        getModelMatrix()))));
-
-    glUniformMatrix4fv(shader->getHandle("uModel"), 1, GL_FALSE,
-                        glm::value_ptr(getModelMatrix()));
-
-    glUniform3f(shader->getHandle("uDiffuseColor"),
-                material->getDiffuseColor().x,
-                material->getDiffuseColor().y,
-                material->getDiffuseColor().z);
-    glUniform3f(shader->getHandle("uSpecularColor"),
-                material->getSpecularColor().x,
-                material->getSpecularColor().y,
-                material->getSpecularColor().z);
-    glUniform3f(shader->getHandle("uAmbientColor"),
-                material->getAmbientColor().x,
-                material->getAmbientColor().y,
-                material->getAmbientColor().z);
-    glUniform3f(shader->getHandle("uEmissionColor"),
-                material->getEmissionColor().x,
-                material->getEmissionColor().y,
-                material->getEmissionColor().z);
-    glUniform1f(shader->getHandle("uShininess"), material->getShininess());
-
-    if(hasTexture() && isTextureEnabled()){
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, texture->getTexture());
-        glUniform1i(shader->getHandle("uTextureID"), 0);
-    }
-    else if(isWater()) {
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, waterData);
-        glUniform1i(shader->getHandle("uWaterData"), 0);
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, waterColor);
-        glUniform1i(shader->getHandle("uWaterColor"), 1);
-        glActiveTexture(GL_TEXTURE2);
-        glBindTexture(GL_TEXTURE_2D, waterBlock);
-        glUniform1i(shader->getHandle("uWaterBlock"), 2);
-    } else {
-        glUniform1f(shader->getHandle("alpha"), alpha);
-    }
-
-    drawElements();
-}
-
-void Object::drawElements(){
-    glDrawElements(GL_TRIANGLES, (int) mesh->getIndices().size(),
-                   GL_UNSIGNED_INT, 0);
+    texturePack = 0;
 }
 
 MeshPtr Object::getMesh(){
@@ -104,7 +50,13 @@ glm::mat4 Object::getModelMatrix(){
 
 TexturePtr Object::getTexture(){
     ASSERT(hasTexture(), "This object does not have texture!");
-    return texture;
+    return this->getTexture(texturePack);
+}
+
+TexturePtr Object::getTexture(unsigned int i){
+    ASSERT(hasTexture(), "This object does not have texture!");
+    ASSERT(i < texture.size(), "The texture #" << i << " is not avaible!");
+    return texture[i];
 }
 
 float Object::getAlpha(){
@@ -125,7 +77,13 @@ GLuint Object::getWaterBlock(){
 
 TexturePtr Object::getNormalMap(){
     ASSERT(hasNormalMap(), "This Object does not have normal map!");
-    return normalMap;
+    return this->getNormalMap(texturePack);
+}
+
+TexturePtr Object::getNormalMap(unsigned int i){
+    ASSERT(hasNormalMap(), "This Object does not have normal map!");
+    ASSERT(i < normalMap.size(), "The texture #" << i << " is not avaible!");
+    return normalMap[i];
 }
 
 float Object::getNormalMapScale(){
@@ -136,17 +94,25 @@ float Object::getNormalMapBias(){
     return normalMapBias;
 }
 
+std::vector<TexturePtr> Object::getTextures() {
+    return texture;
+}
+
+std::vector<TexturePtr> Object::getNormalMaps() {
+    return normalMap;
+}
+
 void Object::setAlpha(float _alpha) {
     alpha = _alpha;
 }
 
 void Object::applyTexture(TexturePtr _texture){
-    texture = _texture;
+    texture.push_back(_texture);
     _hasTexture = true;
 }
 
 void Object::applyNormalMap(TexturePtr _texture){
-    normalMap = _texture;
+    normalMap.push_back(_texture);
     _hasNormalMap = true;
 }
 
@@ -197,6 +163,10 @@ int Object::getShearX() {
 
 int Object::getShearZ() {
     return shearZ;
+}
+
+unsigned int Object::getTexturePack() {
+    return texturePack;
 }
 
 void Object::enableTexture(){
@@ -253,4 +223,20 @@ void Object::setMatrix(glm::mat4 matrix){
 
 void Object::setMaterial(MaterialPtr _material) {
     material = _material;
+}
+
+void Object::setTextureAndNormalMapPack(unsigned int i){
+    texturePack = i;
+}
+
+void Object::setTextures(std::vector<TexturePtr> tex){
+    texture = tex;
+}
+
+void Object::setNormalMaps(std::vector<TexturePtr> norms){
+    normalMap = norms;
+}
+
+void Object::setTexturePack(unsigned int texturePck){
+    texturePack = texturePck;
 }

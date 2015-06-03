@@ -19,9 +19,13 @@ void Texture::createTextureFromImage(ImagePtr image, bool mipmap){
 
 
     if(mipmap){
-        glTexStorage2D(GL_TEXTURE_2D, 6, GL_RGBA8, image->getWidth(), image->getHeight());
-        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, image->getWidth(), image->getHeight(),
-                        mode, GL_UNSIGNED_BYTE, image->getImage());
+        //glTexStorage2D(GL_TEXTURE_2D, 6, GL_RGBA8, image->getWidth(), image->getHeight());
+        //glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, image->getWidth(), image->getHeight(),
+        //                mode, GL_UNSIGNED_BYTE, image->getImage());
+
+        glTexImage2D(GL_TEXTURE_2D, 0, mode, image->getWidth(),
+            image->getHeight(), 0, mode, GL_UNSIGNED_BYTE,
+            image->getImage());
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);

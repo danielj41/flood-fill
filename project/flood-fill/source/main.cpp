@@ -250,6 +250,12 @@ void loadTextures(){
     LoadManager::loadImage("regular_normal.png");
     LoadManager::loadTexture("RegularNormalMap", LoadManager::getImage("regular_normal.png"));
 
+    LoadManager::loadImage("n5.png");
+    LoadManager::loadTexture("OldPaintNormalMap", LoadManager::getImage("n5.png"));
+
+    LoadManager::loadImage("grey.png");
+    LoadManager::loadTexture("GreyTexture", LoadManager::getImage("grey.png"));
+
     LoadManager::loadImage("water_normal_map.png");
     LoadManager::loadTexture("WaterNormalMap", LoadManager::getImage("water_normal_map.png"));
 

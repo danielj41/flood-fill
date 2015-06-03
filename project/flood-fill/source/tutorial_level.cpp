@@ -32,8 +32,11 @@
 #include "time_manager.hpp"
 #include "text.hpp"
 #include "text_render.hpp"
+#include "level_manager.hpp"
 
-TutorialLevel::TutorialLevel() : LevelTemplate("testLevel4.txt"), timer(0.0f) {}
+TutorialLevel::TutorialLevel() : LevelTemplate("testLevel4.txt"), timer(0.0f) {
+    resetHeight = -20.0f;
+}
 
 void TutorialLevel::setup(){
     INFO("Generating Tutorial Level...");
@@ -67,7 +70,7 @@ void TutorialLevel::setup(){
                         0.1f, 100.f));
 
     l1 = LightPtr(new Light(glm::vec3(1), 30.0f, glm::vec3(0, 30, 0)));
-    l1->setPosition(l1->getDirection()*1.0f);
+    l1->setPosition(l1->getDirection());
     
 
     Uniform3DGridPtr<int> typeGrid = getTypeGrid();
@@ -76,9 +79,9 @@ void TutorialLevel::setup(){
                          (typeGrid->getMinZ() - typeGrid->getMaxZ())/2.0f);
 
     l1->setViewMatrix(glm::lookAt(
-        l1->getDirection(),
+        l1->getPosition(),
         gridCenter, glm::vec3(0, 1, 0)));
-    l1->setProjectionMatrix(glm::ortho<float>(-100,100,-100,100,-100,100));
+    l1->setProjectionMatrix(glm::ortho<float>(-30,30,-30,30,-70,70));
 
     addLight("Sun", l1);
 
@@ -112,16 +115,20 @@ void TutorialLevel::update(){
         getCamera("Camera1")->fix(false, true, false);
     }
     timer += TimeManager::getDeltaTime() / 15.0;
-    l1->setDirection(glm::vec3(20.0 * sin(timer * 3.1), 5.0 * sin(timer * 3.4 + 5.0) + 30.0, 20.0 * sin(timer * 3.8 + 2.0)));
-    l1->setPosition(gridCenter + l1->getDirection()*1.0f);
-    l1->setViewMatrix(glm::lookAt(
-        gridCenter + l1->getDirection(),
-        gridCenter, glm::vec3(0, 1, 0)));
+    //l1->setDirection(glm::vec3(20.0 * sin(timer * 3.1), 5.0 * sin(timer * 3.4 + 5.0) + 30.0, 20.0 * sin(timer * 3.8 + 2.0)));
+    //l1->setPosition(gridCenter + l1->getDirection()*1.0f);
+    //l1->setViewMatrix(glm::lookAt(
+    //    gridCenter + l1->getDirection(),
+    //    gridCenter, glm::vec3(0, 1, 0)));
 
     glm::vec4 titleColor = levelTitle->getColor();
     if(titleColor.w > 0){
         titleColor.w -= TimeManager::getDeltaTime()*0.3;
         levelTitle->setColor(titleColor);
+    }
+
+    if(player->getPosition().y <= resetHeight){
+            LevelManager::resetLevel();
     }
 }
 
@@ -130,7 +137,7 @@ void TutorialLevel::createRenders(){
 
     RenderEngine::addRenderElement("camera", RenderElementPtr(new CameraPolygonsRender()), 1);
     RenderEngine::addRenderElement("regular", RenderElementPtr(new RegularPolygonsRender()), 1);
-    RenderEngine::addRenderElement("debug", RenderElementPtr(new DebugRender()), -5);
+    RenderEngine::addRenderElement("debug", RenderElementPtr(new DebugRender()), 5);
     RenderEngine::addRenderElement("normalmap", RenderElementPtr(new NormalMapRender()), 1);
     RenderEngine::addRenderElement("normalmap-border", RenderElementPtr(new NormalMapBorderRender()), 1);
     RenderEngine::addRenderElement("textured", RenderElementPtr(new TexturedPolygonsRender()), 1);

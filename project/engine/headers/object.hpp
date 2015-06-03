@@ -19,13 +19,13 @@ public:
     Object();
     Object(MeshPtr _mesh, MaterialPtr _material);
 
-    virtual void draw(ShaderPtr shader);
-
     MeshPtr getMesh();
     MaterialPtr getMaterial();
     glm::mat4 getModelMatrix();
     TexturePtr getTexture();
+    TexturePtr getTexture(unsigned int i);
     TexturePtr getNormalMap();
+    TexturePtr getNormalMap(unsigned int i);
     float getAlpha();
     float getNormalMapScale();
     float getNormalMapBias();
@@ -37,6 +37,9 @@ public:
     glm::vec2 getGridScale();
     int getShearX();
     int getShearZ();
+    std::vector<TexturePtr> getTextures();
+    std::vector<TexturePtr> getNormalMaps();
+    unsigned int getTexturePack();
 
     void applyTexture(TexturePtr _texture);
     void enableTexture();
@@ -56,6 +59,12 @@ public:
     void setVelocity(glm::vec3 _velocity);
     void setGridScale(glm::vec2 _gridScale);
     void setShear(int x, int z);
+    void setTextures(std::vector<TexturePtr> tex);
+    void setNormalMaps(std::vector<TexturePtr> norms);
+    void setTexturePack(unsigned int texturePck);
+
+    // Sets wich pair or texture and normal map it should use
+    void setTextureAndNormalMapPack(unsigned int i);
 
     void setAlpha(float _alpha);
     void scale(glm::vec3 scalingVector);
@@ -69,8 +78,8 @@ protected:
     MeshPtr mesh;
     MaterialPtr material;
 
-    TexturePtr texture;
-    TexturePtr normalMap;
+    std::vector<TexturePtr> texture;
+    std::vector<TexturePtr> normalMap;
 
     GLuint waterData;
     GLuint waterColor;
@@ -87,7 +96,7 @@ protected:
     glm::vec2 gridScale;
     int shearX, shearZ;
 
-    void drawElements();
+    unsigned int texturePack;
 };
 
 #endif

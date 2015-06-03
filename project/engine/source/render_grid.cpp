@@ -34,6 +34,7 @@ void RenderGrid::initialize() {
   item.planes[4] = NULL_PTR;
   item.planes[5] = NULL_PTR;
   item.renderElement = NULL_PTR;
+  item.facingFillSpaces = std::set<int>();
   item.dirty = true;
   grid->initialize(item);
 }
@@ -169,6 +170,9 @@ void RenderGrid::createPlane(int x, int y, int z, int dir) {
                            center.object));
   plane->setup();
 
+  if(center.facingFillSpaces.find(dir) != center.facingFillSpaces.end())
+    plane->getObject()->setTextureAndNormalMapPack(1);
+
   for(i = left; i <= right; i++) {
     for(j = bottom; j <= top; j++) {
       for(k = back; k <= front; k++) {
@@ -180,10 +184,11 @@ void RenderGrid::createPlane(int x, int y, int z, int dir) {
   center.renderElement->addObject(plane->getObject());
 }
 
-void RenderGrid::addObject(ObjectPtr object, RenderElementPtr renderElement) {
+void RenderGrid::addObject(ObjectPtr object, RenderElementPtr renderElement, std::set<int> facingFillSpaces) {
   glm::vec4 pos = object->getModelMatrix() * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
   RenderGridItem item;
   item.object = object;
+  item.facingFillSpaces = facingFillSpaces;
   item.planes[0] = NULL_PTR;
   item.planes[1] = NULL_PTR;
   item.planes[2] = NULL_PTR;
@@ -202,6 +207,7 @@ void RenderGrid::removeObject(ObjectPtr object) {
   RenderGridItem item = grid->getValue(pos.x, pos.y, pos.z);
   item.object = NULL_PTR;
   item.renderElement = NULL_PTR;
+  item.facingFillSpaces = std::set<int>();
   item.dirty = true;
   grid->setValue(pos.x, pos.y, pos.z, item);
 }

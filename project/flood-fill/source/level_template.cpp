@@ -42,6 +42,7 @@ const int LevelTemplate::FLUID_RED             =  9;
 const int LevelTemplate::FLUID_BLUE            =  10;
 const int LevelTemplate::FLUID_DRAIN           =  11;
 const int LevelTemplate::INVISIBLE_BLOCK       =  12;
+const int LevelTemplate::NEAR_FILL_SPACE_BLOCK =  13;
 
 LevelTemplate::LevelTemplate(std::string levelFileName)
     : Scene(levelFileName) {
@@ -143,7 +144,6 @@ void LevelTemplate::interpLines(std::vector<std::string> lines){
             for(int i = 0; i < numVoxelsInX; i++){
                 ss >> voxelId;
                 (*typeGrid)(i, j, k) = voxelId;
-                (*grid)(i, j, k)     = createVoxel(voxelId, i, (numVoxelsInY - j - 1), k);
             }
 
             j++;
@@ -156,6 +156,14 @@ void LevelTemplate::interpLines(std::vector<std::string> lines){
             }
         }
 
+    }
+
+    for(int i = 0; i < numVoxelsInX; i++){
+        for(int j = 0; j < numVoxelsInY; j++){
+            for(int k = 0; k < numVoxelsInZ; k++){
+                (*grid)(i, j, k) = createVoxel((*typeGrid)(i, j, k), i, (numVoxelsInY - j - 1), k);
+            }
+        }
     }
 
     ASSERT(mapDefined, "Could not find a map definition inside file " <<
@@ -172,6 +180,25 @@ GameObjectPtr LevelTemplate::createVoxel(int id, int i, int j, int k){
         SolidCubePtr c(new SolidCube(glm::vec3(minx + i * 2 + 1,
                                                 miny + j * 2 + 1,
                                                 minz + (k * 2 + 1))));
+        c->setup();
+
+        CollisionManager::addCollisionObjectToGrid(c);
+        return c;
+        break;
+    }
+    case NEAR_FILL_SPACE_BLOCK:
+    {
+        std::set<int> facing;
+        if(i + 1  < numVoxelsInX && (*typeGrid)(i + 1, numVoxelsInY - j - 1, k) == AVAILABLE_FILL_SPACE) facing.insert(0); // Right
+        if(i      > 0            && (*typeGrid)(i - 1, numVoxelsInY - j - 1, k) == AVAILABLE_FILL_SPACE) facing.insert(3); // Left
+        if(numVoxelsInY - j - 1 + 1  < numVoxelsInY && (*typeGrid)(i, numVoxelsInY - j - 1 + 1, k) == AVAILABLE_FILL_SPACE) facing.insert(1); // top
+        if(numVoxelsInY - j - 1 > 0                 && (*typeGrid)(i, numVoxelsInY - j - 1 - 1, k) == AVAILABLE_FILL_SPACE) facing.insert(4); // bottom
+        if(k + 1  < numVoxelsInZ && (*typeGrid)(i, numVoxelsInY - j - 1, k + 1) == AVAILABLE_FILL_SPACE) facing.insert(2); // Front
+        if(k      > 0            && (*typeGrid)(i, numVoxelsInY - j - 1, k - 1) == AVAILABLE_FILL_SPACE) facing.insert(5); // Back
+
+        SolidCubePtr c(new SolidCube(glm::vec3(minx + i * 2 + 1,
+                                                miny + j * 2 + 1,
+                                                minz + (k * 2 + 1)), facing));
         c->setup();
 
         CollisionManager::addCollisionObjectToGrid(c);

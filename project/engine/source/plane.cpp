@@ -39,12 +39,16 @@ void Plane::setup() {
   if(refObject->hasTexture()) {
     object->applyTexture(refObject->getTexture());
     object->enableTexture();
+    object->setTextures(refObject->getTextures());
   }
 
   if(refObject->hasNormalMap()) {
     object->applyNormalMap(refObject->getNormalMap());
+    object->setNormalMaps(refObject->getNormalMaps());
   }
 
+  object->setTexturePack(refObject->getTexturePack());
+  object->setAlpha(refObject->getAlpha());
   object->setAlpha(refObject->getAlpha());
 
   object->loadIdentity();
