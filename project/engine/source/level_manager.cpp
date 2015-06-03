@@ -14,7 +14,7 @@ bool LevelManager::levelFinished = false;
 float LevelManager::timeStamp = 0; 
 //public:
 void LevelManager::nextLevel() {
-    if(TimeManager::getTimeStamp() -timeStamp < .2)
+    if(TimeManager::getTimeStamp() -timeStamp < .5)
         return;
     timeStamp = TimeManager::getTimeStamp(); 
 
