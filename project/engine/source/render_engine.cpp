@@ -135,3 +135,12 @@ void RenderEngine::setupOpenGL(){
     glCullFace(GL_BACK);
     glEnable(GL_TEXTURE_2D);
 }
+
+void RenderEngine::toggleElementsForMenu() {
+     for(auto it = renderElements.begin(); it != renderElements.end(); it++){
+         if(it->first != "text"){
+             renderElementsPriority[it->first] = -renderElementsPriority[it->first];
+             INFO("Render Element Toggled");
+        }
+     }
+}

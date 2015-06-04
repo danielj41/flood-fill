@@ -30,6 +30,7 @@
 #include "shadow_occluder_render.hpp"
 #include "normal_map_border_render.hpp"
 #include "time_manager.hpp"
+#include "menu.hpp"
 
 TestLevel::TestLevel() : LevelTemplate("testLevel3.txt"), timer(0.0f) {}
 
@@ -117,12 +118,17 @@ void TestLevel::setup(){
     shearRegion(1, 4, 11, 11, 4, 5, 1, 0, 0.0f);
     shearRegion(5, 8, 10, 10, 4, 5, 1, 0, 0.5f);
 
-    levelTitle = TextPtr(new Text(">> Level 1 <<", glm::vec4(0, 0, 0, 1), glm::vec2(-0.5, 0), "Courier", 32));
-    PTR_CAST(TextRender, RenderEngine::getRenderElement("text"))->addText(levelTitle);
     
 }
 
 void TestLevel::update(){
+    if (Menu::isNewLevel()) {
+        levelTitle = TextPtr(new Text("Level2", glm::vec4(0, 0, 0, 1), glm::vec2(0, 0), "FourPixel", 75));
+        levelTitle->setPosition(glm::vec2(0 - levelTitle->getTextWidth()/2.0, 0));
+        PTR_CAST(TextRender, RenderEngine::getRenderElement("text"))->addText(levelTitle);
+        Menu::setNewLevel(false);
+    }
+    
     if(debugPlayer->isActive()){
         ASSERT(getCamera("Camera1") != getCamera("DebugCamera"), "Equal camera");
         setMainCamera("DebugCamera");
@@ -139,10 +145,12 @@ void TestLevel::update(){
         gridCenter + l1->getDirection(),
         gridCenter, glm::vec3(0, 1, 0)));
 
-    glm::vec4 titleColor = levelTitle->getColor();
-    if(titleColor.w > 0){
-        titleColor.w -= TimeManager::getDeltaTime()*0.3;
-        levelTitle->setColor(titleColor);
+    if (!Menu::isActive()) {
+        glm::vec4 titleColor = levelTitle->getColor();
+        if(titleColor.w > 0){
+            titleColor.w -= TimeManager::getDeltaTime()*0.3;
+            levelTitle->setColor(titleColor);
+        }
     }
 }
 

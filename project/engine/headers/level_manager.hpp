@@ -13,14 +13,14 @@ public:
     static void resetLevel();
     static void nextLevel();
     static bool levelFinished;
+    static void setupLevel(int level);
+    static void removeLevel(int level);
+    static int getCurrentLevel();
 
 private:
     static int curlevel; 
     static float timeStamp;
-    static void setupFirstLevel();
-    static void setupSecondLevel();
-    static void removeFirstLevel();
-    static void removeSecondLevel();
+    
 };
 
 #endif

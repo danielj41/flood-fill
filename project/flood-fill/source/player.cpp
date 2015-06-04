@@ -26,6 +26,7 @@
 #include "fluid_box.hpp"
 #include "solid_cube.hpp"
 #include "level_manager.hpp"
+#include "menu.hpp"
 
 #define BLUE    1
 #define GREEN   2
@@ -96,6 +97,8 @@ void Player::setup() {
 }
 
 void Player::update() {
+
+    if (!Menu::isActive()) {
     float dt = TimeManager::getDeltaTime();
     if(dt > 0.04) {
         dt = 0.04; // prevent falling through blocks with low framerate
@@ -195,6 +198,7 @@ void Player::update() {
 
     if(ceilingFrame > 0) {
         ceilingFrame--;
+    }
     }
 }
 
