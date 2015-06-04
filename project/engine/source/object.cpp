@@ -116,6 +116,17 @@ void Object::applyNormalMap(TexturePtr _texture){
     _hasNormalMap = true;
 }
 
+void Object::applyTextureIndex(TexturePtr _texture, int index){
+    texture[index] = _texture;
+    _hasTexture = true;
+}
+
+void Object::applyNormalMapIndex(TexturePtr _texture, int index){
+    normalMap[index] = _texture;
+    _hasNormalMap = true;
+}
+
+
 void Object::applyWaterData(GLuint id){
     waterData = id;
 }

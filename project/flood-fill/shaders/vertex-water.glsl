@@ -32,7 +32,7 @@ mat3 tangentToObjectSpaceMatrix(vec3 tangent, vec3 bitangent, vec3 normal){
 void main(){
     aTangent;
     float amount = uDTime.y / 1.5;
-    amount = amount * amount;
+    amount = clamp(amount * amount, 0.0, 1.0);
 
     vec2 coord = aPosition.xz*0.5 + vec2(0.5,0.5);
 
@@ -42,10 +42,8 @@ void main(){
 
     vec3 pos3 = vec3(0.0, -1.00 + ((1.0 - amount) * texture2D(uWaterData, coord + vec2(0.0, 1.0/32.0)).r * texture2D(uWaterColor, coord + vec2(0.0, 1.0/32.0)).a + amount * texture2D(uWaterBlock, coord + vec2(0.0, 1.0/32.0)).g) * 2.0, 0.25);
 
-    pos2.y = (1.0 - amount) * pos2.y + amount * pos.y;
-    pos3.y = (1.0 - amount) * pos3.y + amount * pos.y;
-
     vNormal = -cross(pos2 - pos, pos3 - pos);
+    vNormal = (1.0 - amount) * vNormal + amount * vec3(0.0, 1.0, 0.0);
 
     gl_Position = uProjection*uView*uModel*vec4(aPosition + pos, 1);
     vVertex = vec3(gl_Position);

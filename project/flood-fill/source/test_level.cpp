@@ -84,7 +84,7 @@ void TestLevel::setup(){
     addLight("Sun", l1);
 
     INFO("Setting up the player for the Test Level...");
-    player = PlayerPtr(new Player(cam1, 1));
+    player = PlayerPtr(new Player(cam1, 2));
     player->setup();
     addGameObject("player" , player);
     CollisionManager::addCollisionObjectToList(player);
@@ -106,17 +106,17 @@ void TestLevel::setup(){
     a1->setup();
     addGameObject("a1", a1);
 
-    PTR_CAST(SolidCube, (*grid)(0, 10, 22))->getObject()->applyTexture(LoadManager::getTexture("DrainTexture"));
-    PTR_CAST(SolidCube, (*grid)(0, 10, 23))->getObject()->applyTexture(LoadManager::getTexture("DrainTexture"));
-    PTR_CAST(SolidCube, (*grid)(0, 10, 22))->getObject()->applyNormalMap(LoadManager::getTexture("RegularNormalMap"));
-    PTR_CAST(SolidCube, (*grid)(0, 10, 23))->getObject()->applyNormalMap(LoadManager::getTexture("RegularNormalMap"));
+    PTR_CAST(SolidCube, (*grid)(0, 10, 22))->getObject()->applyTextureIndex(LoadManager::getTexture("DrainTexture"), 0);
+    PTR_CAST(SolidCube, (*grid)(0, 10, 23))->getObject()->applyTextureIndex(LoadManager::getTexture("DrainTexture"), 0);
+    PTR_CAST(SolidCube, (*grid)(0, 10, 22))->getObject()->applyNormalMapIndex(LoadManager::getTexture("RegularNormalMap"), 0);
+    PTR_CAST(SolidCube, (*grid)(0, 10, 23))->getObject()->applyNormalMapIndex(LoadManager::getTexture("RegularNormalMap"), 0);
     shearRegion(1, 4, 11, 11, 22, 23, 1, 0, 0.0f);
     shearRegion(5, 8, 10, 10, 22, 23, 1, 0, 0.5f);
 
-    PTR_CAST(SolidCube, (*grid)(0, 10, 4))->getObject()->applyTexture(LoadManager::getTexture("DrainTexture"));
-    PTR_CAST(SolidCube, (*grid)(0, 10, 5))->getObject()->applyTexture(LoadManager::getTexture("DrainTexture"));
-    PTR_CAST(SolidCube, (*grid)(0, 10, 4))->getObject()->applyNormalMap(LoadManager::getTexture("RegularNormalMap"));
-    PTR_CAST(SolidCube, (*grid)(0, 10, 5))->getObject()->applyNormalMap(LoadManager::getTexture("RegularNormalMap"));
+    PTR_CAST(SolidCube, (*grid)(0, 10, 4))->getObject()->applyTextureIndex(LoadManager::getTexture("DrainTexture"), 0);
+    PTR_CAST(SolidCube, (*grid)(0, 10, 5))->getObject()->applyTextureIndex(LoadManager::getTexture("DrainTexture"), 0);
+    PTR_CAST(SolidCube, (*grid)(0, 10, 4))->getObject()->applyNormalMapIndex(LoadManager::getTexture("RegularNormalMap"), 0);
+    PTR_CAST(SolidCube, (*grid)(0, 10, 5))->getObject()->applyNormalMapIndex(LoadManager::getTexture("RegularNormalMap"), 0);
     shearRegion(1, 4, 11, 11, 4, 5, 1, 0, 0.0f);
     shearRegion(5, 8, 10, 10, 4, 5, 1, 0, 0.5f);
 

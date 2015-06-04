@@ -80,7 +80,7 @@ void WaterSurface::setup() {
   }
 
   if((maxX - minX) * (maxZ - minZ) > 100.0f * visitedGrid->getEdgeSizeX() * visitedGrid->getEdgeSizeZ()) {
-    setSpeed(0.5f + sqrt(7.07f) / sqrt((maxX - minX) * (maxZ - minZ)));
+    //setSpeed(0.5f + sqrt(7.07f) / sqrt((maxX - minX) * (maxZ - minZ)));
     maxSpeed = speed * 3.0f;
   }
 
