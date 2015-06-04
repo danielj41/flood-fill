@@ -103,7 +103,9 @@ int main()
         }
         
         if (glfwGetKey(Global::window, GLFW_KEY_ESCAPE) == GLFW_PRESS && !Menu::isActive() &&
-             TimeManager::getTimeStamp() - Menu::getLastEscape() > .5) {
+            TimeManager::getTimeStamp() - Menu::getLastEscape() > .5) {
+            RenderEngine::removeRenderElement("text");
+            RenderEngine::addRenderElement("text", RenderElementPtr(new TextRender()), 10);
             Menu::displayMenu();
         } 
        
