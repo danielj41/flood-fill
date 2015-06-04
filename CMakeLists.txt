@@ -128,7 +128,13 @@ add_executable(
         project/flood-fill/source/normal_map_border_render.cpp
         project/flood-fill/source/tutorial_level.cpp
         project/flood-fill/source/text_render.cpp
-
+        project/flood-fill/source/menu_item.cpp
+        project/flood-fill/source/page.cpp
+        project/flood-fill/source/menu.cpp
+        project/flood-fill/source/switch_page_button.cpp
+        project/flood-fill/source/level_button.cpp
+        project/flood-fill/source/list_button.cpp
+        
         #Header Files
         #project/flood-fill/headers/main_level.hpp
         project/flood-fill/headers/global_variables.hpp
@@ -166,6 +172,12 @@ add_executable(
         project/flood-fill/headers/normal_map_border_render.hpp
         project/flood-fill/headers/tutorial_level.hpp
         project/flood-fill/headers/text_render.hpp
+        project/flood-fill/headers/menu_item.hpp
+        project/flood-fill/headers/page.hpp
+        project/flood-fill/headers/menu.hpp
+        project/flood-fill/headers/switch_page_button.hpp
+        project/flood-fill/headers/level_button.hpp
+        project/flood-fill/headers/list_button.hpp
 
         ### Engine Files ###
         #Source Files

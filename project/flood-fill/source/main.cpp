@@ -26,6 +26,7 @@
 #include "collision_manager.hpp"
 #include "level_manager.hpp"
 #include "tutorial_level.hpp"
+#include "menu.hpp"
 
 using namespace std;
 //
@@ -53,6 +54,8 @@ int main()
     loadContent();
     createScenes();
 
+    Menu::setup();
+
     /* OpenGL 3.3 Vertex Array Object
     // Each mesh should have one vao to improve performance
     // Responsible to hold all vertex data
@@ -74,12 +77,9 @@ int main()
 
     do{
 
-        if(glfwGetKey(Global::window, GLFW_KEY_R) == GLFW_PRESS) {
-            LevelManager::resetLevel();
-        }
-
-        if(LevelManager::levelFinished || glfwGetKey(Global::window, GLFW_KEY_N) == GLFW_PRESS) {
+        if(LevelManager::levelFinished) {
             LevelManager::nextLevel();
+            Menu::setNewLevel(true);
         }
 
         Director::updateScene();
@@ -96,14 +96,25 @@ int main()
         TimeManager::setDeltaTime();
         TimeManager::setTimeStamp();
         FPS++;
+       
+       
+        if (Menu::isActive()) {
+            Menu::update();
+        }
         
+        if (glfwGetKey(Global::window, GLFW_KEY_ESCAPE) == GLFW_PRESS && !Menu::isActive() &&
+             TimeManager::getTimeStamp() - Menu::getLastEscape() > .5) {
+            Menu::displayMenu();
+        } 
+       
         // Swap buffers
-
         glfwSwapBuffers(Global::window);
         glfwPollEvents();
+        
+        INFO("//");
+        
     }
-    while (glfwGetKey(Global::window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
-    glfwWindowShouldClose(Global::window) == 0);
+    while (Menu::getCurrentPage() != "");
 
     /* OpenGL 3.3 VAO
     glDeleteVertexArrays(1, &vao);*/
@@ -118,7 +129,7 @@ int main()
 
 void createScenes(){
     INFO("Creating Scenes...");
-    LevelManager::nextLevel();
+    LevelManager::setupLevel(1);
 }
 
 /**
@@ -388,7 +399,7 @@ void setupGLFW(){
 
     glfwMakeContextCurrent(Global::window);
     glfwSetInputMode(Global::window, GLFW_STICKY_KEYS, GL_TRUE);
-    glfwSetInputMode(Global::window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    //glfwSetInputMode(Global::window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     glfwSetCursorPosCallback(Global::window, mouse_movement_callback);
 }

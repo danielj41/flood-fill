@@ -25,6 +25,7 @@ public:
     static void setRenderGrid(RenderGridPtr _renderGrid);
     static RenderGridPtr getRenderGrid();
     static void resetRenderEngine();
+    static void toggleElementsForMenu();
 
 private:
     static bool loaded;
