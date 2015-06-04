@@ -68,8 +68,9 @@ int main()
     double timeStamp = TimeManager::getTimeStamp();
 
     
-    //LoadManager::loadSound("rain.wav");
-    //LoadManager::getSound("rain.wav")->playSound();
+    LoadManager::loadSound("background.wav");
+    LoadManager::getSound("background.wav")->playSound();
+    LoadManager::getSound("background.wav")->loopSound();
 
     do{
 
