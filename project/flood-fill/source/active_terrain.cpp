@@ -36,7 +36,7 @@ void ActiveTerrain::setup(){
 
             solidCubes.push_back(at1);
 
-            SolidCubePtr at2(new SolidCube(glm::vec3(i*2 + 1, j*2 + 1, -21)));
+            SolidCubePtr at2(new SolidCube(glm::vec3(i*2 + 1, j*2 + 1, -19)));
             at2->setup();
             RenderEngine::getRenderGrid()->removeObject(at2->getObject());
             //RenderEngine::getRenderElement("shadow")->removeObject(at2->getObject());
@@ -46,7 +46,7 @@ void ActiveTerrain::setup(){
         }
     }    
 
-    for(int j = -19; j < -10; j++) {
+    for(int j = -19; j < -9; j++) {
         for(int i = 7; i < 13; i++) {
                  
             
@@ -83,7 +83,7 @@ void ActiveTerrain::update(){
         if(timer > 1.0f) {
             doneAnimating = true;
             for(std::list<SolidCubePtr>:: iterator it = solidCubes.begin(); it != solidCubes.end(); it++) {
-                RenderElementPtr re = RenderEngine::getRenderElement("normalmap-border");
+                RenderElementPtr re = RenderEngine::getRenderElement("normalmap");
                 re->removeObject((*it)->getObject());
                 RenderEngine::getRenderGrid()->addObject((*it)->getObject(), re);
                 PTR_CAST(LevelTemplate, Director::getScene())->setTypeCell((*it)->getPosition(), LevelTemplate::SOLID_CUBE);
@@ -94,7 +94,7 @@ void ActiveTerrain::update(){
         if (!active){
             
             active = true;
-            RenderElementPtr re = RenderEngine::getRenderElement("normalmap-border");
+            RenderElementPtr re = RenderEngine::getRenderElement("normalmap");
 
             timer = 0.0f;
             doneAnimating = false;

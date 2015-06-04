@@ -26,6 +26,11 @@ public:
     glm::vec2 getPosition();
     std::string getFont();
     int getFontSize();
+    float getCharWidth();
+    float getCharHeight();
+    float getTextHeight();
+    float getTextWidth();
+    
 
 private:
     std::string msg;

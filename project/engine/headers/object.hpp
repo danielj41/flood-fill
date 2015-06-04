@@ -42,12 +42,14 @@ public:
     unsigned int getTexturePack();
 
     void applyTexture(TexturePtr _texture);
+    void applyTextureIndex(TexturePtr _texture, int index);
     void enableTexture();
     void disableTexture();
     bool isTextureEnabled();
     bool hasTexture();
 
     void applyNormalMap(TexturePtr _texture);
+    void applyNormalMapIndex(TexturePtr _texture, int index);
     bool hasNormalMap();
 
     bool isWater();

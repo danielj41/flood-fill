@@ -26,6 +26,7 @@
 #include "fluid_box.hpp"
 #include "solid_cube.hpp"
 #include "level_manager.hpp"
+#include "menu.hpp"
 
 #define BLUE    1
 #define GREEN   2
@@ -61,7 +62,7 @@ void Player::setup() {
     setBoundingBox(BoundingBox(glm::vec3(0.8f,0.8f,0.8f), glm::vec3(-0.8f,-0.8f,-0.8f)));
     getBoundingBox()->setPosition(camera->getEye() - glm::vec3(0,eyeOffset,0));
 
-    LoadManager::loadSound("jump_land.wav");
+    LoadManager::loadSound("paintfill.wav");
 
     sky = ObjectPtr(new Object(
         LoadManager::getMesh("sphere.obj"),
@@ -96,6 +97,8 @@ void Player::setup() {
 }
 
 void Player::update() {
+
+    if (!Menu::isActive()) {
     float dt = TimeManager::getDeltaTime();
     if(dt > 0.04) {
         dt = 0.04; // prevent falling through blocks with low framerate
@@ -169,6 +172,8 @@ void Player::update() {
         CollisionManager::addCollisionObjectToList(fluidProjectile);
         shootPressed = true;
         shootTimer = 0.15f;
+
+        LoadManager::getSound("paintfill.wav")->playSound();
     }
     if(glfwGetMouseButton(Global::window, GLFW_MOUSE_BUTTON_1) == GLFW_RELEASE) {
         shootPressed = false;
@@ -196,6 +201,7 @@ void Player::update() {
 
     if(ceilingFrame > 0) {
         ceilingFrame--;
+    }
     }
 }
 
@@ -229,8 +235,6 @@ void Player::collided(CollisionObjectPtr collidedWith) {
 
     //If on flat ground, jumping is done. 
     if(normal.y > 0.5f) {
-        if(jumping)
-            // LoadManager::getSound("jump_land.wav")->playSound();
         velocity = 0;
         jumping = false;
     } else if (normal.y < -0.5f) {
