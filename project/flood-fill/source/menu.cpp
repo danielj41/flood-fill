@@ -100,8 +100,9 @@ PagePtr Menu::getPage(std::string name){
 
 void Menu::displayPage(std::string name){ 
     // TODO: Check if Valid Page
-  
-    if ( name != currentPage) {
+    if(name == "") {
+        exit(0);
+    } else if ( name != currentPage) {
         
         hidePage(currentPage);
         pages[name]->display();
