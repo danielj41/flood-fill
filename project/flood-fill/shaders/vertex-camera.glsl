@@ -6,6 +6,7 @@ attribute vec3 aNormal;
 attribute vec2 aTexCoord;
 
 uniform mat4 uModel;
+uniform mat4 uView;
 uniform mat4 uProjection;
 uniform mat4 uNormalMatrix;
 
@@ -18,5 +19,5 @@ void main(){
     vVertex = vec3(uModel*vec4(aPosition, 1));
     vTexCoord = aTexCoord;
 
-    gl_Position = uProjection*uModel*vec4(aPosition, 1);
+    gl_Position = uProjection*uView*uModel*vec4(aPosition, 1);
 }

@@ -23,6 +23,7 @@ void CameraPolygonsRender::loadShader(){
     shader->loadHandle("aTexCoord", 'a');
 
     shader->loadHandle("uModel", 'u');
+    shader->loadHandle("uView", 'u');
     shader->loadHandle("uProjection", 'u');
     shader->loadHandle("uNormalMatrix", 'u');
     shader->loadHandle("uDiffuseColor", 'u');
@@ -59,6 +60,8 @@ void CameraPolygonsRender::setupShader(){
     glUniformMatrix4fv(shader->getHandle("uProjection"), 1, GL_FALSE,
       glm::value_ptr(camera->getProjectionMatrix()));
 
+    glUniformMatrix4fv(shader->getHandle("uView"), 1, GL_FALSE,
+      glm::value_ptr(camera->getViewMatrix()));
 
     glUniform3f(shader->getHandle("uEyePosition"),
                 camera->getEye().x,
@@ -100,12 +103,13 @@ void CameraPolygonsRender::setupMesh(Mesh* mesh){
 
 void CameraPolygonsRender::renderObject(ObjectPtr object){
     MeshPtr mesh = object->getMesh();
+    CameraPtr playerCamera = Director::getScene()->getCamera("Camera1");
 
     glUniformMatrix4fv(shader->getHandle("uNormalMatrix"), 1, GL_FALSE,
         glm::value_ptr(glm::transpose(Director::getScene()->getCamera()->getViewMatrix())));
 
     glUniformMatrix4fv(shader->getHandle("uModel"), 1, GL_FALSE,
-                        glm::value_ptr(object->getModelMatrix()));
+                        glm::value_ptr(glm::inverse(playerCamera->getViewMatrix()) * object->getModelMatrix()));
 
     glUniform3f(shader->getHandle("uDiffuseColor"),
                 object->getMaterial()->getDiffuseColor().x,

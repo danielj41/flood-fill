@@ -126,8 +126,9 @@ void TestLevel::setup(){
 
 void TestLevel::update(){
     if (Menu::isNewLevel()) {
+        float pixelDensityX = (float)Global::FbWidth / Global::ScreenWidth;
         levelTitle = TextPtr(new Text("Level2", glm::vec4(0, 0, 0, 1), glm::vec2(0, 0), "FourPixel", 75));
-        levelTitle->setPosition(glm::vec2(0 - levelTitle->getTextWidth()/2.0, 0));
+        levelTitle->setPosition(glm::vec2(0 - levelTitle->getTextWidth()/2.0/pixelDensityX, 0));
         PTR_CAST(TextRender, RenderEngine::getRenderElement("text"))->addText(levelTitle);
         Menu::setNewLevel(false);
     }
