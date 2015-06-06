@@ -86,6 +86,16 @@ void TutorialLevel::setup(){
     addGameObject("debugPlayer" , debugPlayer);
     //Text
     addCamera("DebugCamera", cam2);
+
+    sky = ObjectPtr(new Object(
+        LoadManager::getMesh("sphere.obj"),
+        MaterialManager::getMaterial("None")));
+
+    sky->applyTexture(LoadManager::getTexture("Sky"));
+    sky->enableTexture();
+    sky->scale(glm::vec3(-50.0f,-50.0f,-50.0f));
+    sky->translate(Director::getScene()->getCamera()->getEye());
+    RenderEngine::getRenderElement("textured")->addObject(sky);
 }
 
 void TutorialLevel::update(){
@@ -128,6 +138,10 @@ void TutorialLevel::update(){
     if(player->getPosition().y <= resetHeight){
             LevelManager::resetLevel();
     }
+
+    sky->loadIdentity();
+    sky->scale(glm::vec3(-50.0f,-50.0f,-50.0f));
+    sky->translate(Director::getScene()->getCamera()->getEye());
 }
 
 void TutorialLevel::createRenders(){

@@ -121,7 +121,15 @@ void TestLevel::setup(){
     shearRegion(1, 4, 11, 11, 4, 5, 1, 0, 0.0f);
     shearRegion(5, 8, 10, 10, 4, 5, 1, 0, 0.5f);
 
-    
+    sky = ObjectPtr(new Object(
+        LoadManager::getMesh("sphere.obj"),
+        MaterialManager::getMaterial("None")));
+
+    sky->applyTexture(LoadManager::getTexture("Sky"));
+    sky->enableTexture();
+    sky->scale(glm::vec3(-50.0f,-50.0f,-50.0f));
+    sky->translate(Director::getScene()->getCamera()->getEye());
+    RenderEngine::getRenderElement("textured")->addObject(sky);
 }
 
 void TestLevel::update(){
@@ -160,6 +168,10 @@ void TestLevel::update(){
     if(player->getPosition().y <= resetHeight){
             LevelManager::resetLevel();
     }
+
+    sky->loadIdentity();
+    sky->scale(glm::vec3(-50.0f,-50.0f,-50.0f));
+    sky->translate(Director::getScene()->getCamera()->getEye());
 }
 
 void TestLevel::createRenders(){
