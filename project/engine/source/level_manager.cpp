@@ -8,12 +8,14 @@
 #include "test_level.hpp"
 #include "tunnel_level.hpp"
 #include "menu.hpp"
+#include "load_manager.hpp"
 
 #define MAX_LEVEL 3
 
 int curLevel = 1;
 bool LevelManager::levelFinished = false;
 float LevelManager::timeStamp = 0; 
+std::string LevelManager::currentSound = "";
 //public:
 void LevelManager::nextLevel() {
     if(TimeManager::getTimeStamp() -timeStamp < .5)
@@ -46,6 +48,9 @@ void LevelManager::setupLevel(int level) {
         TutorialLevelPtr level1(new TutorialLevel());
         Director::addScene(level1);
         Director::setScene("testLevel4.txt");
+        currentSound = "background.wav";
+        LoadManager::getSound(currentSound)->playSound();
+        LoadManager::getSound(currentSound)->loopSound();
         break;
     }
     case 2:
@@ -53,6 +58,9 @@ void LevelManager::setupLevel(int level) {
         TestLevelPtr level2(new TestLevel());
         Director::addScene(level2);
         Director::setScene("testLevel3.txt");
+        currentSound = "background.wav";
+        LoadManager::getSound(currentSound)->playSound();
+        LoadManager::getSound(currentSound)->loopSound();
         break;
     }
     case 3:
@@ -60,6 +68,9 @@ void LevelManager::setupLevel(int level) {
         TunnelLevelPtr level3(new TunnelLevel());
         Director::addScene(level3);
         Director::setScene("tunnellevel.txt");
+        currentSound = "roygbiv_pece_cover.wav";
+        LoadManager::getSound(currentSound)->playSound();
+        LoadManager::getSound(currentSound)->loopSound();
         break;
     }
     }
@@ -84,6 +95,10 @@ void LevelManager::removeLevel(int level) {
         RenderEngine::resetRenderEngine();
         Director::removeScene("tunnellevel.txt");
         break;
+    }
+    if(currentSound != "") {
+        LoadManager::getSound(currentSound)->stopSound();
+        currentSound = "";
     }
 }
 

@@ -20,7 +20,7 @@ public:
 private:
     static int curlevel; 
     static float timeStamp;
-    
+    static std::string currentSound;
 };
 
 #endif

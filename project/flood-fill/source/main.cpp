@@ -52,6 +52,8 @@ int main()
     RenderEngine::setup();
 
     loadContent();
+    LoadManager::loadSound("background.wav");//FEZ OST "Puzzle"
+    LoadManager::loadSound("roygbiv_pece_cover.wav");
     createScenes();
 
     Menu::setup();
@@ -71,9 +73,7 @@ int main()
     double timeStamp = TimeManager::getTimeStamp();
 
     
-    LoadManager::loadSound("background.wav");//FEZ OST "Puzzle"
-    LoadManager::getSound("background.wav")->playSound();
-    LoadManager::getSound("background.wav")->loopSound();
+    
 
     do{
 
