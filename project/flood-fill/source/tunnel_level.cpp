@@ -50,7 +50,7 @@ void TunnelLevel::setup(){
     addGameObject(waterSurfaceManager);
 
     INFO("Setting up the cameras for the Test Level...");
-    CameraPtr cam1(new Camera(glm::vec3(4, 10, -5), glm::vec3(4, 4, -10),
+    CameraPtr cam1(new Camera(glm::vec3(32.0f, 12.0f, -24.0f), glm::vec3(4, 4, -10),
                              glm::vec3(0, 1, 0)));
     cam1->setProjectionMatrix(
         glm::perspective(glm::radians(90.0f),
@@ -116,7 +116,7 @@ void TunnelLevel::setup(){
 void TunnelLevel::update(){
     if (Menu::isNewLevel()) {
         float pixelDensityX = (float)Global::FbWidth / Global::ScreenWidth;
-        levelTitle = TextPtr(new Text("Level2", glm::vec4(0, 0, 0, 1), glm::vec2(0, 0), "FourPixel", 75));
+        levelTitle = TextPtr(new Text("Level3", glm::vec4(0, 0, 0, 1), glm::vec2(0, 0), "FourPixel", 75));
         levelTitle->setPosition(glm::vec2(0 - levelTitle->getTextWidth()/2.0/pixelDensityX, 0));
         PTR_CAST(TextRender, RenderEngine::getRenderElement("text"))->addText(levelTitle);
         Menu::setNewLevel(false);
