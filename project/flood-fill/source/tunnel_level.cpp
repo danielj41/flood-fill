@@ -96,11 +96,35 @@ void TunnelLevel::setup(){
 
     addCamera("DebugCamera", cam2);
     INFO("Creating Switch for the Test Level...");
-    SwitchPtr s1(new Switch(glm::vec3(0.9f, 0.1f, 0.1f), glm::vec3(29.7, 23, -45), 
+    SwitchPtr s1(new Switch(glm::vec3(0.9f, 0.1f, 0.1f), glm::vec3(37.7f, 11.0f, -24.0f), 
                              glm::vec3(0,0,1), -20.0f, 1));
     s1->setup();
     addGameObject("s1", s1);
     CollisionManager::addCollisionObjectToGrid(s1);
+
+
+
+
+    std::list<SolidCubePtr> solidCubes;
+    // INFO("Creating Active Terrain for the Test Level...");
+    for(int i = 11; i < 30; i+=2) {
+        for(int j = -27; j < -20; j+=2) {
+            SolidCubePtr at1(new SolidCube(glm::vec3(29, i, j)));
+            at1->setup();
+            RenderEngine::getRenderGrid()->removeObject(at1->getObject());
+
+            solidCubes.push_back(at1);
+        }
+    }    
+
+    ActiveTerrainPtr a1(new ActiveTerrain(s1, glm::vec3(), glm::vec3(), 50.0f));
+    a1->setup();
+    a1->setCubes(solidCubes);
+    addGameObject("a1", a1);
+
+
+
+
 
     sky = ObjectPtr(new Object(
         LoadManager::getMesh("sphere.obj"),

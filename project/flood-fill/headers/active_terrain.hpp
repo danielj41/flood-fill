@@ -21,6 +21,7 @@ public:
 
     void setup();
     void update();
+    void setCubes(std::list<SolidCubePtr> _solidCubes);
     
 private:
     

@@ -20,52 +20,12 @@ ActiveTerrain::ActiveTerrain(SwitchPtr _s, glm::vec3 _initialPos, glm::vec3 _fin
       position(_initialPos), initialPos(_initialPos), 
       finalPos(_finalPos), speed(_speed), active(false), doneAnimating(true), timer(0.0f) {}
 
-void ActiveTerrain::setup(){
-    
-                            
+void ActiveTerrain::setCubes(std::list<SolidCubePtr> _solidCubes) {
+    solidCubes = _solidCubes;
+}
+
+void ActiveTerrain::setup(){                         
     fillTypes = PTR_CAST(LevelTemplate, Director::getScene())->getFillTypes();
-
-    for(int i = 1; i < 15; i++) {
-        for(int j = 6; j < 11; j++) {
-                 
-            
-            SolidCubePtr at1(new SolidCube(glm::vec3(i*2 + 1, j*2 + 1, -37)));
-            at1->setup();
-            RenderEngine::getRenderGrid()->removeObject(at1->getObject());
-            //RenderEngine::getRenderElement("shadow")->removeObject(at1->getObject());
-
-            solidCubes.push_back(at1);
-
-            SolidCubePtr at2(new SolidCube(glm::vec3(i*2 + 1, j*2 + 1, -19)));
-            at2->setup();
-            RenderEngine::getRenderGrid()->removeObject(at2->getObject());
-            //RenderEngine::getRenderElement("shadow")->removeObject(at2->getObject());
-
-            solidCubes.push_back(at2);
-            
-        }
-    }    
-
-    for(int j = -19; j < -9; j++) {
-        for(int i = 7; i < 13; i++) {
-                 
-            
-            SolidCubePtr at1(new SolidCube(glm::vec3(1, i*2 + 1, j*2 + 1)));
-            at1->setup();
-            RenderEngine::getRenderGrid()->removeObject(at1->getObject());
-            //RenderEngine::getRenderElement("shadow")->removeObject(at1->getObject());
-
-            solidCubes.push_back(at1);
-
-            SolidCubePtr at2(new SolidCube(glm::vec3(15 * 2 + 1, i*2 + 1, j*2 + 1)));
-            at2->setup();
-            RenderEngine::getRenderGrid()->removeObject(at2->getObject());
-            //RenderEngine::getRenderElement("shadow")->removeObject(at2->getObject());
-
-            solidCubes.push_back(at2);
-            
-        }
-    }    
 }
 
 void ActiveTerrain::update(){

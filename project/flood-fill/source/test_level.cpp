@@ -2,6 +2,7 @@
 
 #include <cstdlib>
 #include <iostream>
+#include <list>
 #include "debug_macros.h"
 
 #define GLM_FORCE_RADIANS
@@ -102,10 +103,60 @@ void TestLevel::setup(){
     addGameObject("s1", s1);
     CollisionManager::addCollisionObjectToGrid(s1);
 
+
+    std::list<SolidCubePtr> solidCubes;
     // INFO("Creating Active Terrain for the Test Level...");
+    for(int i = 1; i < 15; i++) {
+        for(int j = 6; j < 11; j++) {
+                 
+            
+            SolidCubePtr at1(new SolidCube(glm::vec3(i*2 + 1, j*2 + 1, -37)));
+            at1->setup();
+            RenderEngine::getRenderGrid()->removeObject(at1->getObject());
+            //RenderEngine::getRenderElement("shadow")->removeObject(at1->getObject());
+
+            solidCubes.push_back(at1);
+
+            SolidCubePtr at2(new SolidCube(glm::vec3(i*2 + 1, j*2 + 1, -19)));
+            at2->setup();
+            RenderEngine::getRenderGrid()->removeObject(at2->getObject());
+            //RenderEngine::getRenderElement("shadow")->removeObject(at2->getObject());
+
+            solidCubes.push_back(at2);
+            
+        }
+    }    
+
+    for(int j = -19; j < -9; j++) {
+        for(int i = 7; i < 13; i++) {
+                 
+            
+            SolidCubePtr at1(new SolidCube(glm::vec3(1, i*2 + 1, j*2 + 1)));
+            at1->setup();
+            RenderEngine::getRenderGrid()->removeObject(at1->getObject());
+            //RenderEngine::getRenderElement("shadow")->removeObject(at1->getObject());
+
+            solidCubes.push_back(at1);
+
+            SolidCubePtr at2(new SolidCube(glm::vec3(15 * 2 + 1, i*2 + 1, j*2 + 1)));
+            at2->setup();
+            RenderEngine::getRenderGrid()->removeObject(at2->getObject());
+            //RenderEngine::getRenderElement("shadow")->removeObject(at2->getObject());
+
+            solidCubes.push_back(at2);
+            
+        }
+    }    
+
     ActiveTerrainPtr a1(new ActiveTerrain(s1, glm::vec3(), glm::vec3(), 50.0f));
     a1->setup();
+    a1->setCubes(solidCubes);
     addGameObject("a1", a1);
+
+
+
+
+
 
     PTR_CAST(SolidCube, (*grid)(0, 10, 22))->getObject()->applyTextureIndex(LoadManager::getTexture("DrainTexture"), 0);
     PTR_CAST(SolidCube, (*grid)(0, 10, 23))->getObject()->applyTextureIndex(LoadManager::getTexture("DrainTexture"), 0);
