@@ -127,6 +127,7 @@ add_executable(
         project/flood-fill/source/shadow_occluder_render.cpp
         project/flood-fill/source/normal_map_border_render.cpp
         project/flood-fill/source/tutorial_level.cpp
+        project/flood-fill/source/tunnel_level.cpp
         project/flood-fill/source/text_render.cpp
         project/flood-fill/source/menu_item.cpp
         project/flood-fill/source/page.cpp
@@ -171,6 +172,7 @@ add_executable(
         project/flood-fill/headers/shadow_occluder_render.hpp
         project/flood-fill/headers/normal_map_border_render.hpp
         project/flood-fill/headers/tutorial_level.hpp
+        project/flood-fill/headers/tunnel_level.hpp
         project/flood-fill/headers/text_render.hpp
         project/flood-fill/headers/menu_item.hpp
         project/flood-fill/headers/page.hpp

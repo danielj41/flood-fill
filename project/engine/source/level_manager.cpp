@@ -6,9 +6,10 @@
 
 #include "tutorial_level.hpp"
 #include "test_level.hpp"
+#include "tunnel_level.hpp"
 #include "menu.hpp"
 
-#define MAX_LEVEL 2
+#define MAX_LEVEL 3
 
 int curLevel = 1;
 bool LevelManager::levelFinished = false;
@@ -54,6 +55,13 @@ void LevelManager::setupLevel(int level) {
         Director::setScene("testLevel3.txt");
         break;
     }
+    case 3:
+    {
+        TunnelLevelPtr level3(new TunnelLevel());
+        Director::addScene(level3);
+        Director::setScene("tunnellevel.txt");
+        break;
+    }
     }
 
     curLevel = level;
@@ -70,6 +78,11 @@ void LevelManager::removeLevel(int level) {
         CollisionManager::removeAllCollisionObjects();
         RenderEngine::resetRenderEngine();
         Director::removeScene("testLevel3.txt");
+        break;
+    case 3:
+        CollisionManager::removeAllCollisionObjects();
+        RenderEngine::resetRenderEngine();
+        Director::removeScene("tunnellevel.txt");
         break;
     }
 }
