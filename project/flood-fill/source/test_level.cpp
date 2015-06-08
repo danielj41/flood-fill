@@ -33,7 +33,12 @@
 #include "level_manager.hpp"
 #include "menu.hpp"
 
-TestLevel::TestLevel() : LevelTemplate("testLevel3.txt"), timer(0.0f) {
+TestLevel::TestLevel() : LevelTemplate("testLevel3.txt"), timer(0.0f), includeCinema(true) {
+    resetHeight = -20.0f;
+}
+
+TestLevel::TestLevel(bool _includeCinema) 
+    : LevelTemplate("testLevel3.txt"), timer(0.0f), includeCinema(_includeCinema) {
     resetHeight = -20.0f;
 }
 
@@ -50,7 +55,7 @@ void TestLevel::setup(){
     addGameObject(waterSurfaceManager);
 
     INFO("Setting up the cameras for the Test Level...");
-    CameraPtr cam3(new Camera(glm::vec3(0, 1, 0), glm::vec3(-6, -3, 6),
+    CameraPtr cam3(new Camera(glm::vec3(16, 30, 0), glm::vec3(16, 15, 6),
                              glm::vec3(0, 1, 0)));
     cam3->setProjectionMatrix(
         glm::perspective(glm::radians(90.0f),
@@ -69,8 +74,6 @@ void TestLevel::setup(){
                         0.1f, 100.f));
 
     addCamera("Camera1", cam1);
-    // setMainCamera("Camera1");
-    // setCullingCamera("Camera1");
 
     CameraPtr cam2(new Camera(glm::vec3(0, 1, 0), glm::vec3(-6, -3, 6),
                              glm::vec3(0, 1, 0)));
@@ -161,7 +164,7 @@ void TestLevel::update(){
         setMainCamera("DebugCamera");
         getCamera("Camera1")->fix();
     }
-    else if(cinematicPlayer->isActive()){
+    else if(cinematicPlayer->isActive() && includeCinema){
         ASSERT(getCamera("Camera1") != getCamera("CinematicCamera"), "Equal camera");
         setMainCamera("CinematicCamera");
         setCullingCamera("CinematicCamera");

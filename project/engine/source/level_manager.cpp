@@ -27,7 +27,7 @@ void LevelManager::nextLevel() {
         curLevel = 1;
     }
 
-    setupLevel(curLevel);  
+    setupLevel(curLevel, true);  
 
     levelFinished = false;
 }
@@ -35,21 +35,25 @@ void LevelManager::nextLevel() {
 void LevelManager::resetLevel() {
     removeLevel(curLevel);
     Menu::setNewLevel(true);
-    setupLevel(curLevel);
+    setupLevel(curLevel, false);
 }
 
 void LevelManager::setupLevel(int level) {
+    setupLevel(level, true);
+}
+
+void LevelManager::setupLevel(int level, bool includeCinema) {
     switch (level) {
     case 1:
     {
-        TutorialLevelPtr level1(new TutorialLevel());
+        TutorialLevelPtr level1(new TutorialLevel(includeCinema));
         Director::addScene(level1);
         Director::setScene("testLevel4.txt");
         break;
     }
     case 2:
     {
-        TestLevelPtr level2(new TestLevel());
+        TestLevelPtr level2(new TestLevel(includeCinema));
         Director::addScene(level2);
         Director::setScene("testLevel3.txt");
         break;

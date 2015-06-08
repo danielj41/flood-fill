@@ -12,7 +12,7 @@ class TestLevel : public LevelTemplate{
 
 public:
     TestLevel();
-
+    TestLevel(bool _includeCinema);
     void setup();
     void update();
     void reset();
@@ -21,6 +21,7 @@ private:
     void createRenders();
     LightPtr l1;
     float timer;
+    bool includeCinema;
     glm::vec3 gridCenter;
     TextPtr levelTitle;
     ObjectPtr sky;

@@ -131,7 +131,7 @@ int main()
 
 void createScenes(){
     INFO("Creating Scenes...");
-    LevelManager::setupLevel(1);
+    LevelManager::setupLevel(1, true);
 }
 
 /**

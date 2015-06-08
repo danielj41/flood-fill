@@ -20,7 +20,7 @@ Camera::Camera() : ready(false), fixMouse(false){
 
 Camera::Camera(glm::vec3 _eye, glm::vec3 _target, glm::vec3 _up)
     : eye(_eye), target(_target), up(_up), theta(-90.0f), phi(0.0f), ready(true),
-    projectionMatrixLoaded(false), fixedAxis(glm::vec3(UNFIXED_AXIS), fixMouse(false)){}
+    projectionMatrixLoaded(false), fixedAxis(glm::vec3(UNFIXED_AXIS)), fixMouse(false){}
 
 glm::mat4 Camera::getViewMatrix(){
     ASSERT(isReady(), "The camera base vectors missing!");
@@ -288,7 +288,7 @@ void Camera::setFixedMouse(bool _fixMouse){
 
 void Camera::updateTarget(){
     ASSERT(isReady(), "The camera base vectors missing!");
-
+    
     target.x = cos(glm::radians(phi))*cos(glm::radians(theta)) + eye.x;
     target.y = sin(glm::radians(phi)) + eye.y;
     target.z = cos(glm::radians(phi))*cos(glm::radians(90 - theta)) + eye.z;
