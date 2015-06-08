@@ -14,13 +14,13 @@ const int Camera::RIGHT_DIRECTION    = -1;
 unsigned int Camera::FIXED_AXIS = 0;
 unsigned int Camera::UNFIXED_AXIS = 1;
 
-Camera::Camera() : ready(false) {
+Camera::Camera() : ready(false), fixMouse(false){
     DEBUG("Empty Camera!");
 }
 
 Camera::Camera(glm::vec3 _eye, glm::vec3 _target, glm::vec3 _up)
     : eye(_eye), target(_target), up(_up), theta(-90.0f), phi(0.0f), ready(true),
-    projectionMatrixLoaded(false), fixedAxis(glm::vec3(UNFIXED_AXIS)){}
+    projectionMatrixLoaded(false), fixedAxis(glm::vec3(UNFIXED_AXIS), fixMouse(false)){}
 
 glm::mat4 Camera::getViewMatrix(){
     ASSERT(isReady(), "The camera base vectors missing!");
@@ -274,6 +274,14 @@ bool Camera::insideViewFrustum(ObjectPtr object){
     }
 
     return false;*/
+}
+
+bool Camera::fixedMouse(){
+    return fixMouse;
+}
+
+void Camera::setFixedMouse(bool _fixMouse){
+    fixMouse = _fixMouse;
 }
 
 /** Private Methods **/

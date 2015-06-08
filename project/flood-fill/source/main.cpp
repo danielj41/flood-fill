@@ -346,7 +346,8 @@ void loadContent(){
 double lastX = Global::ScreenWidth/2.0f, lastY = Global::ScreenHeight/2.0f;
 double mouse_sensitivity = 1.0f;
 void mouse_movement_callback(GLFWwindow *, double xpos, double ypos){
-    if(Director::getScene()->hasMainCamera()){
+    if(Director::getScene()->hasMainCamera()
+     && !(Director::getScene()->getCamera()->fixedMouse())){
         CameraPtr cam = Director::getScene()->getCamera();
 
         double xoffset = (xpos - lastX)*mouse_sensitivity;

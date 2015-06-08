@@ -57,6 +57,9 @@ public:
 
     bool insideViewFrustum(ObjectPtr object);
 
+    bool fixedMouse();
+    void setFixedMouse(bool _fixMouse);
+
 private:
     static unsigned int FIXED_AXIS;
     static unsigned int UNFIXED_AXIS;
@@ -65,6 +68,8 @@ private:
     float theta, phi; // Both angles are expressed in degrees
     bool ready; // Flag that says if it is an empty camera or not
     bool projectionMatrixLoaded;
+    bool fixMouse; 
+
     glm::vec3 fixedAxis;
 
     glm::mat4 projectionMatrix;
