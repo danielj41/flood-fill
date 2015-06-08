@@ -162,7 +162,7 @@ void Player::update() {
     sky->scale(glm::vec3(-50.0f,-50.0f,-50.0f));
     sky->translate(getPosition());
 
-    if(glfwGetMouseButton(Global::window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS /*&& !shootPressed*/ && shootTimer < 0.0f){
+    if(glfwGetMouseButton(Global::window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS && shootTimer < 0.0f){
         FluidProjectilePtr fluidProjectile(new FluidProjectile(
             camera->getEye() - (0.35f * camera->getStrafeVector()) + glm::vec3(0.0f, 0.5f, 0.0f),
             -glm::normalize(camera->getViewVector()),
@@ -272,8 +272,6 @@ void Player::collided(CollisionObjectPtr collidedWith) {
 
     //If on flat ground, jumping is done. 
     if(normal.y > 0.5f) {
-        if(jumping)
-            // LoadManager::getSound("jump_land.wav")->playSound();
         velocity = 0;
         jumping = false;
         if(ceilingFrame > 0) {
