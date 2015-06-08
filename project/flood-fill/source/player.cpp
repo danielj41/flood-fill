@@ -64,18 +64,6 @@ void Player::setup() {
 
     LoadManager::loadSound("paintfill.wav");
 
-    sky = ObjectPtr(new Object(
-        LoadManager::getMesh("sphere.obj"),
-        MaterialManager::getMaterial("None")));
-
-    sky->applyTexture(LoadManager::getTexture("Sky"));
-    sky->enableTexture();
-    sky->scale(glm::vec3(-50.0f,-50.0f,-50.0f));
-    sky->translate(getPosition());
-    // RenderEngine::addObject(sky);
-
-    RenderEngine::getRenderElement("textured")->addObject(sky);
-
     gun = ObjectPtr(new Object(
         LoadManager::getMesh("gun.obj"),
         MaterialManager::getMaterial("FlatBlue")));
@@ -158,9 +146,6 @@ void Player::update() {
 
     getBoundingBox()->setPosition(camera->getEye() - glm::vec3(0,eyeOffset,0));
 	setPosition(camera->getEye());
-    sky->loadIdentity();
-    sky->scale(glm::vec3(-50.0f,-50.0f,-50.0f));
-    sky->translate(getPosition());
 
     if(glfwGetMouseButton(Global::window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS && shootTimer < 0.0f){
         FluidProjectilePtr fluidProjectile(new FluidProjectile(

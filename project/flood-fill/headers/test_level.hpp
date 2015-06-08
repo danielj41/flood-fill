@@ -23,6 +23,7 @@ private:
     float timer;
     glm::vec3 gridCenter;
     TextPtr levelTitle;
+    ObjectPtr sky;
 };
 
 #endif

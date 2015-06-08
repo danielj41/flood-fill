@@ -86,13 +86,24 @@ void TutorialLevel::setup(){
     addGameObject("debugPlayer" , debugPlayer);
     //Text
     addCamera("DebugCamera", cam2);
+
+    sky = ObjectPtr(new Object(
+        LoadManager::getMesh("sphere.obj"),
+        MaterialManager::getMaterial("None")));
+
+    sky->applyTexture(LoadManager::getTexture("Sky"));
+    sky->enableTexture();
+    sky->scale(glm::vec3(-50.0f,-50.0f,-50.0f));
+    sky->translate(Director::getScene()->getCamera()->getEye());
+    RenderEngine::getRenderElement("textured")->addObject(sky);
 }
 
 void TutorialLevel::update(){
     if (Menu::isNewLevel()) {
+        float pixelDensityX = (float)Global::FbWidth / Global::ScreenWidth;
         levelTitle = TextPtr(new Text("Level1", glm::vec4(0, 0, 0, 1), glm::vec2(-0.5, 0), "FourPixel", 75));
         
-        levelTitle->setPosition(glm::vec2(0-levelTitle->getTextWidth()/2.0 + .05, 0)); 
+        levelTitle->setPosition(glm::vec2(0-levelTitle->getTextWidth()/2.0/pixelDensityX + .05, 0)); 
         PTR_CAST(TextRender, RenderEngine::getRenderElement("text"))->addText(levelTitle);
         Menu::setNewLevel(false);
     }
@@ -127,6 +138,10 @@ void TutorialLevel::update(){
     if(player->getPosition().y <= resetHeight){
             LevelManager::resetLevel();
     }
+
+    sky->loadIdentity();
+    sky->scale(glm::vec3(-50.0f,-50.0f,-50.0f));
+    sky->translate(Director::getScene()->getCamera()->getEye());
 }
 
 void TutorialLevel::createRenders(){
