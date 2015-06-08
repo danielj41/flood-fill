@@ -68,7 +68,7 @@ void TunnelLevel::setup(){
                         (float) Global::ScreenWidth/Global::ScreenHeight,
                         0.1f, 100.f));
 
-    l1 = LightPtr(new Light(glm::vec3(1), 30.0f, glm::vec3(0, 30, 0)));
+    l1 = LightPtr(new Light(glm::vec3(1), 30.0f, glm::vec3(32, 30, -20)));
     l1->setPosition(l1->getDirection());
     
 

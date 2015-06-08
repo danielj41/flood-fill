@@ -7,10 +7,11 @@
 #include "tutorial_level.hpp"
 #include "test_level.hpp"
 #include "tunnel_level.hpp"
+#include "boss_level.hpp"
 #include "menu.hpp"
 #include "load_manager.hpp"
 
-#define MAX_LEVEL 3
+#define MAX_LEVEL 4
 
 int curLevel = 1;
 bool LevelManager::levelFinished = false;
@@ -73,6 +74,16 @@ void LevelManager::setupLevel(int level) {
         LoadManager::getSound(currentSound)->loopSound();
         break;
     }
+    case 4:
+    {
+        BossLevelPtr level4(new BossLevel());
+        Director::addScene(level4);
+        Director::setScene("bossLevel.txt");
+        currentSound = "windowlicker_kyle_sullivan_remix.wav";
+        LoadManager::getSound(currentSound)->playSound();
+        LoadManager::getSound(currentSound)->loopSound();
+        break;
+    }
     }
 
     curLevel = level;
@@ -94,6 +105,11 @@ void LevelManager::removeLevel(int level) {
         CollisionManager::removeAllCollisionObjects();
         RenderEngine::resetRenderEngine();
         Director::removeScene("tunnellevel.txt");
+        break;
+    case 4:
+        CollisionManager::removeAllCollisionObjects();
+        RenderEngine::resetRenderEngine();
+        Director::removeScene("bossLevel.txt");
         break;
     }
     if(currentSound != "") {
