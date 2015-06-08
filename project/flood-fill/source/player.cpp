@@ -98,8 +98,8 @@ void Player::update() {
         velocity = .6 * jumpMultiplier;
         camera->jump(velocity * 25.0 * dt);
     }
-    
     jumping = true;
+    
     addMultiplier = false; 
   
     if(isKeyPressed(GLFW_KEY_W)){

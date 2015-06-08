@@ -96,7 +96,7 @@ void TunnelLevel::setup(){
 
     addCamera("DebugCamera", cam2);
     INFO("Creating Switch for the Test Level...");
-    SwitchPtr s1(new Switch(glm::vec3(0.9f, 0.1f, 0.1f), glm::vec3(37.7f, 11.0f, -24.0f), 
+    SwitchPtr s1(new Switch(glm::vec3(0.9f, 0.1f, 0.1f), glm::vec3(33.7f, 11.0f, -27.0f), 
                              glm::vec3(0,0,1), -20.0f, 1));
     s1->setup();
     addGameObject("s1", s1);
@@ -107,7 +107,7 @@ void TunnelLevel::setup(){
 
     std::list<SolidCubePtr> solidCubes;
     // INFO("Creating Active Terrain for the Test Level...");
-    for(int i = 11; i < 30; i+=2) {
+    for(int i = 11; i < 36; i+=2) {
         for(int j = -27; j < -20; j+=2) {
             SolidCubePtr at1(new SolidCube(glm::vec3(29, i, j)));
             at1->setup();
