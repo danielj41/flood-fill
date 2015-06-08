@@ -65,7 +65,7 @@ void Plane::setup() {
     object->setGridScale(glm::vec2(right - left + 1, front - back + 1));
   } else if(direction == YN) {
     object->loadIdentity();
-    object->setMatrix(glm::shearZ3D(glm::mat4(1.0f), 1.0f * (float)refObject->getShearX(), 1.0f * (float)refObject->getShearZ()));
+    object->setMatrix(glm::shearZ3D(glm::mat4(1.0f), 1.0f * (float)refObject->getShearX(), 1.0f * -(float)refObject->getShearZ()));
     object->translate(glm::vec3(0.0f, 0.0f, 1.0f + 1.0f * fmax(fabs((float)refObject->getShearX()), fabs((float)refObject->getShearZ()))));
     object->rotate(-90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
     object->setGridScale(glm::vec2(right - left + 1, front - back + 1));

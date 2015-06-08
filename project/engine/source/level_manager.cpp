@@ -49,8 +49,8 @@ void LevelManager::setupLevel(int level) {
         Director::addScene(level1);
         Director::setScene("testLevel4.txt");
         currentSound = "background.wav";
-        //LoadManager::getSound(currentSound)->playSound();
-        //LoadManager::getSound(currentSound)->loopSound();
+        LoadManager::getSound(currentSound)->playSound();
+        LoadManager::getSound(currentSound)->loopSound();
         break;
     }
     case 2:
@@ -59,8 +59,8 @@ void LevelManager::setupLevel(int level) {
         Director::addScene(level2);
         Director::setScene("testLevel3.txt");
         currentSound = "background.wav";
-        //LoadManager::getSound(currentSound)->playSound();
-        //LoadManager::getSound(currentSound)->loopSound();
+        LoadManager::getSound(currentSound)->playSound();
+        LoadManager::getSound(currentSound)->loopSound();
         break;
     }
     case 3:
@@ -69,8 +69,8 @@ void LevelManager::setupLevel(int level) {
         Director::addScene(level3);
         Director::setScene("tunnellevel.txt");
         currentSound = "roygbiv_pece_cover.wav";
-        //LoadManager::getSound(currentSound)->playSound();
-        //LoadManager::getSound(currentSound)->loopSound();
+        LoadManager::getSound(currentSound)->playSound();
+        LoadManager::getSound(currentSound)->loopSound();
         break;
     }
     }
@@ -97,7 +97,7 @@ void LevelManager::removeLevel(int level) {
         break;
     }
     if(currentSound != "") {
-        //LoadManager::getSound(currentSound)->stopSound();
+        LoadManager::getSound(currentSound)->stopSound();
         currentSound = "";
     }
 }

@@ -177,6 +177,27 @@ void TunnelLevel::update(){
     sky->loadIdentity();
     sky->scale(glm::vec3(-50.0f,-50.0f,-50.0f));
     sky->translate(Director::getScene()->getCamera()->getEye());
+
+    PTR_CAST(SolidCube, (*grid)(7, 20, 11))->getObject()->applyTextureIndex(LoadManager::getTexture("DrainTexture"), 0);
+    PTR_CAST(SolidCube, (*grid)(7, 20, 12))->getObject()->applyTextureIndex(LoadManager::getTexture("DrainTexture"), 0);
+    PTR_CAST(SolidCube, (*grid)(7, 20, 11))->getObject()->applyNormalMapIndex(LoadManager::getTexture("RegularNormalMap"), 0);
+    PTR_CAST(SolidCube, (*grid)(7, 20, 12))->getObject()->applyNormalMapIndex(LoadManager::getTexture("RegularNormalMap"), 0);
+    shearRegion(8, 10, 21, 21, 11, 12, 1, 0, 0.0f);
+    shearRegion(11, 13, 20, 20, 11, 12, 1, 0, 0.5f);
+
+    PTR_CAST(SolidCube, (*grid)(16, 12, 0))->getObject()->applyTextureIndex(LoadManager::getTexture("DrainTexture"), 0);
+    PTR_CAST(SolidCube, (*grid)(17, 12, 0))->getObject()->applyTextureIndex(LoadManager::getTexture("DrainTexture"), 0);
+    PTR_CAST(SolidCube, (*grid)(16, 12, 0))->getObject()->applyNormalMapIndex(LoadManager::getTexture("RegularNormalMap"), 0);
+    PTR_CAST(SolidCube, (*grid)(17, 12, 0))->getObject()->applyNormalMapIndex(LoadManager::getTexture("RegularNormalMap"), 0);
+    shearRegion(16, 17, 13, 13, 1, 4, 0, 1, 0.0f);
+    shearRegion(16, 17, 12, 12, 5, 8, 0, 1, 0.5f);
+
+    PTR_CAST(SolidCube, (*grid)(16, 12, 23))->getObject()->applyTextureIndex(LoadManager::getTexture("DrainTexture"), 0);
+    PTR_CAST(SolidCube, (*grid)(17, 12, 23))->getObject()->applyTextureIndex(LoadManager::getTexture("DrainTexture"), 0);
+    PTR_CAST(SolidCube, (*grid)(16, 12, 23))->getObject()->applyNormalMapIndex(LoadManager::getTexture("RegularNormalMap"), 0);
+    PTR_CAST(SolidCube, (*grid)(17, 12, 23))->getObject()->applyNormalMapIndex(LoadManager::getTexture("RegularNormalMap"), 0);
+    shearRegion(16, 17, 13, 13, 19, 22, 0, -1, 0.0f);
+    shearRegion(16, 17, 12, 12, 15, 18, 0, -1, 0.5f);
 }
 
 void TunnelLevel::createRenders(){
