@@ -175,7 +175,7 @@ void TunnelLevel::update(){
     }
 
     sky->loadIdentity();
-    sky->scale(glm::vec3(-50.0f,-50.0f,-50.0f));
+    sky->scale(glm::vec3(-90.0f,-90.0f,-90.0f));
     sky->translate(Director::getScene()->getCamera()->getEye());
 
     PTR_CAST(SolidCube, (*grid)(7, 20, 11))->getObject()->applyTextureIndex(LoadManager::getTexture("DrainTexture"), 0);

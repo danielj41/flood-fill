@@ -93,7 +93,7 @@ void TutorialLevel::setup(){
 
     sky->applyTexture(LoadManager::getTexture("Sky"));
     sky->enableTexture();
-    sky->scale(glm::vec3(-50.0f,-50.0f,-50.0f));
+    sky->scale(glm::vec3(-90.0f,-90.0f,-90.0f));
     sky->translate(Director::getScene()->getCamera()->getEye());
     RenderEngine::getRenderElement("textured")->addObject(sky);
 }
