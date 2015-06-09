@@ -24,6 +24,7 @@ public:
 private:
     CameraPtr camera;
     bool active;
+    bool mousePressed;
 };
 
 #endif

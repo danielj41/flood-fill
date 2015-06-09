@@ -81,7 +81,7 @@ void Player::setup() {
     Director::getScene()->addGameObject(hand);
     CollisionManager::addCollisionObjectToList(hand);
 
-    shootTimer = -1.0f;
+    shootTimer = 1.0f;
 }
 
 void Player::update() {

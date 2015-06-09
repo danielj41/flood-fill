@@ -14,7 +14,7 @@
 #include "time_manager.hpp"
 
 CinematicPlayer::CinematicPlayer(CameraPtr _camera)
-    : camera(_camera), active(true), timer(0.0), timedTheta(0.0){}
+    : camera(_camera), active(true), timer(0.0), timedTheta(0.0), mousePressed(true) {}
 
 void CinematicPlayer::setup() {
     INFO("CinematicPlayer Setup...");
@@ -22,8 +22,14 @@ void CinematicPlayer::setup() {
 }
 
 void CinematicPlayer::update() {
+    if(glfwGetMouseButton(Global::window, GLFW_MOUSE_BUTTON_1) == GLFW_RELEASE && mousePressed) {
+        mousePressed = false;
+    }
+
     timer += TimeManager::getDeltaTime();
-    if(glfwGetKey(Global::window, GLFW_KEY_9) == GLFW_PRESS || timer >= 30.0){
+    if(glfwGetKey(Global::window, GLFW_KEY_9) == GLFW_PRESS ||
+       (glfwGetMouseButton(Global::window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS && !mousePressed) ||
+       timer >= 30.0){
         INFO("Cinematic Player deactivated!");
         active = false;
     }
