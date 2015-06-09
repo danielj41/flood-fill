@@ -62,7 +62,7 @@ void Menu::setup(){
 
     level3 = (MenuItemPtr)new LevelButton(3, "Level3", glm::vec4(0,0,0,.7), glm::vec4(0,1,0,1), glm::vec2(0,0), "FourPixel", 37 * Global::FbHeight/600.0);
 
-    level4 = (MenuItemPtr)new LevelButton(4, "Boss", glm::vec4(0,0,0,.7), glm::vec4(0,1,0,1), glm::vec2(0,0), "FourPixel", 37 * Global::FbHeight/600.0);
+    //level4 = (MenuItemPtr)new LevelButton(4, "Boss", glm::vec4(0,0,0,.7), glm::vec4(0,1,0,1), glm::vec2(0,0), "FourPixel", 37 * Global::FbHeight/600.0);
 
     previous = (MenuItemPtr)new ListButton("levels", "previous", -1, "<<", glm::vec4(0,0,0,.2), glm::vec4(0,0,0,1), glm::vec2(0,0), "Courier", 37 * Global::FbHeight/600.0);
     
@@ -74,7 +74,7 @@ void Menu::setup(){
     level1->setPosition(glm::vec2(0 - level1->getTextWidth()/2.0/pixelDensityX, 0));
     level2->setPosition(glm::vec2(0 - level2->getTextWidth()/2.0/pixelDensityX, 0));
     level3->setPosition(glm::vec2(0 - level3->getTextWidth()/2.0/pixelDensityX, 0));
-    level4->setPosition(glm::vec2(0 - level3->getTextWidth()/2.0/pixelDensityX, 0));
+    //level4->setPosition(glm::vec2(0 - level3->getTextWidth()/2.0/pixelDensityX, 0));
     previous->setPosition(glm::vec2(0 - level1->getTextWidth()/2.0/pixelDensityX - previous->getTextWidth()/pixelDensityX, 0));
     next->setPosition(glm::vec2(0 + level1->getTextWidth()/2.0/pixelDensityX, 0));
 
@@ -82,7 +82,7 @@ void Menu::setup(){
     levels->addToPageLevel(level1);
     levels->addToPageLevel(level2);
     levels->addToPageLevel(level3);
-    levels->addToPageLevel(level4);
+    //levels->addToPageLevel(level4);
     levels->addToPageButton("previous", previous);
     levels->addToPageButton("next", next);
       

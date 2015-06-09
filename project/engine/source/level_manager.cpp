@@ -11,7 +11,7 @@
 #include "menu.hpp"
 #include "load_manager.hpp"
 
-#define MAX_LEVEL 4
+#define MAX_LEVEL 3
 
 int curLevel = 1;
 bool LevelManager::levelFinished = false;
@@ -74,7 +74,7 @@ void LevelManager::setupLevel(int level) {
         LoadManager::getSound(currentSound)->loopSound();
         break;
     }
-    case 4:
+    /*case 4:
     {
         BossLevelPtr level4(new BossLevel());
         Director::addScene(level4);
@@ -83,7 +83,7 @@ void LevelManager::setupLevel(int level) {
         LoadManager::getSound(currentSound)->playSound();
         LoadManager::getSound(currentSound)->loopSound();
         break;
-    }
+    }*/
     }
 
     curLevel = level;
@@ -106,11 +106,11 @@ void LevelManager::removeLevel(int level) {
         RenderEngine::resetRenderEngine();
         Director::removeScene("tunnellevel.txt");
         break;
-    case 4:
+    /*case 4:
         CollisionManager::removeAllCollisionObjects();
         RenderEngine::resetRenderEngine();
         Director::removeScene("bossLevel.txt");
-        break;
+        break;*/
     }
     if(currentSound != "") {
         LoadManager::getSound(currentSound)->stopSound();

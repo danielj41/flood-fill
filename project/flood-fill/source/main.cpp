@@ -54,7 +54,7 @@ int main()
     loadContent();
     LoadManager::loadSound("background.wav");//FEZ OST "Puzzle"
     LoadManager::loadSound("roygbiv_pece_cover.wav");
-    LoadManager::loadSound("windowlicker_kyle_sullivan_remix.wav");
+    //LoadManager::loadSound("windowlicker_kyle_sullivan_remix.wav");
     createScenes();
 
     Menu::setup();
