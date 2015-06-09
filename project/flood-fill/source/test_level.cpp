@@ -219,8 +219,10 @@ void TestLevel::update(){
         ASSERT(getCamera("Camera1") != getCamera("CinematicCamera"), "Equal camera");
         setMainCamera("CinematicCamera");
         setCullingCamera("CinematicCamera");
+        player->setActive(false);
     }
     else{
+        player->setActive(true);
         setMainCamera("Camera1");
         setCullingCamera("Camera1");
         getCamera("Camera1")->fix(false, true, false);

@@ -12,6 +12,7 @@ class TunnelLevel : public LevelTemplate{
 
 public:
     TunnelLevel();
+    TunnelLevel(bool _includeCinema);
 
     void setup();
     void update();
@@ -21,6 +22,7 @@ private:
     void createRenders();
     LightPtr l1;
     float timer;
+    bool includeCinema;
     glm::vec3 gridCenter;
     TextPtr levelTitle;
     ObjectPtr sky;

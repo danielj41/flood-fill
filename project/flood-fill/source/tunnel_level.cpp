@@ -33,9 +33,14 @@
 #include "level_manager.hpp"
 #include "menu.hpp"
 
-TunnelLevel::TunnelLevel() : LevelTemplate("tunnellevel.txt"), timer(0.0f) {
+TunnelLevel::TunnelLevel() : LevelTemplate("tunnellevel.txt"), timer(0.0f), includeCinema(true) {
     resetHeight = -20.0f;
 }
+
+TunnelLevel::TunnelLevel(bool _includeCinema) : LevelTemplate("tunnellevel.txt"), timer(0.0f), includeCinema(_includeCinema) {
+    resetHeight = -20.0f;
+}
+
 
 void TunnelLevel::setup(){
     INFO("Generating Test Level...");
@@ -48,6 +53,17 @@ void TunnelLevel::setup(){
 
     waterSurfaceManager = WaterSurfaceManagerPtr(new WaterSurfaceManager());
     addGameObject(waterSurfaceManager);
+
+    CameraPtr cam3(new Camera(glm::vec3(30, 45, 0), glm::vec3(30, 15, 6),
+                             glm::vec3(0, 1, 0)));
+    cam3->setProjectionMatrix(
+        glm::perspective(glm::radians(90.0f),
+                        (float) Global::ScreenWidth/Global::ScreenHeight,
+                        0.1f, 100.f));
+
+    addCamera("CinematicCamera", cam3);
+    setMainCamera("CinematicCamera");
+    setCullingCamera("CinematicCamera");
 
     INFO("Setting up the cameras for the Test Level...");
     CameraPtr cam1(new Camera(glm::vec3(32.0f, 12.0f, -24.0f), glm::vec3(4, 4, -10),
@@ -83,6 +99,10 @@ void TunnelLevel::setup(){
     l1->setProjectionMatrix(glm::ortho<float>(-30,30,-30,30,-70,70));
 
     addLight("Sun", l1);
+
+    cinematicPlayer = CinematicPlayerPtr(new CinematicPlayer(cam3));
+    cinematicPlayer->setup();
+    addGameObject("cinematicPlayer", cinematicPlayer);
 
     INFO("Setting up the player for the Test Level...");
     player = PlayerPtr(new Player(cam1, 2));
@@ -179,8 +199,16 @@ void TunnelLevel::update(){
         setMainCamera("DebugCamera");
         getCamera("Camera1")->fix();
     }
+    else if(cinematicPlayer->isActive() && includeCinema){
+        ASSERT(getCamera("Camera1") != getCamera("CinematicCamera"), "Equal camera");
+        setMainCamera("CinematicCamera");
+        setCullingCamera("CinematicCamera");
+        player->setActive(false);
+    }
     else{
+        player->setActive(true);
         setMainCamera("Camera1");
+        setCullingCamera("Camera1");
         getCamera("Camera1")->fix(false, true, false);
     }
     timer += TimeManager::getDeltaTime() / 15.0;

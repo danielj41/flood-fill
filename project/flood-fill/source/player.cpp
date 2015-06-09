@@ -44,6 +44,8 @@ Player::Player(CameraPtr _camera, int _initialColor)
 void Player::setup() {
     INFO("Player Setup...");
 
+    active = false;
+
 	lastPosition = camera->getEye();
 	
     setCollisionID(2);
@@ -86,6 +88,8 @@ void Player::setup() {
 
 void Player::update() {
 
+    if(!active) return;
+    
     if (!Menu::isActive()) {
     float dt = TimeManager::getDeltaTime();
     if(dt > 0.04) {
@@ -188,6 +192,10 @@ void Player::update() {
         ceilingFrame--;
     }
     }
+}
+
+void Player::setActive(bool _active) {
+    active = _active;
 }
 
 void Player::collided(CollisionObjectPtr collidedWith) {

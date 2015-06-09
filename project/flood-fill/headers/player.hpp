@@ -22,6 +22,7 @@ public:
 
     void collided(CollisionObjectPtr collidedWith);
     bool isKeyPressed(unsigned int key);
+    void setActive(bool _active);
 
 private:
     CameraPtr camera;
@@ -52,6 +53,7 @@ private:
     float eyeOffset;
 
     bool addMultiplier;
+    bool active;
 
     //Fluid Box Remotion Control Variables and Methods
     unsigned int removeFluidShootRange; // How far you can remove the fluid

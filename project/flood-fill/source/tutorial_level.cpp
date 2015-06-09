@@ -137,8 +137,10 @@ void TutorialLevel::update(){
         ASSERT(getCamera("Camera1") != getCamera("CinematicCamera"), "Equal camera");
         setMainCamera("CinematicCamera");
         setCullingCamera("CinematicCamera");
+        player->setActive(false);
     }
     else{
+        player->setActive(true);
         setMainCamera("Camera1");
         setCullingCamera("Camera1");
         getCamera("Camera1")->fix(false, true, false);
@@ -165,7 +167,7 @@ void TutorialLevel::update(){
     }
 
     sky->loadIdentity();
-    sky->scale(glm::vec3(-50.0f,-50.0f,-50.0f));
+    sky->scale(glm::vec3(-90.0f,-90.0f,-90.0f));
     sky->translate(Director::getScene()->getCamera()->getEye());
 }
 
