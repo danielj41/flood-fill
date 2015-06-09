@@ -14,6 +14,7 @@ public:
     static void nextLevel();
     static bool levelFinished;
     static void setupLevel(int level);
+    static void setupLevel(int level, bool includeCinema);
     static void removeLevel(int level);
     static int getCurrentLevel();
 

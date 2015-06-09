@@ -9,6 +9,7 @@
 #include "uniform_3d_grid.hpp"
 #include "game_object.hpp"
 #include "debug_player.hpp"
+#include "cinematic_player.hpp"
 #include "player.hpp"
 #include "void_voxel.hpp"
 #include "water_surface_manager.hpp"
@@ -75,6 +76,7 @@ protected:
 
     DebugPlayerPtr debugPlayer;
     PlayerPtr player;
+    CinematicPlayerPtr cinematicPlayer;
     WaterSurfaceManagerPtr waterSurfaceManager;
 
 private:

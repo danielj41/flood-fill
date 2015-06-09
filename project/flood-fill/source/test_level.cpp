@@ -34,7 +34,12 @@
 #include "level_manager.hpp"
 #include "menu.hpp"
 
-TestLevel::TestLevel() : LevelTemplate("testLevel3.txt"), timer(0.0f) {
+TestLevel::TestLevel() : LevelTemplate("testLevel3.txt"), timer(0.0f), includeCinema(true) {
+    resetHeight = -20.0f;
+}
+
+TestLevel::TestLevel(bool _includeCinema) 
+    : LevelTemplate("testLevel3.txt"), timer(0.0f), includeCinema(_includeCinema) {
     resetHeight = -20.0f;
 }
 
@@ -51,6 +56,17 @@ void TestLevel::setup(){
     addGameObject(waterSurfaceManager);
 
     INFO("Setting up the cameras for the Test Level...");
+    CameraPtr cam3(new Camera(glm::vec3(16, 30, 0), glm::vec3(16, 15, 6),
+                             glm::vec3(0, 1, 0)));
+    cam3->setProjectionMatrix(
+        glm::perspective(glm::radians(90.0f),
+                        (float) Global::ScreenWidth/Global::ScreenHeight,
+                        0.1f, 100.f));
+
+    addCamera("CinematicCamera", cam3);
+    setMainCamera("CinematicCamera");
+    setCullingCamera("CinematicCamera");
+
     CameraPtr cam1(new Camera(glm::vec3(4, 10, -5), glm::vec3(4, 4, -10),
                              glm::vec3(0, 1, 0)));
     cam1->setProjectionMatrix(
@@ -59,8 +75,6 @@ void TestLevel::setup(){
                         0.1f, 100.f));
 
     addCamera("Camera1", cam1);
-    setMainCamera("Camera1");
-    setCullingCamera("Camera1");
 
     CameraPtr cam2(new Camera(glm::vec3(0, 1, 0), glm::vec3(-6, -3, 6),
                              glm::vec3(0, 1, 0)));
@@ -86,6 +100,10 @@ void TestLevel::setup(){
     addLight("Sun", l1);
 
     INFO("Setting up the player for the Test Level...");
+    cinematicPlayer = CinematicPlayerPtr(new CinematicPlayer(cam3));
+    cinematicPlayer->setup();
+    addGameObject("cinematicPlayer", cinematicPlayer);
+
     player = PlayerPtr(new Player(cam1, 2));
     player->setup();
     addGameObject("player" , player);
@@ -191,14 +209,20 @@ void TestLevel::update(){
         PTR_CAST(TextRender, RenderEngine::getRenderElement("text"))->addText(levelTitle);
         Menu::setNewLevel(false);
     }
-    
+
     if(debugPlayer->isActive()){
         ASSERT(getCamera("Camera1") != getCamera("DebugCamera"), "Equal camera");
         setMainCamera("DebugCamera");
         getCamera("Camera1")->fix();
     }
+    else if(cinematicPlayer->isActive() && includeCinema){
+        ASSERT(getCamera("Camera1") != getCamera("CinematicCamera"), "Equal camera");
+        setMainCamera("CinematicCamera");
+        setCullingCamera("CinematicCamera");
+    }
     else{
         setMainCamera("Camera1");
+        setCullingCamera("Camera1");
         getCamera("Camera1")->fix(false, true, false);
     }
     timer += TimeManager::getDeltaTime() / 15.0;
