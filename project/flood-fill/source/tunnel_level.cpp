@@ -158,6 +158,11 @@ void TunnelLevel::setup(){
     PTR_CAST(SolidCube, (*grid)(17, 12, 23))->getObject()->applyNormalMapIndex(LoadManager::getTexture("RegularNormalMap"), 0);
     shearRegion(16, 17, 13, 13, 19, 22, 0, -1, 0.0f);
     shearRegion(16, 17, 12, 12, 15, 18, 0, -1, 0.5f);
+
+    PTR_CAST(SolidCube, (*grid)(26, 12, 15))->getObject()->applyTextureIndex(LoadManager::getTexture("DrainTexture"), 0);
+    PTR_CAST(SolidCube, (*grid)(26, 12, 8))->getObject()->applyTextureIndex(LoadManager::getTexture("DrainTexture"), 0);
+    PTR_CAST(SolidCube, (*grid)(26, 12, 15))->getObject()->applyNormalMapIndex(LoadManager::getTexture("RegularNormalMap"), 0);
+    PTR_CAST(SolidCube, (*grid)(26, 12, 8))->getObject()->applyNormalMapIndex(LoadManager::getTexture("RegularNormalMap"), 0);
 }
 
 void TunnelLevel::update(){
