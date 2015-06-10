@@ -251,3 +251,11 @@ void Object::setNormalMaps(std::vector<TexturePtr> norms){
 void Object::setTexturePack(unsigned int texturePck){
     texturePack = texturePck;
 }
+
+void Object::setAlternativeMaterial(MaterialPtr _material){
+    alternativeMaterial = _material;
+}
+
+MaterialPtr Object::getAlternativeMaterial(){
+    return alternativeMaterial;
+}

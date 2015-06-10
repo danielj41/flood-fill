@@ -21,6 +21,7 @@ public:
 
     MeshPtr getMesh();
     MaterialPtr getMaterial();
+    MaterialPtr getAlternativeMaterial();
     glm::mat4 getModelMatrix();
     TexturePtr getTexture();
     TexturePtr getTexture(unsigned int i);
@@ -75,10 +76,12 @@ public:
     void loadIdentity();
     void setMatrix(glm::mat4 matrix);
     void setMaterial(MaterialPtr _material);
+    void setAlternativeMaterial(MaterialPtr _material);
 
 protected:
     MeshPtr mesh;
     MaterialPtr material;
+    MaterialPtr alternativeMaterial;
 
     std::vector<TexturePtr> texture;
     std::vector<TexturePtr> normalMap;

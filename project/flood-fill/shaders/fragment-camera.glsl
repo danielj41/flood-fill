@@ -6,6 +6,9 @@ uniform vec3 uSpecularColor;
 uniform vec3 uAmbientColor;
 uniform float uShininess;
 
+uniform vec3 uSecondColor;
+uniform vec3 uSecondAmbient;
+
 uniform vec3 uEyePosition;
 uniform vec3 uLightDirection;
 
@@ -19,6 +22,7 @@ void main(){
     vec4 texel = texture2D(uTexID, vTexCoord);
 
     vec3 colorkey = vec3(0.8, 0, 0.8);
+    vec3 colorkey2 = vec3(0.0, 0, 0.8);
     vec3 ks = uSpecularColor;
     vec3 Ia = uAmbientColor;
     vec3 kd;
@@ -26,6 +30,10 @@ void main(){
     // Color key test
     if(texel.x > colorkey.x && texel.z > colorkey.z){
         kd = uDiffuseColor;
+    }
+    else if(texel.z > colorkey2.z){
+        kd = uSecondColor;
+        Ia = uSecondAmbient;
     }
     else{
         kd = texel.xyz;
@@ -46,6 +54,10 @@ void main(){
 
     // Color key test
     if(texel.x > colorkey.x && texel.z > colorkey.z){
+        I = (Id + Is) + Ia;
+        gl_FragColor = vec4(I, 1.0);
+    }
+    else if(texel.z > colorkey2.z){
         I = (Id + Is) + Ia;
         gl_FragColor = vec4(I, 1.0);
     }

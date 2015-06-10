@@ -33,6 +33,9 @@ void CameraPolygonsRender::loadShader(){
     shader->loadHandle("uEyePosition", 'u');
     shader->loadHandle("uLightDirection", 'u');
     shader->loadHandle("uTexID", 'u');
+
+    shader->loadHandle("uSecondColor", 'u');
+    shader->loadHandle("uSecondAmbient", 'u');
 }
 
 void CameraPolygonsRender::setupEnviroment(){
@@ -124,6 +127,15 @@ void CameraPolygonsRender::renderObject(ObjectPtr object){
                 object->getMaterial()->getAmbientColor().y,
                 object->getMaterial()->getAmbientColor().z);
     glUniform1f(shader->getHandle("uShininess"), object->getMaterial()->getShininess());
+
+    glUniform3f(shader->getHandle("uSecondColor"),
+                object->getAlternativeMaterial()->getDiffuseColor().x,
+                object->getAlternativeMaterial()->getDiffuseColor().y,
+                object->getAlternativeMaterial()->getDiffuseColor().z);
+    glUniform3f(shader->getHandle("uSecondAmbient"),
+                object->getAlternativeMaterial()->getAmbientColor().x,
+                object->getAlternativeMaterial()->getAmbientColor().y,
+                object->getAlternativeMaterial()->getAmbientColor().z);
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, object->getTexture()->getTexture());

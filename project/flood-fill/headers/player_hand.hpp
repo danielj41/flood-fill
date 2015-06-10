@@ -38,6 +38,7 @@ private:
     int clrndx;
     double toggleTime;
     
+    MaterialPtr returnMaterial(int i);
 };
 
 #endif
