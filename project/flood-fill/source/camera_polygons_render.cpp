@@ -6,6 +6,7 @@
 
 #include "glm/gtc/type_ptr.hpp"
 
+#include "global_variables.hpp"
 #include "load_manager.hpp"
 #include "director.hpp"
 
@@ -59,9 +60,12 @@ void CameraPolygonsRender::setupShader(){
 
     CameraPtr camera = Director::getScene()->getCamera();
 
+    glm::mat4 P = glm::perspective(glm::radians(90.0f),
+                         (float) Global::ScreenWidth/Global::ScreenHeight,
+                         0.1f, 100.f);
     //Common information to all Objects
     glUniformMatrix4fv(shader->getHandle("uProjection"), 1, GL_FALSE,
-      glm::value_ptr(camera->getProjectionMatrix()));
+      glm::value_ptr(P));
 
     glUniformMatrix4fv(shader->getHandle("uView"), 1, GL_FALSE,
       glm::value_ptr(camera->getViewMatrix()));
