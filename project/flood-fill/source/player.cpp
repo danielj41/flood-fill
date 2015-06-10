@@ -192,6 +192,8 @@ void Player::update() {
         ceilingFrame--;
     }
     }
+
+    doCameraWarp();
 }
 
 void Player::setActive(bool _active) {
@@ -251,9 +253,11 @@ void Player::collided(CollisionObjectPtr collidedWith) {
     else if(PTR_CAST(FluidBox, collidedWith)->getColorMask() & RED) { //Green filled ... idk why
         moveMultiplier = 2;
         jumpMultiplier = 2;
+        activateCameraWarp = true;
     }
     else if(PTR_CAST(FluidBox, collidedWith)->getColorMask() & GREEN) {//Red filled ... trying to fix
         moveMultiplier = 2;
+        activateCameraWarp = true;
     }
     addMultiplier = true;
 
@@ -350,3 +354,28 @@ void Player::removeFluidBoxes(){
     }
 }
 
+void Player::doCameraWarp(){
+    if(forwardVelocity <= 0) activateCameraWarp = false;
+
+    CameraPtr cam = Director::getScene()->getCamera();
+    glm::mat4 P = glm::perspective(glm::radians(angleP),
+                         (float) Global::ScreenWidth/Global::ScreenHeight,
+                         0.1f, 100.f);
+    cam->setProjectionMatrix(P);
+
+    float angleVelocity = 100;
+    if(activateCameraWarp){
+        angleP += angleInc*angleVelocity*TimeManager::getDeltaTime();
+        if(angleP >= anglePMax){
+            angleP = anglePMax;
+        }
+    }
+    else{
+        angleP -= angleInc*angleVelocity*TimeManager::getDeltaTime();
+        if(angleP <= anglePMin){
+            angleP = anglePMin;
+        }
+    }
+
+    activateCameraWarp = false;
+}

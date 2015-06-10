@@ -63,6 +63,13 @@ private:
     void pickFluidBoxesToRemove();
     void pickOneFluidBoxToRemove(glm::vec3 pos);
     void removeFluidBoxes();
+
+    float angleP = 90.0f;
+    float angleInc = 0.5f, angledir = 1;
+    float anglePMax = 120.0f, anglePMin = 90.0f;
+    bool activateCameraWarp = false;
+
+    void doCameraWarp();
 };
 
 #endif
