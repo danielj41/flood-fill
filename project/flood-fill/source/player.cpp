@@ -198,6 +198,9 @@ void Player::update() {
 
 void Player::setActive(bool _active) {
     active = _active;
+    if(!active) {
+        shootTimer = 1.0f;
+    }
 }
 
 void Player::collided(CollisionObjectPtr collidedWith) {

@@ -2,7 +2,7 @@
 #define SOUND_HPP
 
 #include <string>
-//#include <SFML/Audio.hpp>
+#include <SFML/Audio.hpp>
 #include "GLIncludes.h"
 
 #include "pointer_macros.h"
@@ -19,8 +19,8 @@ public:
     void loopSound();
 
 private:
-    //  sf::SoundBuffer buffer;
-    //sf::Sound audio;
+    sf::SoundBuffer buffer;
+    sf::Sound audio;
 
     static const std::string INVALID_EXT;
     static const std::string INVALID_PATH;

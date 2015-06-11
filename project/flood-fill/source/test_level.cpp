@@ -253,6 +253,11 @@ void TestLevel::update(){
             Menu::displayPage("UserGuide");
             Menu::setNovice(false);
         }
+        if(Menu::getCurrentPage() == "UserGuide") {
+            player->setActive(false);
+        } else {
+            player->setActive(true);
+        }
     }
 
     if(player->getPosition().y <= resetHeight){

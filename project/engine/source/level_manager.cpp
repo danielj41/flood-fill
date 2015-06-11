@@ -70,7 +70,7 @@ void LevelManager::setupLevel(int level, bool includeCinema) {
     }
     case 3:
     {
-        TunnelLevelPtr level3(new TunnelLevel());
+        TunnelLevelPtr level3(new TunnelLevel(includeCinema));
         Director::addScene(level3);
         Director::setScene("tunnellevel.txt");
         currentSound = "roygbiv_pece_cover.wav";
