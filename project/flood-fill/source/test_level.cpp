@@ -33,6 +33,7 @@
 #include "time_manager.hpp"
 #include "level_manager.hpp"
 #include "menu.hpp"
+#include "exclamation.hpp"
 
 TestLevel::TestLevel() : LevelTemplate("testLevel3.txt"), timer(0.0f), includeCinema(true) {
     resetHeight = -20.0f;
@@ -199,13 +200,17 @@ void TestLevel::setup(){
     sky->scale(glm::vec3(-50.0f,-50.0f,-50.0f));
     sky->translate(Director::getScene()->getCamera()->getEye());
     RenderEngine::getRenderElement("textured")->addObject(sky);
+
+    ExclamationPtr exclamation = ExclamationPtr(new Exclamation(glm::vec3(10, 27, -30)));
+    exclamation->setup();
+    addGameObject("exclamation", exclamation); 
 }
 
 void TestLevel::update(){
     if (Menu::isNewLevel()) {
         float pixelDensityX = (float)Global::FbWidth / Global::ScreenWidth;
-        levelTitle = TextPtr(new Text("Level2", glm::vec4(0, 0, 0, 1), glm::vec2(0, 0), "FourPixel", 75));
-        levelTitle->setPosition(glm::vec2(0 - levelTitle->getTextWidth()/2.0/pixelDensityX, 0));
+        levelTitle = TextPtr(new Text("Level2", glm::vec4(0, 0, 0, 1), glm::vec3(0, 0, 0), "FourPixel", 75));
+        levelTitle->setPosition(glm::vec3(0 - levelTitle->getTextWidth()/2.0/pixelDensityX, 0, 0));
         PTR_CAST(TextRender, RenderEngine::getRenderElement("text"))->addText(levelTitle);
         Menu::setNewLevel(false);
     }

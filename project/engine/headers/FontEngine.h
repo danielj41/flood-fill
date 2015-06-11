@@ -4,6 +4,7 @@
 #include <string>
 #include <unordered_map>
 
+#include "glm/glm.hpp"
 #include "FontAtlas.h"
 
 class FontEngine {
@@ -35,6 +36,7 @@ class FontEngine {
 
         // render text with currently active font at x,y [-1,1]
         void renderText(std::string text, float x, float y);
+        void renderBillBoardText(std::string text, float x, float y, float z, glm::vec3 playerPos);
         void renderTextWrapped(std::string text, float x, float y, float width);
 
         // get line height of active font
@@ -53,8 +55,9 @@ class FontEngine {
 
         static const char *VERTEX_SHADER_FILE;
         static const char *FRAGMENT_SHADER_FILE;
-
-
+        static const char *VERTEX_SHADER_FILE_BILLBOARD;
+        static const char *FRAGMENT_SHADER_FILE_BILLBOARD;
+        
         // modify scaling by aspect ratio and to
         // better match with expected scaling for font sizes
         void adjustScaling(float &sx, float &sy);
@@ -92,12 +95,29 @@ class FontEngine {
             GLfloat s, t;
         };
 
+        struct WorldPoint {
+            GLfloat x, y, z;
+        };
+        
+        struct TextCoord {
+            GLfloat x, y;
+        };
+
         // shader interface
         GLuint program;
         GLint coord;
         GLint attribute_coord;
         GLint uniform_tex;
         GLint uniform_color;
+        
+        GLuint billboard_program;
+        GLint billboard_pos;
+        GLint billboard_coord;
+        GLint billboard_uniform_tex;
+        GLint billboard_uniform_color;
+        GLint billboard_uniform_projection;
+        GLint billboard_uniform_view;
+
         GLuint vbo;
 
         int windowWidth, windowHeight;

@@ -81,7 +81,7 @@ void TextRender::renderPass() {
 
         if (fontEngine.useFont(txt->getFont(), txt->getFontSize())) {
             glm::vec4 color = txt->getColor();
-            glm::vec2 pos = txt->getPosition();
+            glm::vec3 pos = txt->getPosition();
 
             fontEngine.setColor(color.x, color.y, color.z, color.w);
             fontEngine.renderText(txt->getText(), pos.x, pos.y);

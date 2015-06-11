@@ -101,9 +101,9 @@ void BossLevel::setup(){
 void BossLevel::update(){
     if (Menu::isNewLevel()) {
         float pixelDensityX = (float)Global::FbWidth / Global::ScreenWidth;
-        levelTitle = TextPtr(new Text("Boss", glm::vec4(0, 0, 0, 1), glm::vec2(-0.5, 0), "FourPixel", 75));
+        levelTitle = TextPtr(new Text("Boss", glm::vec4(0, 0, 0, 1), glm::vec3(-0.5, 0,0), "FourPixel", 75));
         
-        levelTitle->setPosition(glm::vec2(0-levelTitle->getTextWidth()/2.0/pixelDensityX + .05, 0)); 
+        levelTitle->setPosition(glm::vec3(0-levelTitle->getTextWidth()/2.0/pixelDensityX + .05, 0, 0)); 
         PTR_CAST(TextRender, RenderEngine::getRenderElement("text"))->addText(levelTitle);
         Menu::setNewLevel(false);
     }

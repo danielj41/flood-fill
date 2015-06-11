@@ -10,7 +10,7 @@ DEF_PTR(ListButton, ListButtonPtr);
 class ListButton : public MenuItem {
     
 public:
-    ListButton(std::string _page, std::string _name, int _direction, std::string _msg, glm::vec4 _color, glm::vec4 _hoverColor, glm::vec2 _position, std::string _fontName, int _fontSize);
+    ListButton(std::string _page, std::string _name, int _direction, std::string _msg, glm::vec4 _color, glm::vec4 _hoverColor, glm::vec3 _position, std::string _fontName, int _fontSize);
 
     void action();
 

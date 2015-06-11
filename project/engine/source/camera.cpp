@@ -90,9 +90,17 @@ void Camera::zoom(int direction, float velocity){
 
     INFO("Zooming the camera...");
     float dir = (float)direction;
+    glm::vec3 view = getViewVector();
+    
+    glm::vec3 move = normalize(glm::vec3(view.x, 0, view.z));
 
-    eye    += fixedAxis*getViewVector()*velocity*dir;
-    target += fixedAxis*getViewVector()*velocity*dir;
+    move = glm::vec3(move.x, view.y, move.z);
+
+    eye    += fixedAxis*move*velocity*dir;
+    target += fixedAxis*move*velocity*dir;
+    
+    //eye    += fixedAxis*getViewVector()*velocity*dir;
+    //target += fixedAxis*getViewVector()*velocity*dir;
 }
 
 void Camera::jump(float velocity) {
