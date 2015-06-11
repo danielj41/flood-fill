@@ -75,7 +75,7 @@ int main()
 
     
     
-
+    double escapeCoolDown = 0;
     do{
 
         if(LevelManager::levelFinished) {
@@ -105,10 +105,16 @@ int main()
         
         if (glfwGetKey(Global::window, GLFW_KEY_ESCAPE) == GLFW_PRESS && !Menu::isActive() &&
             TimeManager::getTimeStamp() - Menu::getLastEscape() > .5) {
+            escapeCoolDown = 0.4;
             RenderEngine::removeRenderElement("text");
             RenderEngine::addRenderElement("text", RenderElementPtr(new TextRender()), 10);
             Menu::displayMenu();
         } 
+        else if (glfwGetKey(Global::window, GLFW_KEY_ESCAPE) == GLFW_PRESS && Menu::isActive() &&
+            TimeManager::getTimeStamp() - Menu::getLastEscape() > .5 && escapeCoolDown <= 0) {
+            break;
+        }
+        if(escapeCoolDown > 0) escapeCoolDown -= TimeManager::getDeltaTime();
        
         // Swap buffers
         glfwSwapBuffers(Global::window);
