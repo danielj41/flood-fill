@@ -32,6 +32,8 @@
 #include "text_render.hpp"
 #include "level_manager.hpp"
 #include "menu.hpp"
+#include "billboard_text_render.hpp"
+#include "exclamation.hpp"
 
 TutorialLevel::TutorialLevel()
     : LevelTemplate("testLevel4.txt"), timer(0.0f), includeCinema (true) {
@@ -116,14 +118,21 @@ void TutorialLevel::setup(){
     sky->scale(glm::vec3(-90.0f,-90.0f,-90.0f));
     sky->translate(Director::getScene()->getCamera()->getEye());
     RenderEngine::getRenderElement("textured")->addObject(sky);
+
+    ExclamationPtr exclamation = ExclamationPtr(new Exclamation(glm::vec3(30, 26, -48)));
+    exclamation->setup();
+    addGameObject("exclamation", exclamation);
+   
+    TextPtr doesntwork = TextPtr(new Text("Hello", glm::vec4(0,0,0,1), glm::vec3(15,30,-15), "Courier", 500));
+    PTR_CAST(BillBoardTextRender, RenderEngine::getRenderElement("billboard-text"))->addText(doesntwork);
 }
 
 void TutorialLevel::update(){
     if (Menu::isNewLevel()) {
         float pixelDensityX = (float)Global::FbWidth / Global::ScreenWidth;
-        levelTitle = TextPtr(new Text("Level1", glm::vec4(0, 0, 0, 1), glm::vec2(-0.5, 0), "FourPixel", 75));
+        levelTitle = TextPtr(new Text("Level1", glm::vec4(0, 0, 0, 1), glm::vec3(-0.5, 0, 0), "FourPixel", 75));
         
-        levelTitle->setPosition(glm::vec2(0-levelTitle->getTextWidth()/2.0/pixelDensityX + .05, 0)); 
+        levelTitle->setPosition(glm::vec3(0-levelTitle->getTextWidth()/2.0/pixelDensityX + .05, 0, 0)); 
         PTR_CAST(TextRender, RenderEngine::getRenderElement("text"))->addText(levelTitle);
         Menu::setNewLevel(false);
     }
@@ -184,6 +193,7 @@ void TutorialLevel::createRenders(){
     RenderEngine::addRenderElement("water-stream", RenderElementPtr(new WaterStreamRender()), 4);
     RenderEngine::addRenderElement("shadow", RenderElementPtr(new ShadowOccluderRender()), 1);
     RenderEngine::addRenderElement("text", RenderElementPtr(new TextRender()), 10);
+    RenderEngine::addRenderElement("billboard-text", RenderElementPtr(new BillBoardTextRender()), 9);
     RenderEngine::setRenderGrid(RenderGridPtr(new RenderGrid(typeGrid->getSizeX(), typeGrid->getSizeY(), typeGrid->getSizeZ(),
                                                              typeGrid->getMinX(), typeGrid->getMaxX(),
                                                              typeGrid->getMinY(), typeGrid->getMaxY(),

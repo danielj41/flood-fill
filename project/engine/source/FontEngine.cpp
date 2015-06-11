@@ -4,8 +4,19 @@
 #include <cstdlib>
 #include <iostream>
 
+#include "glm/gtc/type_ptr.hpp"
+#include "glm/glm.hpp"
+
+#include "director.hpp"
+#include "scene.hpp"
+#include "camera.hpp"
+
 const char *FontEngine::VERTEX_SHADER_FILE = "flood-fill/shaders/vertex-text.glsl";
 const char *FontEngine::FRAGMENT_SHADER_FILE = "flood-fill/shaders/fragment-text.glsl";
+
+const char *FontEngine::VERTEX_SHADER_FILE_BILLBOARD = "flood-fill/shaders/vertex-billboardtext.glsl";
+const char *FontEngine::FRAGMENT_SHADER_FILE_BILLBOARD = "flood-fill/shaders/fragment-billboardtext.glsl";
+
 
 FontEngine::FontEngine() {
     initialized = 0;
@@ -50,12 +61,33 @@ bool FontEngine::init() {
         INFO("Didn't Create Program");
         return 0;
     }
+
     coord = get_attrib(program, "coord");
     uniform_tex = get_uniform(program, "tex");
     uniform_color = get_uniform(program, "color");
     if (coord < 0 || uniform_tex < 0 || uniform_color < 0) {
+        INFO("attribs not properly allocated");
         return 0;
     }
+
+    billboard_program = create_program(VERTEX_SHADER_FILE_BILLBOARD, FRAGMENT_SHADER_FILE_BILLBOARD);
+    if (!billboard_program) {
+        INFO("Didn't Create BillBoard Program");
+        return 0;
+    }    
+
+    billboard_pos = get_attrib(billboard_program, "position");
+    billboard_coord = get_attrib(billboard_program, "texcoord");
+    billboard_uniform_tex = get_uniform(billboard_program, "tex");
+    billboard_uniform_color = get_uniform(billboard_program, "color");
+    billboard_uniform_projection = get_uniform(billboard_program, "uProjection");
+    billboard_uniform_view = get_uniform(billboard_program, "uView");
+    
+    
+    if (billboard_pos < 0 || billboard_coord < 0|| billboard_uniform_tex < 0|| billboard_uniform_color< 0 || billboard_uniform_projection < 0 || billboard_uniform_view < 0) {
+        INFO("billboard attribs not properly allocated");
+        return 0;
+        }
 
     glGenBuffers(1, &vbo);
 
@@ -217,13 +249,131 @@ void FontEngine::renderText(std::string text, float x, float y) {
     glEnableVertexAttribArray(coord);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glVertexAttribPointer(coord, 4, GL_FLOAT, GL_FALSE, 0, 0);
-
+    
 
     glBufferData(GL_ARRAY_BUFFER, sizeof(coords), coords, GL_DYNAMIC_DRAW);
     glDrawArrays(GL_TRIANGLES, 0, c);
 
     glDisableVertexAttribArray(coord);
+  }
+
+void FontEngine::renderBillBoardText(std::string text, float x, float y, float z, glm::vec3 playerPos) {
+    if (!initialized) {
+        // commented so you dont get spammed for making a mistake
+        // uncomment for more debugging
+        fprintf(stderr, "Font engine error: renderText: engine uninitialized");
+        return;
+    }
+    if (!curAtlas) {
+        // commented so you dont get spammed for making a mistake
+        // uncomment if want more debugging
+        fprintf(stderr, "Font engine error: renderText: no current atlas");
+        return;
+    }
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    glUseProgram(billboard_program);
+    float sx = 1.0, sy = 1.0;
+    adjustScaling(sx, sy);
+
+    CameraPtr cam = Director::getScene()->getCamera();
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, curAtlas->getAtlasTexture());
+    glUniform1i(billboard_uniform_tex, 0);
+    glUniform4fv(billboard_uniform_color, 1, color);
+    glUniformMatrix4fv(billboard_uniform_projection, 1 , GL_FALSE, glm::value_ptr(cam->getProjectionMatrix()));
+    glUniformMatrix4fv(billboard_uniform_view, 1 , GL_FALSE, glm::value_ptr(cam->getViewMatrix()));
+      
+
+    // Obtain cross product to determine how to billboard text
+    glm::vec3 x_product = glm::cross(glm::vec3(0,1,0), playerPos - glm::vec3(x,y,z));
+    x_product = glm::normalize(glm::vec3(x_product.x, 0, x_product.z));
+
+    // rendering characters on 2 triangles
+    const int VERT_COUNT = 6;
+
+    float xCur = x;
+    float yCur = y;
+    float zCur = z;
+    unsigned int c = 0;
+    WorldPoint b_positions[VERT_COUNT * text.length()];
+    TextCoord b_coords[VERT_COUNT * text.length()];
+    for (unsigned int i = 0; i < text.length(); i++) {
+        if (text[i] == '\n') {
+            xCur = x;
+            yCur = yCur - getLineHeight();
+            continue;
+        }
+        FontAtlas::CharInfo charInfo = curAtlas->getCharInfo(text[i]);
+
+        // calculate vertex and texture coordinates
+        //float x2 = xCur + charInfo.bitLeft * sx;
+        float x2 = xCur + charInfo.bitLeft * sx * x_product.x;
+        float y2 = -yCur - charInfo.bitTop * sy;
+        float z2 = zCur + charInfo.bitLeft * sx * x_product.z;
+        float w = charInfo.bitWidth * sx;
+        float h = charInfo.bitHeight * sy;
+
+        // advance cursor to start of next character
+        xCur += charInfo.advanceX * sx * x_product.x;
+        yCur += charInfo.advanceY * sy;
+        zCur += charInfo.advanceX * sy * x_product.z;
+        
+        if (!w || !h) {
+            // skip glyphs with no pixels
+            continue;
+        }
+
+        // 01 3
+        // 2 45
+        // calculate vertices
+        for (int i = 0; i < VERT_COUNT; i++) {
+            if (i % 2 == 0) {
+                b_positions[c + i].x = x2;
+                b_positions[c + i].z = z2;
+                //b_positions[c + i].z = -10;
+                b_coords[c + i].x = charInfo.tex_offX;
+            } else {
+                b_positions[c + i].x = x2 + w * x_product.x;
+                b_positions[c + i].z = z2 + w * x_product.z;
+                //b_positions[c + i].z = -10;
+                b_coords[c + i].x = charInfo.tex_offX +
+                                  charInfo.bitWidth / curAtlas->getAtlasWidth();
+            }
+
+            if (i < 2 || i == 3) {
+                b_positions[c + i].y = -y2;
+                b_coords[c + i].y = charInfo.tex_offY;
+            } else {
+                b_positions[c + i].y = -y2 - h;
+                b_coords[c + i].y = charInfo.tex_offY +
+                                  charInfo.bitHeight / curAtlas->getAtlasHeight();
+            }
+        }
+        c += VERT_COUNT;
+    }
+    
+    // Vertex Positions
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glEnableVertexAttribArray(billboard_pos);
+    glVertexAttribPointer(billboard_pos, 3, GL_FLOAT, GL_FALSE, 0, 0);  
+    glBufferData(GL_ARRAY_BUFFER, sizeof(b_positions), b_positions, GL_DYNAMIC_DRAW);
+    
+    // Texture Coords
+    glEnableVertexAttribArray(billboard_coord);
+    glVertexAttribPointer(billboard_coord, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(b_coords), b_coords, GL_DYNAMIC_DRAW);
+    
+    // Draw
+    glDrawArrays(GL_TRIANGLES, 0, c);
+    
+    // Disable
+    glDisableVertexAttribArray(billboard_pos);
+    glDisableVertexAttribArray(billboard_coord);
 }
+
 
 void FontEngine::renderTextWrapped(std::string text, float x, float y, float width) {
     if (!curAtlas) {

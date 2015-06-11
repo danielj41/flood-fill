@@ -1,4 +1,4 @@
-#include "text_render.hpp"
+#include "billboard_text_render.hpp"
 
 #include <sstream>
 
@@ -7,12 +7,13 @@
 #include "debug_macros.h"
 
 #include "global_variables.hpp"
+#include "director.hpp"
 
-TextRender::TextRender() : RenderElement(false) {
+BillBoardTextRender::BillBoardTextRender() : RenderElement(false) {
     fontEngine = FontEngine();
 }
 
-void TextRender::addText(TextPtr txt) {
+void BillBoardTextRender::addText(TextPtr txt) {
     INFO("Adding text [" << txt->getText() << "] to the Text Render...");
 
     messages.push_front(txt);
@@ -27,8 +28,8 @@ void TextRender::addText(TextPtr txt) {
     };
 }
 
-void TextRender::removeText(TextPtr txt) {
-    INFO("Removing text [" << txt->getText() << "] from the Text Render...");
+void BillBoardTextRender::removeText(TextPtr txt) {
+    INFO("Removing text [" << txt->getText() << "] from the BillBoard Text Render...");
 
     for(auto it = messages.begin() ; it != messages.end(); it++){
         if(*it == txt){
@@ -41,8 +42,8 @@ void TextRender::removeText(TextPtr txt) {
     DEBUG("Could not find text!");
 }
 
-void TextRender::setup() {
-    INFO("Text Render setup...");
+void BillBoardTextRender::setup() {
+    INFO("BillBoard Text Render setup...");
 
     if (!fontEngine.init()) {
         ASSERT(false, "Could not initalize the font engine!");
@@ -51,9 +52,9 @@ void TextRender::setup() {
     fontEngine.updateWindowSize(Global::FbWidth, Global::FbHeight);
 }
 
-void TextRender::loadShader() {}
+void BillBoardTextRender::loadShader() {}
 
-void TextRender::setupEnviroment() {
+void BillBoardTextRender::setupEnviroment() {
     glClear(GL_DEPTH_BUFFER_BIT);
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -64,17 +65,17 @@ void TextRender::setupEnviroment() {
     glEnable(GL_TEXTURE_2D);
 }
 
-void TextRender::tearDownEnviroment() {
+void BillBoardTextRender::tearDownEnviroment() {
 }
 
-void TextRender::setupShader() {}
+void BillBoardTextRender::setupShader() {}
 
-void TextRender::setupMesh(Mesh*) {}
+void BillBoardTextRender::setupMesh(Mesh*) {}
 
-void TextRender::renderObject(ObjectPtr ) {}
+void BillBoardTextRender::renderObject(ObjectPtr ) {}
 
-void TextRender::renderPass() {
-    INFO("Rendering the texts...");
+void BillBoardTextRender::renderPass() {
+    INFO("Rendering the billboard texts...");
 
     for(auto it = messages.begin() ; it != messages.end(); it++){
         TextPtr txt = *it;
@@ -84,9 +85,11 @@ void TextRender::renderPass() {
             glm::vec3 pos = txt->getPosition();
 
             fontEngine.setColor(color.x, color.y, color.z, color.w);
-            fontEngine.renderText(txt->getText(), pos.x, pos.y);
 
-            INFO("Rendering text " << txt->getText());
+            glm::vec3 cameraPos = Director::getScene()->getCamera()->getEye();
+            fontEngine.renderBillBoardText(txt->getText(), pos.x, pos.y, pos.z, cameraPos);
+
+            INFO("Rendering billboard text " << txt->getText());
         }
     }
 }

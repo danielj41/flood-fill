@@ -11,7 +11,7 @@ class MenuItem : public Text{
     
 public:
 
-    MenuItem(std::string _msg, glm::vec4 _color, glm::vec4 _hoverColor, glm::vec2 _position, std::string _fontName, int _fontSize);
+    MenuItem(std::string _msg, glm::vec4 _color, glm::vec4 _hoverColor, glm::vec3 _position, std::string _fontName, int _fontSize);
 
     virtual void action() = 0;
    

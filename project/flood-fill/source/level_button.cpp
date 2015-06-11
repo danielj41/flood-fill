@@ -11,7 +11,7 @@
 #include "debug_macros.h"
 
 
-LevelButton::LevelButton(int _level, std::string _msg, glm::vec4 _color, glm::vec4 _hoverColor, glm::vec2 _position, std::string _fontName, int _fontSize) : MenuItem(_msg, _color, _hoverColor, _position, _fontName, _fontSize), level(_level) {}
+LevelButton::LevelButton(int _level, std::string _msg, glm::vec4 _color, glm::vec4 _hoverColor, glm::vec3 _position, std::string _fontName, int _fontSize) : MenuItem(_msg, _color, _hoverColor, _position, _fontName, _fontSize), level(_level) {}
 
 void LevelButton::action() {
     

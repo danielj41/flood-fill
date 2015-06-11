@@ -28,7 +28,7 @@ void Switch::setup() {
   INFO("Creating a switch ...");
   
   handle = ObjectPtr(new Object(LoadManager::getMesh("cube.obj"), MaterialManager::getMaterial("Red")));
-  shaft = ObjectPtr(new Object(LoadManager::getMesh("cube.obj"), MaterialManager::getMaterial("FlatGrey")));
+  shaft = ObjectPtr(new Object(LoadManager::getMesh("cube.obj"), MaterialManager::getMaterial("White")));
   
   shaft->loadIdentity();
   shaft->scale(scale);

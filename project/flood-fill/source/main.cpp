@@ -327,6 +327,20 @@ void createMaterials(){
                             4.0f));
     MaterialManager::addMaterial("Red", material6);
 
+    MaterialPtr material7(new Material(glm::vec3(0.1, 0.1, 0.1),
+                                       glm::vec3(0.13, 0.13, 0.13),
+                                       glm::vec3(0.05, 0.05, 0.05),
+                                       4.0f));
+    MaterialManager::addMaterial("Black", material7);
+
+    MaterialPtr material8(new Material(glm::vec3(0.7, 0.7, 0.7),
+                                       glm::vec3(0.9, 0.9, 0.9),
+                                       glm::vec3(0.6, 0.6, 0.6),
+                                       4.0f));
+    MaterialManager::addMaterial("White", material8);
+
+
+
     MaterialPtr removeBlockMat(new Material(glm::vec3(0.5, 0.5, 0.5),
                                             glm::vec3(0.0, 0.0, 0.0),
                                             glm::vec3(0.1, 0.1, 0.1),
