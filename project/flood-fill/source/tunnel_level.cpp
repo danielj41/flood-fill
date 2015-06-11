@@ -32,6 +32,7 @@
 #include "time_manager.hpp"
 #include "level_manager.hpp"
 #include "menu.hpp"
+#include "exclamation.hpp"
 
 TunnelLevel::TunnelLevel() : LevelTemplate("tunnellevel.txt"), timer(0.0f), includeCinema(true) {
     resetHeight = -20.0f;
@@ -156,6 +157,11 @@ void TunnelLevel::setup(){
     sky->translate(Director::getScene()->getCamera()->getEye());
     RenderEngine::getRenderElement("textured")->addObject(sky);
 
+    ExclamationPtr exclamation = ExclamationPtr(new Exclamation(glm::vec3(60, 5, -23)));
+    exclamation->setup();
+    addGameObject("exclamation", exclamation);
+    
+
 
     
     PTR_CAST(SolidCube, (*grid)(7, 20, 11))->getObject()->applyTextureIndex(LoadManager::getTexture("DrainTexture"), 0);
@@ -224,8 +230,16 @@ void TunnelLevel::update(){
             titleColor.w -= TimeManager::getDeltaTime()*0.3;
             levelTitle->setColor(titleColor);
         }
+        if (Menu::isNovice() && !cinematicPlayer->isActive()) {
+            RenderEngine::removeRenderElement("text");
+            RenderEngine::addRenderElement("text", RenderElementPtr(new TextRender()), 10);
+            glfwSetInputMode(Global::window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            RenderEngine::toggleElementsForMenu();
+            Menu::displayPage("UserGuide");
+            Menu::setNovice(false);
+        }
     }
-
+    
     if(player->getPosition().y <= resetHeight){
             LevelManager::resetLevel();
     }

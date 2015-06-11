@@ -122,9 +122,6 @@ void TutorialLevel::setup(){
     ExclamationPtr exclamation = ExclamationPtr(new Exclamation(glm::vec3(30, 26, -48)));
     exclamation->setup();
     addGameObject("exclamation", exclamation);
-   
-    TextPtr doesntwork = TextPtr(new Text("Hello", glm::vec4(0,0,0,1), glm::vec3(15,30,-15), "Courier", 500));
-    PTR_CAST(BillBoardTextRender, RenderEngine::getRenderElement("billboard-text"))->addText(doesntwork);
 }
 
 void TutorialLevel::update(){
@@ -168,6 +165,14 @@ void TutorialLevel::update(){
         if(titleColor.w > 0){
             titleColor.w -= TimeManager::getDeltaTime()*0.3;
             levelTitle->setColor(titleColor);
+        }
+        if (Menu::isNovice() && !cinematicPlayer->isActive()) {
+            RenderEngine::removeRenderElement("text");
+            RenderEngine::addRenderElement("text", RenderElementPtr(new TextRender()), 10);
+            glfwSetInputMode(Global::window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            RenderEngine::toggleElementsForMenu();
+            Menu::displayPage("UserGuide");
+            Menu::setNovice(false);
         }
     }
 

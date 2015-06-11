@@ -245,6 +245,14 @@ void TestLevel::update(){
             titleColor.w -= TimeManager::getDeltaTime()*0.3;
             levelTitle->setColor(titleColor);
         }
+        if (Menu::isNovice() && !cinematicPlayer->isActive()) {
+            RenderEngine::removeRenderElement("text");
+            RenderEngine::addRenderElement("text", RenderElementPtr(new TextRender()), 10);
+            glfwSetInputMode(Global::window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            RenderEngine::toggleElementsForMenu();
+            Menu::displayPage("UserGuide");
+            Menu::setNovice(false);
+        }
     }
 
     if(player->getPosition().y <= resetHeight){

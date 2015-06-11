@@ -30,6 +30,8 @@ public:
     static double getLastEscape();
     static void setNewLevel(bool b);
     static bool isNewLevel();
+    static bool isNovice();
+    static void setNovice(bool b);
 
 private:
     
@@ -39,6 +41,7 @@ private:
     static double lastClick;
     static double lastEscape;
     static bool newLevel;
+    static bool novice;
 
 };
 

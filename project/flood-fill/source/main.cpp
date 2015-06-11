@@ -99,12 +99,12 @@ int main()
         FPS++;
        
        
-        if (Menu::isActive()) {
+        if (Menu::isActive() || Menu::getCurrentPage() == "UserGuide") {
             Menu::update();
         }
         
         if (glfwGetKey(Global::window, GLFW_KEY_ESCAPE) == GLFW_PRESS && !Menu::isActive() &&
-            TimeManager::getTimeStamp() - Menu::getLastEscape() > .5) {
+            TimeManager::getTimeStamp() - Menu::getLastEscape() > .5 && Menu::getCurrentPage() != "UserGuide") {
             escapeCoolDown = 0.4;
             RenderEngine::removeRenderElement("text");
             RenderEngine::addRenderElement("text", RenderElementPtr(new TextRender()), 10);
@@ -118,10 +118,7 @@ int main()
        
         // Swap buffers
         glfwSwapBuffers(Global::window);
-        glfwPollEvents();
-        
-        INFO("//");
-        
+        glfwPollEvents(); 
     }
     while (Menu::getCurrentPage() != "");
 
@@ -423,7 +420,6 @@ void setupGLFW(){
 
     glfwMakeContextCurrent(Global::window);
     glfwSetInputMode(Global::window, GLFW_STICKY_KEYS, GL_TRUE);
-    //glfwSetInputMode(Global::window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     glfwSetCursorPosCallback(Global::window, mouse_movement_callback);
 }
