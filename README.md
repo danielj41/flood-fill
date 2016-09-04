@@ -1,6 +1,9 @@
 Flood Fill
 ==========
-[![IMAGE ALT TEXT HERE](http://img.youtube.com/vi/pmhfk0r2W3k/0.jpg)](http://www.youtube.com/watch?v=pmhfk0r2W3k)
+
+Watch a full playthrough on YouTube:
+
+[![youtube video](/youtube-screenshot.png?raw=true "screenshot")](https://youtu.be/fUIOg2MwD7E)
 
 Flood Fill is a first-person puzzle solving game. The player is equipped with a paint gun which can fill a level with a specific colored paint. There are three colors which have different abilities when stepped on: Green is speed; Blue is high-jump; Red is speed and high-jump combine. Having two of the colors equipped at a time, the player must attempt to solve the puzzle and get to the finish.
 
